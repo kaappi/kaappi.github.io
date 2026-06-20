@@ -1,4 +1,4 @@
-# Kaappi Scheme User Guide
+# User Guide
 
 Kaappi is a complete R7RS-small Scheme implementation written in Zig. It provides
 a bytecode compiler, register-based VM, mark-and-sweep garbage collector,

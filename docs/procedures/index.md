@@ -1,4 +1,4 @@
-# Kaappi Scheme Procedure Reference
+# Procedure Reference
 
 This document lists all built-in procedures organized by domain. Each procedure
 shows its arity (`N` = exactly N arguments, `N+` = N or more arguments) and a
