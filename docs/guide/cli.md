@@ -1,7 +1,7 @@
 # Command-Line Reference
 
 ```
-zig build run -- [OPTIONS] [FILE]
+kaappi [OPTIONS] [FILE]
 ```
 
 | Option | Description |
@@ -28,24 +28,22 @@ zig build -Dbundle=program.sbc        # embed pre-compiled bytecode
 
 ```bash
 # REPL
-zig build run
+kaappi
 
 # Run a file
-zig build run -- program.scm
+kaappi program.scm
 
 # Run with additional library paths
-zig build run -- --lib-path ./vendor/libs --lib-path ./mylibs program.scm
+kaappi --lib-path ./vendor/libs --lib-path ./mylibs program.scm
 
 # Compile only
-zig build run -- --compile mylib.scm
+kaappi --compile mylib.scm
 
 # Pipe input
-echo '(+ 1 2)' | zig build run
+echo '(+ 1 2)' | kaappi
 
-# Build and install
-zig build
-cp zig-out/bin/kaappi /usr/local/bin/
+# Profile a program
+kaappi --profile program.scm
 ```
 
 ---
-

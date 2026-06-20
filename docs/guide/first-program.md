@@ -12,7 +12,7 @@ Create a file called `hello.scm`:
 Run it:
 
 ```bash
-zig build run -- hello.scm
+kaappi hello.scm
 ```
 
 Output:
@@ -26,7 +26,7 @@ Hello, world!
 Launch the REPL with no arguments:
 
 ```bash
-zig build run
+kaappi
 ```
 
 ```
@@ -112,7 +112,7 @@ Run it from inside `stats-demo/`:
 
 ```bash
 cd stats-demo
-zig build run -- main.scm
+kaappi main.scm
 ```
 
 Output:

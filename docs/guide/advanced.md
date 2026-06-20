@@ -62,11 +62,11 @@ is loaded directly -- skipping the reader, expander, and compiler stages.
 
 ```bash
 # Explicitly compile to bytecode
-zig build run -- --compile program.scm
+kaappi --compile program.scm
 # Output: Compiled program.scm -> program.sbc
 
 # Subsequent runs use the cache automatically
-zig build run -- program.scm
+kaappi program.scm
 ```
 
 ### Debugger

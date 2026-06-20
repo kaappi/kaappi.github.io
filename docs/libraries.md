@@ -173,7 +173,7 @@ Kaappi searches for `.sld` files in this order:
 Example:
 
 ```bash
-zig build run -- --lib-path /opt/scheme-libs --lib-path ./vendor program.scm
+kaappi --lib-path /opt/scheme-libs --lib-path ./vendor program.scm
 ```
 
 With this invocation, `(import (mylib math))` searches:
@@ -190,7 +190,7 @@ With this invocation, `(import (mylib math))` searches:
 Library files can be pre-compiled to bytecode for faster loading:
 
 ```bash
-zig build run -- --compile mylib/math.sld
+kaappi --compile mylib/math.sld
 # Output: Compiled mylib/math.sld -> mylib/math.sbc
 ```
 
@@ -343,7 +343,7 @@ supports:
 - Pre-compile libraries that don't change often:
 
   ```bash
-  zig build run -- --compile lib/mylib/utils.sld
+  kaappi --compile lib/mylib/utils.sld
   ```
 
 ---

@@ -27,12 +27,18 @@ cd kaappi
 zig build
 ```
 
-### Verify the build
+### Install
 
-The executable is placed at `zig-out/bin/kaappi`:
+The executable is placed at `zig-out/bin/kaappi`. Add it to your `PATH`:
 
 ```bash
-echo '(+ 1 2)' | ./zig-out/bin/kaappi
+cp zig-out/bin/kaappi /usr/local/bin/
+```
+
+Verify:
+
+```bash
+echo '(+ 1 2)' | kaappi
 # Output: 3
 ```
 

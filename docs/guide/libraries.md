@@ -78,7 +78,7 @@ Kaappi searches for `.sld` files in this order:
 The library name `(mylib math)` maps to the file path `mylib/math.sld`.
 
 ```bash
-zig build run -- --lib-path /path/to/libs program.scm
+kaappi --lib-path /path/to/libs program.scm
 ```
 
 See the [Library Reference](../libraries.md) for export specs, import

@@ -81,8 +81,7 @@ Kaappi is faster than Chibi for `fib` (1.9s vs 3.5s) and comparable on
 ## Running Benchmarks
 
 ```bash
-zig build                                        # build executable
-./zig-out/bin/kaappi benchmarks/tak_direct.scm   # run tak(33,22,11)
+kaappi benchmarks/tak_direct.scm   # run tak(33,22,11)
 ```
 
 The `benchmarks/` directory contains additional benchmark scripts that
@@ -104,7 +103,7 @@ zig build bench    # call/cc capture overhead benchmark
 Use `--profile` to get per-function timing for any Scheme program:
 
 ```bash
-zig build run -- --profile program.scm
+kaappi --profile program.scm
 ```
 
 ---
