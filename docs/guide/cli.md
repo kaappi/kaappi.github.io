@@ -24,7 +24,7 @@ zig build -Dbundle-src=program.scm    # compile + embed in one step
 zig build -Dbundle=program.sbc        # embed pre-compiled bytecode
 ```
 
-### Examples
+## Examples
 
 ```bash
 # REPL
