@@ -137,5 +137,5 @@ For more on libraries, import modifiers, and search paths, see
 
 ---
 
-Next: [Language Reference](language.md)
+Next: [Scheme Tutorial](tutorial.md)
 

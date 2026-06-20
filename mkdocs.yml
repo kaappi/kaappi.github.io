@@ -42,6 +42,7 @@ nav:
     - guide/index.md
     - Installation: guide/installation.md
     - Your First Program: guide/first-program.md
+    - Scheme Tutorial: guide/tutorial.md
     - Language Reference: guide/language.md
     - Libraries: guide/libraries.md
     - Advanced Features: guide/advanced.md
