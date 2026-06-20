@@ -4,7 +4,11 @@ A quick tour of Kaappi's Scheme dialect with runnable examples. For
 detailed procedure documentation, see the
 [Procedure Reference](../procedures/index.md).
 
-### Numbers
+Most examples below use procedures from `(scheme base)`. In a file you
+need to import it explicitly; the REPL imports it automatically. Some
+examples also use `(srfi 1)` for `filter` and `fold`.
+
+## Numbers
 
 Kaappi supports fixnums (63-bit integers), bignums (arbitrary precision),
 exact rationals, flonums (IEEE 754 f64), and complex numbers.
@@ -19,7 +23,7 @@ exact rationals, flonums (IEEE 754 f64), and complex numbers.
 (make-rectangular 3 4) ;=> 3+4i
 ```
 
-### Strings
+## Strings
 
 Strings are UTF-8 encoded and indexed by codepoint position.
 
@@ -33,7 +37,7 @@ Strings are UTF-8 encoded and indexed by codepoint position.
 (string-ref "lambda: λ" 8)   ;=> #\λ
 ```
 
-### Lists
+## Lists
 
 See [Pairs and Lists](../procedures/pairs-and-lists.md),
 [SRFI-1](../procedures/srfi-1.md).
@@ -48,7 +52,7 @@ See [Pairs and Lists](../procedures/pairs-and-lists.md),
 (fold + 0 '(1 2 3 4 5))              ;=> 15
 ```
 
-### Vectors
+## Vectors
 
 ```scheme
 (define v #(10 20 30))
@@ -57,7 +61,7 @@ See [Pairs and Lists](../procedures/pairs-and-lists.md),
 (vector-map + #(1 2 3) #(10 20 30))  ;=> #(11 22 33)
 ```
 
-### Booleans, Characters, Symbols
+## Booleans, Characters, Symbols
 
 ```scheme
 (and #t #f)             ;=> #f
@@ -68,7 +72,7 @@ See [Pairs and Lists](../procedures/pairs-and-lists.md),
 (eq? 'abc 'abc)         ;=> #t
 ```
 
-### Bytevectors
+## Bytevectors
 
 ```scheme
 (define bv #u8(10 20 30))
@@ -77,7 +81,7 @@ See [Pairs and Lists](../procedures/pairs-and-lists.md),
 (utf8->string #u8(104 101 108 108 111))  ;=> "hello"
 ```
 
-### Definitions and Functions
+## Definitions and Functions
 
 ```scheme
 (define x 42)
@@ -90,7 +94,7 @@ See [Pairs and Lists](../procedures/pairs-and-lists.md),
 (greet "World")         ;=> "Hello, World!"
 ```
 
-### Conditionals
+## Conditionals
 
 ```scheme
 (if (> 3 2) "yes" "no")       ;=> "yes"
@@ -106,7 +110,7 @@ See [Pairs and Lists](../procedures/pairs-and-lists.md),
   (else "other"))              ;=> "two"
 ```
 
-### Binding Forms
+## Binding Forms
 
 ```scheme
 (let ((x 1) (y 2)) (+ x y))            ;=> 3
@@ -128,7 +132,7 @@ See [Pairs and Lists](../procedures/pairs-and-lists.md),
     ((= i 5) sum))                      ;=> 10
 ```
 
-### Macros
+## Macros
 
 ```scheme
 (define-syntax my-when
@@ -142,7 +146,7 @@ See [Pairs and Lists](../procedures/pairs-and-lists.md),
 ;; prints: yes
 ```
 
-### Exceptions
+## Exceptions
 
 ```scheme
 (guard (exn
@@ -158,7 +162,7 @@ See [Pairs and Lists](../procedures/pairs-and-lists.md),
   (lambda () (raise "boom")))
 ```
 
-### Continuations
+## Continuations
 
 See [Control Flow](../procedures/control-flow.md).
 
@@ -172,7 +176,7 @@ See [Control Flow](../procedures/control-flow.md).
 ;=> -3
 ```
 
-### Parameters
+## Parameters
 
 ```scheme
 (define my-param (make-parameter 10))
@@ -184,7 +188,7 @@ See [Control Flow](../procedures/control-flow.md).
 (my-param)              ;=> 10
 ```
 
-### Lazy Evaluation
+## Lazy Evaluation
 
 ```scheme
 (define p (delay (begin (display "computed!\n") 42)))
@@ -192,7 +196,7 @@ See [Control Flow](../procedures/control-flow.md).
 (force p)  ;; returns 42 (cached, no recomputation)
 ```
 
-### Records
+## Records
 
 ```scheme
 (define-record-type <point>
@@ -207,7 +211,7 @@ See [Control Flow](../procedures/control-flow.md).
 (point-y p)             ;=> 10
 ```
 
-### Multiple Values
+## Multiple Values
 
 ```scheme
 (call-with-values
@@ -219,4 +223,6 @@ See [Control Flow](../procedures/control-flow.md).
 ```
 
 ---
+
+Next: [Libraries](libraries.md)
 

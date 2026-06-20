@@ -1,13 +1,13 @@
 # Installation
 
-### Prerequisites
+## Prerequisites
 
 - **Zig 0.16+** -- the sole build tool (no cmake, make, or cargo)
 - **C toolchain** -- needed to compile the vendored linenoise library (line
   editing for the REPL). On macOS this comes with Xcode Command Line Tools; on
   Linux it comes with `gcc` or `clang`.
 
-### macOS
+## macOS
 
 ```bash
 brew install zig
@@ -16,7 +16,7 @@ cd kaappi
 zig build
 ```
 
-### Linux
+## Linux
 
 Download Zig 0.16+ from [ziglang.org/download](https://ziglang.org/download/),
 extract it, and add it to your `PATH`. Then:
@@ -27,7 +27,7 @@ cd kaappi
 zig build
 ```
 
-### Install
+## Install
 
 The executable is placed at `zig-out/bin/kaappi`. Add it to your `PATH`:
 
@@ -48,7 +48,7 @@ Run the test suite to confirm everything works:
 zig build test
 ```
 
-### Build modes
+## Build modes
 
 The default build uses **ReleaseSafe** (fast execution with bounds checking).
 For maximum throughput use `-Doptimize=ReleaseFast`. The Debug mode is roughly
@@ -60,4 +60,6 @@ zig build -Doptimize=Debug
 ```
 
 ---
+
+Next: [Your First Program](first-program.md)
 

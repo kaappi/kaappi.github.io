@@ -1,6 +1,6 @@
 # Advanced Features
 
-### FFI (Foreign Function Interface)
+## FFI (Foreign Function Interface)
 
 Call C library functions directly from Scheme:
 
@@ -32,7 +32,7 @@ Supported C types: `int`, `long`, `double`, `float`, `string`, `pointer`, `void`
 (ffi-callback-release cb)  ;; free when done
 ```
 
-### REPL Commands
+## REPL Commands
 
 The REPL supports meta-commands prefixed with `,` (comma). Type `,help`
 to see the full list:
@@ -54,7 +54,7 @@ kaappi> ,env string-
 string-append string-copy string-length ...
 ```
 
-### Bytecode Caching
+## Bytecode Caching
 
 Kaappi automatically caches compiled bytecode to `.sbc` files next to the
 source. On subsequent runs, if the source hasn't changed, the cached bytecode
@@ -69,7 +69,7 @@ kaappi --compile program.scm
 kaappi program.scm
 ```
 
-### Debugger
+## Debugger
 
 The REPL includes a built-in stepping debugger.
 
@@ -111,4 +111,6 @@ debug>
 ```
 
 ---
+
+Next: [CLI Reference](cli.md)
 

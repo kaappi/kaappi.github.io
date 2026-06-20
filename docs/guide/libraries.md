@@ -1,6 +1,6 @@
 # Working with Libraries
 
-### Importing Standard Libraries
+## Importing Standard Libraries
 
 Every R7RS program starts by importing what it needs:
 
@@ -19,7 +19,7 @@ Multiple imports can be combined:
         (scheme char))
 ```
 
-### Import Modifiers
+## Import Modifiers
 
 ```scheme
 ;; Import only specific names
@@ -36,13 +36,13 @@ Multiple imports can be combined:
 (char:char-alphabetic? #\A)  ;=> #t
 ```
 
-### Available Libraries
+## Available Libraries
 
 Kaappi includes all 14 R7RS standard libraries, 9 built-in SRFIs, and 42
 portable SRFIs. See the [Library Reference](../libraries.md) for the
 complete list.
 
-### Writing Your Own Library
+## Writing Your Own Library
 
 Create a file `mylib/math.sld`:
 
@@ -67,7 +67,7 @@ Use it from another file:
 (newline)
 ```
 
-### Library Search Paths
+## Library Search Paths
 
 Kaappi searches for `.sld` files in this order:
 
@@ -85,4 +85,6 @@ See the [Library Reference](../libraries.md) for export specs, import
 modifiers, bytecode caching, `cond-expand`, and the complete library list.
 
 ---
+
+Next: [Advanced Features](advanced.md)
 

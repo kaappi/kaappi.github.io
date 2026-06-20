@@ -2,39 +2,15 @@
 
 ## REPL Workflow
 
-- **Use `,time` to measure performance.** Wrap any expression to see how
-  long it takes:
+- **The REPL has built-in tools.** Type `,help` to see commands for
+  timing (`,time`), profiling (`,profile`), macro expansion (`,expand`),
+  binding exploration (`,env`), and GC stats (`,gc`). See
+  [Advanced Features](advanced.md#repl-commands) for the full reference.
 
   ```
   kaappi> ,time (fib 30)
   fib(30): 0.173s
   ```
-
-- **Use `,profile` for detailed analysis.** Shows per-function timing, call
-  counts, and allocation bytes:
-
-  ```
-  kaappi> ,profile (fib 20)
-  ```
-
-- **Use `,expand` to debug macros.** Shows the expanded form of a macro
-  call before evaluation:
-
-  ```
-  kaappi> ,expand (when (> x 0) (display x))
-  ;; shows the if/begin expansion
-  ```
-
-- **Use `,env` to explore bindings.** Lists all global names, or filter by
-  prefix:
-
-  ```
-  kaappi> ,env string-
-  string-append string-copy string-length ...
-  ```
-
-- **Use `,gc` to check memory pressure.** Shows heap size, live objects,
-  and collection count -- useful for diagnosing allocation-heavy code.
 
 ## Performance
 
@@ -206,3 +182,5 @@
   access -- useful for running untrusted code safely.
 
 ---
+
+Next: [Troubleshooting](troubleshooting.md)

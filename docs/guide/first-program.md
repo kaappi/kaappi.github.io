@@ -1,10 +1,12 @@
 # Your First Program
 
-### Running a file
+## Running a file
 
 Create a file called `hello.scm`:
 
 ```scheme
+(import (scheme base) (scheme write))
+
 (display "Hello, world!")
 (newline)
 ```
@@ -21,7 +23,7 @@ Output:
 Hello, world!
 ```
 
-### The REPL
+## The REPL
 
 Launch the REPL with no arguments:
 
@@ -57,7 +59,7 @@ kaappi> (map square '(1 2 3 4 5))
 
 Type `(exit)` or press Ctrl-D to quit.
 
-### A Multi-File Project
+## A Multi-File Project
 
 Real programs split code into libraries. Here's a small project that
 computes statistics on a list of numbers.
@@ -134,4 +136,6 @@ For more on libraries, import modifiers, and search paths, see
 [Working with Libraries](libraries.md).
 
 ---
+
+Next: [Language Reference](language.md)
 

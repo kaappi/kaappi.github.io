@@ -47,3 +47,5 @@ kaappi --profile program.scm
 ```
 
 ---
+
+Next: [Tips](tips.md)
