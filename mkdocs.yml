@@ -47,7 +47,26 @@ nav:
     - Advanced Features: guide/advanced.md
     - CLI Reference: guide/cli.md
     - Tips: guide/tips.md
-  - Procedures: procedures.md
+  - Procedures:
+    - procedures/index.md
+    - Numbers and Arithmetic: procedures/numbers.md
+    - Pairs and Lists: procedures/pairs-and-lists.md
+    - SRFI-1 List Library: procedures/srfi-1.md
+    - Strings: procedures/strings.md
+    - SRFI-13 String Library: procedures/srfi-13.md
+    - Characters: procedures/characters.md
+    - Vectors: procedures/vectors.md
+    - SRFI-133 Vector Library: procedures/srfi-133.md
+    - Bytevectors: procedures/bytevectors.md
+    - Ports and I/O: procedures/ports-and-io.md
+    - Control Flow: procedures/control-flow.md
+    - Type Checking: procedures/type-checking.md
+    - Hash Tables: procedures/hash-tables.md
+    - System and Environment: procedures/system.md
+    - Syntax Forms: procedures/syntax-forms.md
+    - SRFI-18 Threads: procedures/threads.md
+    - Kaappi Extensions: procedures/extensions.md
+    - Other Primitives: procedures/other.md
   - Libraries: libraries.md
   - Benchmarks: benchmarks.md
 
