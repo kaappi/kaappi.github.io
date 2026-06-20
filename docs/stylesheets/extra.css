@@ -65,19 +65,31 @@
   margin-top: 0.6em;
 }
 
-/* ---- code blocks: warm tint ---- */
-[data-md-color-scheme="default"] .md-typeset pre > code,
+/* ---- code: inline keeps warm light tint ---- */
 [data-md-color-scheme="default"] .md-typeset code {
   background-color: #F8F3ED;
 }
 
+/* ---- code blocks: dark roast with readable syntax tokens ---- */
 [data-md-color-scheme="default"] .md-typeset pre > code {
   background-color: #1E1812;
   color: #F3E9DB;
+  --md-code-hl-comment-color: #9C8A77;
+  --md-code-hl-keyword-color: #E8B563;
+  --md-code-hl-string-color: #BFD08A;
+  --md-code-hl-number-color: #E0A867;
+  --md-code-hl-function-color: #4FC4B2;
+  --md-code-hl-variable-color: #BBA890;
+  --md-code-hl-operator-color: #F3E9DB;
+  --md-code-hl-punctuation-color: #BBA890;
+  --md-code-hl-constant-color: #E8B563;
+  --md-code-hl-special-color: #D08B3C;
+  --md-code-hl-generic-color: #9C8A77;
 }
 
 [data-md-color-scheme="slate"] .md-typeset pre > code {
   background-color: #1E1812;
+  --md-code-hl-comment-color: #9C8A77;
 }
 
 /* ---- active nav item uses brass ---- */
