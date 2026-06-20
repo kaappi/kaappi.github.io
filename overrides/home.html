@@ -3,24 +3,16 @@
 {% block tabs %}{{ super() }}{% endblock %}
 
 {% block content %}
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-
 <style>
   /* ============ Kaappi landing — "The Decoction" ============ */
-  /* Elegant source (warm) evaluates to fast result (cool).      */
-  /* kaappi = South Indian filter coffee: slow brew, strong pour. */
 
   .md-content__inner > h1 { display: none; }
   .md-content__inner { margin-top: 0; }
   .md-content__inner::before { display: none; }
 
-  /* Blend the header into the hero — landing page only (this template) */
-  .md-header { background-color: #1A1410; color: #F3E9DB; box-shadow: none; transition: background-color .25s; }
+  /* Seamless hero — remove header shadow on landing */
+  .md-header { box-shadow: none; transition: background-color .25s; }
   .md-header[data-md-state="shadow"], .md-header--shadow { box-shadow: 0 0 .2rem rgba(0,0,0,.4), 0 .2rem .4rem rgba(0,0,0,.3); }
-  .md-header__title { color: #F3E9DB; }
-  .md-tabs { background-color: #1A1410; color: #F3E9DB; }
 
   :root {
     --kp-roast:   #1A1410;
