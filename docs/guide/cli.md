@@ -17,7 +17,11 @@ kaappi [OPTIONS] [FILE]
 | `--disassemble FILE` | Show compiled bytecode without running |
 | `--gc-stats` | Print GC statistics on exit |
 
-**Standalone binaries:**
+## Standalone Binaries
+
+Embed a Scheme program into a self-contained executable. This uses Zig's
+build system (not the `kaappi` CLI) because the program is compiled into
+the binary at build time:
 
 ```bash
 zig build -Dbundle-src=program.scm    # compile + embed in one step
