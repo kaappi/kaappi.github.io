@@ -226,20 +226,21 @@ needed if you want to pre-warm the cache.
 
 ### SRFI Libraries (51)
 
-8 built-in SRFIs (implemented in Zig):
+9 built-in SRFIs (implemented in Zig):
 
 | Library | Description |
 |---------|-------------|
-| `(srfi 1)` | List library (fold, filter, find, any, every, iota, ...) |
+| `(srfi 1)` | [List library](procedures/srfi-1.md) (fold, filter, find, any, every, iota, ...) |
 | `(srfi 9)` | Records (alias for R7RS `define-record-type`) |
-| `(srfi 13)` | String library (contains, split, join, trim, ...) |
-| `(srfi 18)` | Threads, mutexes, condition variables |
+| `(srfi 13)` | [String library](procedures/srfi-13.md) (contains, split, join, trim, ...) |
+| `(srfi 18)` | [Threads](procedures/threads.md), mutexes, condition variables |
+| `(srfi 27)` | Random numbers (random-integer, random-real) |
 | `(srfi 39)` | Parameter objects (alias for `make-parameter`) |
-| `(srfi 69)` | Hash tables |
-| `(srfi 133)` | Vector library |
+| `(srfi 69)` | [Hash tables](procedures/hash-tables.md) |
+| `(srfi 133)` | [Vector library](procedures/srfi-133.md) |
 | `(srfi 170)` | POSIX filesystem API (file-info, directory ops, ...) |
 
-43 portable SRFIs (loaded on demand from `.sld` files in `lib/srfi/`):
+42 portable SRFIs (loaded on demand from `.sld` files in `lib/srfi/`):
 
 | Library | Description |
 |---------|-------------|
@@ -249,7 +250,6 @@ needed if you want to pre-warm the cache.
 | `(srfi 14)` | Character sets |
 | `(srfi 16)` | `case-lambda` |
 | `(srfi 26)` | `cut` / `cute` (partial application) |
-| `(srfi 27)` | Random numbers |
 | `(srfi 28)` | `format` (basic) |
 | `(srfi 31)` | `rec` (recursive expressions) |
 | `(srfi 34)` | Exception handling |
@@ -345,3 +345,5 @@ supports:
   ```bash
   zig build run -- --compile lib/mylib/utils.sld
   ```
+
+---
