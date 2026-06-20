@@ -628,10 +628,77 @@ See [Pairs and Lists](pairs-and-lists.md#cxr-compositions) for the full table.
 | [`random-integer`](other.md#random-integer) | 1 | Random integer in [0, n) |
 | [`random-real`](other.md#random-real) | 0 | Random real in [0, 1) |
 
-## [SRFI-170 Filesystem](../libraries.md)
+## [SRFI-170 Filesystem](srfi-170.md)
 
-The 55 SRFI-170 filesystem procedures are documented as part of the
-[Libraries reference](../libraries.md) since they are accessed via
-`(import (srfi 170))`.
+| Procedure | Arity | Description |
+|-----------|-------|-------------|
+| [`file-info`](srfi-170.md#file-info) | 1+ | Get file metadata (optional follow-symlinks?) |
+| [`file-info?`](srfi-170.md#file-info-pred) | 1 | True if argument is a file-info object |
+| [`file-info-type`](srfi-170.md#file-info-type) | 1 | File type as symbol (regular, directory, symlink, ...) |
+| [`file-info:size`](srfi-170.md#file-info-size) | 1 | File size in bytes |
+| [`file-info:mtime`](srfi-170.md#file-info-mtime) | 1 | Modification time |
+| [`file-info:atime`](srfi-170.md#file-info-atime) | 1 | Access time |
+| [`file-info:ctime`](srfi-170.md#file-info-ctime) | 1 | Status change time |
+| [`file-info:mode`](srfi-170.md#file-info-mode) | 1 | File permission mode |
+| [`file-info:nlinks`](srfi-170.md#file-info-nlinks) | 1 | Number of hard links |
+| [`file-info:uid`](srfi-170.md#file-info-uid) | 1 | Owner user ID |
+| [`file-info:gid`](srfi-170.md#file-info-gid) | 1 | Owner group ID |
+| [`file-info:inode`](srfi-170.md#file-info-inode) | 1 | Inode number |
+| [`file-info:device`](srfi-170.md#file-info-device-id) | 1 | Device ID |
+| [`file-info:rdev`](srfi-170.md#file-info-rdev) | 1 | Device ID (for device files) |
+| [`file-info:blksize`](srfi-170.md#file-info-blksize) | 1 | Block size |
+| [`file-info:blocks`](srfi-170.md#file-info-blocks) | 1 | Number of blocks |
+| [`file-info-directory?`](srfi-170.md#file-info-directory) | 1 | True if file is a directory |
+| [`file-info-regular?`](srfi-170.md#file-info-regular) | 1 | True if file is a regular file |
+| [`file-info-symlink?`](srfi-170.md#file-info-symlink) | 1 | True if file is a symlink |
+| [`file-info-fifo?`](srfi-170.md#file-info-fifo) | 1 | True if file is a FIFO |
+| [`file-info-socket?`](srfi-170.md#file-info-socket) | 1 | True if file is a socket |
+| [`file-info-device?`](srfi-170.md#file-info-device) | 1 | True if file is a device |
+| [`create-directory`](srfi-170.md#create-directory) | 1+ | Create a directory (optional mode) |
+| [`delete-directory`](srfi-170.md#delete-directory) | 1 | Delete a directory |
+| [`rename-file`](srfi-170.md#rename-file) | 2 | Rename a file |
+| [`create-symlink`](srfi-170.md#create-symlink) | 2 | Create a symbolic link |
+| [`read-symlink`](srfi-170.md#read-symlink) | 1 | Read the target of a symbolic link |
+| [`create-hard-link`](srfi-170.md#create-hard-link) | 2 | Create a hard link |
+| [`real-path`](srfi-170.md#real-path) | 1 | Resolve to canonical absolute path |
+| [`set-file-mode`](srfi-170.md#set-file-mode) | 2 | Set file permissions |
+| [`truncate-file`](srfi-170.md#truncate-file) | 2 | Truncate file to given length |
+| [`create-fifo`](srfi-170.md#create-fifo) | 1+ | Create a named pipe (optional mode) |
+| [`set-file-owner`](srfi-170.md#set-file-owner) | 3 | Set file owner (uid, gid) |
+| [`set-file-times`](srfi-170.md#set-file-times) | 1+ | Set access and modification times |
+| [`directory-files`](srfi-170.md#directory-files) | 1+ | List files in a directory |
+| [`open-directory`](srfi-170.md#open-directory) | 1+ | Open a directory stream |
+| [`read-directory`](srfi-170.md#read-directory) | 1 | Read next entry from directory stream |
+| [`close-directory`](srfi-170.md#close-directory) | 1 | Close a directory stream |
+| [`pid`](srfi-170.md#pid) | 0 | Current process ID |
+| [`umask`](srfi-170.md#umask) | 0 | Current umask |
+| [`set-umask!`](srfi-170.md#set-umask) | 1 | Set umask |
+| [`current-directory`](srfi-170.md#current-directory) | 0 | Current working directory |
+| [`set-current-directory!`](srfi-170.md#set-current-directory) | 1 | Change working directory |
+| [`user-uid`](srfi-170.md#user-uid) | 0 | Current user ID |
+| [`user-gid`](srfi-170.md#user-gid) | 0 | Current group ID |
+| [`user-effective-uid`](srfi-170.md#user-effective-uid) | 0 | Effective user ID |
+| [`user-effective-gid`](srfi-170.md#user-effective-gid) | 0 | Effective group ID |
+| [`user-supplementary-gids`](srfi-170.md#user-supplementary-gids) | 0 | Supplementary group IDs |
+| [`nice`](srfi-170.md#nice) | 0+ | Adjust process priority |
+| [`user-info`](srfi-170.md#user-info) | 1 | Get user info by UID or username |
+| [`user-info?`](srfi-170.md#user-info-pred) | 1 | True if argument is a user-info object |
+| [`user-info:name`](srfi-170.md#user-info-name) | 1 | User login name |
+| [`user-info:uid`](srfi-170.md#user-info-uid) | 1 | User ID |
+| [`user-info:gid`](srfi-170.md#user-info-gid) | 1 | User group ID |
+| [`user-info:home-dir`](srfi-170.md#user-info-home-dir) | 1 | Home directory path |
+| [`user-info:shell`](srfi-170.md#user-info-shell) | 1 | Login shell path |
+| [`user-info:full-name`](srfi-170.md#user-info-full-name) | 1 | Full name (GECOS field) |
+| [`group-info`](srfi-170.md#group-info) | 1 | Get group info by GID or group name |
+| [`group-info?`](srfi-170.md#group-info-pred) | 1 | True if argument is a group-info object |
+| [`group-info:name`](srfi-170.md#group-info-name) | 1 | Group name |
+| [`group-info:gid`](srfi-170.md#group-info-gid) | 1 | Group ID |
+| [`set-environment-variable!`](srfi-170.md#set-environment-variable) | 2 | Set an environment variable |
+| [`delete-environment-variable!`](srfi-170.md#delete-environment-variable) | 1 | Delete an environment variable |
+| [`terminal?`](srfi-170.md#terminal) | 1 | True if port is connected to a terminal |
+| [`posix-time`](srfi-170.md#posix-time) | 0 | Current time as seconds since epoch |
+| [`monotonic-time`](srfi-170.md#monotonic-time) | 0 | Monotonic clock time |
+| [`temp-file-prefix`](srfi-170.md#temp-file-prefix) | 0 | Default temporary file prefix |
+| [`create-temp-file`](srfi-170.md#create-temp-file) | 0+ | Create a temporary file (optional prefix) |
 
 ---

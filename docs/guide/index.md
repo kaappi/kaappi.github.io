@@ -11,5 +11,6 @@ first-class continuations, hygienic macros, and a full library system.
 - [Advanced Features](advanced.md) -- FFI, REPL commands, bytecode caching, debugger
 - [CLI Reference](cli.md) -- command-line options and standalone binaries
 - [Tips](tips.md) -- tail calls, bignums, Unicode, error handling
+- [Troubleshooting](troubleshooting.md) -- common errors and how to fix them
 
 ---

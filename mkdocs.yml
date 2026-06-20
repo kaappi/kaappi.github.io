@@ -47,6 +47,7 @@ nav:
     - Advanced Features: guide/advanced.md
     - CLI Reference: guide/cli.md
     - Tips: guide/tips.md
+    - Troubleshooting: guide/troubleshooting.md
   - Procedures:
     - procedures/index.md
     - Numbers and Arithmetic: procedures/numbers.md
@@ -67,6 +68,7 @@ nav:
     - SRFI-18 Threads: procedures/threads.md
     - Kaappi Extensions: procedures/extensions.md
     - Other Primitives: procedures/other.md
+    - SRFI-170 Filesystem: procedures/srfi-170.md
   - Libraries: libraries.md
   - Benchmarks: benchmarks.md
 
