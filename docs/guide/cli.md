@@ -14,6 +14,7 @@ zig build run -- [OPTIONS] [FILE]
 | `--sandbox` | Sandbox mode — blocks FFI, file I/O, `eval`, `load`, env access |
 | `--no-jit` | Disable JIT compilation |
 | `--no-cache` | Disable bytecode caching |
+| `--disassemble FILE` | Show compiled bytecode without running |
 | `--gc-stats` | Print GC statistics on exit |
 
 **Standalone binaries:**

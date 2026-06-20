@@ -1,5 +1,9 @@
 # Language Quick Reference
 
+A quick tour of Kaappi's Scheme dialect with runnable examples. For
+detailed procedure documentation, see the
+[Procedure Reference](../procedures/index.md).
+
 ### Numbers
 
 Kaappi supports fixnums (63-bit integers), bignums (arbitrary precision),
@@ -30,6 +34,9 @@ Strings are UTF-8 encoded and indexed by codepoint position.
 ```
 
 ### Lists
+
+See [Pairs and Lists](../procedures/pairs-and-lists.md),
+[SRFI-1](../procedures/srfi-1.md).
 
 ```scheme
 (cons 1 '(2 3))        ;=> (1 2 3)
@@ -148,11 +155,12 @@ Strings are UTF-8 encoded and indexed by codepoint position.
 
 (with-exception-handler
   (lambda (e) (display "Error!\n"))
-  (lambda () (raise "boom"))
-  'replace)
+  (lambda () (raise "boom")))
 ```
 
 ### Continuations
+
+See [Control Flow](../procedures/control-flow.md).
 
 ```scheme
 ;; Escape continuation (non-local exit)

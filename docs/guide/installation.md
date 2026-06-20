@@ -11,7 +11,7 @@
 
 ```bash
 brew install zig
-git clone <repo-url> kaappi
+git clone https://github.com/kaappi/kaappi
 cd kaappi
 zig build
 ```
@@ -22,7 +22,7 @@ Download Zig 0.16+ from [ziglang.org/download](https://ziglang.org/download/),
 extract it, and add it to your `PATH`. Then:
 
 ```bash
-git clone <repo-url> kaappi
+git clone https://github.com/kaappi/kaappi
 cd kaappi
 zig build
 ```
@@ -32,7 +32,8 @@ zig build
 The executable is placed at `zig-out/bin/kaappi`:
 
 ```bash
-./zig-out/bin/kaappi --help
+echo '(+ 1 2)' | ./zig-out/bin/kaappi
+# Output: 3
 ```
 
 Run the test suite to confirm everything works:

@@ -22,7 +22,7 @@ Call C library functions directly from Scheme:
 (ffi-close libm)
 ```
 
-Supported C types: `int`, `long`, `double`, `float`, `string`, `pointer`, `void`.
+Supported C types: `int`, `long`, `double`, `float`, `string`, `pointer`, `void`, `bool`, `uint8`.
 
 **FFI callbacks** — pass Scheme procedures to C functions that expect function pointers:
 
@@ -30,6 +30,28 @@ Supported C types: `int`, `long`, `double`, `float`, `string`, `pointer`, `void`
 (define cb (ffi-callback (lambda (a b) (- a b)) '(pointer pointer) 'int))
 ;; Pass cb to a C function like qsort
 (ffi-callback-release cb)  ;; free when done
+```
+
+### REPL Commands
+
+The REPL supports meta-commands prefixed with `,` (comma). Type `,help`
+to see the full list:
+
+| Command | Description |
+|---------|-------------|
+| `,time <expr>` | Measure execution time of an expression |
+| `,profile <expr>` | Profile timing, call counts, and allocations |
+| `,expand <expr>` | Show the result of macro expansion |
+| `,env [prefix]` | List global bindings (optional prefix filter) |
+| `,gc` | Show garbage collector statistics |
+| `,break <name>` | Set a breakpoint on a function (see Debugger below) |
+| `,help` | Show all available commands |
+
+```
+kaappi> ,time (fib 30)
+fib(30): 0.173s
+kaappi> ,env string-
+string-append string-copy string-length ...
 ```
 
 ### Bytecode Caching
