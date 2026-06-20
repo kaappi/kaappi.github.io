@@ -3,309 +3,554 @@
 {% block tabs %}{{ super() }}{% endblock %}
 
 {% block content %}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+
 <style>
+  /* ============ Kaappi landing — "The Decoction" ============ */
+  /* Elegant source (warm) evaluates to fast result (cool).      */
+  /* kaappi = South Indian filter coffee: slow brew, strong pour. */
+
   .md-content__inner > h1 { display: none; }
+  .md-content__inner { margin-top: 0; }
+  .md-content__inner::before { display: none; }
+
+  /* Blend the header into the hero — landing page only (this template) */
+  .md-header { background-color: #1A1410; color: #F3E9DB; box-shadow: none; transition: background-color .25s; }
+  .md-header[data-md-state="shadow"], .md-header--shadow { box-shadow: 0 0 .2rem rgba(0,0,0,.4), 0 .2rem .4rem rgba(0,0,0,.3); }
+  .md-header__title { color: #F3E9DB; }
+  .md-tabs { background-color: #1A1410; color: #F3E9DB; }
 
   :root {
-    --home-terminal: #0F172A;
-    --home-terminal-surface: #1E293B;
+    --kp-roast:   #1A1410;
+    --kp-roast-2: #241B14;
+    --kp-roast-3: #34281D;
+    --kp-crema:   #F3E9DB;
+    --kp-brass:   #D08B3C;
+    --kp-brass-2: #E8B563;
+    --kp-filter:  #4FC4B2;
+    --kp-ash:     #9C8A77;
+    --kp-disp: "Space Grotesk", "Inter", system-ui, sans-serif;
+    --kp-mono: var(--md-code-font-family), "JetBrains Mono", monospace;
   }
 
-  .home-hero {
-    text-align: center;
-    padding: 4rem 1rem 2rem;
-    max-width: 800px;
-    margin: 0 auto;
+  .kp {
+    --kp-edge: 1px solid var(--kp-roast-3);
   }
 
-  .home-hero h1 {
-    font-size: clamp(2rem, 5vw, 3.25rem);
-    font-weight: 700;
-    letter-spacing: -0.03em;
-    margin-bottom: 0.5rem;
-    line-height: 1.15;
-  }
+  /* ---- syntax tokens (warm roast palette) ---- */
+  .kp-cm { color: var(--kp-ash); font-style: italic; }
+  .kp-kw { color: var(--kp-brass-2); }
+  .kp-fn { color: var(--kp-filter); }
+  .kp-st { color: #BFD08A; }
+  .kp-nu { color: #E0A867; }
+  .kp-pr { color: var(--kp-brass); font-weight: 600; }
+  .kp-pn { color: #BBA890; }
+  .kp-val { color: var(--kp-filter); font-weight: 600; }
 
-  .home-stats {
-    font-size: 0.9rem;
-    color: var(--md-default-fg-color--light);
-    margin-bottom: 1.75rem;
-  }
-
-  .home-stats span { padding: 0 0.4em; }
-  .home-stats span::after { content: '\00B7'; margin-left: 0.75em; opacity: 0.4; }
-  .home-stats span:last-child::after { content: ''; }
-
-  .home-ctas {
-    display: flex;
-    gap: 0.75rem;
-    justify-content: center;
-    margin-bottom: 2.5rem;
-    flex-wrap: wrap;
-  }
-
-  .home-terminal {
-    background: var(--home-terminal);
-    border-radius: 8px;
+  /* ================= HERO (full-bleed dark roast) ================= */
+  .kp-hero {
+    position: relative;
+    margin: -1.2rem -.8rem 0;
+    padding: 5.5rem 1.5rem 4rem;
+    background:
+      radial-gradient(120% 80% at 50% -10%, #2A2016 0%, var(--kp-roast) 55%);
     overflow: hidden;
-    text-align: left;
-    max-width: 620px;
-    margin: 0 auto 3rem;
-    box-shadow: 0 4px 24px rgba(0,0,0,0.1);
+    isolation: isolate;
+  }
+  /* faint "decoction" hairlines rising through the roast */
+  .kp-hero::before {
+    content: "";
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(90deg, rgba(208,139,60,.05) 1px, transparent 1px);
+    background-size: 56px 56px;
+    -webkit-mask-image: radial-gradient(70% 60% at 50% 30%, #000, transparent 75%);
+            mask-image: radial-gradient(70% 60% at 50% 30%, #000, transparent 75%);
+    z-index: -1;
   }
 
-  .home-terminal-bar {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    padding: 10px 14px;
-    background: var(--home-terminal-surface);
-  }
+  .kp-hero-inner { max-width: 880px; margin: 0 auto; text-align: center; }
 
-  .home-dot { width: 10px; height: 10px; border-radius: 50%; }
-  .home-dot:nth-child(1) { background: #EF4444; }
-  .home-dot:nth-child(2) { background: #EAB308; }
-  .home-dot:nth-child(3) { background: #22C55E; }
-
-  .home-terminal-title {
-    font-family: var(--md-code-font-family);
-    font-size: 0.7rem;
-    color: #64748B;
-    margin-left: 8px;
-  }
-
-  .home-terminal-body {
-    padding: 1.25rem 1.5rem;
-    font-family: var(--md-code-font-family);
-    font-size: 0.78rem;
-    line-height: 1.75;
-    color: #CBD5E1;
-    overflow-x: auto;
-  }
-
-  .pr { color: #2DD4BF; font-weight: 600; }
-  .ct { color: #475569; }
-  .ou { color: #FDE68A; }
-  .cm { color: #64748B; }
-  .kw { color: #7DD3FC; }
-  .st { color: #86EFAC; }
-  .nu { color: #FDE68A; }
-  .fn { color: #C4B5FD; }
-
-  .home-cursor {
-    display: inline-block;
-    width: 0.55em;
-    height: 1.1em;
-    background: #2DD4BF;
-    vertical-align: text-bottom;
-    animation: blink 1s step-end infinite;
-  }
-
-  @keyframes blink { 50% { opacity: 0; } }
-
-  .home-section {
-    max-width: 900px;
-    margin: 0 auto;
-    padding: 2rem 1rem 3rem;
-  }
-
-  .home-section h2 {
-    text-align: center;
-    font-size: 1.4rem;
-    margin-bottom: 1.75rem;
-  }
-
-  .home-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1rem;
-  }
-
-  .home-card {
-    padding: 1.25rem;
-    border: 1px solid var(--md-default-fg-color--lightest);
-    border-radius: 8px;
-    background: var(--md-default-bg-color);
-  }
-
-  .home-card h3 { font-size: 0.95rem; margin: 0 0 0.3rem; }
-  .home-card p { font-size: 0.82rem; color: var(--md-default-fg-color--light); margin: 0; line-height: 1.5; }
-
-  .home-example {
-    background: var(--home-terminal);
-    border-radius: 8px;
-    overflow: hidden;
-  }
-
-  .home-example-label {
-    font-family: var(--md-code-font-family);
-    font-size: 0.68rem;
-    color: #64748B;
-    padding: 0.5rem 0.85rem;
-    background: var(--home-terminal-surface);
+  .kp-eyebrow {
+    font-family: var(--kp-mono);
+    font-size: .74rem;
+    letter-spacing: .14em;
     text-transform: uppercase;
-    letter-spacing: 0.08em;
+    color: var(--kp-brass);
+    display: inline-flex;
+    align-items: center;
+    gap: .6em;
+    margin-bottom: 1.6rem;
   }
+  .kp-eyebrow .kp-dot { width: 4px; height: 4px; border-radius: 50%; background: var(--kp-ash); opacity: .6; }
 
-  .home-example pre {
-    padding: 0.85rem;
-    font-family: var(--md-code-font-family);
-    font-size: 0.75rem;
-    line-height: 1.65;
-    color: #CBD5E1;
-    margin: 0;
-    overflow-x: auto;
-    white-space: pre;
-    background: transparent;
+  .kp-hero h1 {
+    font-family: var(--kp-disp);
+    font-weight: 600;
+    font-size: clamp(2.4rem, 6.2vw, 4.2rem);
+    line-height: 1.02;
+    letter-spacing: -0.03em;
+    color: var(--kp-crema);
+    margin: 0 0 1.1rem;
   }
+  .kp-hero h1 .kp-l2 { color: var(--kp-brass); display: block; }
 
-  .home-doc-card {
+  .kp-sub {
+    font-family: var(--kp-disp);
+    font-weight: 400;
+    font-size: clamp(1rem, 2.1vw, 1.18rem);
+    line-height: 1.55;
+    color: var(--kp-ash);
+    max-width: 30em;
+    margin: 0 auto 2.4rem;
+  }
+  .kp-sub strong { color: var(--kp-crema); font-weight: 500; }
+
+  /* ---- the signature: one live evaluation ---- */
+  .kp-eval {
+    display: inline-grid;
+    grid-template-columns: auto auto auto;
+    align-items: center;
+    gap: 1.4rem;
+    padding: 1.5rem 2rem;
+    background: linear-gradient(180deg, var(--kp-roast-2), #1F1711);
+    border: 1px solid var(--kp-roast-3);
+    border-radius: 14px;
+    box-shadow: 0 24px 60px -28px rgba(0,0,0,.8), inset 0 1px 0 rgba(243,233,219,.04);
+    font-family: var(--kp-mono);
+    margin-bottom: 1.4rem;
+    max-width: 100%;
+  }
+  .kp-eval-src { text-align: right; }
+  .kp-eval-src .kp-cell-label,
+  .kp-eval-out .kp-cell-label {
     display: block;
-    padding: 1.5rem;
-    border: 1px solid var(--md-default-fg-color--lightest);
-    border-radius: 8px;
+    font-size: .6rem;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    color: var(--kp-ash);
+    margin-bottom: .5rem;
+  }
+  .kp-eval-code {
+    font-size: clamp(1rem, 2.6vw, 1.45rem);
+    color: var(--kp-crema);
+    white-space: nowrap;
+  }
+  .kp-arrow {
+    font-size: clamp(1.6rem, 4vw, 2.4rem);
+    color: var(--kp-brass);
+    line-height: 1;
+    transform: translateY(.35em);
+  }
+  .kp-eval-out { text-align: left; }
+  .kp-eval-val {
+    font-size: clamp(1rem, 2.6vw, 1.45rem);
+    color: var(--kp-filter);
+    font-weight: 600;
+  }
+  .kp-eval-meta {
+    margin-top: .55rem;
+    font-family: var(--kp-mono);
+    font-size: .72rem;
+    color: var(--kp-ash);
+  }
+  .kp-eval-meta b { color: var(--kp-brass-2); font-weight: 600; }
+  .kp-eval-meta .kp-spark { color: var(--kp-roast-3); }
+
+  .kp-caption {
+    font-family: var(--kp-mono);
+    font-size: .76rem;
+    color: var(--kp-ash);
+    margin: 0 auto 2.4rem;
+  }
+  .kp-caption b { color: var(--kp-crema); font-weight: 500; }
+
+  /* ---- CTAs ---- */
+  .kp-ctas { display: flex; gap: .8rem; justify-content: center; flex-wrap: wrap; margin-bottom: 2.2rem; }
+  .kp-btn {
+    font-family: var(--kp-disp);
+    font-weight: 500;
+    font-size: .92rem;
+    padding: .72rem 1.5rem;
+    border-radius: 9px;
     text-decoration: none !important;
-    color: inherit !important;
-    transition: border-color 0.15s, box-shadow 0.15s;
+    transition: transform .12s ease, box-shadow .2s ease, background .2s ease;
+    display: inline-flex; align-items: center; gap: .5em;
+  }
+  .kp-btn--primary { background: var(--kp-brass); color: #1A1208 !important; box-shadow: 0 10px 26px -12px rgba(208,139,60,.7); }
+  .kp-btn--primary:hover { background: var(--kp-brass-2); transform: translateY(-2px); }
+  .kp-btn--ghost { background: transparent; color: var(--kp-crema) !important; border: 1px solid var(--kp-roast-3); }
+  .kp-btn--ghost:hover { border-color: var(--kp-brass); transform: translateY(-2px); }
+
+  /* visible keyboard focus across all interactive elements */
+  .kp a:focus-visible, .kp-btn:focus-visible, .kp-doc:focus-visible, .kp-card:focus-visible {
+    outline: 2px solid var(--kp-brass);
+    outline-offset: 3px;
+    border-radius: 9px;
   }
 
-  .home-doc-card:hover {
-    border-color: var(--md-primary-fg-color);
-    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  .kp-facts {
+    display: flex; flex-wrap: wrap; justify-content: center;
+    gap: .5rem 0;
+    font-family: var(--kp-mono);
+    font-size: .76rem;
+    color: var(--kp-ash);
+  }
+  .kp-facts span { padding: 0 1em; position: relative; }
+  .kp-facts span + span::before {
+    content: ""; position: absolute; left: 0; top: 50%; transform: translateY(-50%);
+    width: 1px; height: 11px; background: var(--kp-roast-3);
+  }
+  .kp-facts b { color: var(--kp-brass-2); font-weight: 600; }
+
+  /* ================= SECTIONS (theme-adaptive) ================= */
+  .kp-section { max-width: 960px; margin: 0 auto; padding: 4rem 1rem 1rem; }
+  .kp-section--tight { padding-top: 2.5rem; }
+
+  .kp-shead { margin-bottom: 2rem; }
+  .kp-kicker {
+    font-family: var(--kp-mono);
+    font-size: .72rem; letter-spacing: .16em; text-transform: uppercase;
+    color: var(--kp-brass); margin-bottom: .5rem;
+  }
+  .kp-shead h2 {
+    font-family: var(--kp-disp);
+    font-weight: 600; font-size: clamp(1.5rem, 3.5vw, 2.1rem);
+    letter-spacing: -0.02em; margin: 0; line-height: 1.1;
+  }
+  .kp-shead p {
+    font-family: var(--kp-disp);
+    color: var(--md-default-fg-color--light);
+    margin: .6rem 0 0; max-width: 34em; font-size: .98rem;
   }
 
-  .home-doc-card h3 { font-size: 0.95rem; margin: 0 0 0.25rem; }
-  .home-doc-card p { font-size: 0.82rem; color: var(--md-default-fg-color--light); margin: 0; }
+  /* ---- capability grid ---- */
+  .kp-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
 
-  @media (max-width: 768px) {
-    .home-grid { grid-template-columns: 1fr; }
+  .kp-card {
+    position: relative;
+    padding: 1.4rem 1.4rem 1.5rem;
+    border: 1px solid var(--md-default-fg-color--lightest);
+    border-radius: 12px;
+    background: var(--md-default-bg-color);
+    overflow: hidden;
+    transition: border-color .18s ease, transform .18s ease;
+  }
+  .kp-card::before {
+    content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 3px;
+    background: var(--kp-brass); transform: scaleY(0); transform-origin: top;
+    transition: transform .22s ease;
+  }
+  .kp-card:hover { border-color: var(--md-default-fg-color--lighter); transform: translateY(-2px); }
+  .kp-card:hover::before { transform: scaleY(1); }
+  .kp-card-tag {
+    font-family: var(--kp-mono); font-size: .66rem; letter-spacing: .1em;
+    text-transform: uppercase; color: var(--kp-brass); margin-bottom: .7rem;
+  }
+  .kp-card h3 { font-family: var(--kp-disp); font-size: 1.02rem; margin: 0 0 .35rem; font-weight: 600; }
+  .kp-card p { font-size: .85rem; color: var(--md-default-fg-color--light); margin: 0; line-height: 1.55; }
+  .kp-card code {
+    font-size: .82em; background: var(--md-code-bg-color); padding: .08em .35em;
+    border-radius: 4px; color: var(--md-code-fg-color);
   }
 
-  @media (prefers-reduced-motion: reduce) {
-    .home-cursor { animation: none; }
+  /* ================= PROOF / benchmark ================= */
+  .kp-proof {
+    background: linear-gradient(180deg, var(--kp-roast-2), var(--kp-roast));
+    border: 1px solid var(--kp-roast-3);
+    border-radius: 16px;
+    padding: 2.2rem 2rem;
+    display: grid;
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+    gap: 2.2rem;
+    align-items: center;
+  }
+  .kp-proof-lede .kp-kicker { color: var(--kp-brass); }
+  .kp-proof-lede h2 { font-family: var(--kp-disp); color: var(--kp-crema); font-size: 1.6rem; margin: .3rem 0 .7rem; font-weight: 600; letter-spacing: -.02em; }
+  .kp-proof-eval {
+    font-family: var(--kp-mono); font-size: 1.05rem; color: var(--kp-crema);
+    margin-bottom: .9rem;
+  }
+  .kp-proof-eval .kp-arrow { font-size: 1.2rem; margin: 0 .4em; transform: translateY(.12em); display: inline-block; }
+  .kp-proof-lede p { font-family: var(--kp-disp); color: var(--kp-ash); font-size: .9rem; line-height: 1.55; margin: 0; }
+  .kp-proof-lede a { color: var(--kp-brass-2); text-decoration: none; border-bottom: 1px solid var(--kp-roast-3); }
+  .kp-proof-lede a:hover { border-color: var(--kp-brass-2); }
+
+  .kp-bars { display: grid; gap: .8rem; }
+  .kp-bar-row { display: grid; grid-template-columns: 4.6em 1fr 3em; align-items: center; gap: .7rem; font-family: var(--kp-mono); font-size: .78rem; }
+  .kp-bar-name { color: var(--kp-ash); text-align: right; white-space: nowrap; }
+  .kp-bar-name.kp-me { color: var(--kp-brass-2); font-weight: 600; }
+  .kp-bar-track { position: relative; height: 22px; background: rgba(243,233,219,.04); border-radius: 5px; }
+  .kp-bar-fill {
+    height: 100%; border-radius: 5px;
+    background: var(--kp-roast-3);
+    width: var(--w);
+    transition: width .9s cubic-bezier(.2,.7,.2,1);
+  }
+  .kp-bar-val { color: var(--kp-ash); font-size: .72rem; white-space: nowrap; }
+  .kp-bar-row.kp-me .kp-bar-fill { background: linear-gradient(90deg, var(--kp-brass), var(--kp-brass-2)); }
+  .kp-bar-row.kp-me .kp-bar-val { color: var(--kp-brass-2); font-weight: 600; }
+
+  /* ================= CODE EXAMPLES (roast panels) ================= */
+  .kp-examples { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+  .kp-panel {
+    background: var(--kp-roast);
+    border: 1px solid var(--kp-roast-3);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  .kp-panel-bar {
+    display: flex; align-items: center; gap: .55em;
+    font-family: var(--kp-mono); font-size: .66rem; letter-spacing: .1em; text-transform: uppercase;
+    color: var(--kp-ash); padding: .7rem .95rem;
+    border-bottom: 1px solid var(--kp-roast-3);
+    background: var(--kp-roast-2);
+  }
+  .kp-panel-bar::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--kp-brass); }
+  .kp-panel pre {
+    margin: 0; padding: 1rem 1.05rem;
+    font-family: var(--kp-mono); font-size: .72rem; line-height: 1.7;
+    color: var(--kp-crema); background: transparent; overflow-x: auto; white-space: pre;
+  }
+
+  /* ================= DOC CARDS ================= */
+  .kp-docs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+  .kp-doc {
+    display: flex; flex-direction: column; gap: .3rem;
+    padding: 1.5rem; border: 1px solid var(--md-default-fg-color--lightest);
+    border-radius: 12px; text-decoration: none !important; color: inherit !important;
+    transition: border-color .18s ease, transform .18s ease;
+  }
+  .kp-doc:hover { border-color: var(--kp-brass); transform: translateY(-2px); }
+  .kp-doc-idx { font-family: var(--kp-mono); font-size: .7rem; color: var(--kp-brass); letter-spacing: .08em; }
+  .kp-doc h3 { font-family: var(--kp-disp); font-size: 1rem; margin: 0; font-weight: 600; }
+  .kp-doc p { font-size: .84rem; color: var(--md-default-fg-color--light); margin: .15rem 0 0; line-height: 1.5; }
+  .kp-doc-go { margin-top: auto; padding-top: .8rem; font-family: var(--kp-mono); font-size: .74rem; color: var(--kp-brass); }
+
+  .kp-closer {
+    text-align: center; max-width: 960px; margin: 1rem auto 0; padding: 3rem 1rem 1rem;
+  }
+  .kp-closer p { font-family: var(--kp-disp); font-size: 1.1rem; color: var(--md-default-fg-color--light); margin: 0 0 1.4rem; }
+  .kp-closer .kp-cap { font-family: var(--kp-mono); font-size: .74rem; color: var(--md-default-fg-color--light); }
+
+  /* ================= RESPONSIVE ================= */
+  @media (max-width: 820px) {
+    .kp-grid, .kp-examples, .kp-docs { grid-template-columns: 1fr; }
+    .kp-proof { grid-template-columns: 1fr; gap: 1.6rem; }
+  }
+  @media (max-width: 600px) {
+    .kp-hero { padding-top: 3.5rem; }
+    /* the arrow rotates into a vertical "drip" — coffee through the filter */
+    .kp-eval { grid-template-columns: 1fr; gap: .5rem; padding: 1.25rem 1.25rem 1.4rem; }
+    .kp-eval-src, .kp-eval-out { text-align: center; }
+    .kp-arrow { transform: rotate(90deg); margin: .15rem auto; }
+    .kp-bar-row { grid-template-columns: 4em 1fr 2.8em; gap: .55rem; }
+  }
+
+  /* ================= MOTION (opt-in, reduced-motion safe) ================= */
+  @media (prefers-reduced-motion: no-preference) {
+    .kp-reveal { opacity: 0; transform: translateY(14px); animation: kpRise .7s cubic-bezier(.2,.7,.2,1) forwards; }
+    .kp-d1 { animation-delay: .05s; }
+    .kp-d2 { animation-delay: .18s; }
+    .kp-d3 { animation-delay: .32s; }
+    .kp-d4 { animation-delay: .46s; }
+    .kp-d5 { animation-delay: .58s; }
+    .kp-eval-val { opacity: 0; animation: kpPour .5s ease forwards; animation-delay: .7s; }
+    .kp-arrow { opacity: 0; animation: kpFade .4s ease forwards; animation-delay: .55s; }
+    @keyframes kpRise { to { opacity: 1; transform: none; } }
+    @keyframes kpFade { to { opacity: 1; } }
+    @keyframes kpPour { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: none; } }
   }
 </style>
 
-<section class="home-hero">
-  <h1>R7RS Scheme, written in Zig.</h1>
-  <div class="home-stats">
-    <span>554 procedures</span>
-    <span>51 SRFIs</span>
-    <span>JIT compiled</span>
-  </div>
-  <div class="home-ctas">
-    <a href="guide/" class="md-button md-button--primary">Get Started</a>
-    <a href="https://github.com/kaappi/kaappi" class="md-button" target="_blank" rel="noopener">View Source &rarr;</a>
-  </div>
+<div class="kp">
+  <!-- ============================ HERO ============================ -->
+  <section class="kp-hero">
+    <div class="kp-hero-inner">
+      <div class="kp-eyebrow kp-reveal kp-d1">
+        kaappi <span class="kp-dot"></span> R7RS Scheme, brewed in Zig
+      </div>
 
-  <div class="home-terminal">
-    <div class="home-terminal-bar">
-      <div class="home-dot"></div>
-      <div class="home-dot"></div>
-      <div class="home-dot"></div>
-      <span class="home-terminal-title">kaappi</span>
-    </div>
-    <div class="home-terminal-body">
-<span class="cm">Kaappi Scheme v0.1.0</span>
+      <h1 class="kp-reveal kp-d2">
+        Write the lambda.
+        <span class="kp-l2">Run on the metal.</span>
+      </h1>
 
-<span class="pr">kaappi&gt;</span> (<span class="kw">define</span> (<span class="fn">fib</span> n)
-<span class="ct">  ...   </span>  (<span class="kw">if</span> (&lt; n 2) n
-<span class="ct">  ...   </span>      (+ (<span class="fn">fib</span> (- n 1)) (<span class="fn">fib</span> (- n 2)))))
-<span class="pr">kaappi&gt;</span> (<span class="fn">fib</span> <span class="nu">20</span>)
-<span class="ou">6765</span>
+      <p class="kp-sub kp-reveal kp-d3">
+        A complete <strong>R7RS-small</strong> Scheme implemented in <strong>Zig</strong>.
+        Hot functions JIT-compile to native AArch64 — so the source stays elegant
+        and the machine stays busy.
+      </p>
 
-<span class="pr">kaappi&gt;</span> (<span class="fn">map</span> (<span class="kw">lambda</span> (x) (* x x)) '(<span class="nu">1 2 3 4 5</span>))
-<span class="ou">(1 4 9 16 25)</span>
+      <div class="kp-eval kp-reveal kp-d4" role="img"
+           aria-label="The expression (fib 30) evaluates to 832040 in 173 milliseconds, JIT-compiled to native AArch64.">
+        <div class="kp-eval-src">
+          <span class="kp-cell-label">you write</span>
+          <span class="kp-eval-code">(<span class="kp-fn">fib</span> <span class="kp-nu">30</span>)</span>
+        </div>
+        <div class="kp-arrow" aria-hidden="true">⇒</div>
+        <div class="kp-eval-out">
+          <span class="kp-cell-label">it returns</span>
+          <span class="kp-eval-code"><span class="kp-eval-val">832040</span></span>
+          <div class="kp-eval-meta"><b>173 ms</b> <span class="kp-spark">·</span> JIT → native AArch64</div>
+        </div>
+      </div>
 
-<span class="pr">kaappi&gt;</span> (<span class="fn">string-upcase</span> <span class="st">"héllo"</span>)
-<span class="ou">"HÉLLO"</span>
+      <div class="kp-ctas kp-reveal kp-d5">
+        <a href="guide/" class="kp-btn kp-btn--primary">Get started</a>
+        <a href="https://github.com/kaappi/kaappi" class="kp-btn kp-btn--ghost" target="_blank" rel="noopener">View source &rarr;</a>
+      </div>
 
-<span class="pr">kaappi&gt;</span> <span class="home-cursor"></span></div>
-  </div>
-</section>
+      <div class="kp-facts kp-reveal kp-d5">
+        <span><b>554</b> procedures</span>
+        <span><b>51</b> SRFIs</span>
+        <span>first-class <b>call/cc</b></span>
+        <span>C <b>FFI</b></span>
+        <span>green threads</span>
+      </div>
+    </div>
+  </section>
 
-<section class="home-section">
-  <h2>What you get</h2>
-  <div class="home-grid">
-    <div class="home-card">
-      <h3>Complete R7RS</h3>
-      <p>Every identifier from Appendix A. 554 built-in procedures, 32 syntax forms, all 14 standard libraries.</p>
+  <!-- ====================== WHAT'S INSIDE ====================== -->
+  <section class="kp-section">
+    <div class="kp-shead">
+      <div class="kp-kicker">The full pour</div>
+      <h2>Everything R7RS asks for, and the parts that make it fun.</h2>
+      <p>Every identifier from Appendix A is implemented — then continuations, a JIT, and an FFI on top.</p>
     </div>
-    <div class="home-card">
-      <h3>First-class continuations</h3>
-      <p>Multi-shot <code>call/cc</code> via stack copying. <code>dynamic-wind</code>, <code>call/ec</code> for escape continuations.</p>
+    <div class="kp-grid">
+      <div class="kp-card">
+        <div class="kp-card-tag">conformance</div>
+        <h3>Complete R7RS-small</h3>
+        <p>554 built-in procedures, 32 syntax forms, all 14 standard libraries — every identifier from Appendix A.</p>
+      </div>
+      <div class="kp-card">
+        <div class="kp-card-tag">control</div>
+        <h3>First-class continuations</h3>
+        <p>Multi-shot <code>call/cc</code> via stack copying, plus <code>dynamic-wind</code> and <code>call/ec</code> for escapes.</p>
+      </div>
+      <div class="kp-card">
+        <div class="kp-card-tag">speed</div>
+        <h3>JIT to native code</h3>
+        <p>Hot functions compile to AArch64 — inline fixnum arithmetic, comparisons, <code>car</code>/<code>cdr</code>, and <code>cons</code>.</p>
+      </div>
+      <div class="kp-card">
+        <div class="kp-card-tag">batteries</div>
+        <h3>51 SRFIs</h3>
+        <p>Lists, strings, hash tables, vectors, threads, formatting, char-sets — 8 built in, 43 portable.</p>
+      </div>
+      <div class="kp-card">
+        <div class="kp-card-tag">interop</div>
+        <h3>C FFI with callbacks</h3>
+        <p>Call shared libraries from Scheme, and pass Scheme procedures where C expects a function pointer.</p>
+      </div>
+      <div class="kp-card">
+        <div class="kp-card-tag">concurrency</div>
+        <h3>Green threads</h3>
+        <p>Fiber-based concurrency with channels and full SRFI-18: threads, mutexes, condition variables.</p>
+      </div>
     </div>
-    <div class="home-card">
-      <h3>JIT compiler</h3>
-      <p>Hot functions compile to native AArch64. Inline arithmetic, comparisons, <code>car</code>/<code>cdr</code>, <code>cons</code>.</p>
-    </div>
-    <div class="home-card">
-      <h3>51 SRFIs</h3>
-      <p>8 built-in, 43 portable. Lists, strings, hash tables, vectors, threads, formatting, char-sets, and more.</p>
-    </div>
-    <div class="home-card">
-      <h3>C FFI</h3>
-      <p>Call shared libraries from Scheme. Supports callbacks — pass Scheme procedures to C functions expecting function pointers.</p>
-    </div>
-    <div class="home-card">
-      <h3>Green threads</h3>
-      <p>Fiber-based concurrency with channels. Full SRFI-18 compatibility: threads, mutexes, condition variables.</p>
-    </div>
-  </div>
-</section>
+  </section>
 
-<section class="home-section">
-  <h2>Code examples</h2>
-  <div class="home-grid">
-    <div class="home-example">
-      <div class="home-example-label">Fibonacci</div>
-      <pre>(<span class="kw">define</span> (<span class="fn">fib</span> n)
-  (<span class="kw">if</span> (&lt; n <span class="nu">2</span>) n
-      (+ (<span class="fn">fib</span> (- n <span class="nu">1</span>))
-         (<span class="fn">fib</span> (- n <span class="nu">2</span>)))))
-
-(<span class="fn">fib</span> <span class="nu">30</span>) <span class="cm">;=&gt; 832040</span></pre>
+  <!-- ====================== PROOF / BENCHMARK ====================== -->
+  <section class="kp-section kp-section--tight">
+    <div class="kp-proof">
+      <div class="kp-proof-lede">
+        <div class="kp-kicker">Strong by the cup</div>
+        <h2>The JIT earns its keep.</h2>
+        <div class="kp-proof-eval">(<span class="kp-fn">fib</span> <span class="kp-nu">35</span>) <span class="kp-arrow">⇒</span> <span class="kp-val">9227465</span></div>
+        <p>
+          Pure recursion, fixnum arithmetic. Kaappi outpaces Chibi and runs neck-and-neck
+          with Gauche — with native compilation still closing the gap on the AOT compilers.
+          <a href="benchmarks/">See all benchmarks &rarr;</a>
+        </p>
+      </div>
+      <div class="kp-bars" aria-label="fib(35) timing comparison, lower is faster">
+        <div class="kp-bar-row"><span class="kp-bar-name">Chibi</span><div class="kp-bar-track"><div class="kp-bar-fill" style="--w:100%"></div></div><span class="kp-bar-val">3.5 s</span></div>
+        <div class="kp-bar-row kp-me"><span class="kp-bar-name kp-me">Kaappi</span><div class="kp-bar-track"><div class="kp-bar-fill" style="--w:54%"></div></div><span class="kp-bar-val">1.9 s</span></div>
+        <div class="kp-bar-row"><span class="kp-bar-name">Gauche</span><div class="kp-bar-track"><div class="kp-bar-fill" style="--w:51%"></div></div><span class="kp-bar-val">1.8 s</span></div>
+        <div class="kp-bar-row"><span class="kp-bar-name">Chez</span><div class="kp-bar-track"><div class="kp-bar-fill" style="--w:8%"></div></div><span class="kp-bar-val">0.15 s</span></div>
+      </div>
     </div>
-    <div class="home-example">
-      <div class="home-example-label">Macros</div>
-      <pre>(<span class="kw">define-syntax</span> <span class="fn">my-when</span>
-  (<span class="kw">syntax-rules</span> ()
-    ((<span class="fn">my-when</span> test body ...)
-     (<span class="kw">if</span> test
-         (<span class="kw">begin</span> body ...)))))
+  </section>
 
-(<span class="fn">my-when</span> #t
-  (<span class="fn">display</span> <span class="st">"hello"</span>))</pre>
+  <!-- ====================== CODE EXAMPLES ====================== -->
+  <section class="kp-section">
+    <div class="kp-shead">
+      <div class="kp-kicker">Taste it</div>
+      <h2>Small forms, full language.</h2>
     </div>
-    <div class="home-example">
-      <div class="home-example-label">Libraries</div>
-      <pre>(<span class="kw">define-library</span> (mylib math)
-  (<span class="kw">export</span> square cube)
-  (<span class="kw">import</span> (scheme base))
-  (<span class="kw">begin</span>
-    (<span class="kw">define</span> (<span class="fn">square</span> x)
+    <div class="kp-examples">
+      <div class="kp-panel">
+        <div class="kp-panel-bar">recursion</div>
+        <pre>(<span class="kp-kw">define</span> (<span class="kp-fn">fib</span> n)
+  (<span class="kp-kw">if</span> (&lt; n <span class="kp-nu">2</span>) n
+      (+ (<span class="kp-fn">fib</span> (- n <span class="kp-nu">1</span>))
+         (<span class="kp-fn">fib</span> (- n <span class="kp-nu">2</span>)))))
+
+(<span class="kp-fn">fib</span> <span class="kp-nu">30</span>)  <span class="kp-cm">;=&gt; 832040</span></pre>
+      </div>
+      <div class="kp-panel">
+        <div class="kp-panel-bar">hygienic macros</div>
+        <pre>(<span class="kp-kw">define-syntax</span> <span class="kp-fn">my-when</span>
+  (<span class="kp-kw">syntax-rules</span> ()
+    ((_ test body ...)
+     (<span class="kp-kw">if</span> test
+         (<span class="kp-kw">begin</span> body ...)))))
+
+(<span class="kp-fn">my-when</span> <span class="kp-nu">#t</span>
+  (<span class="kp-fn">display</span> <span class="kp-st">"hello"</span>))</pre>
+      </div>
+      <div class="kp-panel">
+        <div class="kp-panel-bar">libraries</div>
+        <pre>(<span class="kp-kw">define-library</span> (math)
+  (<span class="kp-kw">export</span> square cube)
+  (<span class="kp-kw">import</span> (scheme base))
+  (<span class="kp-kw">begin</span>
+    (<span class="kp-kw">define</span> (<span class="kp-fn">square</span> x)
       (* x x))
-    (<span class="kw">define</span> (<span class="fn">cube</span> x)
+    (<span class="kp-kw">define</span> (<span class="kp-fn">cube</span> x)
       (* x x x))))</pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====================== DOCUMENTATION ====================== -->
+  <section class="kp-section">
+    <div class="kp-shead">
+      <div class="kp-kicker">Read on</div>
+      <h2>Documentation</h2>
+    </div>
+    <div class="kp-docs">
+      <a href="guide/" class="kp-doc">
+        <div class="kp-doc-idx">guide/</div>
+        <h3>User Guide</h3>
+        <p>Installation, REPL features, the language tutorial, and the command-line reference.</p>
+        <span class="kp-doc-go">Start here &rarr;</span>
+      </a>
+      <a href="procedures/" class="kp-doc">
+        <div class="kp-doc-idx">procedures/</div>
+        <h3>Procedure Reference</h3>
+        <p>All 554 built-in procedures with arity and descriptions, organized by domain.</p>
+        <span class="kp-doc-go">Browse &rarr;</span>
+      </a>
+      <a href="libraries/" class="kp-doc">
+        <div class="kp-doc-idx">libraries/</div>
+        <h3>Library Reference</h3>
+        <p>The 51 SRFIs, the standard libraries, and how to write your own.</p>
+        <span class="kp-doc-go">Browse &rarr;</span>
+      </a>
+    </div>
+  </section>
+
+  <div class="kp-closer">
+    <p>Brew a REPL and start evaluating.</p>
+    <div class="kp-ctas" style="margin-bottom:0">
+      <a href="guide/installation/" class="kp-btn kp-btn--primary">Install Kaappi</a>
+      <a href="https://github.com/kaappi/kaappi" class="kp-btn kp-btn--ghost" target="_blank" rel="noopener">Star on GitHub &rarr;</a>
     </div>
   </div>
-</section>
-
-<section class="home-section">
-  <h2>Documentation</h2>
-  <div class="home-grid">
-    <a href="guide/" class="home-doc-card">
-      <h3>User Guide</h3>
-      <p>Installation, REPL features, language tutorial, command-line reference.</p>
-    </a>
-    <a href="procedures/" class="home-doc-card">
-      <h3>Procedure Reference</h3>
-      <p>All 554 built-in procedures with arity and descriptions, organized by domain.</p>
-    </a>
-    <a href="libraries/" class="home-doc-card">
-      <h3>Library Reference</h3>
-      <p>51 SRFIs, standard libraries, and how to write your own.</p>
-    </a>
-  </div>
-</section>
+</div>
 {% endblock %}

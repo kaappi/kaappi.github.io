@@ -67,6 +67,9 @@ extra:
     - icon: fontawesome/brands/github
       link: https://github.com/kaappi/kaappi
 
+watch:
+  - overrides
+
 copyright: MIT License &mdash; Built with Zig
 
 exclude_docs: |
