@@ -65,6 +65,19 @@
 
   .kp-hero-inner { max-width: 880px; margin: 0 auto; text-align: center; }
 
+  .kp-hero-brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 1.2rem;
+    margin-bottom: 1.6rem;
+  }
+
+  .kp-hero-logo {
+    width: clamp(120px, 20vw, 180px);
+    height: auto;
+    flex-shrink: 0;
+  }
+
   .kp-eyebrow {
     font-family: var(--kp-mono);
     font-size: .74rem;
@@ -74,15 +87,9 @@
     display: inline-flex;
     align-items: center;
     gap: .6em;
-    margin-bottom: 1.6rem;
+    text-align: left;
   }
   .kp-eyebrow .kp-dot { width: 4px; height: 4px; border-radius: 50%; background: var(--kp-ash); opacity: .6; }
-
-  .kp-hero-logo {
-    width: clamp(120px, 20vw, 180px);
-    height: auto;
-    margin-bottom: 1.4rem;
-  }
 
   .kp-hero h1 {
     font-family: var(--kp-disp);
@@ -367,11 +374,12 @@
   <!-- ============================ HERO ============================ -->
   <section class="kp-hero">
     <div class="kp-hero-inner">
-      <div class="kp-eyebrow kp-reveal kp-d1">
-        kaappi <span class="kp-dot"></span> R7RS Scheme, brewed in Zig
+      <div class="kp-hero-brand kp-reveal kp-d1">
+        <img src="assets/logo.svg" alt="Kaappi mascot" class="kp-hero-logo" width="160" height="160">
+        <div class="kp-eyebrow">
+          kaappi <span class="kp-dot"></span> R7RS Scheme, brewed in Zig
+        </div>
       </div>
-
-      <img src="assets/logo.svg" alt="Kaappi mascot" class="kp-hero-logo kp-reveal kp-d2" width="160" height="160">
 
       <h1 class="kp-reveal kp-d2">
         Write the lambda.
