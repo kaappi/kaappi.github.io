@@ -20,6 +20,26 @@ kaappi [OPTIONS] [FILE]
 | `--disassemble FILE` | Show compiled bytecode without running |
 | `--gc-stats` | Print GC statistics on exit |
 
+## Build-Time Options
+
+These are passed to `zig build` (not the `kaappi` CLI) and control
+compile-time settings:
+
+| Option | Default | Description |
+|--------|---------|-------------|
+| `-Dmax-frames=N` | 512 | Maximum call frame depth |
+| `-Dmax-registers=N` | 2048 | Maximum register count |
+| `-Dgc-threshold=N` | 8192 | Initial GC object threshold |
+| `-Doptimize=MODE` | ReleaseSafe | Optimization mode (Debug, ReleaseSafe, ReleaseFast) |
+
+```bash
+# Build with deeper recursion limit
+zig build -Dmax-frames=1024
+
+# Build with larger GC threshold for allocation-heavy programs
+zig build -Dgc-threshold=32768
+```
+
 ## Standalone Binaries
 
 Embed a Scheme program into a self-contained executable. This uses Zig's
