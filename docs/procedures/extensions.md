@@ -31,9 +31,9 @@ kaappi> lib
 
 Binds a C function from the shared library *lib* and returns a callable
 Scheme procedure. The *c-name* is a string naming the C function.
-Parameter and return types are specified as symbols: `uint8`, `uint16`,
-`uint32`, `uint64`, `int8`, `int16`, `int32`, `int64`, `float`, `double`,
-`pointer`, `void`, `bool`.
+Parameter and return types are specified as symbols: `int`, `long`,
+`double`, `float`, `string`, `pointer`, `void`, `bool`, `uint8`, `int8`,
+`int16`, `int32`, `int64`, `uint16`, `uint32`, `uint64`, `size_t`, `char`.
 
 ```scheme
 kaappi> (define lib (ffi-open "libm.so"))

@@ -8,8 +8,11 @@ kaappi [OPTIONS] [FILE]
 |--------|-------------|
 | *(no arguments)* | Launch the REPL |
 | `FILE` | Run a Scheme source file |
+| `-h`, `--help` | Show usage and available flags |
+| `--version` | Show version string |
 | `--compile FILE` | Compile to bytecode (.sbc) without running |
-| `--lib-path DIR` | Add a directory to the library search path (repeatable) |
+| `-o FILE` | Output path for `--compile` |
+| `--lib-path DIR` | Add a directory to the library search path (repeatable, up to 16) |
 | `--profile` | Profile execution (per-function timing, call counts, allocations) |
 | `--sandbox` | Sandbox mode — blocks FFI, file I/O, `eval`, `load`, env access |
 | `--no-jit` | Disable JIT compilation |

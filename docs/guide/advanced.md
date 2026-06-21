@@ -22,7 +22,9 @@ Call C library functions directly from Scheme:
 (ffi-close libm)
 ```
 
-Supported C types: `int`, `long`, `double`, `float`, `string`, `pointer`, `void`, `bool`, `uint8`.
+Supported C types: `int`, `long`, `double`, `float`, `string`, `pointer`,
+`void`, `bool`, `uint8`, `int8`, `int16`, `int32`, `int64`, `uint16`,
+`uint32`, `uint64`, `size_t`, `char`.
 
 **FFI callbacks** — pass Scheme procedures to C functions that expect function pointers:
 

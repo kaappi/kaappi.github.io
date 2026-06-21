@@ -71,7 +71,7 @@ Kaappi is faster than Chibi for `fib` (1.9s vs 3.5s) and comparable on
 
 ## Optimizations Implemented
 
-- **JIT compiler** (AArch64): hot functions (100+ calls) compiled to native code; inline fixnum `+`/`-`/`*`/`<`/`>`/`<=`/`>=`/`=`, predicates (`zero?`, `null?`, `pair?`, `not`), `car`/`cdr`, `cons`
+- **JIT compiler** (AArch64, x86_64): hot functions (100+ calls) compiled to native code; inline fixnum `+`/`-`/`*`/`<`/`>`/`<=`/`>=`/`=`, predicates (`zero?`, `null?`, `pair?`, `not`), `car`/`cdr`, `cons`
 - **NativeFn fast path**: `call_global` bypasses the full dispatch chain for native functions
 - **Constant folding**: `(+ 1 2)` → `3` at compile time
 - **Inline global cache**: `call_global` caches resolved function pointers with version invalidation
