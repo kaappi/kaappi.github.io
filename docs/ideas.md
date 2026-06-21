@@ -6,7 +6,7 @@ Potential improvements, roughly ordered by impact. None are committed.
 
 ## Performance
 
-- **x86_64 JIT backend** — currently AArch64 only
+- **RISC-V JIT backend** — riscv64 currently runs interpreter-only
 - **NaN-boxing** — pack f64 directly into the u64 value to eliminate heap allocation for flonums
 - **Inline small functions** at the bytecode level (reduce call overhead for `tak`-style benchmarks)
 - **Register window slide** instead of frame push for known-callee simple calls

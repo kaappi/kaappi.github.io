@@ -14,6 +14,7 @@
 | macOS | aarch64 (Apple Silicon) | AArch64 native |
 | Linux | x86_64 | x86_64 native |
 | Linux | aarch64 | AArch64 native |
+| Linux | riscv64 | No (interpreter only) |
 
 ## macOS
 
