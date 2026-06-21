@@ -78,6 +78,12 @@
   }
   .kp-eyebrow .kp-dot { width: 4px; height: 4px; border-radius: 50%; background: var(--kp-ash); opacity: .6; }
 
+  .kp-hero-logo {
+    width: clamp(120px, 20vw, 180px);
+    height: auto;
+    margin-bottom: 1.4rem;
+  }
+
   .kp-hero h1 {
     font-family: var(--kp-disp);
     font-weight: 600;
@@ -364,6 +370,8 @@
       <div class="kp-eyebrow kp-reveal kp-d1">
         kaappi <span class="kp-dot"></span> R7RS Scheme, brewed in Zig
       </div>
+
+      <img src="assets/logo.svg" alt="Kaappi mascot" class="kp-hero-logo kp-reveal kp-d2" width="160" height="160">
 
       <h1 class="kp-reveal kp-d2">
         Write the lambda.
