@@ -7,6 +7,14 @@
   editing for the REPL). On macOS this comes with Xcode Command Line Tools; on
   Linux it comes with `gcc` or `clang`.
 
+## Supported platforms
+
+| OS | Architecture | JIT |
+|----|-------------|-----|
+| macOS | aarch64 (Apple Silicon) | AArch64 native |
+| Linux | x86_64 | x86_64 native |
+| Linux | aarch64 | AArch64 native |
+
 ## macOS
 
 ```bash
