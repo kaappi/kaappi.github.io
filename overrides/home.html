@@ -416,7 +416,8 @@
         <span><b>51</b> SRFIs</span>
         <span>first-class <b>call/cc</b></span>
         <span>C <b>FFI</b></span>
-        <span>green threads</span>
+        <span>OS <b>threads</b></span>
+        <span>web · redis · postgres</span>
       </div>
     </div>
   </section>
@@ -456,8 +457,13 @@
       </div>
       <div class="kp-card">
         <div class="kp-card-tag">concurrency</div>
-        <h3>Green threads</h3>
-        <p>Fiber-based concurrency with channels and full SRFI-18: threads, mutexes, condition variables.</p>
+        <h3>OS threads &amp; fibers</h3>
+        <p>Real OS threads via SRFI-18, plus green fibers with channels. Pre-fork and threaded HTTP servers.</p>
+      </div>
+      <div class="kp-card">
+        <div class="kp-card-tag">ecosystem</div>
+        <h3>Web, Redis, PostgreSQL</h3>
+        <p>Full web framework, database clients, JSON, HTTPS — installed with one command via <code>thottam</code>.</p>
       </div>
     </div>
   </section>
@@ -549,6 +555,12 @@
         <h3>Library Reference</h3>
         <p>The 51 SRFIs, the standard libraries, and how to write your own.</p>
         <span class="kp-doc-go">Browse &rarr;</span>
+      </a>
+      <a href="ecosystem/" class="kp-doc">
+        <div class="kp-doc-idx">ecosystem/</div>
+        <h3>Ecosystem</h3>
+        <p>Web framework, Redis, PostgreSQL, HTTP/HTTPS, JSON — and the thottam package manager.</p>
+        <span class="kp-doc-go">Explore &rarr;</span>
       </a>
     </div>
   </section>
