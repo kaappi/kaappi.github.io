@@ -4,6 +4,12 @@ Multithreading primitives for concurrent programming. Import with
 `(import (srfi 18))`. See also [Kaappi Extensions](./extensions.md) for
 lightweight green threads (fibers).
 
+!!! note
+    `thread-start!` requires the `--experimental-threads` flag. Without it,
+    calling `thread-start!` raises an error. Each OS thread gets its own VM
+    and GC heap -- values are deep-copied when crossing thread boundaries.
+    See [Advanced Features](../guide/advanced.md#concurrency) for details.
+
 ---
 
 ## Thread Operations
@@ -128,12 +134,21 @@ Starts *thread* and returns the thread object. The thread begins
 executing the thunk that was passed to `make-thread`. A thread can only
 be started once; starting an already-started thread is an error.
 
+Requires `--experimental-threads`. Without the flag, `thread-start!`
+raises an error. The child thread receives a **deep copy** of the thunk's
+closure -- mutations in the child are not visible to the parent.
+
 ```scheme
 kaappi> (define t (make-thread (lambda () (display "hello\n"))))
 kaappi> (thread-start! t)
 ;=> #<thread>
 hello
 kaappi> (thread-join! t)
+```
+
+```bash
+# Run with OS threads enabled
+kaappi --experimental-threads program.scm
 ```
 
 **See also:** [`make-thread`](#make-thread), [`thread-join!`](#thread-join)
@@ -206,8 +221,9 @@ kaappi> (thread-terminate! t)
 **Syntax:** `(thread-join! thread)` | `(thread-join! thread timeout)` | `(thread-join! thread timeout timeout-val)`
 
 Blocks the current thread until *thread* terminates. Returns the result
-value of the thread's thunk. If the thread raised an uncaught exception,
-`thread-join!` re-raises it wrapped in an `uncaught-exception` object.
+value of the thread's thunk (deep-copied from the child's heap to the
+caller's heap). If the thread raised an uncaught exception, `thread-join!`
+re-raises it wrapped in an `uncaught-exception` object.
 
 If *timeout* is given (a time object or number of seconds) and the thread
 has not terminated by then, a `join-timeout-exception` is raised -- unless

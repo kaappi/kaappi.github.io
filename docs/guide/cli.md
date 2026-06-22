@@ -19,6 +19,7 @@ kaappi [OPTIONS] [FILE]
 | `--no-cache` | Disable bytecode caching |
 | `--disassemble FILE` | Show compiled bytecode without running |
 | `--gc-stats` | Print GC statistics on exit |
+| `--experimental-threads` | Enable OS threads (SRFI-18 `thread-start!`) |
 
 ## Build-Time Options
 

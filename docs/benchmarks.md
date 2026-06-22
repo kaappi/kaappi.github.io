@@ -100,6 +100,26 @@ A separate call/cc micro-benchmark is also available:
 zig build bench    # call/cc capture overhead benchmark
 ```
 
+### GC Metrics
+
+Use `--gc-stats` to see garbage collection statistics alongside benchmark
+results (collections, live objects, heap size):
+
+```bash
+kaappi --gc-stats benchmarks/fib.scm
+```
+
+The benchmark runner also outputs JSON for programmatic analysis. Compare
+two JSON snapshots with `benchmarks/compare-benchmarks.sh` to flag
+regressions above a configurable threshold (default 10%):
+
+```bash
+benchmarks/compare-benchmarks.sh baseline.json current.json
+```
+
+The script exits non-zero on regression, making it suitable for CI gates.
+Set `THRESHOLD` to adjust the sensitivity (e.g., `THRESHOLD=5`).
+
 Use `--profile` to get per-function timing for any Scheme program:
 
 ```bash

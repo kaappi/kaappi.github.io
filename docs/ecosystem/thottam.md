@@ -5,10 +5,11 @@
 ## Commands
 
 ```bash
-thottam install <package>    # Install a package and its dependencies
-thottam remove <package>     # Remove a package
-thottam list                 # List installed packages
-thottam update [package]     # Update one or all packages
+thottam install <package>[@<version>]  # Install a package (optionally pinned)
+thottam remove <package>               # Remove a package
+thottam list                           # List installed packages
+thottam update [package]               # Update one or all packages
+thottam verify                         # Check installed packages match lockfile
 ```
 
 ## Install a package
@@ -65,6 +66,38 @@ thottam update kaappi-web   # update a specific package
 thottam remove kaappi-web
 ```
 
+## Version pinning
+
+Pin a package to a specific tag or commit:
+
+```bash
+thottam install kaappi-web@v1.0.0
+thottam install kaappi-http@abc1234
+```
+
+The resolved commit SHA is recorded in the lockfile (`~/.kaappi/thottam.lock`).
+
+## Lockfile and reproducible installs
+
+Every `thottam install` records the exact commit SHA in
+`~/.kaappi/thottam.lock`. Use `--locked` to enforce the lockfile in CI or
+production -- it refuses to install any package not already locked:
+
+```bash
+thottam --locked install kaappi-web   # fails if kaappi-web is not in lockfile
+```
+
+In `--locked` mode, the resolved SHA is also verified against the lockfile
+entry. A mismatch aborts the install.
+
+## Verify integrity
+
+Check that all installed packages match their locked SHAs:
+
+```bash
+thottam verify
+```
+
 ## Installation layout
 
 ```
@@ -85,6 +118,7 @@ thottam remove kaappi-web
 │   ├── kaappi-net/
 │   ├── kaappi-http/
 │   └── ...
+├── thottam.lock            # Pinned commit SHAs for reproducibility
 └── installed.txt           # Installed package list
 ```
 

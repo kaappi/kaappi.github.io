@@ -1,6 +1,26 @@
 # Installation
 
-## Prerequisites
+## Quick install
+
+Download a pre-built binary (no build tools required):
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/kaappi/kaappi/main/install.sh | bash
+```
+
+This auto-detects your platform, downloads the latest release, verifies its
+SHA256 checksum, and installs to `~/.local/bin/kaappi`. Set `INSTALL_DIR` to
+change the location:
+
+```bash
+INSTALL_DIR=/usr/local/bin curl -fsSL https://raw.githubusercontent.com/kaappi/kaappi/main/install.sh | bash
+```
+
+## Build from source
+
+If you prefer to build from source or need a custom configuration:
+
+### Prerequisites
 
 - **Zig 0.16+** -- the sole build tool (no cmake, make, or cargo)
 - **C toolchain** -- needed to compile the vendored linenoise library (line
