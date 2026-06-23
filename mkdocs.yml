@@ -49,6 +49,7 @@ nav:
     - Libraries: guide/libraries.md
     - Advanced Features: guide/advanced.md
     - CLI Reference: guide/cli.md
+    - REPL Guide: guide/repl.md
     - Tips: guide/tips.md
     - Troubleshooting: guide/troubleshooting.md
   - Procedures:

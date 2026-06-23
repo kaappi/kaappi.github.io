@@ -76,4 +76,4 @@ kaappi --profile program.scm
 
 ---
 
-Next: [Tips](tips.md)
+Next: [REPL Guide](repl.md)
