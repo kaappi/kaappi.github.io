@@ -13,7 +13,7 @@ and `thottam` (the package manager), verifies SHA256 checksums, and installs to
 `~/.local/bin/`. Set `INSTALL_DIR` to change the location:
 
 ```bash
-INSTALL_DIR=/usr/local/bin curl -fsSL https://kaappi.github.io/install.sh | bash
+curl -fsSL https://kaappi.github.io/install.sh | INSTALL_DIR=/usr/local/bin bash
 ```
 
 ## Build from source
