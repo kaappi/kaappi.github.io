@@ -50,6 +50,7 @@ nav:
     - Advanced Features: guide/advanced.md
     - CLI Reference: guide/cli.md
     - REPL Guide: guide/repl.md
+    - Editor Support: guide/editors.md
     - Tips: guide/tips.md
     - Troubleshooting: guide/troubleshooting.md
   - Procedures:

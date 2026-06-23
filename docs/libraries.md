@@ -224,9 +224,9 @@ needed if you want to pre-warm the cache.
 | `(scheme time)` | 3 | `current-second`, jiffies |
 | `(scheme write)` | 7 | `write`, `display`, `write-shared` |
 
-### SRFI Libraries (51)
+### SRFI Libraries (69)
 
-9 built-in SRFIs (implemented in Zig):
+8 built-in SRFIs (implemented in Zig):
 
 | Library | Description |
 |---------|-------------|
@@ -234,38 +234,55 @@ needed if you want to pre-warm the cache.
 | `(srfi 9)` | Records (alias for R7RS `define-record-type`) |
 | `(srfi 13)` | [String library](procedures/srfi-13.md) (contains, split, join, trim, ...) |
 | `(srfi 18)` | [Threads](procedures/threads.md), mutexes, condition variables |
-| `(srfi 27)` | Random numbers (random-integer, random-real) |
 | `(srfi 39)` | Parameter objects (alias for `make-parameter`) |
 | `(srfi 69)` | [Hash tables](procedures/hash-tables.md) |
 | `(srfi 133)` | [Vector library](procedures/srfi-133.md) |
 | `(srfi 170)` | POSIX filesystem API (file-info, directory ops, ...) |
 
-42 portable SRFIs (loaded on demand from `.sld` files in `lib/srfi/`):
+61 portable SRFIs (loaded on demand from `.sld` files in `lib/srfi/`):
 
 | Library | Description |
 |---------|-------------|
+| `(srfi 0)` | `cond-expand` (feature-based conditional) |
 | `(srfi 2)` | `and-let*` |
+| `(srfi 6)` | Basic string ports |
 | `(srfi 8)` | `receive` |
 | `(srfi 11)` | `let-values` |
 | `(srfi 14)` | Character sets |
 | `(srfi 16)` | `case-lambda` |
+| `(srfi 17)` | Generalized `set!` |
+| `(srfi 19)` | Time data types and procedures (dates, formatting) |
+| `(srfi 23)` | Error reporting (`error`) |
 | `(srfi 26)` | `cut` / `cute` (partial application) |
+| `(srfi 27)` | Random numbers |
 | `(srfi 28)` | `format` (basic) |
 | `(srfi 31)` | `rec` (recursive expressions) |
 | `(srfi 34)` | Exception handling |
 | `(srfi 35)` | Conditions |
 | `(srfi 36)` | I/O conditions |
+| `(srfi 37)` | `args-fold` (CLI argument processor) |
 | `(srfi 41)` | Streams (lazy lists) |
+| `(srfi 42)` | Eager comprehensions (`list-ec`, `sum-ec`, ...) |
+| `(srfi 43)` | Vector library (predecessor to SRFI 133) |
+| `(srfi 45)` | Lazy algorithms (`delay`, `force`) |
 | `(srfi 48)` | `format` (intermediate) |
+| `(srfi 60)` | Integers as bits (`logand`, `ash`, ...) |
+| `(srfi 61)` | More general `cond` clause |
 | `(srfi 64)` | Test suite framework |
+| `(srfi 78)` | Lightweight testing (`check`) |
+| `(srfi 87)` | `=>` in `case` clauses |
 | `(srfi 98)` | Environment variables |
 | `(srfi 111)` | Boxes |
 | `(srfi 113)` | Sets and bags |
 | `(srfi 115)` | Regular expressions |
+| `(srfi 116)` | Immutable list library |
 | `(srfi 117)` | Mutable queues |
 | `(srfi 125)` | Hash tables (R7RS-style) |
+| `(srfi 127)` | Lazy sequences |
 | `(srfi 128)` | Comparators |
+| `(srfi 130)` | Cursor-based string library |
 | `(srfi 132)` | Sort libraries |
+| `(srfi 134)` | Immutable deques |
 | `(srfi 141)` | Integer division |
 | `(srfi 143)` | Fixnums |
 | `(srfi 145)` | `assume` |
@@ -279,6 +296,7 @@ needed if you want to pre-warm the cache.
 | `(srfi 189)` | Maybe and Either |
 | `(srfi 195)` | Multiple values as objects |
 | `(srfi 196)` | Range objects |
+| `(srfi 197)` | Pipeline operators (`chain`) |
 | `(srfi 210)` | Procedures and syntax for multiple values |
 | `(srfi 219)` | `define` with curried arguments |
 | `(srfi 222)` | Compound objects |
