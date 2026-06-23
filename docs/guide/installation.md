@@ -2,18 +2,18 @@
 
 ## Quick install
 
-Download a pre-built binary (no build tools required):
+Download pre-built binaries (no build tools required):
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/kaappi/kaappi/main/install.sh | bash
+curl -fsSL https://kaappi.github.io/install.sh | bash
 ```
 
-This auto-detects your platform, downloads the latest release, verifies its
-SHA256 checksum, and installs to `~/.local/bin/kaappi`. Set `INSTALL_DIR` to
-change the location:
+This auto-detects your platform, downloads the latest release of both `kaappi`
+and `thottam` (the package manager), verifies SHA256 checksums, and installs to
+`~/.local/bin/`. Set `INSTALL_DIR` to change the location:
 
 ```bash
-INSTALL_DIR=/usr/local/bin curl -fsSL https://raw.githubusercontent.com/kaappi/kaappi/main/install.sh | bash
+INSTALL_DIR=/usr/local/bin curl -fsSL https://kaappi.github.io/install.sh | bash
 ```
 
 ## Build from source
@@ -35,6 +35,9 @@ If you prefer to build from source or need a custom configuration:
 | Linux | x86_64 | x86_64 native |
 | Linux | aarch64 | AArch64 native |
 | Linux | riscv64 | No (interpreter only) |
+
+macOS binaries are Developer ID signed and Apple notarized — no Gatekeeper
+warnings when downloading from GitHub releases.
 
 ## macOS
 
@@ -58,10 +61,11 @@ zig build
 
 ## Install
 
-The executable is placed at `zig-out/bin/kaappi`. Add it to your `PATH`:
+The executables are placed at `zig-out/bin/kaappi` and `zig-out/bin/thottam`.
+Add them to your `PATH`:
 
 ```bash
-cp zig-out/bin/kaappi /usr/local/bin/
+cp zig-out/bin/kaappi zig-out/bin/thottam /usr/local/bin/
 ```
 
 Verify:

@@ -1,6 +1,19 @@
 # thottam — Package Manager
 
-**thottam** installs, updates, and removes Kaappi ecosystem libraries.
+**thottam** installs, updates, and removes Kaappi ecosystem libraries. It is a
+compiled Zig binary that ships alongside `kaappi` in release artifacts for all
+platforms (macOS, Linux x86_64, Linux aarch64, Linux riscv64).
+
+## Getting thottam
+
+thottam is installed automatically by the Kaappi installer:
+
+```bash
+curl -fsSL https://kaappi.github.io/install.sh | bash
+```
+
+If you build from source, `zig build` produces both `kaappi` and `thottam` in
+`zig-out/bin/`.
 
 ## Commands
 
@@ -141,6 +154,6 @@ build: make
 ## Requirements
 
 - Git (for cloning packages)
-- C compiler (for packages with native code)
+- C compiler (for packages with native code, e.g. kaappi-net)
 - OpenSSL (`brew install openssl` / `apt install libssl-dev`) for kaappi-net
-- PostgreSQL client libs for kaappi-pg
+- PostgreSQL client libs (`brew install libpq` / `apt install libpq-dev`) for kaappi-pg

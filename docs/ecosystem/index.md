@@ -16,8 +16,10 @@ Kaappi has a growing ecosystem of libraries for web development, databases, and 
 ## Getting started
 
 ```bash
-# Install thottam (comes with Kaappi)
-# Then install a library:
+# thottam is included when you install Kaappi:
+# curl -fsSL https://kaappi.github.io/install.sh | bash
+
+# Install a library:
 thottam install kaappi-web
 
 # That's it. Now use it:
