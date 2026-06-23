@@ -76,11 +76,20 @@ nav:
     - ecosystem/index.md
     - Package Manager (thottam): ecosystem/thottam.md
     - JSON: ecosystem/json.md
+    - TOML: ecosystem/toml.md
+    - YAML: ecosystem/yaml.md
+    - CSV: ecosystem/csv.md
     - Redis: ecosystem/redis.md
     - PostgreSQL: ecosystem/pg.md
+    - SQLite: ecosystem/sqlite.md
     - HTTP / HTTPS: ecosystem/http.md
     - Web Framework: ecosystem/web.md
+    - Templates: ecosystem/template.md
     - Networking (TCP/TLS): ecosystem/net.md
+    - Email (SMTP): ecosystem/email.md
+    - Crypto (Hashing): ecosystem/crypto.md
+    - Testing: ecosystem/test.md
+    - Logging: ecosystem/log.md
   - Libraries: libraries.md
   - Benchmarks: benchmarks.md
 
