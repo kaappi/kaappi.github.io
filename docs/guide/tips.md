@@ -196,10 +196,21 @@
   - **Process context** — `get-environment-variable`,
     `get-environment-variables`, `command-line`, `exit`
   - **Filesystem** — all SRFI-170 operations
+  - **OS threads** — SRFI-18 (`thread-start!`, mutexes, etc.)
 
   What still works: arithmetic, strings, lists, vectors, hash tables,
-  standard output (`display`, `write`), fibers, threads, and all
+  standard output (`display`, `write`), green fibers, and all
   pure-computation libraries.
+
+  Add resource limits to prevent infinite loops and memory exhaustion:
+
+  ```bash
+  kaappi --sandbox --timeout 5000 --max-memory 10000000 untrusted.scm
+  ```
+
+  `--timeout` kills execution after the given milliseconds. `--max-memory`
+  caps heap allocation in bytes (GC runs first; fails only if still over
+  limit after collection). Both flags work independently of `--sandbox`.
 
 ---
 

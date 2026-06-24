@@ -14,12 +14,14 @@ kaappi [OPTIONS] [FILE]
 | `-o FILE` | Output path for `--compile` |
 | `--lib-path DIR` | Add a directory to the library search path (repeatable, up to 16) |
 | `--profile` | Profile execution (per-function timing, call counts, allocations) |
-| `--sandbox` | Sandbox mode — blocks FFI, file I/O, `eval`, `load`, env access |
+| `--sandbox` | Sandbox mode — blocks FFI, file I/O, `eval`, `load`, env access, threads |
+| `--timeout MS` | Execution timeout in milliseconds |
+| `--max-memory BYTES` | Maximum heap memory in bytes |
 | `--no-jit` | Disable JIT compilation |
-| `--no-cache` | Disable bytecode caching |
 | `--disassemble FILE` | Show compiled bytecode without running |
 | `--gc-stats` | Print GC statistics on exit |
-| `--experimental-threads` | Enable OS threads (SRFI-18 `thread-start!`) |
+| `--coverage` | Report library procedure coverage |
+| `--coverage-xml FILE` | Write Cobertura XML coverage report |
 
 ## Build-Time Options
 

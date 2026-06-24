@@ -316,6 +316,14 @@ exercise:
 kaappi --coverage --lib-path ./lib tests/test.scm
 ```
 
+**Catch runaway programs** — use `--timeout` to kill programs that
+take too long, and `--max-memory` to cap heap usage:
+
+```bash
+kaappi --timeout 5000 program.scm           # 5-second limit
+kaappi --max-memory 10000000 program.scm    # ~10 MB limit
+```
+
 **Tune runtime limits** — if you hit stack overflows or need deeper
 recursion, rebuild with higher limits:
 
