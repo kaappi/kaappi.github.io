@@ -125,48 +125,10 @@ kaappi --compile program.scm
 kaappi program.scm
 ```
 
-## Debugger
-
-The REPL includes a built-in stepping debugger.
-
-**Setting breakpoints:**
-
-```
-kaappi> ,break factorial
-Breakpoint set on factorial
-```
-
-**Running with breakpoints:**
-
-When a breakpoint is hit, the debugger pauses and shows a `debug>` prompt:
-
-```
-kaappi> (factorial 5)
-Break at factorial (<repl>:1)
-debug>
-```
-
-**Debugger commands:**
-
-| Command | Short | Action |
-|---------|-------|--------|
-| `step` | `s` | Step into the next expression |
-| `next` | `n` | Step over (stay in current frame) |
-| `continue` | `c` | Continue to next breakpoint |
-| `locals` | `l` | Show local variable bindings |
-| `backtrace` | `bt` | Print the call stack |
-| `quit` | `q` | Exit the debugger |
-
-**Other REPL debug commands:**
-
-```
-,break name        -- Set a breakpoint on a function
-,breakpoints       -- List all breakpoints
-,delete all        -- Remove all breakpoints
-,step (expr)       -- Step through an expression from the start
-```
-
 ---
+
+For the stepping debugger, profiling, bytecode inspection, and other
+debugging tools, see the [Debugging](debugging.md) guide.
 
 Next: [CLI Reference](cli.md)
 

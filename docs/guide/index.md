@@ -19,6 +19,7 @@ Prefer the browser? Try the [interactive tour](../tour.md) or the
 - [Libraries](libraries.md) — importing and organizing libraries
 - [Library Authoring](library-authoring.md) — creating your own libraries with `define-library`
 - [CLI Reference](cli.md) — command-line flags and standalone binaries
-- [Advanced Features](advanced.md) — FFI, REPL commands, bytecode caching, debugger
+- [Debugging](debugging.md) — stepping debugger, profiling, disassembly, error handling
+- [Advanced Features](advanced.md) — FFI, REPL commands, bytecode caching
 - [Tips](tips.md) — tail calls, bignums, Unicode, error handling
 - [Troubleshooting](troubleshooting.md) — common errors and how to fix them

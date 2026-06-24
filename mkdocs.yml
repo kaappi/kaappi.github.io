@@ -52,6 +52,7 @@ nav:
     - Library Authoring: guide/library-authoring.md
     - Advanced Features: guide/advanced.md
     - CLI Reference: guide/cli.md
+    - Debugging: guide/debugging.md
     - REPL Guide: guide/repl.md
     - Editor Support: guide/editors.md
     - Tips: guide/tips.md
