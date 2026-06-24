@@ -1,21 +1,23 @@
 # User Guide
 
-Kaappi is a complete R7RS-small Scheme implementation written in Zig. It provides
-a bytecode compiler, register-based VM, mark-and-sweep garbage collector,
-first-class continuations, hygienic macros, and a full library system.
+Kaappi is a Scheme you can install in one command and start using immediately.
+It implements the full R7RS-small standard with 72 SRFIs, C FFI, and a
+package manager — everything you need to write real programs.
 
-- [Installation](installation.md) -- building from source on macOS and Linux
-- [Your First Program](first-program.md) -- running files and using the REPL
-- [Scheme Tutorial](tutorial.md) -- learn Scheme from scratch with runnable examples
-- [Language Reference](language.md) -- quick syntax lookup for every feature
-- [Libraries](libraries.md) -- importing, authoring, and organizing libraries
-- [Advanced Features](advanced.md) -- FFI, REPL commands, bytecode caching, debugger
-- [CLI Reference](cli.md) -- command-line options and standalone binaries
-- [Tips](tips.md) -- tail calls, bignums, Unicode, error handling
-- [Troubleshooting](troubleshooting.md) -- common errors and how to fix them
+## Getting started
 
-Prefer the browser? The [interactive tour](../tour.md) teaches the same
-fundamentals with live code, or jump straight into the
-[playground](../playground.md) to experiment.
+1. [Installation](installation.md) — one-line install or build from source
+2. [Your First Program](first-program.md) — run a file, explore the REPL
+3. [Scheme Tutorial](tutorial.md) — learn Scheme from scratch with runnable examples
 
----
+Prefer the browser? Try the [interactive tour](../tour.md) or the
+[playground](../playground.md) — no install needed.
+
+## Reference
+
+- [Language Reference](language.md) — syntax lookup for every form and feature
+- [Libraries](libraries.md) — importing, authoring, and organizing libraries
+- [CLI Reference](cli.md) — command-line flags and standalone binaries
+- [Advanced Features](advanced.md) — FFI, REPL commands, bytecode caching, debugger
+- [Tips](tips.md) — tail calls, bignums, Unicode, error handling
+- [Troubleshooting](troubleshooting.md) — common errors and how to fix them
