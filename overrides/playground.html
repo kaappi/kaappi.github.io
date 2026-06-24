@@ -1,0 +1,513 @@
+{% extends "main.html" %}
+
+{% block tabs %}{{ super() }}{% endblock %}
+
+{% block content %}
+<style>
+  .md-content__inner > h1 { display: none; }
+  .md-content__inner { margin-top: 0; padding: 0; max-width: none; }
+  .md-content__inner::before { display: none; }
+
+  :root {
+    --kp-roast:   #1A1410;
+    --kp-roast-2: #241B14;
+    --kp-roast-3: #34281D;
+    --kp-crema:   #F3E9DB;
+    --kp-brass:   #D08B3C;
+    --kp-brass-2: #E8B563;
+    --kp-filter:  #4FC4B2;
+    --kp-ash:     #9C8A77;
+    --kp-mono:    var(--md-code-font-family), "JetBrains Mono", monospace;
+  }
+
+  .kp-play {
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 3rem);
+    min-height: 400px;
+    font-family: var(--kp-mono);
+  }
+
+  /* ---- Toolbar ---- */
+  .kp-play-toolbar {
+    display: flex;
+    align-items: center;
+    gap: .75rem;
+    padding: .5rem .75rem;
+    background: var(--kp-roast);
+    border-bottom: 1px solid var(--kp-roast-3);
+    flex-shrink: 0;
+  }
+
+  .kp-play-toolbar button {
+    background: var(--kp-brass);
+    color: var(--kp-roast);
+    border: none;
+    padding: .4rem 1.2rem;
+    border-radius: 4px;
+    font-family: var(--kp-mono);
+    font-size: .85rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background .15s;
+  }
+  .kp-play-toolbar button:hover { background: var(--kp-brass-2); }
+  .kp-play-toolbar button:active { transform: scale(.97); }
+  .kp-play-toolbar button:disabled {
+    opacity: .5;
+    cursor: not-allowed;
+  }
+
+  .kp-play-toolbar select {
+    background: var(--kp-roast-2);
+    color: var(--kp-crema);
+    border: 1px solid var(--kp-roast-3);
+    padding: .35rem .5rem;
+    border-radius: 4px;
+    font-family: var(--kp-mono);
+    font-size: .8rem;
+    cursor: pointer;
+  }
+
+  #kp-status {
+    color: var(--kp-ash);
+    font-size: .8rem;
+    margin-left: auto;
+  }
+  #kp-status.running { color: var(--kp-brass-2); }
+  #kp-status.done    { color: var(--kp-filter); }
+  #kp-status.error   { color: #E07070; }
+
+  .kp-play-label {
+    color: var(--kp-ash);
+    font-size: .7rem;
+    opacity: .6;
+  }
+
+  /* ---- Panels ---- */
+  .kp-play-panels {
+    display: flex;
+    flex: 1;
+    min-height: 0;
+  }
+
+  .kp-play-editor {
+    flex: 1;
+    overflow: hidden;
+    background: var(--kp-roast);
+  }
+
+  .kp-play-output {
+    flex: 1;
+    overflow: auto;
+    background: var(--kp-roast-2);
+    padding: .75rem;
+    border-left: 1px solid var(--kp-roast-3);
+  }
+
+  .kp-play-output pre {
+    margin: 0;
+    white-space: pre-wrap;
+    word-break: break-word;
+    font-family: var(--kp-mono);
+    font-size: .85rem;
+    line-height: 1.5;
+  }
+
+  #kp-stdout { color: var(--kp-crema); }
+  #kp-stderr { color: #E07070; }
+  #kp-stdout:empty + #kp-stderr:empty::before {
+    content: "Output appears here.";
+    color: var(--kp-ash);
+    opacity: .5;
+  }
+
+  /* ---- CodeMirror overrides ---- */
+  .kp-play-editor .cm-editor {
+    height: 100%;
+    font-size: .85rem;
+  }
+  .kp-play-editor .cm-editor.cm-focused { outline: none; }
+  .kp-play-editor .cm-scroller { overflow: auto; }
+  .kp-play-editor .cm-gutters {
+    background: var(--kp-roast);
+    color: var(--kp-ash);
+    border-right: 1px solid var(--kp-roast-3);
+  }
+  .kp-play-editor .cm-content { padding: .5rem 0; }
+  .kp-play-editor .cm-line { padding: 0 .75rem; }
+  .kp-play-editor .cm-activeLine { background: rgba(255,255,255,.03); }
+  .kp-play-editor .cm-selectionBackground { background: rgba(208,139,60,.25) !important; }
+  .kp-play-editor .cm-cursor { border-left-color: var(--kp-crema); }
+  .kp-play-editor .cm-matchingBracket {
+    background: rgba(79,196,178,.2);
+    outline: 1px solid var(--kp-filter);
+  }
+
+  /* ---- Mobile ---- */
+  @media (max-width: 820px) {
+    .kp-play-panels {
+      flex-direction: column;
+    }
+    .kp-play-output {
+      border-left: none;
+      border-top: 1px solid var(--kp-roast-3);
+      min-height: 150px;
+      max-height: 40vh;
+    }
+  }
+
+  /* ---- Light mode adjustments ---- */
+  [data-md-color-scheme="default"] .kp-play-toolbar { background: #F5F0EB; border-color: #DDD5CB; }
+  [data-md-color-scheme="default"] .kp-play-toolbar select { background: #EDE6DC; color: #1A1410; border-color: #DDD5CB; }
+  [data-md-color-scheme="default"] #kp-status { color: #8A7A6A; }
+  [data-md-color-scheme="default"] .kp-play-editor { background: #FDFAF6; }
+  [data-md-color-scheme="default"] .kp-play-editor .cm-gutters { background: #FDFAF6; color: #BBA890; border-color: #EDE6DC; }
+  [data-md-color-scheme="default"] .kp-play-editor .cm-activeLine { background: rgba(0,0,0,.03); }
+  [data-md-color-scheme="default"] .kp-play-editor .cm-cursor { border-left-color: #1A1410; }
+  [data-md-color-scheme="default"] .kp-play-output { background: #F5F0EB; border-color: #DDD5CB; }
+  [data-md-color-scheme="default"] #kp-stdout { color: #1A1410; }
+</style>
+
+<div class="kp-play">
+  <div class="kp-play-toolbar">
+    <button id="kp-run" title="Run (Ctrl+Enter)">&#9654; Run</button>
+    <select id="kp-examples" aria-label="Example programs">
+      <option value="">Examples</option>
+      <option value="hello">Hello World</option>
+      <option value="fib">Fibonacci</option>
+      <option value="higher">Higher-Order</option>
+      <option value="macros">Macros</option>
+      <option value="callcc">Continuations</option>
+      <option value="tail">Tail Recursion</option>
+      <option value="library">define-library</option>
+    </select>
+    <span id="kp-status">Ready</span>
+    <span class="kp-play-label">bytecode interpreter</span>
+  </div>
+
+  <div class="kp-play-panels">
+    <div class="kp-play-editor" id="kp-editor"></div>
+    <div class="kp-play-output">
+      <pre id="kp-stdout"></pre>
+      <pre id="kp-stderr"></pre>
+    </div>
+  </div>
+</div>
+
+<script type="module">
+
+const EXAMPLES = {
+  hello: `(display "Hello from Kaappi!")
+(newline)`,
+  fib: `(define (fib n)
+  (if (<= n 1)
+      n
+      (+ (fib (- n 1))
+         (fib (- n 2)))))
+
+(display "fib(30) = ")
+(display (fib 30))
+(newline)`,
+  higher: `(import (srfi 1))
+
+(define nums '(1 2 3 4 5 6 7 8 9 10))
+
+(display "Squares of odds: ")
+(display
+  (map (lambda (x) (* x x))
+       (filter odd? nums)))
+(newline)
+
+(display "Sum: ")
+(display (fold + 0 nums))
+(newline)
+
+(display "Product: ")
+(display (fold * 1 nums))
+(newline)`,
+  macros: `(define-syntax swap!
+  (syntax-rules ()
+    ((_ a b)
+     (let ((tmp a))
+       (set! a b)
+       (set! b tmp)))))
+
+(define x 1)
+(define y 2)
+(display "Before: x=") (display x) (display " y=") (display y) (newline)
+(swap! x y)
+(display "After:  x=") (display x) (display " y=") (display y) (newline)
+
+(define-syntax my-cond
+  (syntax-rules (else)
+    ((_ (else e ...)) (begin e ...))
+    ((_ (test e ...) rest ...)
+     (if test (begin e ...) (my-cond rest ...)))))
+
+(display (my-cond
+  ((> 1 2) "no")
+  ((< 1 2) "yes")
+  (else "maybe")))
+(newline)`,
+  callcc: `; Coroutine with call/cc
+(define saved-k #f)
+
+(define (producer)
+  (display "Producing 1\\n")
+  (call/cc (lambda (k) (set! saved-k k) 1))
+  (display "Producing 2\\n")
+  (call/cc (lambda (k) (set! saved-k k) 2))
+  (display "Producing 3\\n")
+  3)
+
+(display "Result: ")
+(display (producer))
+(newline)
+
+; Non-local exit
+(display "Early exit: ")
+(display
+  (call-with-current-continuation
+    (lambda (exit)
+      (for-each (lambda (x)
+                  (if (negative? x)
+                      (exit x)))
+                '(54 0 37 -3 245 19))
+      #t)))
+(newline)`,
+  tail: `; Tail-recursive loop — 1 million iterations, constant stack
+(define (loop n acc)
+  (if (= n 0)
+      acc
+      (loop (- n 1) (+ acc 1))))
+
+(display "1,000,000 iterations: ")
+(display (loop 1000000 0))
+(newline)
+
+; Ackermann (small args — deeply recursive)
+(define (ack m n)
+  (cond ((= m 0) (+ n 1))
+        ((= n 0) (ack (- m 1) 1))
+        (else (ack (- m 1) (ack m (- n 1))))))
+
+(display "ack(3,7) = ")
+(display (ack 3 7))
+(newline)`,
+  library: `(define-library (geometry shapes)
+  (import (scheme base) (scheme write))
+  (export circle-area rect-area describe)
+  (begin
+    (define pi 3.141592653589793)
+
+    (define (circle-area r)
+      (* pi r r))
+
+    (define (rect-area w h)
+      (* w h))
+
+    (define (describe shape . args)
+      (display shape)
+      (display ": ")
+      (display
+        (cond
+          ((equal? shape "circle")
+           (circle-area (car args)))
+          ((equal? shape "rect")
+           (rect-area (car args) (cadr args)))
+          (else "unknown")))
+      (newline))))
+
+(import (geometry shapes))
+(describe "circle" 5)
+(describe "rect" 3 4)`,
+};
+
+// ---- CodeMirror setup ----
+let editorView = null;
+
+async function initEditor() {
+  try {
+    const [
+      { EditorView, basicSetup, },
+      { EditorState },
+      { StreamLanguage },
+      { schemeMode },
+    ] = await Promise.all([
+      import("https://esm.sh/codemirror@6?bundle"),
+      import("https://esm.sh/@codemirror/state@6?bundle"),
+      import("https://esm.sh/@codemirror/language@6?bundle"),
+      loadSchemeMode(),
+    ]);
+
+    const darkTheme = EditorView.theme({
+      "&": {
+        color: "#F3E9DB",
+        backgroundColor: "transparent",
+      },
+      ".cm-content": { caretColor: "#F3E9DB" },
+    }, { dark: true });
+
+    const lightTheme = EditorView.theme({
+      "&": {
+        color: "#1A1410",
+        backgroundColor: "transparent",
+      },
+      ".cm-content": { caretColor: "#1A1410" },
+    }, { dark: false });
+
+    const isDark = document.documentElement.dataset.mdColorScheme === "slate";
+
+    const extensions = [
+      basicSetup,
+      isDark ? darkTheme : lightTheme,
+      EditorView.updateListener.of(v => {}),
+      EditorView.domEventHandlers({
+        keydown(e) {
+          if ((e.ctrlKey || e.metaKey) && e.key === "Enter") {
+            e.preventDefault();
+            document.getElementById("kp-run").click();
+          }
+        }
+      }),
+    ];
+
+    if (schemeMode) {
+      extensions.push(StreamLanguage.define(schemeMode));
+    }
+
+    editorView = new EditorView({
+      state: EditorState.create({
+        doc: EXAMPLES.hello,
+        extensions,
+      }),
+      parent: document.getElementById("kp-editor"),
+    });
+  } catch (e) {
+    // Fallback: plain textarea
+    const el = document.getElementById("kp-editor");
+    const ta = document.createElement("textarea");
+    ta.id = "kp-textarea-fallback";
+    ta.value = EXAMPLES.hello;
+    ta.spellcheck = false;
+    Object.assign(ta.style, {
+      width: "100%", height: "100%", resize: "none",
+      background: "transparent", color: "inherit",
+      border: "none", outline: "none", padding: ".75rem",
+      fontFamily: "var(--kp-mono)", fontSize: ".85rem",
+      lineHeight: "1.5", tabSize: 2,
+    });
+    ta.addEventListener("keydown", e => {
+      if ((e.ctrlKey || e.metaKey) && e.key === "Enter") {
+        e.preventDefault();
+        document.getElementById("kp-run").click();
+      }
+    });
+    el.appendChild(ta);
+  }
+}
+
+async function loadSchemeMode() {
+  try {
+    const mod = await import("https://esm.sh/@codemirror/legacy-modes@6/mode/scheme?bundle");
+    return { schemeMode: mod.scheme || mod.default };
+  } catch {
+    return { schemeMode: null };
+  }
+}
+
+function getEditorContent() {
+  if (editorView) return editorView.state.doc.toString();
+  const ta = document.getElementById("kp-textarea-fallback");
+  return ta ? ta.value : "";
+}
+
+function setEditorContent(code) {
+  if (editorView) {
+    editorView.dispatch({
+      changes: { from: 0, to: editorView.state.doc.length, insert: code },
+    });
+  } else {
+    const ta = document.getElementById("kp-textarea-fallback");
+    if (ta) ta.value = code;
+  }
+}
+
+// ---- Worker + execution ----
+const TIMEOUT_MS = 5000;
+const siteRoot = new URL("{{ base_url }}", document.baseURI).href.replace(/\/$/, "");
+const workerUrl = siteRoot + "/js/playground-worker.js";
+const wasmUrl = siteRoot + "/wasm/kaappi.wasm";
+let worker = new Worker(workerUrl, { type: "module" });
+
+const statusEl = document.getElementById("kp-status");
+const stdoutEl = document.getElementById("kp-stdout");
+const stderrEl = document.getElementById("kp-stderr");
+const runBtn = document.getElementById("kp-run");
+const exSelect = document.getElementById("kp-examples");
+
+function setStatus(text, cls) {
+  statusEl.textContent = text;
+  statusEl.className = cls || "";
+}
+
+async function runCode() {
+  const code = getEditorContent();
+  if (!code.trim()) return;
+
+  stdoutEl.textContent = "";
+  stderrEl.textContent = "";
+  setStatus("Running…", "running");
+  runBtn.disabled = true;
+
+  try {
+    const result = await new Promise((resolve, reject) => {
+      const timer = setTimeout(() => {
+        worker.terminate();
+        worker = new Worker(workerUrl, { type: "module" });
+        reject(new Error("Timed out (5 s limit)"));
+      }, TIMEOUT_MS);
+
+      worker.onmessage = ({ data }) => {
+        clearTimeout(timer);
+        resolve(data);
+      };
+      worker.onerror = (e) => {
+        clearTimeout(timer);
+        reject(new Error(e.message || "Worker error"));
+      };
+
+      worker.postMessage({ code, wasmUrl });
+    });
+
+    stdoutEl.textContent = result.stdout;
+    stderrEl.textContent = result.stderr;
+    const ms = Math.round(result.elapsed);
+    setStatus(result.stderr ? `Done (${ms} ms) — errors` : `Done (${ms} ms)`,
+              result.stderr ? "error" : "done");
+  } catch (e) {
+    stderrEl.textContent = e.message;
+    setStatus("Error", "error");
+  } finally {
+    runBtn.disabled = false;
+  }
+}
+
+runBtn.addEventListener("click", runCode);
+
+exSelect.addEventListener("change", () => {
+  const key = exSelect.value;
+  if (key && EXAMPLES[key]) {
+    setEditorContent(EXAMPLES[key]);
+    stdoutEl.textContent = "";
+    stderrEl.textContent = "";
+    setStatus("Ready");
+  }
+  exSelect.value = "";
+});
+
+initEditor();
+
+</script>
+{% endblock %}
