@@ -348,3 +348,123 @@ building large intermediate structures. If the program is legitimately
 memory-bound, consider breaking the work into smaller batches.
 
 ---
+
+## Library and Import Errors
+
+### Library not found
+
+**Message:** `error: library not found: (some library)`
+
+**Cause:** The library is not built-in and no `.sld` file was found in
+the library search path.
+
+**Fix:** Check the library name for typos. For ecosystem libraries,
+install with `thottam install kaappi-json`. For your own libraries, pass
+the path with `--lib-path`:
+
+```bash
+kaappi --lib-path ./lib program.scm
+```
+
+Libraries installed via thottam are auto-discovered from `~/.kaappi/lib/`.
+
+---
+
+### Export not found
+
+**Cause:** You imported a library but referenced a procedure that it
+does not export.
+
+**Fix:** Check the library's `define-library` form for the `export`
+clause. Use `,apropos` in the REPL to search for the procedure name.
+
+---
+
+## FFI Errors
+
+### Shared library not found
+
+**Message:** `error: ffi-open: cannot open shared library`
+
+**Cause:** The `.dylib` (macOS) or `.so` (Linux) file was not found in
+the library search path.
+
+**Fix:** Make sure the native library is built (`make` in the library's
+directory) and either:
+
+- Install via thottam (copies to `~/.kaappi/lib/`)
+- Pass the path: `--lib-path /path/to/dir`
+- Set `DYLD_LIBRARY_PATH` (macOS) or `LD_LIBRARY_PATH` (Linux)
+
+---
+
+### Symbol not found
+
+**Message:** `error: ffi-fn: symbol not found`
+
+**Cause:** The shared library was loaded but does not contain the
+requested function symbol.
+
+**Fix:** Check the function name for typos. Verify the library was
+compiled with the expected function (use `nm -gU library.dylib` on macOS
+or `nm -D library.so` on Linux to list exported symbols).
+
+---
+
+## Setup Issues
+
+### command not found: kaappi
+
+**Cause:** The `kaappi` binary is not in your `PATH`.
+
+**Fix for install script:** The install script places binaries in
+`~/.local/bin`. Add it to your shell profile:
+
+```bash
+export PATH="$HOME/.local/bin:$PATH"
+```
+
+Then restart your terminal or `source` your profile.
+
+**Fix for source build:** The binary is at `zig-out/bin/kaappi`. Either
+add `zig-out/bin` to your `PATH` or copy the binary:
+
+```bash
+cp zig-out/bin/kaappi ~/.local/bin/
+```
+
+---
+
+### macOS Gatekeeper warning
+
+**Message:** *"kaappi" can't be opened because Apple cannot check it for
+malicious software.*
+
+**Cause:** The binary is not signed. This only affects binaries built
+from source — release binaries are Developer ID signed and Apple
+notarized.
+
+**Fix:** Use the install script (`curl -fsSL https://kaappi-lang.org/install.sh | bash`)
+which downloads signed binaries. For source builds, remove the quarantine
+attribute:
+
+```bash
+xattr -d com.apple.quarantine zig-out/bin/kaappi
+```
+
+---
+
+## JIT Issues
+
+If you encounter unexpected behavior that you suspect is JIT-related
+(wrong results, crashes in compiled code), run with `--no-jit` to force
+pure interpretation:
+
+```bash
+kaappi --no-jit program.scm
+```
+
+If the bug disappears with `--no-jit`, it's a JIT bug — please
+[report it](https://github.com/kaappi/kaappi/issues).
+
+---

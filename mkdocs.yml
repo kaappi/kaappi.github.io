@@ -97,6 +97,7 @@ nav:
     - Crypto (Hashing): ecosystem/crypto.md
     - Testing: ecosystem/test.md
     - Logging: ecosystem/log.md
+    - CLI Parsing: ecosystem/cli.md
 
 markdown_extensions:
   - pymdownx.highlight:

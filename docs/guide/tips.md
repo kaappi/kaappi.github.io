@@ -178,8 +178,28 @@
   ```
 
 - **Sandbox mode blocks dangerous operations.** The `--sandbox` flag
-  disables FFI, file I/O, `eval`, `load`, and environment variable
-  access -- useful for running untrusted code safely.
+  runs code with restricted capabilities — useful for untrusted input.
+
+  ```bash
+  kaappi --sandbox untrusted.scm
+  ```
+
+  What's blocked:
+
+  - **File I/O** — `open-input-file`, `open-output-file`,
+    `call-with-input-file`, `call-with-output-file`,
+    `with-input-from-file`, `with-output-to-file`,
+    `open-binary-input-file`, `open-binary-output-file`,
+    `file-exists?`, `delete-file`
+  - **FFI** — `ffi-open`, `ffi-fn`, `ffi-close`, `ffi-callback`
+  - **Code loading** — `eval`, `load`
+  - **Process context** — `get-environment-variable`,
+    `get-environment-variables`, `command-line`, `exit`
+  - **Filesystem** — all SRFI-170 operations
+
+  What still works: arithmetic, strings, lists, vectors, hash tables,
+  standard output (`display`, `write`), fibers, threads, and all
+  pure-computation libraries.
 
 ---
 

@@ -100,7 +100,7 @@ to see the full list:
 | `,expand <expr>` | Show the result of macro expansion |
 | `,env [prefix]` | List global bindings (optional prefix filter) |
 | `,gc` | Show garbage collector statistics |
-| `,break <name>` | Set a breakpoint on a function (see Debugger below) |
+| `,break <name>` | Set a breakpoint on a function (see [Debugging](debugging.md)) |
 | `,help` | Show all available commands |
 
 ```
@@ -123,6 +123,40 @@ kaappi --compile program.scm
 
 # Subsequent runs use the cache automatically
 kaappi program.scm
+```
+
+## Standalone Binaries
+
+Kaappi can compile a Scheme program into a single standalone executable
+that requires no runtime or source files to run.
+
+**One-step build** — compile and embed in one command:
+
+```bash
+zig build -Dbundle-src=app.scm
+# produces zig-out/bin/kaappi with app.scm embedded
+```
+
+The resulting binary includes the full Kaappi runtime and your compiled
+program. Distribute it as a single file — no Zig or Kaappi installation
+needed on the target machine.
+
+**Two-step build** — pre-compile to bytecode, then embed:
+
+```bash
+kaappi --compile app.scm -o app.sbc    # compile to bytecode
+zig build -Dbundle=app.sbc             # embed in binary
+```
+
+The two-step workflow is useful when you want to inspect or cache the
+bytecode separately.
+
+**Cross-compilation** — build for a different platform:
+
+```bash
+zig build -Dbundle-src=app.scm -Dtarget=x86_64-linux
+zig build -Dbundle-src=app.scm -Dtarget=aarch64-linux
+zig build -Dbundle-src=app.scm -Dtarget=riscv64-linux
 ```
 
 ---

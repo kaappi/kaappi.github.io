@@ -36,6 +36,7 @@ Kaappi has a growing ecosystem of libraries. All are installed with **thottam**,
 | [kaappi-test](test.md) | Test framework (assertions, groups, reporting) |
 | [kaappi-log](log.md) | Structured logging (text and JSON formats) |
 | [kaappi-crypto](crypto.md) | Hashing (SHA-256/512, MD5) and HMAC |
+| [kaappi-cli](cli.md) | CLI argument parsing, subcommands, help generation |
 
 ## Getting started
 
@@ -66,7 +67,7 @@ kaappi-sqlite (standalone, links libsqlite3)
 kaappi-crypto (standalone, links OpenSSL)
 
 kaappi-toml, kaappi-yaml, kaappi-csv, kaappi-template,
-kaappi-test, kaappi-log (pure Scheme, no dependencies)
+kaappi-test, kaappi-log, kaappi-cli (pure Scheme, no dependencies)
 ```
 
 When you install a package, thottam automatically installs its dependencies.
