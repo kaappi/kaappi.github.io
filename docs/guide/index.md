@@ -16,7 +16,8 @@ Prefer the browser? Try the [interactive tour](../tour.md) or the
 ## Reference
 
 - [Language Reference](language.md) — syntax lookup for every form and feature
-- [Libraries](libraries.md) — importing, authoring, and organizing libraries
+- [Libraries](libraries.md) — importing and organizing libraries
+- [Library Authoring](library-authoring.md) — creating your own libraries with `define-library`
 - [CLI Reference](cli.md) — command-line flags and standalone binaries
 - [Advanced Features](advanced.md) — FFI, REPL commands, bytecode caching, debugger
 - [Tips](tips.md) — tail calls, bignums, Unicode, error handling

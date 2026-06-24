@@ -49,6 +49,7 @@ nav:
     - Scheme Tutorial: guide/tutorial.md
     - Language Reference: guide/language.md
     - Libraries: guide/libraries.md
+    - Library Authoring: guide/library-authoring.md
     - Advanced Features: guide/advanced.md
     - CLI Reference: guide/cli.md
     - REPL Guide: guide/repl.md
@@ -94,7 +95,6 @@ nav:
     - Crypto (Hashing): ecosystem/crypto.md
     - Testing: ecosystem/test.md
     - Logging: ecosystem/log.md
-  - Libraries: libraries.md
 
 markdown_extensions:
   - pymdownx.highlight:
