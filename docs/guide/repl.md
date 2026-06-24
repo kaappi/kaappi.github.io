@@ -45,11 +45,20 @@ kaappi> string-<TAB>
 string-append  string-copy  string-length  string-ref  ...
 ```
 
-Completion matches all bound symbols — built-in procedures, your own definitions, and imported library exports.
+Completion matches all bound symbols — built-in procedures, your own
+definitions, and imported library exports.
+
+Comma commands are also completed:
+
+```
+kaappi> ,ti<TAB>
+,time
+```
 
 ## History
 
-History is saved automatically to `.kaappi_history` in the current directory. Up to 1000 entries are preserved across sessions.
+History is saved automatically to `~/.kaappi/history`. Up to 1000
+entries are preserved across sessions.
 
 - **Up / Down arrows** — navigate through previous entries
 - **Ctrl+P / Ctrl+N** — same as Up / Down

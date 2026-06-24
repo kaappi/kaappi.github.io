@@ -43,8 +43,8 @@ The REPL provides:
 - **Line editing** -- arrow keys, Ctrl-A (start of line), Ctrl-E (end of line),
   backspace, delete
 - **Command history** -- up/down arrows, persisted across sessions in
-  `.kaappi_history`
-- **Tab completion** -- completes all built-in and user-defined symbols
+  `~/.kaappi/history`
+- **Tab completion** -- completes symbols and `,commands`
 - **Multi-line input** -- open parentheses are tracked; the prompt changes to
   `  ... ` until all parens are balanced
 
