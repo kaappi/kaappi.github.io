@@ -275,44 +275,6 @@
     border-radius: 4px; color: var(--md-code-fg-color);
   }
 
-  /* ================= PROOF / benchmark ================= */
-  .kp-proof {
-    background: linear-gradient(180deg, var(--kp-roast-2), var(--kp-roast));
-    border: 1px solid var(--kp-roast-3);
-    border-radius: 16px;
-    box-shadow: 0 24px 60px -28px rgba(0,0,0,.8), inset 0 1px 0 rgba(243,233,219,.04);
-    padding: 2.2rem 2rem;
-    display: grid;
-    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
-    gap: 2.2rem;
-    align-items: center;
-  }
-  .kp-proof-lede .kp-kicker { color: var(--kp-brass); }
-  .kp-proof-lede h2 { font-family: var(--kp-disp); color: var(--kp-crema); font-size: 1.6rem; margin: .3rem 0 .7rem; font-weight: 600; letter-spacing: -.02em; }
-  .kp-proof-eval {
-    font-family: var(--kp-mono); font-size: 1.05rem; color: var(--kp-crema);
-    margin-bottom: .9rem;
-  }
-  .kp-proof-eval .kp-arrow { font-size: 1.2rem; margin: 0 .4em; transform: translateY(.12em); display: inline-block; }
-  .kp-proof-lede p { font-family: var(--kp-disp); color: var(--kp-ash); font-size: .9rem; line-height: 1.55; margin: 0; }
-  .kp-proof-lede a { color: var(--kp-brass-2); text-decoration: none; border-bottom: 1px solid var(--kp-roast-3); }
-  .kp-proof-lede a:hover { border-color: var(--kp-brass-2); }
-
-  .kp-bars { display: grid; gap: .8rem; }
-  .kp-bar-row { display: grid; grid-template-columns: 4.6em 1fr 3em; align-items: center; gap: .7rem; font-family: var(--kp-mono); font-size: .78rem; }
-  .kp-bar-name { color: var(--kp-ash); text-align: right; white-space: nowrap; }
-  .kp-bar-name.kp-me { color: var(--kp-brass-2); font-weight: 600; }
-  .kp-bar-track { position: relative; height: 22px; background: rgba(243,233,219,.04); border-radius: 5px; }
-  .kp-bar-fill {
-    height: 100%; border-radius: 5px;
-    background: var(--kp-roast-3);
-    width: var(--w);
-    transition: width .9s cubic-bezier(.2,.7,.2,1);
-  }
-  .kp-bar-val { color: var(--kp-ash); font-size: .72rem; white-space: nowrap; }
-  .kp-bar-row.kp-me .kp-bar-fill { background: linear-gradient(90deg, var(--kp-brass), var(--kp-brass-2)); }
-  .kp-bar-row.kp-me .kp-bar-val { color: var(--kp-brass-2); font-weight: 600; }
-
   /* ================= CODE EXAMPLES (roast panels) ================= */
   .kp-examples { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
   .kp-panel {
@@ -362,7 +324,6 @@
   }
   @media (max-width: 820px) {
     .kp-grid, .kp-examples, .kp-docs { grid-template-columns: 1fr; }
-    .kp-proof { grid-template-columns: 1fr; gap: 1.6rem; }
   }
   @media (max-width: 600px) {
     .kp-hero { padding: 3.5rem 1.2rem 3rem; }
@@ -371,8 +332,6 @@
     .kp-eval { grid-template-columns: 1fr; gap: .5rem; padding: 1.25rem 1.25rem 1.4rem; }
     .kp-eval-src, .kp-eval-out { text-align: center; }
     .kp-arrow { transform: rotate(90deg); margin: .15rem auto; }
-    .kp-bar-row { grid-template-columns: 4em 1fr 2.8em; gap: .55rem; }
-    .kp-proof { padding: 1.5rem 1.2rem; }
     .kp-hero-brand { flex-direction: column; gap: .8rem; }
     .kp-eyebrow { text-align: center; }
   }
@@ -488,28 +447,6 @@
         <div class="kp-card-tag">concurrency</div>
         <h3>OS threads &amp; fibers</h3>
         <p>Real OS threads via SRFI-18, plus green fibers with channels. Pre-fork and threaded HTTP servers.</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- ====================== PROOF / BENCHMARK ====================== -->
-  <section class="kp-section kp-section--tight">
-    <div class="kp-proof">
-      <div class="kp-proof-lede">
-        <div class="kp-kicker">Strong by the cup</div>
-        <h2>The JIT earns its keep.</h2>
-        <div class="kp-proof-eval">(<span class="kp-fn">fib</span> <span class="kp-nu">35</span>) <span class="kp-arrow">⇒</span> <span class="kp-val">9227465</span></div>
-        <p>
-          Pure recursion, fixnum arithmetic. Kaappi outpaces Chibi and runs neck-and-neck
-          with Gauche — with native compilation still closing the gap on the AOT compilers.
-          <a href="benchmarks/">See all benchmarks &rarr;</a>
-        </p>
-      </div>
-      <div class="kp-bars" aria-label="fib(35) timing comparison, lower is faster">
-        <div class="kp-bar-row"><span class="kp-bar-name">Chibi</span><div class="kp-bar-track"><div class="kp-bar-fill" style="--w:100%"></div></div><span class="kp-bar-val">3.5 s</span></div>
-        <div class="kp-bar-row kp-me"><span class="kp-bar-name kp-me">Kaappi</span><div class="kp-bar-track"><div class="kp-bar-fill" style="--w:54%"></div></div><span class="kp-bar-val">1.9 s</span></div>
-        <div class="kp-bar-row"><span class="kp-bar-name">Gauche</span><div class="kp-bar-track"><div class="kp-bar-fill" style="--w:51%"></div></div><span class="kp-bar-val">1.8 s</span></div>
-        <div class="kp-bar-row"><span class="kp-bar-name">Chez</span><div class="kp-bar-track"><div class="kp-bar-fill" style="--w:8%"></div></div><span class="kp-bar-val">0.15 s</span></div>
       </div>
     </div>
   </section>

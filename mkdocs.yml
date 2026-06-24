@@ -95,7 +95,6 @@ nav:
     - Testing: ecosystem/test.md
     - Logging: ecosystem/log.md
   - Libraries: libraries.md
-  - Benchmarks: benchmarks.md
 
 markdown_extensions:
   - pymdownx.highlight:
