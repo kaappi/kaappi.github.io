@@ -59,6 +59,11 @@ kaappi> (map square '(1 2 3 4 5))
 
 Type `(exit)` or press Ctrl-D to quit.
 
+!!! note "No install yet?"
+
+    You can try all these examples in the [browser playground](../playground.md)
+    — same interpreter, no installation required.
+
 ## A Multi-File Project
 
 Real programs split code into libraries. Here's a small project that

@@ -71,8 +71,19 @@
   #kp-tour-run:disabled { opacity: .5; cursor: not-allowed; }
 
   #kp-tour-reset {
-    margin-left: auto;
   }
+
+  .kp-tour-link {
+    margin-left: auto;
+    font-size: .78rem;
+    color: var(--kp-ash);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: color .15s, border-color .15s;
+  }
+  .kp-tour-link:hover { color: var(--kp-brass-2); border-bottom-color: var(--kp-brass); }
+  [data-md-color-scheme="default"] .kp-tour-link { color: #8A7A6A; }
+  [data-md-color-scheme="default"] .kp-tour-link:hover { color: #9A6520; border-bottom-color: #9A6520; }
 
   .kp-tour-title {
     color: var(--kp-crema);
@@ -237,6 +248,7 @@
   }
 
   @media (max-width: 820px) {
+    .kp-tour-link { display: none; }
     #kp-tour-menu-toggle { display: block; }
     .kp-tour-sidebar {
       position: fixed;
@@ -281,6 +293,7 @@
     <button id="kp-tour-next" title="Next lesson">&rarr;</button>
     <button id="kp-tour-run" title="Run (Ctrl+Enter)">&#9654; Run</button>
     <span id="kp-tour-status"></span>
+    <a href="{{ base_url }}playground/" class="kp-tour-link">Free playground &rarr;</a>
     <button id="kp-tour-reset" title="Reset code">Reset</button>
   </div>
 

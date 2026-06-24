@@ -2,7 +2,8 @@
 
 A hands-on introduction to Scheme for programmers coming from Python,
 JavaScript, or similar languages. Open a REPL with `kaappi` and follow
-along.
+along. For a browser-based version with guided exercises, see the
+[interactive tour](../tour.md).
 
 ```bash
 kaappi
@@ -637,6 +638,8 @@ more to explore.
 - [Libraries](libraries.md) -- how to import SRFIs and write your own
   libraries
 - [Tips](tips.md) -- performance tips, common pitfalls, and REPL workflow
+- [Browser Playground](../playground.md) -- edit and run Scheme online
+  with example programs
 
 ---
 

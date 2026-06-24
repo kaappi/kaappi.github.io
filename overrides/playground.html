@@ -84,6 +84,17 @@
     opacity: .6;
   }
 
+  .kp-play-link {
+    font-size: .78rem;
+    color: var(--kp-ash);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: color .15s, border-color .15s;
+  }
+  .kp-play-link:hover { color: var(--kp-brass-2); border-bottom-color: var(--kp-brass); }
+  [data-md-color-scheme="default"] .kp-play-link { color: #8A7A6A; }
+  [data-md-color-scheme="default"] .kp-play-link:hover { color: #9A6520; border-bottom-color: #9A6520; }
+
   /* ---- Panels ---- */
   .kp-play-panels {
     display: flex;
@@ -184,6 +195,7 @@
     </select>
     <span id="kp-status">Ready</span>
     <span class="kp-play-label">bytecode interpreter</span>
+    <a href="{{ base_url }}tour/" class="kp-play-link">Guided tour &rarr;</a>
   </div>
 
   <div class="kp-play-panels">

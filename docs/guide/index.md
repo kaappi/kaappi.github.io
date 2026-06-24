@@ -14,4 +14,8 @@ first-class continuations, hygienic macros, and a full library system.
 - [Tips](tips.md) -- tail calls, bignums, Unicode, error handling
 - [Troubleshooting](troubleshooting.md) -- common errors and how to fix them
 
+Prefer the browser? The [interactive tour](../tour.md) teaches the same
+fundamentals with live code, or jump straight into the
+[playground](../playground.md) to experiment.
+
 ---
