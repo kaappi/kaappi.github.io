@@ -159,6 +159,29 @@ zig build -Dbundle-src=app.scm -Dtarget=aarch64-linux
 zig build -Dbundle-src=app.scm -Dtarget=riscv64-linux
 ```
 
+## WebAssembly (WASM)
+
+Kaappi can be compiled to WebAssembly for use in browsers or WASI
+runtimes:
+
+```bash
+zig build wasm    # produces zig-out/bin/kaappi.wasm
+```
+
+The WASM build runs the same bytecode interpreter but with several
+limitations:
+
+- **No REPL** — WASM mode takes a source file, not interactive input
+- **No JIT** — interpreter only (no native code generation)
+- **No FFI** — `ffi-open`, `ffi-fn` are unavailable
+- **No file I/O** — limited to WASI-compatible stdin/stdout
+- **No profiling or coverage** — `--profile`, `--coverage` flags are not available
+- **No library paths** — `--lib-path` is not supported; only built-in libraries
+- **No OS threads** — SRFI-18 is disabled (green fibers still work)
+
+The [playground](../playground.md) and [interactive tour](../tour.md) use
+the WASM build to run Scheme directly in the browser.
+
 ---
 
 For the stepping debugger, profiling, bytecode inspection, and other
