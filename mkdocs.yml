@@ -98,6 +98,7 @@ nav:
     - Testing: ecosystem/test.md
     - Logging: ecosystem/log.md
     - CLI Parsing: ecosystem/cli.md
+    - Examples: ecosystem/examples.md
 
 markdown_extensions:
   - pymdownx.highlight:

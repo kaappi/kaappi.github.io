@@ -38,6 +38,11 @@ Kaappi has a growing ecosystem of libraries. All are installed with **thottam**,
 | [kaappi-crypto](crypto.md) | Hashing (SHA-256/512, MD5) and HMAC |
 | [kaappi-cli](cli.md) | CLI argument parsing, subcommands, help generation |
 
+## Example Applications
+
+The [kaappi-examples](examples.md) repo has complete working apps:
+REST API (PostgreSQL + Redis + HTTP), task queue, CRUD app, and file server.
+
 ## Getting started
 
 ```bash
