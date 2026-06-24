@@ -146,7 +146,7 @@
   .kp-eval-code {
     font-size: clamp(1rem, 2.6vw, 1.45rem);
     color: var(--kp-crema);
-    white-space: nowrap;
+    white-space: pre;
   }
   .kp-arrow {
     font-size: clamp(1.6rem, 4vw, 2.4rem);
@@ -416,16 +416,17 @@
       </p>
 
       <div class="kp-eval kp-reveal kp-d4" role="img"
-           aria-label="The expression (fib 30) evaluates to 832040 in 173 milliseconds, JIT-compiled to native AArch64.">
+           aria-label="Map square over a list, returns (1 4 9 16 25). 72 SRFIs included.">
         <div class="kp-eval-src">
           <span class="kp-cell-label">you write</span>
-          <span class="kp-eval-code">(<span class="kp-fn">fib</span> <span class="kp-nu">30</span>)</span>
+          <span class="kp-eval-code">(<span class="kp-fn">map</span> (<span class="kp-kw">lambda</span> (x) (* x x))
+     '(<span class="kp-nu">1 2 3 4 5</span>))</span>
         </div>
         <div class="kp-arrow" aria-hidden="true">⇒</div>
         <div class="kp-eval-out">
           <span class="kp-cell-label">it returns</span>
-          <span class="kp-eval-code"><span class="kp-eval-val">832040</span></span>
-          <div class="kp-eval-meta"><b>173 ms</b> <span class="kp-spark">·</span> JIT → native AArch64</div>
+          <span class="kp-eval-code"><span class="kp-eval-val">(1 4 9 16 25)</span></span>
+          <div class="kp-eval-meta"><b>72 SRFIs</b> <span class="kp-spark">·</span> batteries included</div>
         </div>
       </div>
 
