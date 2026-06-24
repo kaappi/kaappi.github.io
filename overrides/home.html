@@ -176,12 +176,12 @@
   }
   .kp-caption b { color: var(--kp-crema); font-weight: 500; }
   .kp-caption code {
-    font-size: .82rem; background: rgba(243,233,219,.06); padding: .4em .8em;
-    border-radius: 9px; border: 1px solid var(--kp-roast-3); color: var(--kp-crema);
+    font-size: .85rem; background: rgba(243,233,219,.1); padding: .5em 1em;
+    border-radius: 9px; border: 1px solid rgba(208,139,60,.35); color: var(--kp-crema);
     user-select: all; cursor: copy; display: inline-block; max-width: 100%;
     overflow-x: auto; white-space: nowrap;
   }
-  .kp-caption code:hover { background: rgba(243,233,219,.1); }
+  .kp-caption code:hover { background: rgba(243,233,219,.15); border-color: var(--kp-brass); }
   .kp-caption--install { margin-top: .8rem; }
 
   /* ---- CTAs ---- */
@@ -202,6 +202,8 @@
   .kp-btn--ghost { background: transparent; color: var(--kp-crema) !important; border: 1.5px solid var(--kp-brass); }
   .kp-btn--ghost:hover { background: rgba(208,139,60,.1); border-color: var(--kp-brass-2); transform: translateY(-2px); }
   .kp-btn--ghost:active { transform: translateY(0); background: rgba(208,139,60,.15); }
+  [data-md-color-scheme="default"] .kp-closer .kp-btn--ghost { color: #1A1208 !important; }
+  [data-md-color-scheme="slate"] .kp-closer .kp-btn--ghost { color: var(--kp-crema) !important; }
 
   /* visible keyboard focus across all interactive elements */
   .kp a:focus-visible, .kp-btn:focus-visible, .kp-doc:focus-visible {
