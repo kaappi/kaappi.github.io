@@ -35,6 +35,7 @@ If you prefer to build from source or need a custom configuration:
 | Linux | x86_64 | x86_64 native |
 | Linux | aarch64 | AArch64 native |
 | Linux | riscv64 | No (interpreter only) |
+| WebAssembly | wasm32-wasi | No (interpreter only) |
 
 macOS binaries are Developer ID signed and Apple notarized — no Gatekeeper
 warnings when downloading from GitHub releases.
