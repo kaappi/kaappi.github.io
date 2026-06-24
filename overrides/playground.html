@@ -450,7 +450,7 @@ function setEditorContent(code) {
 const TIMEOUT_MS = 5000;
 const siteRoot = new URL("{{ base_url }}", document.baseURI).href.replace(/\/$/, "");
 const workerUrl = siteRoot + "/js/playground-worker.js";
-const wasmUrl = siteRoot + "/wasm/kaappi.wasm";
+const wasmUrl = "https://github.com/kaappi/kaappi/releases/latest/download/kaappi.wasm";
 let worker = new Worker(workerUrl, { type: "module" });
 
 const statusEl = document.getElementById("kp-status");
