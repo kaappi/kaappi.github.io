@@ -2,7 +2,7 @@
 
 MkDocs Material site for [Kaappi](https://github.com/kaappi/kaappi), an R7RS Scheme implementation in Zig.
 
-Served at **https://kaappi.github.io/**
+Served at **https://kaappi-lang.org/**
 
 ## Source repo
 

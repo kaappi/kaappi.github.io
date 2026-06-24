@@ -5,7 +5,7 @@
 Download pre-built binaries (no build tools required):
 
 ```bash
-curl -fsSL https://kaappi.github.io/install.sh | bash
+curl -fsSL https://kaappi-lang.org/install.sh | bash
 ```
 
 This auto-detects your platform, downloads the latest release of both `kaappi`
@@ -13,7 +13,7 @@ and `thottam` (the package manager), verifies SHA256 checksums, and installs to
 `~/.local/bin/`. Set `INSTALL_DIR` to change the location:
 
 ```bash
-curl -fsSL https://kaappi.github.io/install.sh | INSTALL_DIR=/usr/local/bin bash
+curl -fsSL https://kaappi-lang.org/install.sh | INSTALL_DIR=/usr/local/bin bash
 ```
 
 ## Build from source

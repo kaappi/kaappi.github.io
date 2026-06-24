@@ -9,7 +9,7 @@ platforms (macOS, Linux x86_64, Linux aarch64, Linux riscv64).
 thottam is installed automatically by the Kaappi installer:
 
 ```bash
-curl -fsSL https://kaappi.github.io/install.sh | bash
+curl -fsSL https://kaappi-lang.org/install.sh | bash
 ```
 
 If you build from source, `zig build` produces both `kaappi` and `thottam` in

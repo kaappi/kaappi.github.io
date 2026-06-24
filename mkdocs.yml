@@ -1,5 +1,5 @@
 site_name: Kaappi
-site_url: https://kaappi.github.io/
+site_url: https://kaappi-lang.org/
 site_description: A complete R7RS-small Scheme implementation written in Zig
 repo_url: https://github.com/kaappi/kaappi
 repo_name: kaappi/kaappi

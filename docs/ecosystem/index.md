@@ -41,7 +41,7 @@ Kaappi has a growing ecosystem of libraries. All are installed with **thottam**,
 
 ```bash
 # thottam is included when you install Kaappi:
-# curl -fsSL https://kaappi.github.io/install.sh | bash
+# curl -fsSL https://kaappi-lang.org/install.sh | bash
 
 # Install a library:
 thottam install kaappi-web
