@@ -18,8 +18,10 @@ Prefer the browser? Try the [interactive tour](../tour.md) or the
 - [Language Reference](language.md) — syntax lookup for every form and feature
 - [Libraries](libraries.md) — importing and organizing libraries
 - [Library Authoring](library-authoring.md) — creating your own libraries with `define-library`
+- [REPL Guide](repl.md) — commands, history, tab completion, reverse search
 - [CLI Reference](cli.md) — command-line flags and standalone binaries
 - [Debugging](debugging.md) — stepping debugger, profiling, disassembly, error handling
-- [Advanced Features](advanced.md) — FFI, REPL commands, bytecode caching
+- [Advanced Features](advanced.md) — FFI, bytecode caching, standalone binaries
+- [Editor Support](editors.md) — VS Code, Neovim, Emacs, Helix setup
 - [Tips](tips.md) — tail calls, bignums, Unicode, error handling
 - [Troubleshooting](troubleshooting.md) — common errors and how to fix them
