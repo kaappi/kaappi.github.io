@@ -230,13 +230,13 @@ needed if you want to pre-warm the cache.
 
 | Library | Description |
 |---------|-------------|
-| `(srfi 1)` | [List library](procedures/srfi-1.md) (fold, filter, find, any, every, iota, ...) |
+| `(srfi 1)` | [List library](../procedures/srfi-1.md) (fold, filter, find, any, every, iota, ...) |
 | `(srfi 9)` | Records (alias for R7RS `define-record-type`) |
-| `(srfi 13)` | [String library](procedures/srfi-13.md) (contains, split, join, trim, ...) |
-| `(srfi 18)` | [Threads](procedures/threads.md), mutexes, condition variables |
+| `(srfi 13)` | [String library](../procedures/srfi-13.md) (contains, split, join, trim, ...) |
+| `(srfi 18)` | [Threads](../procedures/threads.md), mutexes, condition variables |
 | `(srfi 39)` | Parameter objects (alias for `make-parameter`) |
-| `(srfi 69)` | [Hash tables](procedures/hash-tables.md) |
-| `(srfi 133)` | [Vector library](procedures/srfi-133.md) |
+| `(srfi 69)` | [Hash tables](../procedures/hash-tables.md) |
+| `(srfi 133)` | [Vector library](../procedures/srfi-133.md) |
 | `(srfi 170)` | POSIX filesystem API (file-info, directory ops, ...) |
 
 61 portable SRFIs (loaded on demand from `.sld` files in `lib/srfi/`):

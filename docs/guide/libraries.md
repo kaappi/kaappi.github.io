@@ -39,7 +39,7 @@ Multiple imports can be combined:
 ## Available Libraries
 
 Kaappi includes all 14 R7RS standard libraries, 9 built-in SRFIs, and 42
-portable SRFIs. See the [Library Reference](../libraries.md) for the
+portable SRFIs. See the [Library Reference](library-authoring.md) for the
 complete list.
 
 ## Writing Your Own Library
@@ -81,7 +81,7 @@ The library name `(mylib math)` maps to the file path `mylib/math.sld`.
 kaappi --lib-path /path/to/libs program.scm
 ```
 
-See the [Library Reference](../libraries.md) for export specs, import
+See the [Library Reference](library-authoring.md) for export specs, import
 modifiers, bytecode caching, `cond-expand`, and the complete library list.
 
 ---
