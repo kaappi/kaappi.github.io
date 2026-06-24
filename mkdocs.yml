@@ -50,6 +50,7 @@ nav:
     - Language Reference: guide/language.md
     - Libraries: guide/libraries.md
     - Library Authoring: guide/library-authoring.md
+    - SRFI Support: guide/srfi-support.md
     - Advanced Features: guide/advanced.md
     - CLI Reference: guide/cli.md
     - Debugging: guide/debugging.md

@@ -13,13 +13,9 @@ Potential improvements, roughly ordered by impact. None are committed.
 
 ## Features
 
-- **OS-level threading** with true parallelism (requires thread-safe GC)
 - **Async I/O** integration with the fiber scheduler
-- **Network sockets** library
 - **Resource limits** for sandbox mode (max execution time, max memory)
 
 ## Tooling
 
-- **Language server** (LSP) for editor integration
-- **Source-level debugger** with file:line mapping (currently bytecode-level)
 - **REPL improvements** — syntax highlighting, auto-indent
