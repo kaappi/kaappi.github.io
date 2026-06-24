@@ -27,13 +27,14 @@
     --kp-mono: var(--md-code-font-family), "JetBrains Mono", monospace;
   }
 
+  html { overflow-x: hidden; }
   .kp {
     --kp-edge: 1px solid var(--kp-roast-3);
   }
   [data-md-color-scheme="default"] .kp-kicker,
   [data-md-color-scheme="default"] .kp-card-tag,
   [data-md-color-scheme="default"] .kp-doc-idx,
-  [data-md-color-scheme="default"] .kp-doc-go { color: #9A6820; }
+  [data-md-color-scheme="default"] .kp-doc-go { color: #8A5E18; }
 
   /* ---- syntax tokens (warm roast palette) ---- */
   .kp-cm { color: var(--kp-ash); font-style: italic; }
@@ -98,7 +99,7 @@
   .kp-hero h1 {
     font-family: var(--kp-disp);
     font-weight: 600;
-    font-size: clamp(2.4rem, 6.2vw, 4.2rem);
+    font-size: clamp(1.8rem, 6.2vw, 4.2rem);
     line-height: 1.08;
     letter-spacing: -0.03em;
     color: var(--kp-crema);
@@ -176,7 +177,7 @@
   }
   .kp-caption b { color: var(--kp-crema); font-weight: 500; }
   .kp-caption code {
-    font-size: .85rem; background: rgba(243,233,219,.1); padding: .5em 1em;
+    font-size: .85rem; background: rgba(243,233,219,.15); padding: .5em 1em;
     border-radius: 9px; border: 1px solid rgba(208,139,60,.35); color: var(--kp-crema);
     user-select: all; cursor: copy; display: inline-block; max-width: 100%;
     overflow-x: auto; white-space: nowrap;
@@ -219,7 +220,7 @@
     font-size: .76rem;
     color: var(--kp-ash);
   }
-  .kp-facts span { padding: 0 .9em; }
+  .kp-facts span { padding: 0 .9em; white-space: nowrap; }
   .kp-facts span + span::before {
     content: "\00b7"; color: var(--kp-roast-3); margin-right: .5em;
   }
@@ -260,7 +261,9 @@
   .kp-card::before {
     content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 3px;
     background: var(--kp-brass); transform: scaleY(0); transform-origin: top;
+    transition: transform .25s ease;
   }
+  .kp-card:hover::before { transform: scaleY(1); }
   .kp-card-tag {
     font-family: var(--kp-mono); font-size: .66rem; letter-spacing: .1em;
     text-transform: uppercase; color: var(--kp-brass); margin-bottom: .7rem;
@@ -359,7 +362,8 @@
     .kp-proof { grid-template-columns: 1fr; gap: 1.6rem; }
   }
   @media (max-width: 600px) {
-    .kp-hero { padding-top: 3.5rem; }
+    .kp-hero { padding: 3.5rem 1.2rem 3rem; }
+    .kp-hero h1 { font-size: clamp(1.5rem, 7vw, 2.4rem); }
     /* the arrow rotates into a vertical "drip" — coffee through the filter */
     .kp-eval { grid-template-columns: 1fr; gap: .5rem; padding: 1.25rem 1.25rem 1.4rem; }
     .kp-eval-src, .kp-eval-out { text-align: center; }
@@ -480,11 +484,6 @@
         <h3>OS threads &amp; fibers</h3>
         <p>Real OS threads via SRFI-18, plus green fibers with channels. Pre-fork and threaded HTTP servers.</p>
       </div>
-      <div class="kp-card">
-        <div class="kp-card-tag">ecosystem</div>
-        <h3>18 packages and growing</h3>
-        <p>Web framework, databases, templates, email, JSON/TOML/YAML/CSV, crypto, logging, testing — all via <code>thottam</code>.</p>
-      </div>
     </div>
   </section>
 
@@ -593,4 +592,5 @@
     </div>
   </div>
 </div>
+
 {% endblock %}
