@@ -157,3 +157,18 @@ build: make
 - C compiler (for packages with native code, e.g. kaappi-net)
 - OpenSSL (`brew install openssl` / `apt install libssl-dev`) for kaappi-net
 - PostgreSQL client libs (`brew install libpq` / `apt install libpq-dev`) for kaappi-pg
+
+## Environment variables
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `KAAPPI_HOME` | `~/.kaappi` | Root directory for installed packages, source repos, and the lockfile |
+| `KAAPPI_ORG` | `https://github.com/kaappi` | Base URL for fetching packages |
+
+```bash
+# Store packages in a project-local directory
+KAAPPI_HOME=./vendor thottam install kaappi-json
+
+# Fetch packages from a private GitHub org
+KAAPPI_ORG=https://github.com/my-org thottam install my-lib
+```
