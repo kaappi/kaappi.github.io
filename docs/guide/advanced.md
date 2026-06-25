@@ -96,18 +96,28 @@ to see the full list:
 | Command | Description |
 |---------|-------------|
 | `,time <expr>` | Measure execution time of an expression |
-| `,profile <expr>` | Profile timing, call counts, and allocations |
+| `,type <expr>` | Show the type of the result |
 | `,expand <expr>` | Show the result of macro expansion |
+| `,profile <expr>` | Profile timing, call counts, and allocations |
+| `,dis <expr>` | Disassemble a procedure |
+| `,describe <sym>` | Show procedure arity and type |
+| `,apropos <str>` | Search bindings by substring |
 | `,env [prefix]` | List global bindings (optional prefix filter) |
-| `,gc` | Show garbage collector statistics |
 | `,break <name>` | Set a breakpoint on a function (see [Debugging](debugging.md)) |
+| `,gc` | Show garbage collector statistics |
+| `,version` | Show Kaappi version |
+| `,load <file>` | Load and run a Scheme file |
+| `,import <lib>` | Import a library (e.g. `,import (srfi 1)`) |
+| `,quit` | Exit the REPL |
 | `,help` | Show all available commands |
 
 ```
 kaappi> ,time (fib 30)
-fib(30): 0.173s
-kaappi> ,env string-
-string-append string-copy string-length ...
+832040
+; 0.173 seconds
+kaappi> ,import (srfi 1)
+kaappi> (iota 5)
+(0 1 2 3 4)
 ```
 
 ## Bytecode Caching

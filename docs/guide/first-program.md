@@ -32,8 +32,8 @@ kaappi
 ```
 
 ```
-Kaappi Scheme v0.1.0
-Type (exit) to quit.
+Kaappi Scheme v0.5.0
+Type ,help for commands, ,quit to exit.
 
 kaappi>
 ```
@@ -57,7 +57,7 @@ kaappi> (map square '(1 2 3 4 5))
 (1 4 9 16 25)
 ```
 
-Type `(exit)` or press Ctrl-D to quit.
+Type `,quit` or press Ctrl-D to exit.
 
 !!! note "No install yet?"
 

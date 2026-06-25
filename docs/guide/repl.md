@@ -7,8 +7,8 @@ kaappi
 ```
 
 ```
-Kaappi Scheme v0.2.1
-Type (exit) to quit.
+Kaappi Scheme v0.5.0
+Type ,help for commands, ,quit to exit.
 
 kaappi> (+ 1 2)
 3
@@ -118,7 +118,15 @@ This is useful for exploratory programming — evaluate something, then use the 
 
 All commands start with a comma (`,`). They are not Scheme expressions.
 
-### Inspection
+### Evaluation
+
+#### `,time <expr>` — Measure execution time
+
+```
+kaappi> ,time (fib 30)
+832040
+; 0.173 seconds
+```
 
 #### `,type <expr>` — Show result type
 
@@ -134,6 +142,43 @@ kaappi> ,type car
 kaappi> ,type #t
 ; boolean
 ```
+
+#### `,expand <expr>` — Show macro expansion
+
+```
+kaappi> ,expand (when #t (display "yes"))
+(if #t (begin (display "yes")))
+```
+
+#### `,profile <expr>` — Detailed profiling
+
+Shows per-function timing, call counts, and memory allocations:
+
+```
+kaappi> ,profile (fib 25)
+75025
+; Profile Report
+; ...
+```
+
+#### `,dis <expr>` — Disassemble a procedure
+
+Shows the register-based bytecode for a procedure:
+
+```
+kaappi> ,dis factorial
+; Function: factorial
+; Arity: 1, Locals: 7, Upvalues: 0
+; Constants: <=, 1, *, factorial, -
+;
+  0000  move            r2, r0
+  0003  load_const      r3, 1
+  ...
+```
+
+This is a shortcut for `(disassemble <expr>)`. See [Debugging](debugging.md#bytecode-inspection) for details.
+
+### Inspection
 
 #### `,describe <symbol>` — Show binding details
 
@@ -200,36 +245,6 @@ kaappi> ,env string-
 ; 24 bindings
 ```
 
-### Timing and Profiling
-
-#### `,time <expr>` — Measure execution time
-
-```
-kaappi> ,time (fib 30)
-832040
-; 0.173 seconds
-```
-
-#### `,profile <expr>` — Detailed profiling
-
-Shows per-function timing, call counts, and memory allocations:
-
-```
-kaappi> ,profile (fib 25)
-75025
-; Profile Report
-; ...
-```
-
-### Macros
-
-#### `,expand <expr>` — Show macro expansion
-
-```
-kaappi> ,expand (when #t (display "yes"))
-(if #t (begin (display "yes")))
-```
-
 ### Debugging
 
 #### `,break <name>` — Set breakpoint
@@ -259,7 +274,7 @@ kaappi> ,delete all
 All breakpoints deleted
 ```
 
-### Runtime
+### System
 
 #### `,gc` — Show GC statistics
 
@@ -272,24 +287,69 @@ GC Statistics:
   ...
 ```
 
+#### `,version` — Show Kaappi version
+
+```
+kaappi> ,version
+Kaappi Scheme v0.5.0
+```
+
+#### `,load <file>` — Load and run a Scheme file
+
+```
+kaappi> ,load helpers.scm
+```
+
+Equivalent to `(load "helpers.scm")`. Definitions in the file become
+available in the current REPL session.
+
+#### `,import <lib>` — Import a library
+
+```
+kaappi> ,import (srfi 1)
+kaappi> (iota 5)
+(0 1 2 3 4)
+```
+
+Import one or more libraries interactively, just like `(import ...)` at
+the top of a program. Supports all import modifiers (`only`, `except`,
+`rename`, `prefix`):
+
+```
+kaappi> ,import (only (srfi 1) iota fold)
+```
+
 #### `,help` — Show all commands
 
 ```
 kaappi> ,help
 Commands:
+  ,help             Show this message
+  ,quit             Exit the REPL
+
+ -- Evaluation:
   ,time <expr>      Measure execution time
   ,type <expr>      Show result type
+  ,expand <expr>    Show macro expansion
+  ,profile <expr>   Profile timing, calls, and allocations
+  ,dis <expr>       Disassemble a procedure
+
+ -- Inspection:
   ,describe <sym>   Show procedure arity and type
   ,apropos <str>    Search bindings by substring
-  ,env [prefix]     List global bindings by prefix
-  ,profile <expr>   Profile timing, calls, and allocations
-  ,expand <expr>    Show macro expansion
-  ,gc               Show GC statistics
+  ,env [prefix]     List bindings (optionally filtered by prefix)
+
+ -- Debugging:
   ,break <name>     Set breakpoint on function
   ,breakpoints      List active breakpoints
   ,delete all       Clear all breakpoints
   ,step <expr>      Evaluate with single-stepping
-  ,help             This message
+
+ -- System:
+  ,gc               Show GC statistics
+  ,version          Show Kaappi version
+  ,load <file>      Load and run a Scheme file
+  ,import <lib>     Import a library (e.g. ,import (srfi 1))
 
 The variable _ holds the last result.
 ```
@@ -297,10 +357,10 @@ The variable _ holds the last result.
 ## Exiting
 
 ```
-kaappi> (exit)
+kaappi> ,quit
 ```
 
-Or press **Ctrl+D** on an empty line.
+You can also type `(exit)` or press **Ctrl+D** on an empty line.
 
 ---
 

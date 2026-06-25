@@ -205,9 +205,11 @@ kaappi> ,time (fib 30)
 
 ### Disassembling a procedure
 
+Use the `,dis` REPL command or the `(disassemble)` procedure:
+
 ```
 kaappi> (define (factorial n) (if (<= n 1) 1 (* n (factorial (- n 1)))))
-kaappi> (disassemble factorial)
+kaappi> ,dis factorial
 ; Function: factorial
 ; Source: <repl>
 ; Arity: 1, Locals: 7, Upvalues: 0
@@ -225,7 +227,9 @@ kaappi> (disassemble factorial)
   0050  return          r1
 ```
 
-This shows the register-based bytecode the compiler produces. Useful for
+`,dis <expr>` evaluates the expression, then disassembles the resulting
+procedure. `(disassemble proc)` does the same from Scheme code. This shows
+the register-based bytecode the compiler produces — useful for
 understanding tail call optimization, closure captures, and performance.
 
 ### Disassembling a file

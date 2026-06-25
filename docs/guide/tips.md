@@ -2,14 +2,20 @@
 
 ## REPL Workflow
 
-- **The REPL has built-in tools.** Type `,help` to see commands for
-  timing (`,time`), profiling (`,profile`), macro expansion (`,expand`),
-  binding exploration (`,env`), and GC stats (`,gc`). See
-  [Advanced Features](advanced.md#repl-commands) for the full reference.
+- **The REPL has built-in tools.** Type `,help` to see all commands.
+  Highlights: `,time` for timing, `,profile` for profiling, `,dis` for
+  disassembly, `,expand` for macro expansion, `,describe` and `,apropos`
+  for exploring bindings, `,import` for loading libraries, and `,load`
+  for running files. See [REPL Guide](repl.md#repl-commands) for the full
+  reference.
 
   ```
   kaappi> ,time (fib 30)
-  fib(30): 0.173s
+  832040
+  ; 0.173 seconds
+  kaappi> ,import (srfi 1)
+  kaappi> (iota 5)
+  (0 1 2 3 4)
   ```
 
 ## Performance
