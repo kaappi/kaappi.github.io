@@ -783,13 +783,9 @@ document.getElementById("kp-tour-menu-toggle").addEventListener("click", () => {
 // ---- CodeMirror setup ----
 async function initEditor() {
   try {
-    const [{ EditorView, basicSetup }, { EditorState }, { StreamLanguage, HighlightStyle, syntaxHighlighting }, { tags }, { schemeMode }] = await Promise.all([
-      import("https://esm.sh/codemirror@6.0.1"),
-      import("https://esm.sh/@codemirror/state@6"),
-      import("https://esm.sh/@codemirror/language@6"),
-      import("https://esm.sh/@lezer/highlight@^1.0.0?target=es2022"),
-      loadSchemeMode(),
-    ]);
+    const cmRoot = new URL("{{ base_url }}", document.baseURI).href.replace(/\/$/, "");
+    const { EditorView, basicSetup, EditorState, StreamLanguage, HighlightStyle, syntaxHighlighting, tags, scheme: schemeMode } =
+      await import(cmRoot + "/js/codemirror-bundle.mjs");
 
     const darkHighlight = HighlightStyle.define([
       { tag: [tags.keyword, tags.standard(tags.variableName)], color: "#E8B563" },
@@ -831,7 +827,7 @@ async function initEditor() {
         }
       }),
     ];
-    if (schemeMode) extensions.push(StreamLanguage.define(schemeMode));
+    extensions.push(StreamLanguage.define(schemeMode));
 
     editorView = new EditorView({
       state: EditorState.create({ doc: LESSONS[currentLesson].code, extensions }),
@@ -853,13 +849,6 @@ async function initEditor() {
     });
     el.appendChild(ta);
   }
-}
-
-async function loadSchemeMode() {
-  try {
-    const mod = await import("https://esm.sh/@codemirror/legacy-modes@6/mode/scheme");
-    return { schemeMode: mod.scheme || mod.default };
-  } catch { return { schemeMode: null }; }
 }
 
 function getEditorContent() {

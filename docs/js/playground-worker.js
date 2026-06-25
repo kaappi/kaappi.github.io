@@ -4,7 +4,7 @@ let wasiShim = null;
 self.onmessage = async ({ data: { code, wasmUrl } }) => {
   try {
     if (!wasiShim) {
-      wasiShim = await import("https://esm.sh/@bjorn3/browser_wasi_shim?bundle");
+      wasiShim = await import("./wasi-shim-bundle.mjs");
     }
     const { WASI, File, OpenFile, ConsoleStdout, PreopenDirectory } = wasiShim;
 
