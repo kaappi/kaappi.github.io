@@ -81,7 +81,7 @@ Use these Zig types to match Kaappi's FFI:
 | `'uint8` ... `'uint64` | `u8` ... `u64` | |
 | `'size_t` | `usize` | |
 
-Functions can take up to 4 parameters.
+Functions can take up to 5 parameters.
 
 ### String handling
 

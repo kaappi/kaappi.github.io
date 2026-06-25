@@ -66,7 +66,7 @@ int kmylib_add(int a, int b) {
 | `size_t` | `'size_t` | fixnum |
 | `char` | `'char` | fixnum |
 
-Functions can take up to 4 parameters.
+Functions can take up to 5 parameters.
 
 ## Step 2: Write the Makefile
 
