@@ -26,5 +26,8 @@ Prefer the browser? Try the [interactive tour](../tour.md) or the
 - [Debugging](debugging.md) — stepping debugger, profiling, disassembly, error handling
 - [Advanced Features](advanced.md) — FFI, bytecode caching, standalone binaries
 - [Editor Support](editors.md) — VS Code, Neovim, Emacs, Helix setup
+- [Migrating from Other Schemes](migrating.md) — differences from Racket, Guile, Chicken, and Common Lisp
+- [Security](security.md) — SQL injection, XSS prevention, safe FFI, sandbox mode
+- [Deployment](deployment.md) — standalone binaries, Docker, systemd, reverse proxy
 - [Tips](tips.md) — tail calls, bignums, Unicode, error handling
 - [Troubleshooting](troubleshooting.md) — common errors and how to fix them
