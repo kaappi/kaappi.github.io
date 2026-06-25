@@ -99,7 +99,9 @@ kaappi> (vector? "hello")
 
 **Syntax:** `(vector-length vector)`
 
-Returns the number of elements in *vector*.
+Returns the number of elements in *vector*. O(1) — stored in the vector
+header, unlike [`length`](pairs-and-lists.md#length) which traverses the
+list.
 
 ```scheme
 kaappi> (vector-length #(1 2 3))
@@ -116,14 +118,21 @@ kaappi> (vector-length #())
 
 **Syntax:** `(vector-ref vector k)`
 
-Returns the element at index *k* in *vector*, using zero-based indexing. It is
-an error if *k* is not a valid index. This operation is O(1).
+Returns the element at index *k* in *vector*, using zero-based indexing.
+O(1) — direct indexed access, unlike [`list-ref`](pairs-and-lists.md#list-ref)
+which is O(k).
+
+**Errors:** Raises `IndexOutOfBounds` if *k* is out of range. Raises
+`TypeError` if *vector* is not a vector or *k* is not a non-negative
+integer.
 
 ```scheme
 kaappi> (vector-ref #(a b c d) 0)
 ;=> a
 kaappi> (vector-ref #(a b c d) 2)
 ;=> c
+kaappi> (vector-ref #(a b c d) 3)
+;=> d
 ```
 
 **See also:** [`vector-set!`](#vector-set), [`vector-length`](#vector-length)
@@ -134,8 +143,11 @@ kaappi> (vector-ref #(a b c d) 2)
 
 **Syntax:** `(vector-set! vector k obj)`
 
-Stores *obj* into element *k* of *vector*. It is an error if *k* is not a valid
-index. This operation is O(1). Returns void.
+Stores *obj* into element *k* of *vector*. O(1). Returns void.
+
+**Errors:** Raises `IndexOutOfBounds` if *k* is out of range. Raises
+`TypeError` if *vector* is not a vector or *k* is not a non-negative
+integer.
 
 ```scheme
 kaappi> (let ((v (vector 1 2 3)))

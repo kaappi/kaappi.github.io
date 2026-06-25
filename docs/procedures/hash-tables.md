@@ -141,11 +141,14 @@ kaappi> (hash-table? "hello")
 
 **Syntax:** `(hash-table-ref ht key)` | `(hash-table-ref ht key default)`
 
-Returns the value associated with *key* in hash table *ht*. If *key*
-is not found and a *default* is provided, returns *default* (if it is
-a thunk, it is called and the result is returned). If *key* is not
-found and no default is provided, an error is raised. Keys are compared
-using the hash table's equality predicate (`equal?` by default).
+Returns the value associated with *key* in hash table *ht*. O(1) average.
+
+If *key* is not found and a *default* is provided, returns *default* (if it
+is a thunk, it is called and the result is returned). If *key* is not found
+and no default is provided, an error is raised. Keys are compared using the
+hash table's equality predicate (`equal?` by default).
+
+**Errors:** Raises an error if *key* is not found and no default is provided.
 
 ```scheme
 kaappi> (define ht (alist->hash-table '((a . 1) (b . 2) (c . 3))))
@@ -159,6 +162,13 @@ kaappi> (hash-table-ref ht 'z 0)
 ;=> 0
 ```
 
+**Common pattern** — safe lookup with default:
+
+```scheme
+(define (get-config key)
+  (hash-table-ref config-ht key #f))
+```
+
 **See also:** [`hash-table-exists?`](#hash-table-exists),
 [`hash-table-set!`](#hash-table-set)
 
@@ -169,7 +179,8 @@ kaappi> (hash-table-ref ht 'z 0)
 **Syntax:** `(hash-table-set! ht key value)`
 
 Associates *key* with *value* in hash table *ht*. If *key* already
-exists, its value is replaced. Returns void.
+exists, its value is replaced. O(1) average. Returns void. The table
+resizes automatically when needed.
 
 ```scheme
 kaappi> (define ht (make-hash-table))

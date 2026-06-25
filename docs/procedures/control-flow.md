@@ -147,8 +147,10 @@ kaappi> (call-with-escape-continuation
 
 An alias for `call-with-escape-continuation`. The escape continuation
 is a one-shot exit: it can only be called within the dynamic extent of
-*proc*. More efficient than `call/cc` because the runtime does not need
-to preserve the continuation after *proc* returns.
+*proc*. Much cheaper than `call/cc` because no stack snapshot is needed.
+
+**Prefer `call/ec` over `call/cc`** unless you need to reinvoke the
+continuation after the procedure returns.
 
 ```scheme
 kaappi> (call/ec (lambda (exit) (exit 'done)))
@@ -159,6 +161,20 @@ kaappi> (call/ec
              (when (= i 5) (return i))
              (loop (+ i 1)))))
 ;=> 5
+```
+
+**Common pattern** — early return from iteration:
+
+```scheme
+(define (find-negative lst)
+  (call/ec (lambda (return)
+    (for-each (lambda (x)
+                (when (negative? x) (return x)))
+              lst)
+    #f)))
+
+(find-negative '(1 2 -3 4))  ;=> -3
+(find-negative '(1 2 3))     ;=> #f
 ```
 
 **See also:** [`call-with-escape-continuation`](#call-with-escape-continuation),
@@ -345,6 +361,8 @@ an error in Scheme programs. The *message* should describe what went
 wrong, and the irritants provide additional context (typically the
 offending values).
 
+**Errors:** Always raises. The error can be caught with `guard`.
+
 ```scheme
 kaappi> (guard (e (#t (error-object-message e)))
          (error "index out of range" 5 '(0 3)))
@@ -352,6 +370,25 @@ kaappi> (guard (e (#t (error-object-message e)))
 kaappi> (guard (e (#t (error-object-irritants e)))
          (error "bad value" 42 'expected-string))
 ;=> (42 expected-string)
+```
+
+**Common pattern** — input validation:
+
+```scheme
+(define (divide a b)
+  (when (zero? b) (error "divide: division by zero" a b))
+  (/ a b))
+```
+
+**Common pattern** — catch and handle:
+
+```scheme
+(guard (e
+        ((string=? (error-object-message e) "not found")
+         (display "using default\n")
+         default-value)
+        (#t (raise e)))
+  (lookup key))
 ```
 
 **See also:** [`error-object?`](#error-object-pred),

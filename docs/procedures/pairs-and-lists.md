@@ -40,6 +40,8 @@ Returns a newly allocated mutable pair whose `car` is *obj1* and whose `cdr` is
 *obj2*. If *obj2* is a proper list the result is a proper list; otherwise the
 result is a dotted pair.
 
+O(1). Allocates one pair on the heap.
+
 ```scheme
 kaappi> (cons 1 2)
 ;=> (1 . 2)
@@ -47,6 +49,16 @@ kaappi> (cons 'a '(b c))
 ;=> (a b c)
 kaappi> (cons 1 '())
 ;=> (1)
+```
+
+**Common pattern** — building a list from back to front:
+
+```scheme
+(define (iota n)
+  (let loop ((i (- n 1)) (acc '()))
+    (if (< i 0) acc
+        (loop (- i 1) (cons i acc)))))
+(iota 5) ;=> (0 1 2 3 4)
 ```
 
 **See also:** [`car`](#car), [`cdr`](#cdr)
@@ -57,14 +69,18 @@ kaappi> (cons 1 '())
 
 **Syntax:** `(car pair)`
 
-Returns the contents of the `car` field of *pair*. Raises a type error if
-the argument is not a pair.
+Returns the contents of the `car` field of *pair*. O(1). JIT-inlined.
+
+**Errors:** Raises `TypeError` if the argument is not a pair.
+`(car '())` is an error — the empty list is not a pair.
 
 ```scheme
 kaappi> (car '(a b c))
 ;=> a
 kaappi> (car (cons 1 2))
 ;=> 1
+kaappi> (car '((1 2) 3))
+;=> (1 2)
 ```
 
 **See also:** [`cdr`](#cdr), [`caar`](#caar), [`cadr`](#cadr)
@@ -75,14 +91,17 @@ kaappi> (car (cons 1 2))
 
 **Syntax:** `(cdr pair)`
 
-Returns the contents of the `cdr` field of *pair*. Raises a type error if
-the argument is not a pair.
+Returns the contents of the `cdr` field of *pair*. O(1). JIT-inlined.
+
+**Errors:** Raises `TypeError` if the argument is not a pair.
 
 ```scheme
 kaappi> (cdr '(a b c))
 ;=> (b c)
 kaappi> (cdr (cons 1 2))
 ;=> 2
+kaappi> (cdr '(a))
+;=> ()
 ```
 
 **See also:** [`car`](#car), [`cdar`](#cdar), [`cddr`](#cddr)
@@ -132,7 +151,8 @@ kaappi> p
 **Syntax:** `(list obj ...)`
 
 Returns a newly allocated proper list whose elements are the arguments.
-Called with no arguments it returns the empty list.
+Called with no arguments it returns the empty list. O(n) where n is the
+number of arguments.
 
 ```scheme
 kaappi> (list 1 2 3)
@@ -141,6 +161,8 @@ kaappi> (list 'a 'b)
 ;=> (a b)
 kaappi> (list)
 ;=> ()
+kaappi> (list (+ 1 2) (* 3 4))
+;=> (3 12)
 ```
 
 **See also:** [`make-list`](#make-list), [`cons`](#cons)
@@ -198,6 +220,9 @@ elements of the other *lists*. The last argument may be any object and is used
 directly as the tail of the result. All preceding arguments must be proper
 lists. Called with no arguments it returns the empty list.
 
+O(n) where n is the total length of all lists except the last (the last
+list is shared, not copied).
+
 ```scheme
 kaappi> (append '(a b) '(c d))
 ;=> (a b c d)
@@ -205,9 +230,16 @@ kaappi> (append '(1) '(2) '(3))
 ;=> (1 2 3)
 kaappi> (append '(a b) 'c)
 ;=> (a b . c)
+kaappi> (append '() '(1 2))
+;=> (1 2)
 kaappi> (append)
 ;=> ()
 ```
+
+!!! note "append copies all but the last list"
+    `(append list1 list2)` copies `list1` and points its tail at `list2`.
+    Mutating `list2` later will affect the result. If you need an independent
+    copy, use `list-copy` on the result.
 
 **See also:** [`reverse`](#reverse), [`concatenate`](./srfi-1.md#concatenate)
 
@@ -235,10 +267,11 @@ kaappi> (reverse '())
 
 **Syntax:** `(length list)`
 
-Returns the number of elements in *list*. Raises a type error if the
-argument is an improper or circular list. Uses Floyd's cycle-detection
-algorithm internally so circular lists are caught rather than causing an
-infinite loop.
+Returns the number of elements in *list*. O(n) — traverses the entire list.
+
+**Errors:** Raises `TypeError` if the argument is an improper or circular
+list. Uses Floyd's cycle-detection algorithm internally so circular lists
+are caught rather than causing an infinite loop.
 
 ```scheme
 kaappi> (length '(a b c))
@@ -246,6 +279,10 @@ kaappi> (length '(a b c))
 kaappi> (length '())
 ;=> 0
 ```
+
+!!! note "Avoid repeated length calls"
+    Since `length` is O(n), avoid calling it in a loop condition. Instead,
+    use recursion with `null?` to check for the end of a list.
 
 **See also:** [`list?`](./type-checking.md#list), [`length+`](./srfi-1.md#length-plus)
 
@@ -316,9 +353,12 @@ kaappi> (cddr '(1 2 3))
 
 **Syntax:** `(list-ref list k)`
 
-Returns the *k*th element of *list* (zero-indexed). Raises `IndexOutOfBounds`
-if *k* is out of range and `TypeError` if *k* is not a non-negative integer
-or *list* is not a proper list.
+Returns the *k*th element of *list* (zero-indexed). O(k) — walks k pairs
+from the head.
+
+**Errors:** Raises `IndexOutOfBounds` if *k* is out of range. Raises
+`TypeError` if *k* is not a non-negative integer or *list* is not a proper
+list.
 
 ```scheme
 kaappi> (list-ref '(a b c d) 0)
@@ -328,6 +368,11 @@ kaappi> (list-ref '(a b c d) 2)
 kaappi> (list-ref '(a b c d) 3)
 ;=> d
 ```
+
+!!! note "Use vectors for indexed access"
+    `list-ref` is O(k) because it walks the list. If you need frequent
+    random access by index, use a [vector](vectors.md) instead —
+    `vector-ref` is O(1).
 
 **See also:** [`list-tail`](#list-tail), [`list-set!`](#list-set)
 
@@ -444,16 +489,29 @@ kaappi> (memv 4 '(1 2 3))
 Searches the association list *alist* (a list of pairs) for the first pair
 whose `car` is equal to *obj* using `equal?`. Returns the matching pair, or
 `#f` if not found. An optional third argument *compare* specifies a
-two-argument predicate to use instead of `equal?`.
+two-argument predicate to use instead of `equal?`. O(n) linear scan.
 
 ```scheme
 kaappi> (assoc 'b '((a 1) (b 2) (c 3)))
 ;=> (b 2)
 kaappi> (assoc 'd '((a 1) (b 2) (c 3)))
 ;=> #f
+kaappi> (assoc "name" '(("name" . "Alice") ("age" . 30)))
+;=> ("name" . "Alice")
 kaappi> (assoc 2.0 '((1 a) (2 b) (3 c)) =)
 ;=> (2 b)
 ```
+
+**Common pattern** — safe value extraction:
+
+```scheme
+(let ((pair (assoc "key" alist)))
+  (if pair (cdr pair) default-value))
+```
+
+!!! note "Use hash tables for large alists"
+    `assoc` is O(n). For more than ~10 key-value pairs, use a
+    [hash table](hash-tables.md) — `hash-table-ref` is O(1).
 
 **See also:** [`assq`](#assq), [`assv`](#assv), [`alist-cons`](./srfi-1.md#alist-cons)
 
@@ -506,7 +564,7 @@ Applies *proc* element-wise to the elements of the given lists and returns
 a list of the results. When multiple lists are given, *proc* receives one
 argument from each list and iteration stops at the shortest list. The order
 of application is unspecified by R7RS but Kaappi processes elements left to
-right.
+right. O(n).
 
 ```scheme
 kaappi> (map car '((1 2) (3 4) (5 6)))
@@ -517,7 +575,14 @@ kaappi> (map + '(1 2 3) '(10 20 30))
 ;=> (11 22 33)
 kaappi> (map car '())
 ;=> ()
+kaappi> (map + '(1 2 3) '(10 20))
+;=> (11 22)
 ```
+
+!!! note "map vs for-each"
+    `map` allocates a new list for the results. If you only need the side
+    effects (printing, mutation), use [`for-each`](#for-each) instead — it
+    doesn't allocate.
 
 **See also:** [`for-each`](#for-each), [`filter-map`](./srfi-1.md#filter-map)
 
@@ -530,14 +595,11 @@ kaappi> (map car '())
 Like `map`, but calls *proc* for its side effects rather than collecting
 results. The return value is unspecified. When multiple lists are given,
 iteration stops at the shortest. Elements are guaranteed to be processed
-left to right.
+left to right. O(n), no allocation.
 
 ```scheme
-kaappi> (let ((result '()))
-         (for-each (lambda (x) (set! result (cons x result)))
-                   '(1 2 3))
-         (reverse result))
-;=> (1 2 3)
+kaappi> (for-each display '(1 2 3))
+123
 kaappi> (let ((sum 0))
          (for-each (lambda (a b) (set! sum (+ sum a b)))
                    '(1 2 3) '(10 20 30))

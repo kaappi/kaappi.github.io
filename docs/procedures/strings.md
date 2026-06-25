@@ -75,7 +75,10 @@ kaappi> (make-string 3 #\x)
 
 **Syntax:** `(string-length string)`
 
-Returns the number of Unicode codepoints in *string*.
+Returns the number of Unicode codepoints in *string*. O(n) — counts
+codepoints, not bytes.
+
+**Errors:** Raises `TypeError` if the argument is not a string.
 
 ```scheme
 kaappi> (string-length "hello")
@@ -100,7 +103,11 @@ kaappi> (string-length "")
 **Syntax:** `(string-ref string k)`
 
 Returns the character at codepoint index *k* in *string*, using zero-based
-indexing. It is an error if *k* is not a valid index.
+indexing. O(k) — walks from the start to position k.
+
+**Errors:** Raises `IndexOutOfBounds` if *k* is out of range. Raises
+`TypeError` if *string* is not a string or *k* is not a non-negative
+integer.
 
 ```scheme
 kaappi> (string-ref "hello" 0)
@@ -112,7 +119,8 @@ kaappi> (string-ref "hello" 4)
 !!! note "Codepoint indexing"
     Indices refer to Unicode codepoint positions, not byte offsets. In a string
     like `"h\x00E9;llo"`, index 1 returns the e-acute character (U+00E9), and
-    index 2 returns `#\l`.
+    index 2 returns `#\l`. Since `string-ref` is O(k), use
+    `string->vector` first if you need many indexed accesses.
 
 **See also:** [`string-length`](#string-length), [`string-set!`](#string-set)
 
@@ -148,6 +156,9 @@ Returns a newly allocated string containing the characters of *string* from
 codepoint index *start* (inclusive) to *end* (exclusive). Both *start* and *end*
 must be valid codepoint indices with *start* <= *end*.
 
+**Errors:** Raises `IndexOutOfBounds` if *start* or *end* are out of range
+or if *start* > *end*.
+
 ```scheme
 kaappi> (substring "hello world" 0 5)
 ;=> "hello"
@@ -155,6 +166,10 @@ kaappi> (substring "hello world" 6 11)
 ;=> "world"
 kaappi> (substring "abc" 1 2)
 ;=> "b"
+kaappi> (substring "abc" 0 0)
+;=> ""
+kaappi> (substring "abc" 0 3)
+;=> "abc"
 ```
 
 **See also:** [`string-copy`](#string-copy)
@@ -169,12 +184,24 @@ kaappi> (substring "abc" 1 2)
 
 Returns a newly allocated string whose characters are the concatenation of all
 the given strings. When called with no arguments, returns the empty string.
+O(n) where n is the total length of all arguments.
+
+**Errors:** Raises `TypeError` if any argument is not a string.
 
 ```scheme
 kaappi> (string-append "hello" " " "world")
 ;=> "hello world"
 kaappi> (string-append)
 ;=> ""
+kaappi> (string-append "a" "" "b")
+;=> "ab"
+```
+
+**Common pattern** — building strings from parts:
+
+```scheme
+(string-append "Hello, " name "! You have "
+               (number->string count) " messages.")
 ```
 
 **See also:** [`string-copy`](#string-copy)

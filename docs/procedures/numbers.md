@@ -33,11 +33,14 @@ numbers. These procedures are available from `(scheme base)` and
 **Syntax:** `(+ z1 ...)`
 
 Returns the sum of its arguments. With no arguments, returns `0` (the
-additive identity). Accepts any combination of number types: when all
-arguments are exact integers the result is exact, when any argument is
-inexact the result is inexact, and when any argument is complex the
-result is complex. Arithmetic on fixnums that overflows is transparently
-promoted to bignums.
+additive identity). JIT-inlined for fixnums.
+
+Accepts any combination of number types: when all arguments are exact
+integers the result is exact, when any argument is inexact the result is
+inexact, and when any argument is complex the result is complex. Fixnum
+overflow is transparently promoted to bignums.
+
+**Errors:** Raises `TypeError` if any argument is not a number.
 
 ```scheme
 kaappi> (+)
@@ -48,6 +51,8 @@ kaappi> (+ 1 2.0)
 ;=> 3.0
 kaappi> (+ 1/3 2/3)
 ;=> 1
+kaappi> (+ (expt 2 62) 1)
+;=> 4611686018427387905  ;; bignum — overflow is safe
 ```
 
 **See also:** [`-`](./numbers.md#minus), [`*`](./numbers.md#star)
@@ -109,8 +114,10 @@ kaappi> (* 1/2 1/3)
 With one argument, returns the multiplicative inverse (reciprocal). With
 two or more arguments, divides the first argument by all subsequent ones.
 Division of exact integers produces exact rationals rather than inexact
-flonums: `(/ 1 3)` returns `1/3`, not `0.333...`. Division by zero
-raises an error that can be caught with `guard`.
+flonums: `(/ 1 3)` returns `1/3`, not `0.333...`.
+
+**Errors:** Division by zero raises an error that can be caught with `guard`.
+Raises `TypeError` if any argument is not a number.
 
 ```scheme
 kaappi> (/ 10 2)
@@ -123,11 +130,14 @@ kaappi> (/ 10 3)
 ;=> 10/3
 kaappi> (/ 6.0 2.0)
 ;=> 3.0
+kaappi> (inexact (/ 1 3))
+;=> 0.3333333333333333
 ```
 
-!!! note
-    Exact integer division always produces an exact result. Use
-    `(inexact (/ 1 3))` if you need a flonum.
+!!! note "Exact division returns rationals"
+    `(/ 1 3)` returns the exact rational `1/3`, not `0.333...`. Use
+    `(inexact (/ 1 3))` if you need a flonum. Use `quotient` for
+    truncated integer division.
 
 **See also:** [`quotient`](./numbers.md#quotient), [`remainder`](./numbers.md#remainder), [`floor/`](./numbers.md#floor-div)
 
@@ -816,13 +826,19 @@ bignum arithmetic for large results). A negative exact exponent produces
 an exact rational. Complex exponentiation uses the formula
 `z^w = e^(w * ln(z))`.
 
+**Errors:** Raises `TypeError` if either argument is not a number.
+
 ```scheme
 kaappi> (expt 2 10)
 ;=> 1024
+kaappi> (expt 2 100)
+;=> 1267650600228229401496703205376  ;; bignum — no overflow
 kaappi> (expt 2 -1)
 ;=> 1/2
 kaappi> (expt 2.0 0.5)
 ;=> 1.4142135623730951
+kaappi> (expt 0 0)
+;=> 1
 ```
 
 **See also:** [`square`](./numbers.md#square), [`sqrt`](./numbers.md#sqrt)
@@ -1095,10 +1111,11 @@ kaappi> (number->string +inf.0)
 **Syntax:** `(string->number string)` or `(string->number string radix)`
 
 Parses `string` as a number and returns the result. Returns `#f` if the
-string cannot be parsed. The optional `radix` argument (default 10)
-specifies the base for integer parsing; valid values are 2, 8, 10, and
-16. Recognizes special float syntax (`+inf.0`, `-inf.0`, `+nan.0`),
-rational syntax (`1/3`), and complex number syntax (`3+4i`).
+string cannot be parsed — it never raises an error on invalid input.
+The optional `radix` argument (default 10) specifies the base for integer
+parsing; valid values are 2, 8, 10, and 16. Recognizes special float
+syntax (`+inf.0`, `-inf.0`, `+nan.0`), rational syntax (`1/3`), and
+complex number syntax (`3+4i`).
 
 ```scheme
 kaappi> (string->number "42")
@@ -1111,8 +1128,21 @@ kaappi> (string->number "101010" 2)
 ;=> 42
 kaappi> (string->number "hello")
 ;=> #f
+kaappi> (string->number "")
+;=> #f
 kaappi> (string->number "+inf.0")
 ;=> +inf.0
+kaappi> (string->number "1/3")
+;=> 1/3
+```
+
+**Common pattern** — parsing user input safely:
+
+```scheme
+(let ((n (string->number user-input)))
+  (if (and n (exact-integer? n) (positive? n))
+      (process n)
+      (error "expected a positive integer")))
 ```
 
 **See also:** [`number->string`](./numbers.md#number-to-string)
