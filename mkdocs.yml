@@ -120,6 +120,8 @@ extra:
   social:
     - icon: fontawesome/brands/github
       link: https://github.com/kaappi/kaappi
+    - icon: octicons/comment-discussion-16
+      link: https://github.com/orgs/kaappi/discussions
 
 watch:
   - overrides
