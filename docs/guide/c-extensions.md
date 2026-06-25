@@ -168,6 +168,16 @@ build: make
 depends: kaappi-net
 ```
 
+If your package is hosted outside the official `kaappi` org, add a `source:`
+field so users can install it directly:
+
+```
+name: kaappi-mylib
+build: make
+depends: kaappi-net
+source: https://github.com/yourname/kaappi-mylib
+```
+
 ## Step 6: Test
 
 ```bash

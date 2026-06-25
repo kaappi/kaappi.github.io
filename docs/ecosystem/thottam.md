@@ -18,7 +18,7 @@ If you build from source, `zig build` produces both `kaappi` and `thottam` in
 ## Commands
 
 ```bash
-thottam install <package>[@<version>]  # Install a package (optionally pinned)
+thottam install <pkg>[@<ver>][::url]   # Install a package (optionally pinned/sourced)
 thottam remove <package>               # Remove a package
 thottam list                           # List installed packages
 thottam update [package]               # Update one or all packages
@@ -90,6 +90,26 @@ thottam install kaappi-http@abc1234
 
 The resolved commit SHA is recorded in the lockfile (`~/.kaappi/thottam.lock`).
 
+## Custom source URLs
+
+Install a package from any Git URL using the `::` syntax:
+
+```bash
+thottam install kaappi-auth::https://github.com/bob/kaappi-auth
+thottam install kaappi-http@v1.1::https://github.com/alice/kaappi-http
+```
+
+Without `::`, packages are fetched from `KAAPPI_ORG` (default:
+`https://github.com/kaappi`). Custom URLs are recorded in the lockfile so
+`thottam update` pulls from the correct source.
+
+Dependencies can also specify source URLs in `kaappi.pkg`:
+
+```
+name: my-app
+depends: kaappi-web kaappi-auth::https://github.com/bob/kaappi-auth
+```
+
 ## Lockfile and reproducible installs
 
 Every `thottam install` records the exact commit SHA in
@@ -131,7 +151,7 @@ thottam verify
 │   ├── kaappi-net/
 │   ├── kaappi-http/
 │   └── ...
-├── thottam.lock            # Pinned commit SHAs for reproducibility
+├── thottam.lock            # Pinned commit SHAs (and source URLs) for reproducibility
 └── installed.txt           # Installed package list
 ```
 
@@ -143,13 +163,15 @@ Each package has a `kaappi.pkg` file in its root:
 name: kaappi-web
 depends: kaappi-http kaappi-json
 build: make
+source: https://github.com/kaappi/kaappi-web
 ```
 
 | Field | Required | Description |
 |-------|----------|-------------|
 | `name` | yes | Package name |
-| `depends` | no | Space-separated dependency names |
+| `depends` | no | Space-separated dependency specs (`name[@ver][::url]`) |
 | `build` | no | Build command (omit for pure Scheme) |
+| `source` | no | Git URL where this package is hosted |
 
 ## Requirements
 
