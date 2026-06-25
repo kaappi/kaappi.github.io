@@ -112,7 +112,6 @@ nav:
     - Logging: ecosystem/log.md
     - CLI Parsing: ecosystem/cli.md
     - Examples: ecosystem/examples.md
-  - Benchmarks: benchmarks.md
   - Glossary: glossary.md
   - Stability: stability.md
   - Community: community.md

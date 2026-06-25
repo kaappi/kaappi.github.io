@@ -57,8 +57,7 @@ differences:
 
 Kaappi's JIT compiler generates native code for hot functions (after 100
 calls). On numeric and list-processing benchmarks, JIT-compiled Kaappi is
-competitive with Chez Scheme, Gambit, and Larceny. See
-[Benchmarks](benchmarks.md) for data.
+competitive with Chez Scheme, Gambit, and Larceny.
 
 The interpreter (without JIT) is comparable to Guile and Chicken on most
 workloads.
