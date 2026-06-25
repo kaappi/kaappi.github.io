@@ -8,7 +8,10 @@ Served at **https://kaappi-lang.org/**
 
 The Kaappi implementation lives at [github.com/kaappi/kaappi](https://github.com/kaappi/kaappi).
 Local path: `/Users/bmuthuka/kaappi/kaappi`.
-Dev docs (architecture, testing, adding-features) remain in that repo under `docs/dev/`.
+
+This repo is exclusively for **end-user documentation**. Developer/contributor
+docs (architecture, testing, adding-features, postmortems) live in the main
+repo under `docs/dev/` — do not add dev docs here.
 
 ## Structure
 
@@ -82,4 +85,4 @@ The landing page content is in `overrides/home.html` (HTML with MkDocs Material 
 - Cross-references use relative markdown links: `./page.md#anchor`
 - Landing page uses "600+" for procedure count (not an exact number that drifts)
 - Guide pages link to procedure reference for detailed docs
-- The `docs/dev/` directory is excluded from the site build (`exclude_docs` in mkdocs.yml)
+- Dev docs live in the main kaappi repo (`docs/dev/`), not here
