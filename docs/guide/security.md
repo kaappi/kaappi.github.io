@@ -133,18 +133,28 @@ boundary:
 (define lib (ffi-open user-provided-path))  ;; DON'T DO THIS
 ```
 
-### Validate FFI inputs
+### Type safety
 
-C functions don't check types. Pass wrong arguments and you get undefined
-behavior:
+Kaappi validates argument types before marshaling to C. Passing a string
+where an `int` is expected raises a type error instead of silently passing
+garbage to the C function:
 
 ```scheme
-(define c-strlen (ffi-fn libc "strlen" '(string) 'size_t))
+(define c-abs (ffi-fn libm "abs" '(int) 'int))
+(c-abs "hello")  ;=> error: type error in 'abs'
+(c-abs 42)       ;=> 42
+```
 
-;; Always validate before calling
-(define (safe-strlen s)
-  (unless (string? s) (error "strlen: expected string" s))
-  (c-strlen s))
+Fixnums passed to `double` parameters are automatically coerced. For
+semantic validation (e.g., non-negative values), add your own checks:
+
+```scheme
+(define c-sqrt (ffi-fn libm "sqrt" '(double) 'double))
+
+(define (safe-sqrt x)
+  (unless (and (number? x) (>= x 0))
+    (error "sqrt: expected non-negative number" x))
+  (c-sqrt x))
 ```
 
 ### Release resources
@@ -174,7 +184,7 @@ kaappi --sandbox untrusted.scm
 | Category | Blocked procedures |
 |----------|-------------------|
 | **File I/O** | `open-input-file`, `open-output-file`, `call-with-input-file`, `call-with-output-file`, `with-input-from-file`, `with-output-to-file`, `file-exists?`, `delete-file` |
-| **FFI** | `ffi-open`, `ffi-fn`, `ffi-close`, `ffi-callback` |
+| **FFI** | `ffi-open`, `ffi-fn`, `ffi-close`, `ffi-callback`, `ffi-bytevector-ptr` |
 | **Code loading** | `eval`, `load` |
 | **Process context** | `get-environment-variable`, `get-environment-variables`, `command-line`, `exit` |
 | **Filesystem** | All SRFI-170 operations |
@@ -203,7 +213,7 @@ Both flags work independently of `--sandbox`.
 
 ### Sandbox escape testing
 
-The sandbox boundary is verified by a test suite of 31 escape tests that
+The sandbox boundary is verified by a test suite of 36 escape tests that
 confirm every gated capability is blocked. These tests run in CI on every
 commit.
 
