@@ -1,0 +1,172 @@
+# FAQ
+
+## General
+
+### What is Kaappi?
+
+Kaappi is a Scheme implementation that follows the R7RS-small standard. It is
+written in Zig and includes a register-based bytecode VM, JIT compiler (ARM64
+and x86_64), garbage collector, C FFI, package manager, and a growing ecosystem
+of libraries for web development, databases, and data processing.
+
+### Why another Scheme?
+
+Most Scheme implementations focus on either standards conformance or
+performance. Kaappi aims for both — full R7RS-small with 72 SRFIs, plus JIT
+compilation to native code. It also ships as a single binary with no runtime
+dependencies, which makes deployment straightforward.
+
+### What does the name mean?
+
+Kaappi is Finnish for "cupboard" or "cabinet." The project uses a South Indian
+filter coffee theme in its branding.
+
+### What license is Kaappi under?
+
+MIT. All ecosystem libraries are also MIT licensed.
+
+## Standards and Compatibility
+
+### How complete is the R7RS-small implementation?
+
+Kaappi implements the full R7RS-small standard — all required libraries, syntax
+forms, and procedures. It passes the R7RS test suite.
+
+### Which SRFIs are supported?
+
+72 SRFIs total: 8 built-in (compiled into the interpreter) and 64 portable
+(pure Scheme, installed via the install script). See
+[SRFI Support](guide/srfi-support.md) for the complete list.
+
+### Can I run code written for other Schemes?
+
+R7RS-small code should work without changes. Code using implementation-specific
+extensions from Racket, Guile, or Chicken will need modification. Key
+differences:
+
+- **Module system**: Kaappi uses R7RS `define-library` (not Racket's `#lang` or
+  Guile's `define-module`)
+- **FFI**: Kaappi has its own FFI syntax (not Chicken's `foreign-lambda` or
+  Guile's dynamic FFI)
+- **Continuations**: Full `call/cc` is supported, but Kaappi also provides
+  `call/ec` for efficient escape-only continuations
+
+## Performance
+
+### How fast is Kaappi?
+
+Kaappi's JIT compiler generates native code for hot functions (after 100
+calls). On numeric and list-processing benchmarks, JIT-compiled Kaappi is
+competitive with Chez Scheme, Gambit, and Larceny. See
+[Benchmarks](benchmarks.md) for data.
+
+The interpreter (without JIT) is comparable to Guile and Chicken on most
+workloads.
+
+### How does the JIT work?
+
+The JIT monitors function call counts. After a function is called 100 times, it
+compiles the bytecode to native ARM64 or x86_64 machine code. JIT-compiled
+functions handle fixnum arithmetic, comparisons, `car`/`cdr`, `cons`, and
+function calls inline. Operations that fall outside the JIT's scope (bignums,
+complex closures) fall back to the interpreter.
+
+### Does the JIT work on all platforms?
+
+JIT is available on macOS ARM64 and Linux x86_64/ARM64. The WASM build runs
+interpreter-only (no JIT). Linux RISC-V runs interpreter-only.
+
+## Ecosystem
+
+### How do I install libraries?
+
+Use `thottam`, the built-in package manager:
+
+```bash
+thottam install kaappi-web
+```
+
+It handles dependencies, native builds, and library discovery automatically.
+See [thottam](ecosystem/thottam.md) for details.
+
+### Can I use third-party libraries?
+
+Yes. `thottam` can install from any Git URL:
+
+```bash
+thottam install my-lib::https://github.com/someone/my-lib
+```
+
+The library needs a `kaappi.pkg` manifest and `.sld` files following the R7RS
+`define-library` convention.
+
+### Is Kaappi ready for production use?
+
+Kaappi is pre-1.0 software. The core language is stable and well-tested (the
+R7RS suite, 28 robustness tests, 31 sandbox escape tests, and fuzz targets all
+pass in CI). The ecosystem libraries are functional and tested nightly.
+
+That said, the API may still change between minor versions. If you use Kaappi in
+production, pin your `thottam` dependencies and test upgrades before deploying.
+
+## Development
+
+### How do I report a bug?
+
+Open an issue at [github.com/kaappi/kaappi/issues](https://github.com/kaappi/kaappi/issues).
+Include the Kaappi version (`kaappi --version`), your OS, and a minimal
+reproducing example.
+
+### How do I contribute?
+
+Fork the repo, make your changes, and open a pull request. The project uses
+`zig fmt` for code style (checked in CI). See the
+[contributing guide](https://github.com/kaappi/kaappi/blob/main/CONTRIBUTING.md)
+for details.
+
+### Where is the community?
+
+[GitHub Discussions](https://github.com/orgs/kaappi/discussions) is the primary
+community channel for questions, ideas, and show-and-tell.
+
+### How do I build from source?
+
+```bash
+git clone https://github.com/kaappi/kaappi
+cd kaappi
+zig build
+```
+
+Requires Zig 0.16. The build produces `zig-out/bin/kaappi` and
+`zig-out/bin/thottam`.
+
+## Deployment
+
+### Can I compile to a standalone binary?
+
+Yes. Kaappi can bundle a Scheme program into a single executable:
+
+```bash
+zig build -Dbundle-src=app.scm
+```
+
+The binary includes the full runtime — no Kaappi installation needed on the
+target machine. Cross-compile to Linux x86_64, ARM64, or RISC-V from any
+platform. See [Standalone Binaries](guide/advanced.md#standalone-binaries).
+
+### Does Kaappi run in the browser?
+
+Yes, via WebAssembly. `zig build wasm` produces a WASM binary that runs in
+browsers and WASI runtimes. The [playground](playground.md) and
+[interactive tour](tour.md) use this. The WASM build does not include JIT,
+FFI, file I/O, or OS threads.
+
+### What platforms are supported?
+
+| Platform | JIT | Prebuilt binary |
+|----------|:---:|:---------------:|
+| macOS ARM64 (Apple Silicon) | yes | yes |
+| Linux x86_64 | yes | yes |
+| Linux ARM64 | yes | yes |
+| Linux RISC-V 64 | no | yes |
+| WebAssembly (wasm32-wasi) | no | yes |

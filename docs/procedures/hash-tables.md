@@ -3,6 +3,29 @@
 Hash tables provide efficient key-value storage with average O(1) lookup.
 Import with `(import (srfi 69))`.
 
+## Performance characteristics
+
+| Operation | Average | Worst case |
+|-----------|:-------:|:----------:|
+| `hash-table-ref` | O(1) | O(n) |
+| `hash-table-set!` | O(1) | O(n) |
+| `hash-table-delete!` | O(1) | O(n) |
+| `hash-table-size` | O(1) | O(1) |
+| `hash-table->alist` | O(n) | O(n) |
+| `hash-table-keys` | O(n) | O(n) |
+
+Kaappi uses open-addressing with linear probing. The table resizes
+automatically when the load factor exceeds a threshold.
+
+**When to use hash tables vs. alists:**
+
+- Use hash tables when you have more than ~10 key-value pairs or when
+  lookup performance matters — `hash-table-ref` is O(1) vs. `assoc` O(n)
+- Use [alists](pairs-and-lists.md#assoc) for small, short-lived mappings
+  or when you need the data as a list (e.g., JSON serialization)
+- Hash tables are mutable; alists are persistent (the original is unchanged
+  when you `cons` a new pair onto the front)
+
 ---
 
 ## Construction

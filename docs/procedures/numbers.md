@@ -5,6 +5,25 @@ Kaappi supports a full numeric tower: fixnums (63-bit integers), bignums
 numbers. These procedures are available from `(scheme base)` and
 `(scheme inexact)`.
 
+## Numeric types and performance
+
+| Type | Range | Storage | Speed |
+|------|-------|---------|-------|
+| Fixnum | -2^62 to 2^62-1 | Tagged value (no allocation) | Fastest — JIT-inlined |
+| Bignum | Unlimited | Heap-allocated | Slower — arbitrary precision |
+| Rational | Exact fractions | Heap-allocated (pair of bignums) | Slower |
+| Flonum | IEEE 754 f64 | NaN-boxed (no allocation) | Fast — JIT-inlined |
+| Complex | Exact or inexact | Heap-allocated (pair) | Slowest |
+
+**Key behaviors:**
+
+- Fixnum overflow automatically promotes to bignum — no silent wraparound
+- `(/ 1 3)` returns `1/3` (exact rational), not `0.333...`. Use `inexact`
+  to convert
+- Mixing exact and inexact numbers produces inexact results
+- The JIT inlines fixnum arithmetic (`+`, `-`, `*`, `<`, `>`, `=`) — hot
+  loops over integers are compiled to native code
+
 ---
 
 ## Basic Arithmetic

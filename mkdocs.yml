@@ -59,6 +59,9 @@ nav:
     - REPL Guide: guide/repl.md
     - Editor Support: guide/editors.md
     - Tips: guide/tips.md
+    - Migrating from Other Schemes: guide/migrating.md
+    - Security: guide/security.md
+    - Deployment: guide/deployment.md
     - Troubleshooting: guide/troubleshooting.md
   - Procedures:
     - procedures/index.md
@@ -81,6 +84,14 @@ nav:
     - Kaappi Extensions: procedures/extensions.md
     - Other Primitives: procedures/other.md
     - SRFI-170 Filesystem: procedures/srfi-170.md
+  - Cookbook:
+    - cookbook/index.md
+    - Build a REST API: cookbook/rest-api.md
+    - Serve HTML with Templates: cookbook/html-templates.md
+    - Process JSON Data: cookbook/json-processing.md
+    - Parse and Generate CSV: cookbook/csv-processing.md
+    - Write Tests: cookbook/testing.md
+    - Build a CLI Tool: cookbook/cli-tool.md
   - Ecosystem:
     - ecosystem/index.md
     - Package Manager (thottam): ecosystem/thottam.md
@@ -101,6 +112,12 @@ nav:
     - Logging: ecosystem/log.md
     - CLI Parsing: ecosystem/cli.md
     - Examples: ecosystem/examples.md
+  - Benchmarks: benchmarks.md
+  - Glossary: glossary.md
+  - Stability: stability.md
+  - Community: community.md
+  - Changelog: changelog.md
+  - FAQ: faq.md
 
 markdown_extensions:
   - pymdownx.highlight:

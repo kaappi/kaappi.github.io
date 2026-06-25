@@ -5,6 +5,29 @@ lists, vectors support efficient random access and mutation. Available from
 `(scheme base)`. For extended operations, see
 [SRFI-133 Vector Library](./srfi-133.md).
 
+## Performance characteristics
+
+| Operation | Complexity | Notes |
+|-----------|:----------:|-------|
+| `vector-ref` | O(1) | Constant time — direct index |
+| `vector-set!` | O(1) | Constant time |
+| `vector-length` | O(1) | Stored in the object header |
+| `vector->list` | O(n) | Allocates n pairs |
+| `list->vector` | O(n) | One pass |
+| `vector-copy` | O(n) | Full copy |
+| `vector-fill!` | O(n) | Fills all elements |
+| `vector-for-each` | O(n) | One pass |
+
+**When to use vectors vs. lists:**
+
+- Use vectors when you need random access by index — `vector-ref` is O(1),
+  `list-ref` is O(n)
+- Use vectors for fixed-size collections where the length is known up front
+- Use [lists](pairs-and-lists.md) when you build data incrementally with
+  `cons` and process it sequentially
+- Database query results in the ecosystem (kaappi-pg, kaappi-sqlite) return
+  rows as vectors for efficient column access
+
 ---
 
 ## Construction

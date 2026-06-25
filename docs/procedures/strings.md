@@ -5,6 +5,29 @@ UTF-8. Indexing operations use codepoint positions, not byte offsets. These
 procedures are available from `(scheme base)`. For extended string operations,
 see [SRFI-13 String Library](./srfi-13.md).
 
+## Performance characteristics
+
+| Operation | Complexity | Notes |
+|-----------|:----------:|-------|
+| `string-length` | O(n) | Counts Unicode codepoints (not bytes) |
+| `string-ref` | O(n) | Walks from the start to the k-th codepoint |
+| `string-set!` | O(n) | May need to shift bytes if codepoint size changes |
+| `string-append` | O(n+m) | Allocates a new string |
+| `string-copy` | O(n) | Full copy |
+| `substring` | O(k) | Copies k codepoints |
+| `string=?` | O(n) | Byte-level comparison |
+| `string->list` | O(n) | Allocates n pairs |
+
+**Key points:**
+
+- String indexing is by codepoint position, not byte offset. This means
+  `string-ref` is O(n), not O(1). For performance-sensitive indexed access
+  over many positions, convert to a vector of characters first
+- String literals are immutable. Use `string-copy` to get a mutable copy
+  before calling `string-set!`
+- For extensive string manipulation (searching, splitting, trimming), use
+  the [SRFI-13](./srfi-13.md) library
+
 ---
 
 ## Construction

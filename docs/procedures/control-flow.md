@@ -3,6 +3,27 @@
 Procedures for managing program flow including continuations, multiple
 values, exceptions, and dynamic binding. Available from `(scheme base)`.
 
+## Choosing the right control flow
+
+| Need | Use | Cost |
+|------|-----|------|
+| Apply a function to a list of args | `apply` | Minimal |
+| Return multiple values | `values` + `call-with-values` | Minimal |
+| Structured error handling | `guard` + `raise` | Minimal when no error |
+| Non-local exit (early return, loop break) | `call/ec` | Cheap — no stack copy |
+| Coroutines, backtracking, advanced flow | `call/cc` | Expensive — copies full stack |
+| Cleanup on exit (like `finally`) | `dynamic-wind` | Moderate |
+
+**Key guidance:**
+
+- Prefer `call/ec` over `call/cc` unless you need to reinvoke the
+  continuation after the procedure returns. `call/ec` is significantly
+  faster because it doesn't snapshot the stack
+- Use `guard` for error handling — it combines exception catching with
+  pattern matching and is the R7RS standard approach
+- Tail calls are optimized automatically. Write loops as recursive calls
+  in tail position and they use O(1) stack
+
 ---
 
 ## Procedure Application

@@ -4,6 +4,30 @@ Pairs are the fundamental building block of Scheme data structures. A list is
 either the empty list `'()` or a pair whose `cdr` is a list. These procedures
 are available from `(scheme base)`.
 
+## Performance characteristics
+
+Lists are linked chains of pairs. This makes some operations fast and others
+slow:
+
+| Operation | Complexity | Notes |
+|-----------|:----------:|-------|
+| `cons`, `car`, `cdr` | O(1) | Constant time |
+| `length` | O(n) | Traverses the entire list |
+| `list-ref` | O(n) | Walks n pairs from the head |
+| `append` | O(n) | Copies the first list |
+| `map`, `for-each` | O(n) | One pass |
+| `assoc` | O(n) | Linear scan |
+| `member` | O(n) | Linear scan |
+
+**When to use lists vs. other types:**
+
+- Use lists for sequential processing, building up data with `cons`, and
+  recursive decomposition with `car`/`cdr`
+- Use [vectors](vectors.md) when you need random access by index (`vector-ref`
+  is O(1), `list-ref` is O(n))
+- Use [hash tables](hash-tables.md) when you need fast key-value lookup
+  (`hash-table-ref` is O(1), `assoc` is O(n))
+
 ---
 
 ## Core Pairs
