@@ -1,25 +1,8 @@
 # Installation
 
-## Quick install
+For pre-built binaries, see the [Download](../download.md) page.
 
-Download pre-built binaries (no build tools required):
-
-```bash
-curl -fsSL https://kaappi-lang.org/install.sh | bash
-```
-
-This auto-detects your platform, downloads the latest release of `kaappi`,
-`thottam` (the package manager), and the portable SRFI libraries, verifies
-SHA256 checksums, and installs binaries to `~/.local/bin/` and standard
-libraries to `~/.kaappi/lib/`. Set `INSTALL_DIR` to change the location:
-
-```bash
-curl -fsSL https://kaappi-lang.org/install.sh | INSTALL_DIR=/usr/local/bin bash
-```
-
-## Build from source
-
-If you prefer to build from source or need a custom configuration:
+This page covers building from source.
 
 ### Prerequisites
 
