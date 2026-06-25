@@ -63,41 +63,6 @@ Run the test suite to confirm everything works:
 zig build test
 ```
 
-## Verifying releases
-
-Every GitHub release includes `SHA256SUMS` (checksums for all binaries) and
-`SHA256SUMS.asc` (a detached GPG signature). The install script verifies
-checksums automatically, but you can also verify manually:
-
-### SHA256 checksums
-
-```bash
-cd ~/Downloads  # or wherever you downloaded the binary
-curl -LO https://github.com/kaappi/kaappi/releases/latest/download/SHA256SUMS
-sha256sum --check --ignore-missing SHA256SUMS
-```
-
-### GPG signature
-
-The release checksums are signed with the maintainer's GPG key. The public key
-is available at [keybase.io/baijum](https://keybase.io/baijum).
-
-```bash
-# Import the public key from Keybase
-curl https://keybase.io/baijum/pgp_keys.asc | gpg --import
-
-# Download the signature and verify
-curl -LO https://github.com/kaappi/kaappi/releases/latest/download/SHA256SUMS.asc
-gpg --verify SHA256SUMS.asc SHA256SUMS
-```
-
-A successful verification shows "Good signature from ..." in the output.
-
-### macOS binaries
-
-macOS binaries are additionally Developer ID signed and Apple notarized — no
-Gatekeeper warnings when downloading from GitHub releases.
-
 ## Build modes
 
 The default build uses **ReleaseSafe** (fast execution with bounds checking).

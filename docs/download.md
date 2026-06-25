@@ -58,7 +58,7 @@ tar xzf kaappi-lib.tar.gz -C ~/.kaappi/lib
 
 ---
 
-## Checksums and verification
+## Verifying releases
 
 Every release includes SHA256 checksums and a GPG signature:
 
@@ -67,10 +67,37 @@ Every release includes SHA256 checksums and a GPG signature:
 | [SHA256SUMS](https://github.com/kaappi/kaappi/releases/latest/download/SHA256SUMS) | SHA256 checksums for all artifacts |
 | [SHA256SUMS.asc](https://github.com/kaappi/kaappi/releases/latest/download/SHA256SUMS.asc) | GPG detached signature |
 
-The maintainer's GPG public key is at
-[keybase.io/baijum](https://keybase.io/baijum).
-See [Verifying releases](guide/installation.md#verifying-releases) for
-step-by-step verification instructions.
+The install script verifies checksums automatically, but you can also verify
+manually:
+
+### SHA256 checksums
+
+```bash
+cd ~/Downloads  # or wherever you downloaded the binary
+curl -LO https://github.com/kaappi/kaappi/releases/latest/download/SHA256SUMS
+sha256sum --check --ignore-missing SHA256SUMS
+```
+
+### GPG signature
+
+The release checksums are signed with the maintainer's GPG key. The public key
+is available at [keybase.io/baijum](https://keybase.io/baijum).
+
+```bash
+# Import the public key from Keybase
+curl https://keybase.io/baijum/pgp_keys.asc | gpg --import
+
+# Download the signature and verify
+curl -LO https://github.com/kaappi/kaappi/releases/latest/download/SHA256SUMS.asc
+gpg --verify SHA256SUMS.asc SHA256SUMS
+```
+
+A successful verification shows "Good signature from ..." in the output.
+
+### macOS binaries
+
+macOS binaries are additionally Developer ID signed and Apple notarized — no
+Gatekeeper warnings when downloading from GitHub releases.
 
 ---
 
