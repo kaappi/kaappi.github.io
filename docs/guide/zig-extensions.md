@@ -127,7 +127,47 @@ export fn mylib_greet(name: [*:0]const u8) [*:0]const u8 {
 }
 ```
 
-## Step 2: Write build.zig
+## Step 2: Build the shared library
+
+### Option A: Makefile (recommended)
+
+The `zig build-lib` command is stable across Zig versions, while the
+`build.zig` API changes between releases. A Makefile is more portable
+and matches the pattern used by existing ecosystem libraries.
+
+```makefile
+UNAME := $(shell uname)
+
+ifeq ($(UNAME), Darwin)
+  DYLIB_EXT := dylib
+else
+  DYLIB_EXT := so
+endif
+
+TARGET := libkaappi_mylib.$(DYLIB_EXT)
+
+all: $(TARGET)
+
+$(TARGET): src/mylib.zig
+	zig build-lib src/mylib.zig -dynamic -lc --name kaappi_mylib
+
+clean:
+	rm -f libkaappi_mylib.dylib libkaappi_mylib.so
+
+.PHONY: all clean
+```
+
+```bash
+make                                         # native build
+zig build-lib src/mylib.zig -dynamic -lc --name kaappi_mylib -target x86_64-linux  # cross-compile
+```
+
+This is what [kaappi-math](https://github.com/kaappi/kaappi-math) uses.
+
+### Option B: build.zig
+
+If you prefer the Zig build system (note: the API may change between
+Zig versions):
 
 ```zig
 const std = @import("std");
@@ -147,12 +187,8 @@ pub fn build(b: *std.Build) void {
 }
 ```
 
-Build:
-
 ```bash
-zig build                                    # native
-zig build -Dtarget=x86_64-linux              # cross-compile for Linux
-zig build -Doptimize=ReleaseFast             # optimized build
+zig build
 ```
 
 Output: `zig-out/lib/libkaappi_mylib.dylib` (macOS) or `.so` (Linux).
@@ -195,15 +231,13 @@ Create `kaappi.pkg`:
 
 ```
 name: kaappi-mylib
-build: zig build
+build: make
 ```
-
-Note: `build: zig build` instead of `build: make`.
 
 ## Step 6: Test
 
 ```bash
-zig build
+make
 kaappi --lib-path ./lib tests/test-mylib.scm
 ```
 
