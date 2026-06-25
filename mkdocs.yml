@@ -42,7 +42,7 @@ nav:
   - Home: index.md
   - Try It: playground.md
   - Tour: tour.md
-  - Download: downloads.md
+  - Download: download.md
   - Guide:
     - guide/index.md
     - Installation: guide/installation.md
