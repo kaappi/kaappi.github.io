@@ -4,6 +4,9 @@ This guide walks through building a Kaappi library that wraps C code
 via the FFI. The same pattern is used by `kaappi-net`, `kaappi-crypto`,
 `kaappi-pg`, `kaappi-sqlite`, and `kaappi-redis`.
 
+Extensions can also be written in [Zig](zig-extensions.md), which offers
+memory safety and built-in cross-compilation.
+
 ## Directory layout
 
 ```

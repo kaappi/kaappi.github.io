@@ -19,6 +19,7 @@ Prefer the browser? Try the [interactive tour](../tour.md) or the
 - [Libraries](libraries.md) — importing and organizing libraries
 - [Library Authoring](library-authoring.md) — creating your own libraries with `define-library`
 - [C Extensions](c-extensions.md) — wrapping C code via FFI with Makefile, `.sld`, and thottam
+- [Zig Extensions](zig-extensions.md) — writing extensions in Zig with memory safety and cross-compilation
 - [SRFI Support](srfi-support.md) — all 72 supported SRFIs at a glance
 - [REPL Guide](repl.md) — commands, history, tab completion, reverse search
 - [CLI Reference](cli.md) — command-line flags and standalone binaries
