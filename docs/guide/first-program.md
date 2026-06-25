@@ -136,6 +136,7 @@ The key points:
 - `export` controls what the library exposes
 - `import` in both the library and main program pulls in dependencies
 - Kaappi finds `mylib/stats.sld` automatically from the current directory
+- A `lib/` subdirectory is also searched, so `lib/mylib/stats.sld` works too — handy for separating library source from application code
 
 For more on libraries, import modifiers, and search paths, see
 [Working with Libraries](libraries.md).
