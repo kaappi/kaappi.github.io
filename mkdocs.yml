@@ -41,7 +41,7 @@ theme:
 nav:
   - Home: index.md
   - Try It: playground.md
-  - Tour: tour.md
+  - Tour: https://kaappi-lang.org/tour/
   - Download: download.md
   - Guide:
     - guide/index.md
