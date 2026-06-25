@@ -8,9 +8,10 @@ Download pre-built binaries (no build tools required):
 curl -fsSL https://kaappi-lang.org/install.sh | bash
 ```
 
-This auto-detects your platform, downloads the latest release of both `kaappi`
-and `thottam` (the package manager), verifies SHA256 checksums, and installs to
-`~/.local/bin/`. Set `INSTALL_DIR` to change the location:
+This auto-detects your platform, downloads the latest release of `kaappi`,
+`thottam` (the package manager), and the portable SRFI libraries, verifies
+SHA256 checksums, and installs binaries to `~/.local/bin/` and standard
+libraries to `~/.kaappi/lib/`. Set `INSTALL_DIR` to change the location:
 
 ```bash
 curl -fsSL https://kaappi-lang.org/install.sh | INSTALL_DIR=/usr/local/bin bash
