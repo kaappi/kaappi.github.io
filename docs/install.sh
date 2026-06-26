@@ -98,6 +98,7 @@ main() {
 
     echo "Installing standard libraries to ~/.kaappi/lib/..."
     mkdir -p "$HOME/.kaappi/lib" "$tmpdir/libextract"
+    rm -rf "$HOME/.kaappi/lib/"*
     tar xzf "$tmpdir/kaappi-lib.tar.gz" -C "$tmpdir/libextract"
     cp -r "$tmpdir/libextract/lib/"* "$HOME/.kaappi/lib/"
     cp "$tmpdir/libextract/LICENSE" "$HOME/.kaappi/lib/"
