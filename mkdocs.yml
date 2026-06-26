@@ -110,6 +110,7 @@ nav:
     - Email (SMTP): ecosystem/email.md
     - Crypto (Hashing): ecosystem/crypto.md
     - Testing: ecosystem/test.md
+    - BDD Testing: ecosystem/bdd.md
     - Logging: ecosystem/log.md
     - CLI Parsing: ecosystem/cli.md
     - Examples: ecosystem/examples.md
