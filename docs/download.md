@@ -1,4 +1,4 @@
-# Download Kaappi v0.6.2
+# Download Kaappi v0.6.3
 
 ## Recommended: install script
 
