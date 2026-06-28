@@ -182,7 +182,7 @@ The WASM build runs the same bytecode interpreter but with several
 limitations:
 
 - **No REPL** — WASM mode takes a source file, not interactive input
-- **No JIT** — interpreter only (no native code generation)
+- **Interpreter only** — no LLVM native compilation
 - **No FFI** — `ffi-open`, `ffi-fn` are unavailable
 - **No file I/O** — limited to WASI-compatible stdin/stdout
 - **No profiling or coverage** — `--profile`, `--coverage` flags are not available

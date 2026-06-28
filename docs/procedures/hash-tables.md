@@ -402,3 +402,28 @@ kaappi> (hash-table->alist (make-hash-table))
 **See also:** [`alist->hash-table`](#alist-to-hash-table),
 [`hash-table-keys`](#hash-table-keys),
 [`hash-table-values`](#hash-table-values)
+
+---
+
+## hash-table-equivalence-function
+
+`(hash-table-equivalence-function ht)` → procedure
+
+Returns the equivalence function used by the hash table. Kaappi hash
+tables always use `equal?`.
+
+```scheme
+kaappi> (hash-table-equivalence-function (make-hash-table))
+;=> #<procedure equal?>
+```
+
+## hash-table-hash-function
+
+`(hash-table-hash-function ht)` → procedure
+
+Returns the hash function used by the hash table.
+
+```scheme
+kaappi> (hash-table-hash-function (make-hash-table))
+;=> #<procedure hash>
+```

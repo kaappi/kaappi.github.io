@@ -5,18 +5,29 @@ binaries, Docker, systemd services, reverse proxies, and health checks.
 
 ## Standalone binaries
 
-The simplest deployment — compile your application into a single executable
-with no runtime dependencies:
+Two approaches for compiling Scheme programs into standalone executables:
+
+### Bytecode bundling (interpreter)
+
+Compiles your program to bytecode and embeds it in the interpreter binary:
 
 ```bash
 zig build -Dbundle-src=app.scm
 ```
 
-The binary includes the full Kaappi runtime and your compiled program.
+### Native compilation (LLVM backend)
+
+Compiles your program to native code via LLVM IR:
+
+```bash
+zig build native -Dnative-src=app.scm
+```
+
+Both produce a single executable with the Kaappi runtime included.
 Copy it to the server and run it:
 
 ```bash
-scp zig-out/bin/kaappi server:/opt/myapp/myapp
+scp zig-out/bin/program server:/opt/myapp/myapp
 ssh server '/opt/myapp/myapp'
 ```
 

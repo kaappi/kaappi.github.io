@@ -13,13 +13,13 @@ This page covers building from source.
 
 ## Supported platforms
 
-| OS | Architecture | JIT |
-|----|-------------|-----|
-| macOS | aarch64 (Apple Silicon) | AArch64 native |
-| Linux | x86_64 | x86_64 native |
-| Linux | aarch64 | AArch64 native |
-| Linux | riscv64 | No (interpreter only) |
-| WebAssembly | wasm32-wasi | No (interpreter only) |
+| OS | Architecture | Native compilation |
+|----|-------------|-------------------|
+| macOS | aarch64 (Apple Silicon) | LLVM backend |
+| Linux | x86_64 | LLVM backend |
+| Linux | aarch64 | LLVM backend |
+| Linux | riscv64 | LLVM backend |
+| WebAssembly | wasm32-wasi | interpreter only |
 
 ## macOS
 
