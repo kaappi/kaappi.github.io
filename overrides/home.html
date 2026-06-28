@@ -370,8 +370,8 @@
 
       <p class="kp-sub kp-reveal kp-d3">
         A complete <strong>R7RS-small</strong> Scheme implemented in <strong>Zig</strong>.
-        Hot functions JIT-compile to native AArch64 and x86_64 — so the source
-        stays elegant and the machine stays busy.
+        Compile to native binaries via <strong>LLVM</strong> on AArch64 and x86_64 — so
+        the source stays elegant and the machine stays busy.
       </p>
 
       <div class="kp-eval kp-reveal kp-d4" role="img"
@@ -415,7 +415,7 @@
     <div class="kp-shead">
       <div class="kp-kicker">The full pour</div>
       <h2>Everything R7RS asks for, and the parts that make it fun.</h2>
-      <p>Every identifier from Appendix A is implemented — then continuations, a JIT, and an FFI on top.</p>
+      <p>Every identifier from Appendix A is implemented — then continuations, a native compiler, and an FFI on top.</p>
     </div>
     <div class="kp-grid">
       <div class="kp-card">
@@ -430,8 +430,8 @@
       </div>
       <div class="kp-card">
         <div class="kp-card-tag">speed</div>
-        <h3>JIT to native code</h3>
-        <p>Hot functions compile to AArch64 and x86_64 — inline fixnum arithmetic, comparisons, <code>car</code>/<code>cdr</code>, and <code>cons</code>.</p>
+        <h3>Compile to native code</h3>
+        <p>Compile Scheme to native binaries via LLVM on AArch64 and x86_64 — closures, tail calls, and fixnum arithmetic run at full speed.</p>
       </div>
       <div class="kp-card">
         <div class="kp-card-tag">batteries</div>
