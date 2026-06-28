@@ -454,17 +454,19 @@ xattr -d com.apple.quarantine zig-out/bin/kaappi
 
 ---
 
-## JIT Issues
+## Native Compilation Issues
 
-If you encounter unexpected behavior that you suspect is JIT-related
-(wrong results, crashes in compiled code), run with `--no-jit` to force
-pure interpretation:
+If a native-compiled binary behaves differently from the interpreter,
+compare outputs:
 
 ```bash
-kaappi --no-jit program.scm
+kaappi program.scm > expected.txt
+zig build native -Dnative-src=program.scm
+./zig-out/bin/program > actual.txt
+diff expected.txt actual.txt
 ```
 
-If the bug disappears with `--no-jit`, it's a JIT bug — please
+If outputs differ, please
 [report it](https://github.com/kaappi/kaappi/issues).
 
 ---

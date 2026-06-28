@@ -458,3 +458,15 @@ kaappi> (let ((v (vector 1 2 3)))
 [`vector-for-each`](./vectors.md#vector-for-each)
 
 ---
+
+## vector-append-subvectors
+
+`(vector-append-subvectors vec₁ start₁ end₁ ...)` → vector
+
+Concatenates subranges from multiple vectors. Arguments are triples of
+(vector, start index, end index).
+
+```scheme
+kaappi> (vector-append-subvectors #(1 2 3 4 5) 1 3 #(10 20 30) 0 2)
+;=> #(2 3 10 20)
+```

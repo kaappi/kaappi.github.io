@@ -17,7 +17,8 @@ kaappi [OPTIONS] [FILE]
 | `--sandbox` | Sandbox mode — blocks FFI, file I/O, `eval`, `load`, env access, threads |
 | `--timeout MS` | Execution timeout in milliseconds |
 | `--max-memory BYTES` | Maximum heap memory in bytes |
-| `--no-jit` | Disable JIT compilation |
+| `--emit-llvm` | Emit LLVM IR text (`.ll` file) for native compilation |
+| `--profile-json FILE` | Write profiling data as JSON |
 | `--disassemble FILE` | Show compiled bytecode without running |
 | `--gc-stats` | Print GC statistics on exit |
 | `--coverage` | Report library procedure coverage |
@@ -34,6 +35,7 @@ compile-time settings:
 | `-Dmax-registers=N` | 2048 | Maximum register count |
 | `-Dgc-threshold=N` | 8192 | Initial GC object threshold |
 | `-Doptimize=MODE` | ReleaseSafe | Optimization mode (Debug, ReleaseSafe, ReleaseFast) |
+| `-Dnative-src=FILE` | — | Compile Scheme source to a native binary via LLVM IR |
 
 ```bash
 # Build with deeper recursion limit
@@ -41,6 +43,10 @@ zig build -Dmax-frames=1024
 
 # Build with larger GC threshold for allocation-heavy programs
 zig build -Dgc-threshold=32768
+
+# Compile Scheme to native binary
+zig build native -Dnative-src=program.scm
+./zig-out/bin/program
 ```
 
 ## Standalone Binaries

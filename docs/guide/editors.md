@@ -22,6 +22,7 @@ Then press **F5** in VS Code to launch an Extension Development Host, or copy th
 - **Syntax highlighting** for `.scm`, `.sld`, `.ss`, `.sls` files
 - **Auto-completion** of all 600+ built-in procedures and your definitions
 - **Hover information** showing type and arity of procedures
+- **Document outline** — lists all `define`, `define-syntax`, `define-record-type` forms (breadcrumbs and outline view)
 - **Real-time diagnostics** for parse and compile errors
 - **Bracket matching** and auto-closing for parentheses
 - **Comment toggling** — line (`;`) and block (`#| |#`)

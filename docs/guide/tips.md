@@ -34,19 +34,10 @@
   (list-ref ls 3)          ;=> 40
   ```
 
-- **JIT compiles hot functions after 100 calls.** Kaappi's JIT compiler
-  targets ARM64 and inlines fixnum arithmetic, comparisons, `car`/`cdr`,
-  and `cons`. Functions called fewer than 100 times stay interpreted.
-  Warm up critical paths before benchmarking:
-
-  ```scheme
-  ;; Warm up the JIT before measuring
-  (fib 10)                     ;; triggers JIT compilation of fib
-  (let ((start (current-jiffy)))
-    (fib 35)
-    (/ (- (current-jiffy) start)
-       (jiffies-per-second)))  ;=> ~1.9
-  ```
+- **For maximum performance, compile to native.** Use
+  `zig build native -Dnative-src=program.scm` to compile your program
+  via the LLVM backend. Simple functions compile to native LLVM functions
+  with direct calls, bypassing the bytecode interpreter.
 
 - **Use `for-each` instead of `map` when you don't need results.** `map`
   allocates a new list for its return value; `for-each` just applies the

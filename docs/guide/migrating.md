@@ -196,7 +196,7 @@ Built-in SRFIs don't need installation — just `(import (srfi 1))`.
 
 ### Compilation
 
-Chicken compiles to C. Kaappi uses bytecode + JIT or standalone binaries:
+Chicken compiles to C. Kaappi uses bytecode or LLVM-compiled standalone binaries:
 
 ```bash
 # Chicken
@@ -317,7 +317,7 @@ false, the empty list, and a symbol. In Scheme:
 | File extension | `.rkt` | `.scm` | `.scm` | `.sld` (library), `.scm` (program) |
 | FFI | `ffi/unsafe` | `(system foreign)` | `foreign-lambda` | `(kaappi ffi)` |
 | Package manager | `raco pkg` | Guix | `chicken-install` | `thottam` |
-| Compilation | Bytecode/JIT | Bytecode | C | Bytecode/JIT |
+| Compilation | Bytecode/JIT | Bytecode | C | Bytecode + LLVM native |
 | REPL | `racket` | `guile` | `csi` | `kaappi` |
 
 ## Getting help

@@ -304,14 +304,14 @@ Use `call/ec` (escape continuations) for non-local exits:
 
 ## Tips
 
-**Isolate JIT issues** — if you suspect a bug in JIT-compiled code, run
-with `--no-jit` to force pure interpretation:
+**Compare interpreter vs native** — if a native-compiled binary behaves
+differently from the interpreter, run both and diff:
 
 ```bash
-kaappi --no-jit program.scm
+kaappi program.scm > expected.txt
+zig build native -Dnative-src=program.scm && ./zig-out/bin/program > actual.txt
+diff expected.txt actual.txt
 ```
-
-If the bug disappears, it's a JIT issue — please report it.
 
 **Check library coverage** — see which exported procedures your tests
 exercise:
