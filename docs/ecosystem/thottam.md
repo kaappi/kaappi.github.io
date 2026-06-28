@@ -208,6 +208,21 @@ source: https://github.com/kaappi/kaappi-web
 - OpenSSL (`brew install openssl` / `apt install libssl-dev`) for kaappi-net
 - PostgreSQL client libs (`brew install libpq` / `apt install libpq-dev`) for kaappi-pg
 
+## Shell completions
+
+Enable tab completion for `thottam` subcommands and flags:
+
+```bash
+# Bash — add to ~/.bashrc
+eval "$(thottam --completions bash)"
+
+# Zsh — add to ~/.zshrc
+eval "$(thottam --completions zsh)"
+
+# Fish — add to ~/.config/fish/config.fish
+thottam --completions fish | source
+```
+
 ## Environment variables
 
 | Variable | Default | Description |

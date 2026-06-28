@@ -32,6 +32,28 @@ kaappi compile FILE [-o OUTPUT]
 | `--gc-stats` | Print GC statistics on exit |
 | `--coverage` | Report library procedure coverage |
 | `--coverage-xml FILE` | Write Cobertura XML coverage report |
+| `--completions SHELL` | Output shell completion script (`bash`, `zsh`, or `fish`) |
+
+## Shell Completions
+
+Enable tab completion for `kaappi` flags, subcommands, and `.scm` files:
+
+```bash
+# Bash — add to ~/.bashrc
+eval "$(kaappi --completions bash)"
+
+# Zsh — add to ~/.zshrc
+eval "$(kaappi --completions zsh)"
+
+# Fish — add to ~/.config/fish/config.fish
+kaappi --completions fish | source
+```
+
+The `thottam` package manager also supports `--completions`:
+
+```bash
+eval "$(thottam --completions bash)"   # or zsh / fish
+```
 
 ## Environment Variables
 
