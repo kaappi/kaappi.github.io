@@ -90,6 +90,34 @@ thottam install kaappi-http@abc1234
 
 The resolved commit SHA is recorded in the lockfile (`~/.kaappi/thottam.lock`).
 
+## Version constraints
+
+Use semantic versioning constraints to install the latest compatible version:
+
+```bash
+thottam install kaappi-net@">=0.2.0"        # 0.2.0 or newer
+thottam install kaappi-http@"^0.3.0"        # compatible (same major: 0.3.x)
+thottam install kaappi-web@"~1.2.0"         # patch-level (1.2.x)
+thottam install kaappi-pg@">=1.0.0,<2.0.0"  # range
+```
+
+| Operator | Meaning | Example |
+|----------|---------|---------|
+| `>=` | Greater than or equal | `>=1.0.0` matches 1.0.0, 1.5.0, 2.0.0 |
+| `>` | Greater than | `>1.0.0` matches 1.0.1 but not 1.0.0 |
+| `<=` | Less than or equal | `<=2.0.0` matches 1.9.9, 2.0.0 |
+| `<` | Less than | `<2.0.0` matches 1.9.9 but not 2.0.0 |
+| `^` | Compatible (same major) | `^0.3.0` matches 0.3.0, 0.4.0 but not 1.0.0 |
+| `~` | Patch-level (same major.minor) | `~1.2.0` matches 1.2.0, 1.2.5 but not 1.3.0 |
+
+Constraints resolve against git tags via `git ls-remote --tags`. The latest
+matching version is selected. Constraints can also be used in `kaappi.pkg`
+manifests:
+
+```
+depends: kaappi-net@">=0.2.0" kaappi-json@"^0.1.0"
+```
+
 ## Custom source URLs
 
 Install a package from any Git URL using the `::` syntax:

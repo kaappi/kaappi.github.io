@@ -36,6 +36,23 @@ The REPL uses [linenoise](https://github.com/antirez/linenoise) for line editing
 | **Ctrl+R** | Reverse history search |
 | **Ctrl+C** | Cancel current line |
 
+## Syntax Highlighting
+
+The REPL provides real-time syntax coloring as you type:
+
+| Element | Color |
+|---------|-------|
+| Keywords (`define`, `lambda`, `if`, `let`, ...) | Magenta |
+| Strings (`"hello"`) | Green |
+| Numbers (`42`, `-3.14`) | Yellow |
+| Comments (`;` and `#| |#`) | Gray |
+| Booleans (`#t`, `#f`) | Cyan |
+| Parentheses | Gray |
+| Quote / quasiquote / unquote | Magenta |
+
+Highlighting is applied per-keystroke and does not affect cursor
+positioning or copy-paste behavior.
+
 ## Tab Completion
 
 Press **Tab** to complete symbol names from the global environment:
@@ -254,11 +271,20 @@ kaappi> ,break fib
 Breakpoint set on fib
 ```
 
+#### `,condition <id> <expr>` — Conditional breakpoint
+
+Only break when the Scheme expression evaluates to a truthy value:
+
+```
+kaappi> ,condition 0 (> n 10)
+Condition set
+```
+
 #### `,breakpoints` — List breakpoints
 
 ```
 kaappi> ,breakpoints
-  [0] fib
+  [0] fib if (> n 10)
 ```
 
 #### `,step <expr>` — Single-step evaluation
@@ -341,6 +367,7 @@ Commands:
 
  -- Debugging:
   ,break <name>     Set breakpoint on function
+  ,condition <id> <expr>  Set conditional breakpoint
   ,breakpoints      List active breakpoints
   ,delete all       Clear all breakpoints
   ,step <expr>      Evaluate with single-stepping

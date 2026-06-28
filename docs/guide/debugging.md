@@ -128,10 +128,60 @@ debug>
 |---------|-------|--------|
 | `step` | `s` | Step into the next expression |
 | `next` | `n` | Step over (stay in current frame) |
+| `finish` | `out` | Step out — run until current frame returns |
 | `continue` | `c` | Continue to next breakpoint or end |
 | `locals` | `l` | Show local variable bindings |
-| `backtrace` | `bt` | Print the call stack |
+| `backtrace` | `bt` | Print the call stack (marks inspected frame with `>`) |
+| `up` | | Move inspection up to the caller frame |
+| `down` | | Move inspection down to the callee frame |
+| `watch VAR` | | Break when a local variable's value changes |
+| `unwatch VAR` | | Stop watching a variable |
 | `quit` | `q` | Exit the debugger |
+
+### Conditional breakpoints
+
+Break only when a condition is true:
+
+```
+kaappi> ,break factorial
+Breakpoint set on factorial
+kaappi> ,condition 0 (> n 10)
+Condition set
+```
+
+The expression is evaluated each time the breakpoint is hit. The debugger
+only pauses when the result is truthy.
+
+### Watch expressions
+
+Watch a variable and break when its value changes:
+
+```
+debug> watch n
+Watching n
+debug> continue
+Watch: n = 2
+Break at factorial
+```
+
+Use `unwatch n` to remove the watch.
+
+### Frame navigation
+
+Use `up` and `down` to inspect locals at different stack levels:
+
+```
+debug> backtrace
+> [2] factorial
+  [1] factorial
+  [0] <top-level>
+debug> up
+[1] factorial
+debug> locals
+  n = 3
+debug> down
+[2] factorial
+```
 
 ### Walkthrough
 
@@ -145,8 +195,8 @@ Break at factorial (<repl>:1)
 debug> locals
   n = 2
 debug> backtrace
-  0: factorial (<repl>:1)
-  1: factorial (<repl>:1)
+> [1] factorial
+  [0] factorial
 debug> continue
 Break at factorial (<repl>:1)
 debug> locals

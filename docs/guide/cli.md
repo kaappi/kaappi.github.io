@@ -2,7 +2,16 @@
 
 ```
 kaappi [OPTIONS] [FILE]
+kaappi compile FILE [-o OUTPUT]
 ```
+
+## Commands
+
+| Command | Description |
+|---------|-------------|
+| `kaappi compile FILE` | Compile Scheme source to a native binary via LLVM. Use `-o` to set the output path. |
+
+## Options
 
 | Option | Description |
 |--------|-------------|
@@ -11,7 +20,7 @@ kaappi [OPTIONS] [FILE]
 | `-h`, `--help` | Show usage and available flags |
 | `--version` | Show version string |
 | `--compile FILE` | Compile to bytecode (.sbc) without running |
-| `-o FILE` | Output path for `--compile` |
+| `-o FILE` | Output path for `--compile`, `--emit-llvm`, or `compile` |
 | `--lib-path DIR` | Add a directory to the library search path (repeatable, up to 16) |
 | `--profile` | Profile execution (per-function timing, call counts, allocations) |
 | `--sandbox` | Sandbox mode — blocks FFI, file I/O, `eval`, `load`, env access, threads |
@@ -23,6 +32,12 @@ kaappi [OPTIONS] [FILE]
 | `--gc-stats` | Print GC statistics on exit |
 | `--coverage` | Report library procedure coverage |
 | `--coverage-xml FILE` | Write Cobertura XML coverage report |
+
+## Environment Variables
+
+| Variable | Description |
+|----------|-------------|
+| `KAAPPI_LIB_DIR` | Directory containing `libkaappi_rt.a` for `kaappi compile`. Overrides the default search paths. |
 
 ## Build-Time Options
 
@@ -69,10 +84,17 @@ kaappi
 # Run a file
 kaappi program.scm
 
+# Compile to native binary
+kaappi compile program.scm -o program
+./program
+
+# Compile to native binary with custom lib path
+KAAPPI_LIB_DIR=/opt/kaappi/lib kaappi compile program.scm -o program
+
 # Run with additional library paths
 kaappi --lib-path ./vendor/libs --lib-path ./mylibs program.scm
 
-# Compile only
+# Compile to bytecode only
 kaappi --compile mylib.scm
 
 # Pipe input

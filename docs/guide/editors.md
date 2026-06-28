@@ -22,6 +22,8 @@ Then press **F5** in VS Code to launch an Extension Development Host, or copy th
 - **Syntax highlighting** for `.scm`, `.sld`, `.ss`, `.sls` files
 - **Auto-completion** of all 600+ built-in procedures and your definitions
 - **Hover information** showing type and arity of procedures
+- **Go to Definition** — jump to where a symbol is defined (Ctrl+Click or F12)
+- **Find References** — find all uses of a symbol (Shift+F12)
 - **Document outline** — lists all `define`, `define-syntax`, `define-record-type` forms (breadcrumbs and outline view)
 - **Real-time diagnostics** for parse and compile errors
 - **Bracket matching** and auto-closing for parentheses
@@ -52,6 +54,9 @@ The `kaappi-lsp` binary is included with Kaappi and built alongside the main int
 | **Diagnostics** | Parse and compile errors on every file change |
 | **Completion** | All global symbols, filtered by prefix at cursor |
 | **Hover** | Type name and arity for any symbol |
+| **Go to Definition** | Jump to `define`, `define-syntax`, or `define-record-type` for a symbol |
+| **Find References** | Find all occurrences of a symbol in the document |
+| **Document Symbols** | Outline of all top-level definitions |
 | **Document sync** | Full text synchronization |
 
 ### Using with other editors

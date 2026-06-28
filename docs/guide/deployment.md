@@ -17,14 +17,24 @@ zig build -Dbundle-src=app.scm
 
 ### Native compilation (LLVM backend)
 
-Compiles your program to native code via LLVM IR:
+Compiles your program to native code via LLVM IR. The simplest way:
+
+```bash
+kaappi compile app.scm -o app
+```
+
+Or via the build system:
 
 ```bash
 zig build native -Dnative-src=app.scm
 ```
 
 Both produce a single executable with the Kaappi runtime included.
-Copy it to the server and run it:
+The native backend supports tail call optimization (self-recursive
+functions run in constant stack space), variadic parameters, and
+let/let* bindings compiled natively.
+
+Copy the executable to the server and run it:
 
 ```bash
 scp zig-out/bin/program server:/opt/myapp/myapp
