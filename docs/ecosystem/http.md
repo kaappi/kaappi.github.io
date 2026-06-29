@@ -192,7 +192,8 @@ Without the web framework, route by matching method and path:
 (http-listen-prefork handler port 4)
 ```
 
-Threaded mode requires `--experimental-threads`. Pre-fork mode uses
+Threaded mode uses SRFI-18 OS threads, which are unavailable in
+`--sandbox` mode and in the WebAssembly build. Pre-fork mode uses
 `fork()` and is the recommended approach for production concurrency.
 
 ## URL utilities

@@ -28,11 +28,15 @@ for the full API.
 ### OS threads (SRFI-18)
 
 Real OS threads via `pthread_create`. Each thread gets its own VM and GC
-with an independent heap. Requires the `--experimental-threads` flag:
+with an independent heap. No special flag is needed -- just run your
+program:
 
 ```bash
-kaappi --experimental-threads program.scm
+kaappi program.scm
 ```
+
+OS threads are unavailable in `--sandbox` mode and in the WebAssembly
+build (including the browser playground); use fibers there.
 
 ```scheme
 (import (srfi 18))

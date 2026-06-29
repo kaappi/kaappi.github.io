@@ -5,9 +5,10 @@ Multithreading primitives for concurrent programming. Import with
 lightweight green threads (fibers).
 
 !!! note
-    `thread-start!` requires the `--experimental-threads` flag. Without it,
-    calling `thread-start!` raises an error. Each OS thread gets its own VM
-    and GC heap -- values are deep-copied when crossing thread boundaries.
+    SRFI-18 spawns real OS threads -- each thread gets its own VM and GC
+    heap, and values are deep-copied when crossing thread boundaries. OS
+    threads are unavailable in `--sandbox` mode and in the WebAssembly build
+    (including the browser playground); use [fibers](./extensions.md) there.
     See [Advanced Features](../guide/advanced.md#concurrency) for details.
 
 ---
@@ -134,9 +135,8 @@ Starts *thread* and returns the thread object. The thread begins
 executing the thunk that was passed to `make-thread`. A thread can only
 be started once; starting an already-started thread is an error.
 
-Requires `--experimental-threads`. Without the flag, `thread-start!`
-raises an error. The child thread receives a **deep copy** of the thunk's
-closure -- mutations in the child are not visible to the parent.
+The child thread receives a **deep copy** of the thunk's closure --
+mutations in the child are not visible to the parent.
 
 ```scheme
 kaappi> (define t (make-thread (lambda () (display "hello\n"))))
@@ -147,8 +147,8 @@ kaappi> (thread-join! t)
 ```
 
 ```bash
-# Run with OS threads enabled
-kaappi --experimental-threads program.scm
+# OS threads work out of the box -- no special flag needed
+kaappi program.scm
 ```
 
 **See also:** [`make-thread`](#make-thread), [`thread-join!`](#thread-join)
