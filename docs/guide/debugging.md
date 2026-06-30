@@ -378,12 +378,13 @@ kaappi --timeout 5000 program.scm           # 5-second limit
 kaappi --max-memory 10000000 program.scm    # ~10 MB limit
 ```
 
-**Tune runtime limits** — if you hit stack overflows or need deeper
-recursion, rebuild with higher limits:
+**Tune initial stack capacity** — the frame stack and register array grow
+automatically during execution. To reduce the number of reallocations for
+deeply recursive programs, set a larger initial capacity:
 
 ```bash
-zig build -Dmax-frames=1024        # default: 512
-zig build -Dmax-registers=4096     # default: 2048
+zig build -Dmax-frames=4096        # default: 480, grows to 32768
+zig build -Dmax-registers=8192     # default: 2048, grows to 65536
 ```
 
 ---

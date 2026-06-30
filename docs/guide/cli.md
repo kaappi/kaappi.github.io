@@ -68,14 +68,14 @@ compile-time settings:
 
 | Option | Default | Description |
 |--------|---------|-------------|
-| `-Dmax-frames=N` | 512 | Maximum call frame depth |
-| `-Dmax-registers=N` | 2048 | Maximum register count |
+| `-Dmax-frames=N` | 480 | Initial call frame capacity (grows to 32768) |
+| `-Dmax-registers=N` | 2048 | Initial register count (grows to 65536) |
 | `-Dgc-threshold=N` | 8192 | Initial GC object threshold |
 | `-Doptimize=MODE` | ReleaseSafe | Optimization mode (Debug, ReleaseSafe, ReleaseFast) |
 | `-Dnative-src=FILE` | — | Compile Scheme source to a native binary via LLVM IR |
 
 ```bash
-# Build with deeper recursion limit
+# Build with larger initial frame capacity
 zig build -Dmax-frames=1024
 
 # Build with larger GC threshold for allocation-heavy programs

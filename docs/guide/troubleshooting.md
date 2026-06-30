@@ -280,15 +280,16 @@ kaappi> (string-ref "abc" 10)
 
 **Message:** `runtime error: error.StackOverflow`
 
-**Cause:** The call stack exceeded 256 frames. This typically happens with
-non-tail-recursive functions that recurse deeply. Tail calls do not consume
-stack frames, so properly tail-recursive code will not trigger this error.
+**Cause:** The call stack exceeded 32768 frames or exhausted available
+memory. The frame stack grows automatically (starting at 480 frames), so
+this error only occurs with extremely deep non-tail recursion. Tail calls
+do not consume stack frames.
 
 **Example:**
 ```scheme
 kaappi> (define (forever n) (+ 1 (forever (+ n 1))))
 kaappi> (forever 0)
-;; runtime error: error.StackOverflow
+;; runtime error: error.StackOverflow (at ~32768 frames)
 ```
 
 **Fix:** Rewrite the recursion in tail position. The example above can be
@@ -299,7 +300,8 @@ converted to a tail-recursive form:
 ```
 
 Kaappi optimizes tail calls, so tail-recursive functions run in constant
-stack space.
+stack space. Non-tail-recursive code (e.g., `(cons x (f (cdr lst)))`)
+works fine for thousands of elements.
 
 ---
 
