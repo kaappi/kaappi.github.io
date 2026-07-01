@@ -18,8 +18,9 @@ dependencies, which makes deployment straightforward.
 
 ### What does the name mean?
 
-Kaappi is Finnish for "cupboard" or "cabinet." The project uses a South Indian
-filter coffee theme in its branding.
+The name comes from South Indian languages such as Malayalam and Tamil, where
+*kaappi* means "coffee" — a nod to the warm, everyday ritual of brewing
+something energizing from simple ingredients.
 
 ### What license is Kaappi under?
 
