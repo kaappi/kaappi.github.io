@@ -78,6 +78,22 @@ which builds and pushes to the `gh-pages` branch. GitHub Pages serves from that 
 Edit markdown files in `docs/`, commit, push. The site regenerates automatically.
 The landing page content is in `overrides/home.html` (HTML with MkDocs Material template tags).
 
+## Kaappi Reference Sources
+
+When writing about Kaappi features, verify against these sources (not from memory).
+All paths are relative to this repo root (`kaappi.github.io/`):
+
+- **Kaappi source code**: `../kaappi/` — the Zig implementation
+  - `../kaappi/src/` — core runtime, compiler, VM, GC, primitives (~48k lines)
+  - `../kaappi/lib/` — portable Scheme SRFI libraries (.sld files)
+  - `../kaappi/docs/dev/` — architecture, IR, LLVM backend docs
+  - `../kaappi/CONFORMANCE.md` — R7RS compliance details
+  - `../kaappi/CLAUDE.md` — detailed build options, architecture, coding patterns
+- **Book source**: `../kaappi-book/` — XeLaTeX book teaching Kaappi Scheme
+  - `../kaappi-book/chapters/` — one .tex per chapter (ch01–ch18, appendix-a–g)
+  - `../kaappi-book/CLAUDE.md` — book structure, writing guidelines, LaTeX conventions
+- **Wiki**: `../wiki/` — Scheme language reference
+
 ## Conventions
 
 - CLI examples use `kaappi` (not `zig build run --`); assume user has installed per guide
