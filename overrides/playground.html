@@ -229,7 +229,17 @@
   </div>
 </div>
 
-<script type="module">
+<script>
+(function() {
+// Clean up any state from a previous instant-navigation visit
+if (window._kpPlaygroundWorker) {
+  window._kpPlaygroundWorker.terminate();
+  window._kpPlaygroundWorker = null;
+}
+if (window._kpPlaygroundEditor) {
+  window._kpPlaygroundEditor.destroy();
+  window._kpPlaygroundEditor = null;
+}
 
 const EXAMPLES = {
   hello: `(display "Hello from Kaappi!")
@@ -425,6 +435,7 @@ async function initEditor() {
       }),
       parent: document.getElementById("kp-editor"),
     });
+    window._kpPlaygroundEditor = editorView;
   } catch (e) {
     // Fallback: plain textarea
     const el = document.getElementById("kp-editor");
@@ -471,7 +482,8 @@ const TIMEOUT_MS = 5000;
 const siteRoot = new URL("{{ base_url }}", document.baseURI).href.replace(/\/$/, "");
 const workerUrl = siteRoot + "/js/playground-worker.js";
 const wasmUrl = siteRoot + "/wasm/kaappi.wasm";
-let worker = new Worker(workerUrl, { type: "module" });
+var worker = new Worker(workerUrl, { type: "module" });
+window._kpPlaygroundWorker = worker;
 
 const statusEl = document.getElementById("kp-status");
 const stdoutEl = document.getElementById("kp-stdout");
@@ -498,6 +510,7 @@ async function runCode() {
       const timer = setTimeout(() => {
         worker.terminate();
         worker = new Worker(workerUrl, { type: "module" });
+        window._kpPlaygroundWorker = worker;
         reject(new Error("Timed out (5 s limit)"));
       }, TIMEOUT_MS);
 
@@ -541,5 +554,6 @@ exSelect.addEventListener("change", () => {
 
 initEditor();
 
+})();
 </script>
 {% endblock %}

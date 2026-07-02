@@ -350,7 +350,17 @@
   </div>
 </div>
 
-<script type="module">
+<script>
+(function() {
+// Clean up any state from a previous instant-navigation visit
+if (window._kpTourWorker) {
+  window._kpTourWorker.terminate();
+  window._kpTourWorker = null;
+}
+if (window._kpTourEditor) {
+  window._kpTourEditor.destroy();
+  window._kpTourEditor = null;
+}
 
 const LESSONS = [
   {
@@ -871,6 +881,7 @@ async function initEditor() {
       state: EditorState.create({ doc: LESSONS[currentLesson].code, extensions }),
       parent: document.getElementById("kp-tour-editor"),
     });
+    window._kpTourEditor = editorView;
   } catch {
     const el = document.getElementById("kp-tour-editor");
     const ta = document.createElement("textarea");
@@ -917,7 +928,8 @@ const TIMEOUT_MS = 5000;
 const siteRoot = new URL("{{ base_url }}", document.baseURI).href.replace(/\/$/, "");
 const workerUrl = siteRoot + "/js/playground-worker.js";
 const wasmUrl = siteRoot + "/wasm/kaappi.wasm";
-let worker = new Worker(workerUrl, { type: "module" });
+var worker = new Worker(workerUrl, { type: "module" });
+window._kpTourWorker = worker;
 
 const statusEl = document.getElementById("kp-tour-status");
 const runBtn = document.getElementById("kp-tour-run");
@@ -941,6 +953,7 @@ async function runCode() {
       const timer = setTimeout(() => {
         worker.terminate();
         worker = new Worker(workerUrl, { type: "module" });
+        window._kpTourWorker = worker;
         reject(new Error("Timed out (5 s limit)"));
       }, TIMEOUT_MS);
       worker.onmessage = ({ data }) => { clearTimeout(timer); resolve(data); };
@@ -974,5 +987,6 @@ currentLesson = readHash();
 buildSidebar();
 initEditor().then(() => loadLesson(currentLesson));
 
+})();
 </script>
 {% endblock %}
