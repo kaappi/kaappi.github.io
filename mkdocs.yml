@@ -55,6 +55,7 @@ nav:
       - Libraries: guide/libraries.md
       - Library Authoring: guide/library-authoring.md
       - SRFI Support: guide/srfi-support.md
+      - Concurrency: guide/concurrency.md
     - Tooling:
       - REPL Guide: guide/repl.md
       - CLI Reference: guide/cli.md
@@ -63,12 +64,10 @@ nav:
     - Extending:
       - C Extensions: guide/c-extensions.md
       - Zig Extensions: guide/zig-extensions.md
-      - Advanced Features: guide/advanced.md
     - In Production:
       - Security: guide/security.md
       - Deployment: guide/deployment.md
       - Migrating from Other Schemes: guide/migrating.md
-      - Tips: guide/tips.md
       - Troubleshooting: guide/troubleshooting.md
   - Procedures:
     - procedures/index.md
@@ -148,6 +147,10 @@ plugins:
   - search
   - macros:
       render_by_default: false
+  - redirects:
+      redirect_maps:
+        guide/advanced.md: guide/concurrency.md
+        guide/tips.md: guide/troubleshooting.md
 
 extra_css:
   - stylesheets/extra.css

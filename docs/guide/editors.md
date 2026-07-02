@@ -96,4 +96,4 @@ command = "kaappi-lsp"
 
 ---
 
-Next: [Tips](tips.md)
+Next: [C Extensions](c-extensions.md)

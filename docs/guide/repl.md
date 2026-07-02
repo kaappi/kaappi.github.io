@@ -395,4 +395,4 @@ You can also type `(exit)` or press **Ctrl+D** on an empty line.
 
 ---
 
-Next: [Tips](tips.md)
+Next: [CLI Reference](cli.md)

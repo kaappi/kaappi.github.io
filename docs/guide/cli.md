@@ -128,4 +128,4 @@ kaappi --profile program.scm
 
 ---
 
-Next: [REPL Guide](repl.md)
+Next: [Debugging](debugging.md)

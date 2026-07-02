@@ -637,7 +637,8 @@ more to explore.
   for every built-in procedure, organized by category
 - [Libraries](libraries.md) -- how to import SRFIs and write your own
   libraries
-- [Tips](tips.md) -- performance tips, common pitfalls, and REPL workflow
+- [Troubleshooting](troubleshooting.md) -- common errors, pitfalls, and
+  how to fix them
 - [Browser Playground](../playground.md) -- edit and run Scheme online
   with example programs
 

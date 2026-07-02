@@ -11,13 +11,17 @@ examples also use `(srfi 1)` for `filter` and `fold`.
 ## Numbers
 
 Kaappi supports fixnums (63-bit integers), bignums (arbitrary precision),
-exact rationals, flonums (IEEE 754 f64), and complex numbers.
+exact rationals, flonums (IEEE 754 f64), and complex numbers. When a
+fixnum operation would overflow 63 bits, the result is promoted to a
+bignum automatically. Exact division produces rationals, not floats —
+use `inexact` when you need a float.
 
 ```scheme
 (+ 1 2 3)              ;=> 6
 (* 2.5 4)              ;=> 10.0
 (expt 2 100)           ;=> 1267650600228229401496703205376
 (/ 1 3)                ;=> 1/3
+(inexact (/ 1 3))      ;=> 0.3333333333333333
 (+ 1/3 1/6)            ;=> 1/2
 (sqrt -1)              ;=> 0+1i
 (make-rectangular 3 4) ;=> 3+4i
@@ -132,6 +136,21 @@ See [Pairs and Lists](../procedures/pairs-and-lists.md),
     ((= i 5) sum))                      ;=> 10
 ```
 
+## Tail Calls
+
+Tail calls are optimized — a call in tail position reuses the current
+stack frame. Write loops as recursive calls without worrying about stack
+overflow:
+
+```scheme
+(define (countdown n)
+  (if (zero? n)
+      'done
+      (countdown (- n 1))))   ;; tail call: constant stack space
+
+(countdown 10000000)  ;=> done
+```
+
 ## Macros
 
 ```scheme
@@ -175,6 +194,10 @@ See [Control Flow](../procedures/control-flow.md).
   'all-positive))
 ;=> -3
 ```
+
+For simple non-local exits like the one above, prefer `call/ec` — it
+captures a one-shot escape continuation with no stack snapshot, much
+cheaper than `call/cc`, which copies all registers and frames.
 
 ## Parameters
 

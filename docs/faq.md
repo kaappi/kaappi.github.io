@@ -152,7 +152,7 @@ zig build -Dbundle-src=app.scm
 
 The binary includes the full runtime — no Kaappi installation needed on the
 target machine. Cross-compile to Linux x86_64, ARM64, or RISC-V from any
-platform. See [Standalone Binaries](guide/advanced.md#standalone-binaries).
+platform. See [Standalone Binaries](guide/deployment.md#standalone-binaries).
 
 ### Does Kaappi run in the browser?
 

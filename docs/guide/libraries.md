@@ -38,34 +38,46 @@ Multiple imports can be combined:
 
 ## Available Libraries
 
-Kaappi includes all 14 R7RS standard libraries and 72 SRFIs (8 built-in,
-64 portable). See the [SRFI Support](srfi-support.md) page for the
-complete list.
+Kaappi includes all 14 R7RS standard libraries, 72 SRFIs (8 built-in,
+64 portable), and two Kaappi extension libraries.
+
+### Standard R7RS Libraries (14)
+
+| Library | Exports | Description |
+|---------|---------|-------------|
+| `(scheme base)` | 230+ | Core procedures and syntax |
+| `(scheme case-lambda)` | 1 | `case-lambda` syntax |
+| `(scheme char)` | 22 | Unicode character operations |
+| `(scheme complex)` | 6 | Complex number procedures |
+| `(scheme cxr)` | 28 | Car/cdr compositions (3 and 4 deep) |
+| `(scheme eval)` | 3 | `eval`, `environment`, `interaction-environment` |
+| `(scheme file)` | 10 | File I/O |
+| `(scheme inexact)` | 12 | Transcendental math (sin, cos, exp, log, ...) |
+| `(scheme lazy)` | 5 | `delay`, `force`, promises |
+| `(scheme load)` | 1 | `load` |
+| `(scheme process-context)` | 5 | `exit`, `command-line`, environment variables |
+| `(scheme read)` | 1 | `read` |
+| `(scheme time)` | 3 | `current-second`, jiffies |
+| `(scheme write)` | 7 | `write`, `display`, `write-shared` |
+
+### SRFI Libraries (72)
+
+See the [SRFI Support](srfi-support.md) page for the complete list of
+all 72 supported SRFIs, built-in and portable.
+
+### Kaappi Extension Libraries
+
+| Library | Description |
+|---------|-------------|
+| `(kaappi ffi)` | Foreign function interface (ffi-open, ffi-fn, ffi-callback, ffi-close) |
+| `(kaappi fibers)` | Green threads (spawn, yield, fiber-join, channels) |
 
 ## Writing Your Own Library
 
-Create a file `mylib/math.sld`:
-
-```scheme
-(define-library (mylib math)
-  (export square cube factorial)
-  (import (scheme base))
-  (begin
-    (define (square x) (* x x))
-    (define (cube x) (* x x x))
-    (define (factorial n)
-      (let loop ((i n) (acc 1))
-        (if (= i 0) acc
-            (loop (- i 1) (* i acc)))))))
-```
-
-Use it from another file:
-
-```scheme
-(import (mylib math))
-(display (factorial 10))  ;=> 3628800
-(newline)
-```
+Define libraries with `define-library` in `.sld` files. The
+[Library Authoring](library-authoring.md) guide covers the full syntax:
+export specifications, `include`, `cond-expand`, file naming, bytecode
+caching, and organization tips.
 
 ## Library Search Paths
 
@@ -81,10 +93,7 @@ The library name `(mylib math)` maps to the file path `mylib/math.sld`.
 kaappi --lib-path /path/to/libs program.scm
 ```
 
-See the [Library Reference](library-authoring.md) for export specs, import
-modifiers, bytecode caching, `cond-expand`, and the complete library list.
-
 ---
 
-Next: [Advanced Features](advanced.md)
+Next: [Library Authoring](library-authoring.md)
 

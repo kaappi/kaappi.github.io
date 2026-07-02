@@ -251,6 +251,49 @@ kaappi> ,time (fib 30)
 ; 0.025 seconds
 ```
 
+## Performance tips
+
+- **Prefer vectors over lists for random access.** `vector-ref` is O(1);
+  `list-ref` is O(n) because it walks the chain of pairs. Use lists for
+  sequential processing, vectors when you need indexing:
+
+  ```scheme
+  ;; Fast: O(1) lookup
+  (define v (vector 10 20 30 40 50))
+  (vector-ref v 3)         ;=> 40
+
+  ;; Slow: O(n) traversal
+  (define ls (list 10 20 30 40 50))
+  (list-ref ls 3)          ;=> 40
+  ```
+
+- **For maximum performance, compile to native.** Use
+  `zig build native -Dnative-src=program.scm` to compile your program
+  via the LLVM backend. Simple functions compile to native LLVM functions
+  with direct calls, bypassing the bytecode interpreter.
+
+- **Use `for-each` instead of `map` when you don't need results.** `map`
+  allocates a new list for its return value; `for-each` just applies the
+  procedure for side effects:
+
+  ```scheme
+  ;; Allocates a list you throw away -- wasteful
+  (map display '(1 2 3))
+
+  ;; No allocation
+  (for-each display '(1 2 3))
+  ```
+
+- **Hash tables are O(1) for lookup.** Kaappi uses open-addressing with
+  linear probing. For key-value associations that grow beyond a handful of
+  entries, `hash-table-ref` is much faster than `assoc` on an alist:
+
+  ```scheme
+  (import (srfi 69))
+  (define ht (alist->hash-table '((a . 1) (b . 2) (c . 3))))
+  (hash-table-ref ht 'b)  ;=> 2
+  ```
+
 ## Bytecode inspection
 
 ### Disassembling a procedure
@@ -370,6 +413,15 @@ exercise:
 kaappi --coverage --lib-path ./lib tests/test.scm
 ```
 
+**Use `write-shared` for circular structures** — `write` will hang on
+circular lists or vectors. `write-shared` prints them with datum labels:
+
+```scheme
+(define x (list 1 2 3))
+(set-cdr! (cddr x) x)
+(write-shared x)  ;; prints: #0=(1 2 3 . #0#)
+```
+
 **Catch runaway programs** — use `--timeout` to kill programs that
 take too long, and `--max-memory` to cap heap usage:
 
@@ -389,4 +441,4 @@ zig build -Dmax-registers=8192     # default: 2048, grows to 65536
 
 ---
 
-Next: [Tips](tips.md)
+Next: [Editor Support](editors.md)

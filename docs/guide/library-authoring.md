@@ -99,52 +99,14 @@ Example with renaming:
 
 ## Import Sets and Modifiers
 
-### Basic Import
+The `import` declaration accepts the same import sets as program-level
+`import`: plain library names plus the `only`, `except`, `rename`, and
+`prefix` modifiers, which can be nested. See
+[Import Modifiers](libraries.md#import-modifiers) in the Libraries guide.
 
 ```scheme
-(import (scheme base))            ;; Import all exports
-(import (scheme base) (scheme write))  ;; Import from multiple libraries
-```
-
-### only -- Import specific names
-
-```scheme
-(import (only (scheme base) map filter cons car cdr))
-```
-
-### except -- Import everything but specific names
-
-```scheme
-(import (except (scheme base) error))
-```
-
-### rename -- Import with different names
-
-```scheme
-(import (rename (scheme base)
-                (map    scheme-map)
-                (filter scheme-filter)))
-
-(scheme-map + '(1 2 3) '(10 20 30))  ;=> (11 22 33)
-```
-
-### prefix -- Add prefix to all imported names
-
-```scheme
-(import (prefix (scheme char) char:))
-
-(char:char-alphabetic? #\A)       ;=> #t
-(char:string-upcase "hello")      ;=> "HELLO"
-```
-
-### Nested modifiers
-
-Modifiers can be composed:
-
-```scheme
-(import (prefix (only (scheme base) map filter) list:))
-
-(list:map + '(1 2) '(3 4))       ;=> (4 6)
+(import (scheme base)
+        (prefix (only (scheme char) char-upcase) c:))
 ```
 
 ---
@@ -205,112 +167,10 @@ needed if you want to pre-warm the cache.
 
 ## Available Libraries
 
-### Standard R7RS Libraries (14)
-
-| Library | Exports | Description |
-|---------|---------|-------------|
-| `(scheme base)` | 230+ | Core procedures and syntax |
-| `(scheme case-lambda)` | 1 | `case-lambda` syntax |
-| `(scheme char)` | 22 | Unicode character operations |
-| `(scheme complex)` | 6 | Complex number procedures |
-| `(scheme cxr)` | 28 | Car/cdr compositions (3 and 4 deep) |
-| `(scheme eval)` | 3 | `eval`, `environment`, `interaction-environment` |
-| `(scheme file)` | 10 | File I/O |
-| `(scheme inexact)` | 12 | Transcendental math (sin, cos, exp, log, ...) |
-| `(scheme lazy)` | 5 | `delay`, `force`, promises |
-| `(scheme load)` | 1 | `load` |
-| `(scheme process-context)` | 5 | `exit`, `command-line`, environment variables |
-| `(scheme read)` | 1 | `read` |
-| `(scheme time)` | 3 | `current-second`, jiffies |
-| `(scheme write)` | 7 | `write`, `display`, `write-shared` |
-
-### SRFI Libraries (69)
-
-8 built-in SRFIs (implemented in Zig):
-
-| Library | Description |
-|---------|-------------|
-| `(srfi 1)` | [List library](../procedures/srfi-1.md) (fold, filter, find, any, every, iota, ...) |
-| `(srfi 9)` | Records (alias for R7RS `define-record-type`) |
-| `(srfi 13)` | [String library](../procedures/srfi-13.md) (contains, split, join, trim, ...) |
-| `(srfi 18)` | [Threads](../procedures/threads.md), mutexes, condition variables |
-| `(srfi 39)` | Parameter objects (alias for `make-parameter`) |
-| `(srfi 69)` | [Hash tables](../procedures/hash-tables.md) |
-| `(srfi 133)` | [Vector library](../procedures/srfi-133.md) |
-| `(srfi 170)` | POSIX filesystem API (file-info, directory ops, ...) |
-
-61 portable SRFIs (loaded on demand from `.sld` files in `lib/srfi/`):
-
-| Library | Description |
-|---------|-------------|
-| `(srfi 0)` | `cond-expand` (feature-based conditional) |
-| `(srfi 2)` | `and-let*` |
-| `(srfi 6)` | Basic string ports |
-| `(srfi 8)` | `receive` |
-| `(srfi 11)` | `let-values` |
-| `(srfi 14)` | Character sets |
-| `(srfi 16)` | `case-lambda` |
-| `(srfi 17)` | Generalized `set!` |
-| `(srfi 19)` | Time data types and procedures (dates, formatting) |
-| `(srfi 23)` | Error reporting (`error`) |
-| `(srfi 26)` | `cut` / `cute` (partial application) |
-| `(srfi 27)` | Random numbers |
-| `(srfi 28)` | `format` (basic) |
-| `(srfi 31)` | `rec` (recursive expressions) |
-| `(srfi 34)` | Exception handling |
-| `(srfi 35)` | Conditions |
-| `(srfi 36)` | I/O conditions |
-| `(srfi 37)` | `args-fold` (CLI argument processor) |
-| `(srfi 41)` | Streams (lazy lists) |
-| `(srfi 42)` | Eager comprehensions (`list-ec`, `sum-ec`, ...) |
-| `(srfi 43)` | Vector library (predecessor to SRFI 133) |
-| `(srfi 45)` | Lazy algorithms (`delay`, `force`) |
-| `(srfi 48)` | `format` (intermediate) |
-| `(srfi 60)` | Integers as bits (`logand`, `ash`, ...) |
-| `(srfi 61)` | More general `cond` clause |
-| `(srfi 64)` | Test suite framework |
-| `(srfi 78)` | Lightweight testing (`check`) |
-| `(srfi 87)` | `=>` in `case` clauses |
-| `(srfi 98)` | Environment variables |
-| `(srfi 111)` | Boxes |
-| `(srfi 113)` | Sets and bags |
-| `(srfi 115)` | Regular expressions |
-| `(srfi 116)` | Immutable list library |
-| `(srfi 117)` | Mutable queues |
-| `(srfi 125)` | Hash tables (R7RS-style) |
-| `(srfi 127)` | Lazy sequences |
-| `(srfi 128)` | Comparators |
-| `(srfi 130)` | Cursor-based string library |
-| `(srfi 132)` | Sort libraries |
-| `(srfi 134)` | Immutable deques |
-| `(srfi 141)` | Integer division |
-| `(srfi 143)` | Fixnums |
-| `(srfi 145)` | `assume` |
-| `(srfi 146)` | Mappings (+ `(srfi 146 hash)`) |
-| `(srfi 151)` | Bitwise operations |
-| `(srfi 152)` | String library (R7RS-style) |
-| `(srfi 158)` | Generators and accumulators |
-| `(srfi 166)` | Formatting (+ pretty, columnar, unicode, color) |
-| `(srfi 174)` | POSIX timespecs |
-| `(srfi 175)` | ASCII character library |
-| `(srfi 189)` | Maybe and Either |
-| `(srfi 195)` | Multiple values as objects |
-| `(srfi 196)` | Range objects |
-| `(srfi 197)` | Pipeline operators (`chain`) |
-| `(srfi 210)` | Procedures and syntax for multiple values |
-| `(srfi 219)` | `define` with curried arguments |
-| `(srfi 222)` | Compound objects |
-| `(srfi 227)` | Optional arguments |
-| `(srfi 232)` | Flexible curried procedures |
-| `(srfi 233)` | `let` with multiple values |
-| `(srfi 235)` | Combinators |
-
-### Kaappi Extension Libraries
-
-| Library | Description |
-|---------|-------------|
-| `(kaappi ffi)` | Foreign function interface (ffi-open, ffi-fn, ffi-callback, ffi-close) |
-| `(kaappi fibers)` | Green threads (spawn, yield, fiber-join, channels) |
+For everything you can import — the 14 standard R7RS libraries, all 72
+SRFIs, and the Kaappi extension libraries — see
+[Available Libraries](libraries.md#available-libraries) and
+[SRFI Support](srfi-support.md).
 
 ---
 
@@ -365,3 +225,5 @@ supports:
   ```
 
 ---
+
+Next: [SRFI Support](srfi-support.md)

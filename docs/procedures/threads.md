@@ -9,7 +9,7 @@ lightweight green threads (fibers).
     heap, and values are deep-copied when crossing thread boundaries. OS
     threads are unavailable in `--sandbox` mode and in the WebAssembly build
     (including the browser playground); use [fibers](./extensions.md) there.
-    See [Advanced Features](../guide/advanced.md#concurrency) for details.
+    See the [Concurrency guide](../guide/concurrency.md) for details.
 
 ---
 

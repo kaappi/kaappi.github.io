@@ -199,5 +199,5 @@ cp zig-out/bin/kaappi tasks
 ./tasks add "Ship the binary"
 ```
 
-See [Standalone Binaries](../guide/advanced.md#standalone-binaries) for
+See [Standalone Binaries](../guide/deployment.md#standalone-binaries) for
 cross-compilation.

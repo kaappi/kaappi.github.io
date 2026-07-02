@@ -96,3 +96,7 @@ These are loaded from `.sld` files when first imported. Sorted by SRFI number.
 | 232 | Flexible curried procedures |
 | 233 | `INI` file parser |
 | 235 | Combinators |
+
+---
+
+Next: [Concurrency](concurrency.md)

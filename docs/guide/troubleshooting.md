@@ -413,6 +413,60 @@ or `nm -D library.so` on Linux to list exported symbols).
 
 ---
 
+## Common Pitfalls
+
+Not errors, but behavior that often surprises newcomers.
+
+- **`eq?` doesn't compare numbers reliably.** Use `=` for numeric
+  equality, `eqv?` for numbers and characters, `equal?` for deep
+  structural comparison. `eq?` tests pointer identity -- two equal numbers
+  may not be `eq?`:
+
+  ```scheme
+  (eq? 42 42)           ;=> #t (fixnums are immediate)
+  (eq? 3.14 3.14)       ;=> #f (flonums are heap-allocated)
+  (= 3.14 3.14)         ;=> #t (use = for numbers)
+  ```
+
+- **`set!` changes the binding, not the value.** If you pass a variable to
+  a function and `set!` it inside, the caller's variable is unaffected:
+
+  ```scheme
+  (define x 10)
+  (define (change! v) (set! v 99))
+  (change! x)
+  x  ;=> 10  (unchanged -- set! modified the local binding v)
+  ```
+
+- **`string-set!` requires mutable strings.** String literals are
+  immutable. Use `string-copy` to get a mutable copy first:
+
+  ```scheme
+  (define s (string-copy "hello"))
+  (string-set! s 0 #\H)
+  s  ;=> "Hello"
+  ```
+
+- **`map` and `for-each` stop at the shortest list.** When given multiple
+  lists of different lengths, extra elements are silently ignored:
+
+  ```scheme
+  (map + '(1 2 3) '(10 20))  ;=> (11 22)
+  ```
+
+- **`begin` in a definition context defines, not sequences.** At the top
+  level or in a library body, `begin` splices definitions rather than
+  sequencing expressions:
+
+  ```scheme
+  (begin
+    (define a 1)
+    (define b 2))
+  ;; a and b are now top-level definitions
+  ```
+
+---
+
 ## Setup Issues
 
 ### command not found: kaappi

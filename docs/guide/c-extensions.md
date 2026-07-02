@@ -7,6 +7,33 @@ via the FFI. The same pattern is used by `kaappi-net`, `kaappi-crypto`,
 Extensions can also be written in [Zig](zig-extensions.md), which offers
 memory safety and built-in cross-compilation.
 
+## Calling C directly
+
+Before packaging anything, know that you can call C functions from any
+script or REPL session with `(kaappi ffi)` — no library structure needed:
+
+```scheme
+(import (kaappi ffi))
+
+;; Open a shared library
+(define libm (ffi-open "libm.dylib"))  ;; macOS
+;; (define libm (ffi-open "libm.so.6"))  ;; Linux
+
+;; Bind a C function: (ffi-fn lib "name" (param-types ...) return-type)
+(define c-sqrt (ffi-fn libm "sqrt" '(double) 'double))
+(define c-pow  (ffi-fn libm "pow"  '(double double) 'double))
+
+(c-sqrt 2.0)     ;=> 1.4142135623730951
+(c-pow 2.0 10.0) ;=> 1024.0
+
+;; Clean up
+(ffi-close libm)
+```
+
+The rest of this guide covers wrapping your own C code as a reusable,
+installable library. See the [FFI reference](../procedures/extensions.md#ffi-open)
+for the full API.
+
 ## Directory layout
 
 ```

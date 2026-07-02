@@ -258,7 +258,7 @@ cp zig-out/bin/kaappi deploy
 ./deploy push --target staging
 ```
 
-See [Standalone Binaries](../guide/advanced.md#standalone-binaries).
+See [Standalone Binaries](../guide/deployment.md#standalone-binaries).
 
 ## API reference
 
