@@ -28,8 +28,9 @@ theme:
   features:
     - navigation.instant
     - navigation.tracking
+    - navigation.tabs
+    - navigation.tabs.sticky
     - navigation.sections
-    - navigation.expand
     - navigation.top
     - search.suggest
     - search.highlight
@@ -45,46 +46,54 @@ nav:
   - Download: download.md
   - Guide:
     - guide/index.md
-    - Installation: guide/installation.md
-    - Your First Program: guide/first-program.md
-    - Scheme Tutorial: guide/tutorial.md
-    - Language Reference: guide/language.md
-    - Libraries: guide/libraries.md
-    - Library Authoring: guide/library-authoring.md
-    - C Extensions: guide/c-extensions.md
-    - Zig Extensions: guide/zig-extensions.md
-    - SRFI Support: guide/srfi-support.md
-    - Advanced Features: guide/advanced.md
-    - CLI Reference: guide/cli.md
-    - Debugging: guide/debugging.md
-    - REPL Guide: guide/repl.md
-    - Editor Support: guide/editors.md
-    - Tips: guide/tips.md
-    - Migrating from Other Schemes: guide/migrating.md
-    - Security: guide/security.md
-    - Deployment: guide/deployment.md
-    - Troubleshooting: guide/troubleshooting.md
+    - Getting Started:
+      - Installation: guide/installation.md
+      - Your First Program: guide/first-program.md
+      - Scheme Tutorial: guide/tutorial.md
+    - Language:
+      - Language Reference: guide/language.md
+      - Libraries: guide/libraries.md
+      - Library Authoring: guide/library-authoring.md
+      - SRFI Support: guide/srfi-support.md
+    - Tooling:
+      - REPL Guide: guide/repl.md
+      - CLI Reference: guide/cli.md
+      - Debugging: guide/debugging.md
+      - Editor Support: guide/editors.md
+    - Extending:
+      - C Extensions: guide/c-extensions.md
+      - Zig Extensions: guide/zig-extensions.md
+      - Advanced Features: guide/advanced.md
+    - In Production:
+      - Security: guide/security.md
+      - Deployment: guide/deployment.md
+      - Migrating from Other Schemes: guide/migrating.md
+      - Tips: guide/tips.md
+      - Troubleshooting: guide/troubleshooting.md
   - Procedures:
     - procedures/index.md
-    - Numbers and Arithmetic: procedures/numbers.md
-    - Pairs and Lists: procedures/pairs-and-lists.md
-    - SRFI-1 List Library: procedures/srfi-1.md
-    - Strings: procedures/strings.md
-    - SRFI-13 String Library: procedures/srfi-13.md
-    - Characters: procedures/characters.md
-    - Vectors: procedures/vectors.md
-    - SRFI-133 Vector Library: procedures/srfi-133.md
-    - Bytevectors: procedures/bytevectors.md
-    - Ports and I/O: procedures/ports-and-io.md
-    - Control Flow: procedures/control-flow.md
-    - Type Checking: procedures/type-checking.md
-    - Hash Tables: procedures/hash-tables.md
-    - System and Environment: procedures/system.md
-    - Syntax Forms: procedures/syntax-forms.md
-    - SRFI-18 Threads: procedures/threads.md
-    - Kaappi Extensions: procedures/extensions.md
-    - Other Primitives: procedures/other.md
-    - SRFI-170 Filesystem: procedures/srfi-170.md
+    - R7RS Core:
+      - Numbers and Arithmetic: procedures/numbers.md
+      - Pairs and Lists: procedures/pairs-and-lists.md
+      - Strings: procedures/strings.md
+      - Characters: procedures/characters.md
+      - Vectors: procedures/vectors.md
+      - Bytevectors: procedures/bytevectors.md
+      - Ports and I/O: procedures/ports-and-io.md
+      - Control Flow: procedures/control-flow.md
+      - Type Checking: procedures/type-checking.md
+      - System and Environment: procedures/system.md
+      - Syntax Forms: procedures/syntax-forms.md
+    - SRFI Libraries:
+      - SRFI-1 List Library: procedures/srfi-1.md
+      - SRFI-13 String Library: procedures/srfi-13.md
+      - SRFI-133 Vector Library: procedures/srfi-133.md
+      - SRFI-18 Threads: procedures/threads.md
+      - SRFI-69 Hash Tables: procedures/hash-tables.md
+      - SRFI-170 Filesystem: procedures/srfi-170.md
+    - Extensions:
+      - Kaappi Extensions: procedures/extensions.md
+      - Other Primitives: procedures/other.md
   - Cookbook:
     - cookbook/index.md
     - Build a REST API: cookbook/rest-api.md
@@ -96,28 +105,33 @@ nav:
   - Ecosystem:
     - ecosystem/index.md
     - Package Manager (thottam): ecosystem/thottam.md
-    - JSON: ecosystem/json.md
-    - TOML: ecosystem/toml.md
-    - YAML: ecosystem/yaml.md
-    - CSV: ecosystem/csv.md
-    - Redis: ecosystem/redis.md
-    - PostgreSQL: ecosystem/pg.md
-    - SQLite: ecosystem/sqlite.md
-    - HTTP / HTTPS: ecosystem/http.md
-    - Web Framework: ecosystem/web.md
-    - Templates: ecosystem/template.md
-    - Networking (TCP/TLS): ecosystem/net.md
-    - Email (SMTP): ecosystem/email.md
-    - Crypto (Hashing): ecosystem/crypto.md
-    - Testing: ecosystem/test.md
-    - BDD Testing: ecosystem/bdd.md
-    - Logging: ecosystem/log.md
-    - CLI Parsing: ecosystem/cli.md
+    - Web & Networking:
+      - Networking (TCP/TLS): ecosystem/net.md
+      - HTTP / HTTPS: ecosystem/http.md
+      - Web Framework: ecosystem/web.md
+      - Templates: ecosystem/template.md
+      - Email (SMTP): ecosystem/email.md
+    - Data Formats:
+      - JSON: ecosystem/json.md
+      - TOML: ecosystem/toml.md
+      - YAML: ecosystem/yaml.md
+      - CSV: ecosystem/csv.md
+    - Databases:
+      - PostgreSQL: ecosystem/pg.md
+      - SQLite: ecosystem/sqlite.md
+      - Redis: ecosystem/redis.md
+    - Developer Tools:
+      - Testing: ecosystem/test.md
+      - BDD Testing: ecosystem/bdd.md
+      - Logging: ecosystem/log.md
+      - Crypto (Hashing): ecosystem/crypto.md
+      - CLI Parsing: ecosystem/cli.md
     - Examples: ecosystem/examples.md
-  - Glossary: glossary.md
-  - Stability: stability.md
-  - Community: community.md
-  - FAQ: faq.md
+  - About:
+    - FAQ: faq.md
+    - Community: community.md
+    - Stability: stability.md
+    - Glossary: glossary.md
 
 markdown_extensions:
   - pymdownx.highlight:
