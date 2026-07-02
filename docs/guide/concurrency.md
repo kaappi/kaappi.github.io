@@ -67,7 +67,9 @@ for mutexes, condition variables, and the full threading API.
 | Best for | Concurrent I/O, event loops | CPU-bound parallel work |
 
 For multi-process serving in production (`serve-prefork`), see
-[Deployment](deployment.md#multi-process-serving).
+[Deployment](deployment.md#multi-process-serving). For worked examples
+of pipelines and worker pools, see the cookbook recipe
+[Run Concurrent Tasks](../cookbook/concurrent-tasks.md).
 
 ---
 

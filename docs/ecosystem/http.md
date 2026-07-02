@@ -8,6 +8,10 @@ thottam install kaappi-http
 
 Depends on [kaappi-net](net.md) (auto-installed).
 
+For a task-oriented walkthrough of the client (JSON APIs, error
+handling, retries, downloads), see the cookbook recipe
+[Call HTTP APIs](../cookbook/http-client.md).
+
 ## Client
 
 ### GET request

@@ -30,7 +30,7 @@ page names). Section overview:
 | Download | `docs/download.md` | 1 | Install script + binary links; **version in H1** |
 | Guide | `docs/guide/` | 18 + index | Installation through troubleshooting; incl. tutorial, library authoring, concurrency, C/Zig extensions, SRFI support, editors, migrating, security, deployment |
 | Procedures | `docs/procedures/` | 19 + index | Per-category API reference (numbers, lists, strings, SRFI-1/13/18/133/170, syntax forms, extensions, …) |
-| Cookbook | `docs/cookbook/` | 6 + index | Task recipes: REST API, HTML templates, JSON, CSV, testing, CLI tool |
+| Cookbook | `docs/cookbook/` | 10 + index | Task recipes: REST API, HTTP client, HTML templates, JSON, CSV, SQLite, config files, concurrency, testing, CLI tool |
 | Ecosystem | `docs/ecosystem/` | 19 + index | thottam (package manager) + one page per kaappi-* library |
 | Top-level | `docs/*.md` | 4 | glossary, stability, community, faq |
 

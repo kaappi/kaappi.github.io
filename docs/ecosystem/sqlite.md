@@ -8,6 +8,9 @@ thottam install kaappi-sqlite
 
 Requires: `libsqlite3` (macOS: included, Linux: `apt install libsqlite3-dev`)
 
+For a task-oriented walkthrough, see the cookbook recipe
+[Store Data in SQLite](../cookbook/sqlite-storage.md).
+
 ## Quick start
 
 ```scheme

@@ -8,6 +8,10 @@ thottam install kaappi-toml
 
 Pure Scheme — no dependencies.
 
+For a task-oriented walkthrough (defaults, environment overrides,
+validation), see the cookbook recipe
+[Read Configuration Files](../cookbook/config-files.md).
+
 ## Quick start
 
 ```scheme

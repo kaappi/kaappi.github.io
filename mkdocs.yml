@@ -96,9 +96,13 @@ nav:
   - Cookbook:
     - cookbook/index.md
     - Build a REST API: cookbook/rest-api.md
+    - Call HTTP APIs: cookbook/http-client.md
     - Serve HTML with Templates: cookbook/html-templates.md
     - Process JSON Data: cookbook/json-processing.md
     - Parse and Generate CSV: cookbook/csv-processing.md
+    - Store Data in SQLite: cookbook/sqlite-storage.md
+    - Read Configuration Files: cookbook/config-files.md
+    - Run Concurrent Tasks: cookbook/concurrent-tasks.md
     - Write Tests: cookbook/testing.md
     - Build a CLI Tool: cookbook/cli-tool.md
   - Ecosystem:
