@@ -1,0 +1,110 @@
+/* Kaappi design bridge — landing page identity into content pages */
+
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap');
+
+/* ---- palette overrides (both schemes) ---- */
+:root,
+[data-md-color-scheme="default"] {
+  --md-primary-fg-color: #1A1410;
+  --md-primary-bg-color: #F3E9DB;
+  --md-accent-fg-color: #D08B3C;
+  --md-typeset-a-color: #B07530;
+}
+
+[data-md-color-scheme="slate"] {
+  --md-primary-fg-color: #1A1410;
+  --md-primary-bg-color: #F3E9DB;
+  --md-accent-fg-color: #E8B563;
+  --md-typeset-a-color: #D08B3C;
+}
+
+/* ---- logo: fill the header height ---- */
+.md-header__button.md-logo img,
+.md-header__button.md-logo svg {
+  height: 2.5rem;
+  width: auto;
+}
+
+/* ---- header: dark roast on every page ---- */
+.md-header {
+  background-color: #1A1410;
+  color: #F3E9DB;
+}
+
+.md-header__title {
+  color: #F3E9DB;
+}
+
+.md-tabs {
+  background-color: #1A1410;
+  color: #F3E9DB;
+}
+
+.md-tabs__link {
+  color: rgba(243, 233, 219, 0.7);
+}
+
+.md-tabs__link--active,
+.md-tabs__link:hover {
+  color: #F3E9DB;
+}
+
+/* ---- typography: Space Grotesk for headings ---- */
+.md-typeset h1,
+.md-typeset h2,
+.md-typeset h3 {
+  font-family: "Space Grotesk", "Inter", system-ui, sans-serif;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+.md-typeset h1 {
+  letter-spacing: -0.03em;
+}
+
+/* ---- nav section labels ---- */
+.md-nav__item--section > .md-nav__link {
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 0.65rem;
+  letter-spacing: 0.05em;
+  opacity: 0.7;
+  margin-top: 0.6em;
+}
+
+/* ---- code: inline keeps warm light tint ---- */
+[data-md-color-scheme="default"] .md-typeset code {
+  background-color: #F8F3ED;
+}
+
+/* ---- code blocks: dark roast with readable syntax tokens ---- */
+[data-md-color-scheme="default"] .md-typeset pre > code {
+  background-color: #1E1812;
+  color: #F3E9DB;
+  --md-code-hl-comment-color: #9C8A77;
+  --md-code-hl-keyword-color: #E8B563;
+  --md-code-hl-string-color: #BFD08A;
+  --md-code-hl-number-color: #E0A867;
+  --md-code-hl-function-color: #4FC4B2;
+  --md-code-hl-variable-color: #BBA890;
+  --md-code-hl-operator-color: #F3E9DB;
+  --md-code-hl-punctuation-color: #BBA890;
+  --md-code-hl-constant-color: #E8B563;
+  --md-code-hl-special-color: #D08B3C;
+  --md-code-hl-generic-color: #9C8A77;
+}
+
+[data-md-color-scheme="slate"] .md-typeset pre > code {
+  background-color: #1E1812;
+  --md-code-hl-comment-color: #9C8A77;
+}
+
+/* ---- active nav item uses brass ---- */
+.md-nav__link--active {
+  color: #D08B3C !important;
+}
+
+/* ---- search highlight ---- */
+.md-search-result mark {
+  background-color: rgba(208, 139, 60, 0.25);
+}

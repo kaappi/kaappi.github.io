@@ -1,0 +1,4217 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="A complete R7RS-small Scheme implementation written in Zig">
+      
+      
+      
+        <link rel="canonical" href="https://kaappi-lang.org/procedures/threads/">
+      
+      
+        <link rel="prev" href="../syntax-forms/">
+      
+      
+        <link rel="next" href="../extensions/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>SRFI-18 Threads - Kaappi</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,700,700i%7CJetBrains+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="amber">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#srfi-18-threads" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Kaappi" class="md-header__button md-logo" aria-label="Kaappi" data-md-component="logo">
+      
+  <img src="../../assets/logo.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Kaappi
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              SRFI-18 Threads
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/kaappi/kaappi" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    kaappi/kaappi
+  </div>
+</a>
+      </div>
+    
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="amber"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="teal" data-md-color-accent="amber"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Kaappi" class="md-nav__button md-logo" aria-label="Kaappi" data-md-component="logo">
+      
+  <img src="../../assets/logo.svg" alt="logo">
+
+    </a>
+    Kaappi
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/kaappi/kaappi" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    kaappi/kaappi
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../playground/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Try It
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="https://kaappi-lang.org/tour/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tour
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../download/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Download
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guide
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Guide
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    User Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guide/installation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Installation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guide/first-program/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Your First Program
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guide/tutorial/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Scheme Tutorial
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guide/language/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Language Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guide/libraries/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Libraries
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guide/library-authoring/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Library Authoring
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guide/c-extensions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    C Extensions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guide/zig-extensions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Zig Extensions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guide/srfi-support/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SRFI Support
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guide/advanced/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Advanced Features
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guide/cli/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CLI Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guide/debugging/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Debugging
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guide/repl/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    REPL Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guide/editors/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Editor Support
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guide/tips/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tips
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guide/migrating/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Migrating from Other Schemes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guide/security/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Security
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guide/deployment/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deployment
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guide/troubleshooting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Troubleshooting
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Procedures
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Procedures
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Procedure Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../numbers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Numbers and Arithmetic
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pairs-and-lists/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pairs and Lists
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../srfi-1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SRFI-1 List Library
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../strings/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Strings
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../srfi-13/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SRFI-13 String Library
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../characters/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Characters
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../vectors/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Vectors
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../srfi-133/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SRFI-133 Vector Library
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../bytevectors/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Bytevectors
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ports-and-io/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ports and I/O
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../control-flow/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Control Flow
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../type-checking/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Type Checking
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../hash-tables/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hash Tables
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../system/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    System and Environment
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../syntax-forms/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Syntax Forms
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SRFI-18 Threads
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SRFI-18 Threads
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#thread-operations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Thread Operations
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Thread Operations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#current-thread" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        current-thread
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#thread-pred" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        thread?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#make-thread" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        make-thread
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#thread-name" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        thread-name
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#thread-specific" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        thread-specific
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#thread-specific-set" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        thread-specific-set!
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#thread-start" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        thread-start!
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#thread-yield" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        thread-yield!
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#thread-sleep" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        thread-sleep!
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#thread-terminate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        thread-terminate!
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#thread-join" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        thread-join!
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mutexes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Mutexes
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Mutexes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#mutex-pred" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        mutex?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#make-mutex" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        make-mutex
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mutex-name" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        mutex-name
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mutex-specific" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        mutex-specific
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mutex-specific-set" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        mutex-specific-set!
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mutex-state" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        mutex-state
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mutex-lock" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        mutex-lock!
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mutex-unlock" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        mutex-unlock!
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#condition-variables" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Condition Variables
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Condition Variables">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#condition-variable-pred" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        condition-variable?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#make-condition-variable" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        make-condition-variable
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#condition-variable-name" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        condition-variable-name
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#condition-variable-specific" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        condition-variable-specific
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#condition-variable-specific-set" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        condition-variable-specific-set!
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#condition-variable-signal" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        condition-variable-signal!
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#condition-variable-broadcast" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        condition-variable-broadcast!
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#time" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Time
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Time">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#current-time" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        current-time
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#time-pred" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        time?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#time-to-seconds" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        time-&gt;seconds
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#seconds-to-time" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        seconds-&gt;time
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exception-predicates" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exception Predicates
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Exception Predicates">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#join-timeout-exception" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        join-timeout-exception?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#abandoned-mutex-exception" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        abandoned-mutex-exception?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#terminated-thread-exception" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        terminated-thread-exception?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#uncaught-exception" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        uncaught-exception?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#uncaught-exception-reason" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        uncaught-exception-reason
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../extensions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Kaappi Extensions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../other/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Other Primitives
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../srfi-170/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SRFI-170 Filesystem
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cookbook
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Cookbook
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cookbook/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cookbook
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cookbook/rest-api/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Build a REST API
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cookbook/html-templates/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Serve HTML with Templates
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cookbook/json-processing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Process JSON Data
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cookbook/csv-processing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Parse and Generate CSV
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cookbook/testing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Write Tests
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cookbook/cli-tool/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Build a CLI Tool
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ecosystem
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Ecosystem
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ecosystem/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ecosystem
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ecosystem/thottam/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Package Manager (thottam)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ecosystem/json/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    JSON
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ecosystem/toml/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    TOML
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ecosystem/yaml/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    YAML
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ecosystem/csv/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CSV
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ecosystem/redis/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Redis
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ecosystem/pg/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PostgreSQL
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ecosystem/sqlite/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SQLite
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ecosystem/http/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    HTTP / HTTPS
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ecosystem/web/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Web Framework
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ecosystem/template/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Templates
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ecosystem/net/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Networking (TCP/TLS)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ecosystem/email/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Email (SMTP)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ecosystem/crypto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Crypto (Hashing)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ecosystem/test/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Testing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ecosystem/bdd/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    BDD Testing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ecosystem/log/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Logging
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ecosystem/cli/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CLI Parsing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ecosystem/examples/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Examples
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../glossary/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Glossary
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../stability/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Stability
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../community/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Community
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../changelog/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Changelog
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../faq/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    FAQ
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#thread-operations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Thread Operations
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Thread Operations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#current-thread" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        current-thread
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#thread-pred" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        thread?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#make-thread" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        make-thread
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#thread-name" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        thread-name
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#thread-specific" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        thread-specific
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#thread-specific-set" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        thread-specific-set!
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#thread-start" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        thread-start!
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#thread-yield" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        thread-yield!
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#thread-sleep" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        thread-sleep!
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#thread-terminate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        thread-terminate!
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#thread-join" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        thread-join!
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mutexes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Mutexes
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Mutexes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#mutex-pred" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        mutex?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#make-mutex" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        make-mutex
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mutex-name" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        mutex-name
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mutex-specific" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        mutex-specific
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mutex-specific-set" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        mutex-specific-set!
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mutex-state" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        mutex-state
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mutex-lock" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        mutex-lock!
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mutex-unlock" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        mutex-unlock!
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#condition-variables" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Condition Variables
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Condition Variables">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#condition-variable-pred" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        condition-variable?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#make-condition-variable" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        make-condition-variable
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#condition-variable-name" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        condition-variable-name
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#condition-variable-specific" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        condition-variable-specific
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#condition-variable-specific-set" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        condition-variable-specific-set!
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#condition-variable-signal" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        condition-variable-signal!
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#condition-variable-broadcast" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        condition-variable-broadcast!
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#time" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Time
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Time">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#current-time" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        current-time
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#time-pred" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        time?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#time-to-seconds" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        time-&gt;seconds
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#seconds-to-time" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        seconds-&gt;time
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exception-predicates" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exception Predicates
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Exception Predicates">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#join-timeout-exception" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        join-timeout-exception?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#abandoned-mutex-exception" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        abandoned-mutex-exception?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#terminated-thread-exception" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        terminated-thread-exception?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#uncaught-exception" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        uncaught-exception?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#uncaught-exception-reason" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        uncaught-exception-reason
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="srfi-18-threads">SRFI-18 Threads<a class="headerlink" href="#srfi-18-threads" title="Permanent link">&para;</a></h1>
+<p>Multithreading primitives for concurrent programming. Import with
+<code>(import (srfi 18))</code>. See also <a href="../extensions/">Kaappi Extensions</a> for
+lightweight green threads (fibers).</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>SRFI-18 spawns real OS threads -- each thread gets its own VM and GC
+heap, and values are deep-copied when crossing thread boundaries. OS
+threads are unavailable in <code>--sandbox</code> mode and in the WebAssembly build
+(including the browser playground); use <a href="../extensions/">fibers</a> there.
+See <a href="../../guide/advanced/#concurrency">Advanced Features</a> for details.</p>
+</div>
+<hr />
+<h2 id="thread-operations">Thread Operations<a class="headerlink" href="#thread-operations" title="Permanent link">&para;</a></h2>
+<h3 id="current-thread"><code>current-thread</code><a class="headerlink" href="#current-thread" title="Permanent link">&para;</a></h3>
+<p><strong>Syntax:</strong> <code>(current-thread)</code></p>
+<p>Returns the thread object representing the currently executing thread.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nf">current-thread</span><span class="p">)</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="c1">;=&gt; #&lt;thread main&gt;</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nf">thread-name</span><span class="w"> </span><span class="p">(</span><span class="nf">current-thread</span><span class="p">))</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1">;=&gt; main</span>
+</code></pre></div>
+<p><strong>See also:</strong> <a href="#thread-pred"><code>thread?</code></a>, <a href="#make-thread"><code>make-thread</code></a></p>
+<hr />
+<h3 id="thread-pred"><code>thread?</code><a class="headerlink" href="#thread-pred" title="Permanent link">&para;</a></h3>
+<p><strong>Syntax:</strong> <code>(thread? obj)</code></p>
+<p>Returns <code>#t</code> if <em>obj</em> is a thread object, <code>#f</code> otherwise.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nf">thread?</span><span class="w"> </span><span class="p">(</span><span class="nf">current-thread</span><span class="p">))</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c1">;=&gt; #t</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nf">thread?</span><span class="w"> </span><span class="p">(</span><span class="nf">make-thread</span><span class="w"> </span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="mi">42</span><span class="p">)))</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1">;=&gt; #t</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nf">thread?</span><span class="w"> </span><span class="ss">&#39;not-a-thread</span><span class="p">)</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c1">;=&gt; #f</span>
+</code></pre></div>
+<p><strong>See also:</strong> <a href="#current-thread"><code>current-thread</code></a>, <a href="#make-thread"><code>make-thread</code></a></p>
+<hr />
+<h3 id="make-thread"><code>make-thread</code><a class="headerlink" href="#make-thread" title="Permanent link">&para;</a></h3>
+<p><strong>Syntax:</strong> <code>(make-thread thunk)</code> | <code>(make-thread thunk name)</code></p>
+<p>Creates a new thread that will execute <em>thunk</em> (a procedure of zero
+arguments) when started. The optional <em>name</em> is a string used for
+identification and debugging. The thread is created in a non-started
+state; call <code>thread-start!</code> to begin execution.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="nv">t</span><span class="w"> </span><span class="p">(</span><span class="nf">make-thread</span><span class="w"> </span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="mi">2</span><span class="p">))))</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="nv">t</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c1">;=&gt; #&lt;thread&gt;</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="nv">t2</span><span class="w"> </span><span class="p">(</span><span class="nf">make-thread</span><span class="w"> </span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="ss">&#39;done</span><span class="p">)</span><span class="w"> </span><span class="s">&quot;worker&quot;</span><span class="p">))</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nf">thread-name</span><span class="w"> </span><span class="nv">t2</span><span class="p">)</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1">;=&gt; &quot;worker&quot;</span>
+</code></pre></div>
+<p><strong>See also:</strong> <a href="#thread-start"><code>thread-start!</code></a>, <a href="#thread-join"><code>thread-join!</code></a></p>
+<hr />
+<h3 id="thread-name"><code>thread-name</code><a class="headerlink" href="#thread-name" title="Permanent link">&para;</a></h3>
+<p><strong>Syntax:</strong> <code>(thread-name thread)</code></p>
+<p>Returns the name associated with <em>thread</em>, or <code>#f</code> if no name was given
+at creation time.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nf">thread-name</span><span class="w"> </span><span class="p">(</span><span class="nf">make-thread</span><span class="w"> </span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="no">#f</span><span class="p">)</span><span class="w"> </span><span class="s">&quot;my-thread&quot;</span><span class="p">))</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="c1">;=&gt; &quot;my-thread&quot;</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nf">thread-name</span><span class="w"> </span><span class="p">(</span><span class="nf">make-thread</span><span class="w"> </span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="no">#f</span><span class="p">)))</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1">;=&gt; #f</span>
+</code></pre></div>
+<p><strong>See also:</strong> <a href="#make-thread"><code>make-thread</code></a></p>
+<hr />
+<h3 id="thread-specific"><code>thread-specific</code><a class="headerlink" href="#thread-specific" title="Permanent link">&para;</a></h3>
+<p><strong>Syntax:</strong> <code>(thread-specific thread)</code></p>
+<p>Returns the thread-specific value associated with <em>thread</em>. Each thread
+has a single slot for storing an arbitrary value, initially <code>#f</code>.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nf">thread-specific</span><span class="w"> </span><span class="p">(</span><span class="nf">current-thread</span><span class="p">))</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="c1">;=&gt; #f</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nf">thread-specific-set!</span><span class="w"> </span><span class="p">(</span><span class="nf">current-thread</span><span class="p">)</span><span class="w"> </span><span class="o">&#39;</span><span class="p">(</span><span class="nv">my</span><span class="w"> </span><span class="nv">data</span><span class="p">))</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nf">thread-specific</span><span class="w"> </span><span class="p">(</span><span class="nf">current-thread</span><span class="p">))</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1">;=&gt; (my data)</span>
+</code></pre></div>
+<p><strong>See also:</strong> <a href="#thread-specific-set"><code>thread-specific-set!</code></a></p>
+<hr />
+<h3 id="thread-specific-set"><code>thread-specific-set!</code><a class="headerlink" href="#thread-specific-set" title="Permanent link">&para;</a></h3>
+<p><strong>Syntax:</strong> <code>(thread-specific-set! thread obj)</code></p>
+<p>Sets the thread-specific value of <em>thread</em> to <em>obj</em>. This can be used to
+associate per-thread data without using global mutable state.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nf">thread-specific-set!</span><span class="w"> </span><span class="p">(</span><span class="nf">current-thread</span><span class="p">)</span><span class="w"> </span><span class="mi">42</span><span class="p">)</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nf">thread-specific</span><span class="w"> </span><span class="p">(</span><span class="nf">current-thread</span><span class="p">))</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="c1">;=&gt; 42</span>
+</code></pre></div>
+<p><strong>See also:</strong> <a href="#thread-specific"><code>thread-specific</code></a></p>
+<hr />
+<h3 id="thread-start"><code>thread-start!</code><a class="headerlink" href="#thread-start" title="Permanent link">&para;</a></h3>
+<p><strong>Syntax:</strong> <code>(thread-start! thread)</code></p>
+<p>Starts <em>thread</em> and returns the thread object. The thread begins
+executing the thunk that was passed to <code>make-thread</code>. A thread can only
+be started once; starting an already-started thread is an error.</p>
+<p>The child thread receives a <strong>deep copy</strong> of the thunk's closure --
+mutations in the child are not visible to the parent.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="nv">t</span><span class="w"> </span><span class="p">(</span><span class="nf">make-thread</span><span class="w"> </span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">(</span><span class="nb">display</span><span class="w"> </span><span class="s">&quot;hello</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">))))</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nf">thread-start!</span><span class="w"> </span><span class="nv">t</span><span class="p">)</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="c1">;=&gt; #&lt;thread&gt;</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="nv">hello</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nf">thread-join!</span><span class="w"> </span><span class="nv">t</span><span class="p">)</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># OS threads work out of the box -- no special flag needed</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>kaappi<span class="w"> </span>program.scm
+</code></pre></div>
+<p><strong>See also:</strong> <a href="#make-thread"><code>make-thread</code></a>, <a href="#thread-join"><code>thread-join!</code></a></p>
+<hr />
+<h3 id="thread-yield"><code>thread-yield!</code><a class="headerlink" href="#thread-yield" title="Permanent link">&para;</a></h3>
+<p><strong>Syntax:</strong> <code>(thread-yield!)</code></p>
+<p>Causes the current thread to voluntarily give up its time slice,
+allowing the scheduler to run other ready threads. Returns an
+unspecified value.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nf">thread-yield!</span><span class="p">)</span>
+</code></pre></div>
+<p><strong>See also:</strong> <a href="#thread-sleep"><code>thread-sleep!</code></a>,
+<a href="../extensions/#yield"><code>yield</code></a> (fiber equivalent)</p>
+<hr />
+<h3 id="thread-sleep"><code>thread-sleep!</code><a class="headerlink" href="#thread-sleep" title="Permanent link">&para;</a></h3>
+<p><strong>Syntax:</strong> <code>(thread-sleep! timeout)</code></p>
+<p>Causes the current thread to sleep until <em>timeout</em>. The <em>timeout</em> can
+be a time object (from <code>seconds-&gt;time</code>) or a number of seconds as an
+inexact real. Other threads continue to run during the sleep.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nf">thread-sleep!</span><span class="w"> </span><span class="mf">0.5</span><span class="p">)</span><span class="w">  </span><span class="c1">; sleep 500ms</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nf">thread-sleep!</span><span class="w"> </span><span class="p">(</span><span class="nf">seconds-&gt;time</span><span class="w"> </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="p">(</span><span class="nf">time-&gt;seconds</span><span class="w"> </span><span class="p">(</span><span class="nb">current-time</span><span class="p">))</span><span class="w"> </span><span class="mi">1</span><span class="p">)))</span>
+</code></pre></div>
+<p><strong>See also:</strong> <a href="#thread-yield"><code>thread-yield!</code></a>,
+<a href="#current-time"><code>current-time</code></a>, <a href="#seconds-to-time"><code>seconds-&gt;time</code></a></p>
+<hr />
+<h3 id="thread-terminate"><code>thread-terminate!</code><a class="headerlink" href="#thread-terminate" title="Permanent link">&para;</a></h3>
+<p><strong>Syntax:</strong> <code>(thread-terminate! thread)</code></p>
+<p>Forcefully terminates <em>thread</em>. Any thread that subsequently calls
+<code>thread-join!</code> on the terminated thread will receive a
+<code>terminated-thread-exception</code>. Use with caution: the terminated thread
+does not get a chance to release resources or unlock mutexes.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="nv">t</span><span class="w"> </span><span class="p">(</span><span class="nf">make-thread</span><span class="w"> </span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">(</span><span class="nf">thread-sleep!</span><span class="w"> </span><span class="mi">100</span><span class="p">))))</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nf">thread-start!</span><span class="w"> </span><span class="nv">t</span><span class="p">)</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="c1">;=&gt; #&lt;thread&gt;</span>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nf">thread-terminate!</span><span class="w"> </span><span class="nv">t</span><span class="p">)</span>
+</code></pre></div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Terminating a thread that holds a mutex leaves the mutex in an
+abandoned state. Subsequent attempts to lock it will raise an
+<code>abandoned-mutex-exception</code>.</p>
+</div>
+<p><strong>See also:</strong> <a href="#thread-join"><code>thread-join!</code></a>,
+<a href="#terminated-thread-exception"><code>terminated-thread-exception?</code></a></p>
+<hr />
+<h3 id="thread-join"><code>thread-join!</code><a class="headerlink" href="#thread-join" title="Permanent link">&para;</a></h3>
+<p><strong>Syntax:</strong> <code>(thread-join! thread)</code> | <code>(thread-join! thread timeout)</code> | <code>(thread-join! thread timeout timeout-val)</code></p>
+<p>Blocks the current thread until <em>thread</em> terminates. Returns the result
+value of the thread's thunk (deep-copied from the child's heap to the
+caller's heap). If the thread raised an uncaught exception, <code>thread-join!</code>
+re-raises it wrapped in an <code>uncaught-exception</code> object.</p>
+<p>If <em>timeout</em> is given (a time object or number of seconds) and the thread
+has not terminated by then, a <code>join-timeout-exception</code> is raised -- unless
+<em>timeout-val</em> is provided, in which case that value is returned instead.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="nv">t</span><span class="w"> </span><span class="p">(</span><span class="nf">make-thread</span><span class="w"> </span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="mi">6</span><span class="w"> </span><span class="mi">7</span><span class="p">))))</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nf">thread-start!</span><span class="w"> </span><span class="nv">t</span><span class="p">)</span>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="c1">;=&gt; #&lt;thread&gt;</span>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nf">thread-join!</span><span class="w"> </span><span class="nv">t</span><span class="p">)</span>
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="c1">;=&gt; 42</span>
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="nv">t2</span><span class="w"> </span><span class="p">(</span><span class="nf">make-thread</span><span class="w"> </span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">(</span><span class="nf">thread-sleep!</span><span class="w"> </span><span class="mi">10</span><span class="p">))))</span>
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nf">thread-start!</span><span class="w"> </span><span class="nv">t2</span><span class="p">)</span>
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a><span class="c1">;=&gt; #&lt;thread&gt;</span>
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nf">thread-join!</span><span class="w"> </span><span class="nv">t2</span><span class="w"> </span><span class="mf">0.1</span><span class="w"> </span><span class="ss">&#39;timed-out</span><span class="p">)</span>
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a><span class="c1">;=&gt; timed-out</span>
+</code></pre></div>
+<p><strong>See also:</strong> <a href="#thread-start"><code>thread-start!</code></a>,
+<a href="#join-timeout-exception"><code>join-timeout-exception?</code></a>,
+<a href="#uncaught-exception"><code>uncaught-exception?</code></a></p>
+<hr />
+<h2 id="mutexes">Mutexes<a class="headerlink" href="#mutexes" title="Permanent link">&para;</a></h2>
+<h3 id="mutex-pred"><code>mutex?</code><a class="headerlink" href="#mutex-pred" title="Permanent link">&para;</a></h3>
+<p><strong>Syntax:</strong> <code>(mutex? obj)</code></p>
+<p>Returns <code>#t</code> if <em>obj</em> is a mutex, <code>#f</code> otherwise.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nf">mutex?</span><span class="w"> </span><span class="p">(</span><span class="nf">make-mutex</span><span class="p">))</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="c1">;=&gt; #t</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nf">mutex?</span><span class="w"> </span><span class="ss">&#39;not-a-mutex</span><span class="p">)</span>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="c1">;=&gt; #f</span>
+</code></pre></div>
+<p><strong>See also:</strong> <a href="#make-mutex"><code>make-mutex</code></a></p>
+<hr />
+<h3 id="make-mutex"><code>make-mutex</code><a class="headerlink" href="#make-mutex" title="Permanent link">&para;</a></h3>
+<p><strong>Syntax:</strong> <code>(make-mutex)</code> | <code>(make-mutex name)</code></p>
+<p>Creates a new mutex in the unlocked state. The optional <em>name</em> is a
+string used for identification and debugging.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="nv">m</span><span class="w"> </span><span class="p">(</span><span class="nf">make-mutex</span><span class="w"> </span><span class="s">&quot;my-lock&quot;</span><span class="p">))</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="nv">m</span>
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="c1">;=&gt; #&lt;mutex my-lock&gt;</span>
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nf">mutex-state</span><span class="w"> </span><span class="nv">m</span><span class="p">)</span>
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="c1">;=&gt; not-abandoned</span>
+</code></pre></div>
+<p><strong>See also:</strong> <a href="#mutex-lock"><code>mutex-lock!</code></a>, <a href="#mutex-unlock"><code>mutex-unlock!</code></a></p>
+<hr />
+<h3 id="mutex-name"><code>mutex-name</code><a class="headerlink" href="#mutex-name" title="Permanent link">&para;</a></h3>
+<p><strong>Syntax:</strong> <code>(mutex-name mutex)</code></p>
+<p>Returns the name associated with <em>mutex</em>, or <code>#f</code> if no name was given.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nf">mutex-name</span><span class="w"> </span><span class="p">(</span><span class="nf">make-mutex</span><span class="w"> </span><span class="s">&quot;lock-1&quot;</span><span class="p">))</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="c1">;=&gt; &quot;lock-1&quot;</span>
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nf">mutex-name</span><span class="w"> </span><span class="p">(</span><span class="nf">make-mutex</span><span class="p">))</span>
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="c1">;=&gt; #f</span>
+</code></pre></div>
+<p><strong>See also:</strong> <a href="#make-mutex"><code>make-mutex</code></a></p>
+<hr />
+<h3 id="mutex-specific"><code>mutex-specific</code><a class="headerlink" href="#mutex-specific" title="Permanent link">&para;</a></h3>
+<p><strong>Syntax:</strong> <code>(mutex-specific mutex)</code></p>
+<p>Returns the mutex-specific value associated with <em>mutex</em>, initially <code>#f</code>.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="nv">m</span><span class="w"> </span><span class="p">(</span><span class="nf">make-mutex</span><span class="p">))</span>
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nf">mutex-specific</span><span class="w"> </span><span class="nv">m</span><span class="p">)</span>
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a><span class="c1">;=&gt; #f</span>
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nf">mutex-specific-set!</span><span class="w"> </span><span class="nv">m</span><span class="w"> </span><span class="ss">&#39;data</span><span class="p">)</span>
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nf">mutex-specific</span><span class="w"> </span><span class="nv">m</span><span class="p">)</span>
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a><span class="c1">;=&gt; data</span>
+</code></pre></div>
+<p><strong>See also:</strong> <a href="#mutex-specific-set"><code>mutex-specific-set!</code></a></p>
+<hr />
+<h3 id="mutex-specific-set"><code>mutex-specific-set!</code><a class="headerlink" href="#mutex-specific-set" title="Permanent link">&para;</a></h3>
+<p><strong>Syntax:</strong> <code>(mutex-specific-set! mutex obj)</code></p>
+<p>Sets the mutex-specific value of <em>mutex</em> to <em>obj</em>.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="nv">m</span><span class="w"> </span><span class="p">(</span><span class="nf">make-mutex</span><span class="p">))</span>
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nf">mutex-specific-set!</span><span class="w"> </span><span class="nv">m</span><span class="w"> </span><span class="o">&#39;</span><span class="p">(</span><span class="nv">resource-info</span><span class="p">))</span>
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nf">mutex-specific</span><span class="w"> </span><span class="nv">m</span><span class="p">)</span>
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="c1">;=&gt; (resource-info)</span>
+</code></pre></div>
+<p><strong>See also:</strong> <a href="#mutex-specific"><code>mutex-specific</code></a></p>
+<hr />
+<h3 id="mutex-state"><code>mutex-state</code><a class="headerlink" href="#mutex-state" title="Permanent link">&para;</a></h3>
+<p><strong>Syntax:</strong> <code>(mutex-state mutex)</code></p>
+<p>Returns the state of <em>mutex</em>. Possible return values:</p>
+<ul>
+<li>A thread object -- the mutex is locked and owned by that thread</li>
+<li>The symbol <code>not-owned</code> -- the mutex is locked but not owned</li>
+<li>The symbol <code>abandoned</code> -- the mutex was abandoned by a terminated thread</li>
+<li>The symbol <code>not-abandoned</code> -- the mutex is unlocked</li>
+</ul>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="nv">m</span><span class="w"> </span><span class="p">(</span><span class="nf">make-mutex</span><span class="p">))</span>
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nf">mutex-state</span><span class="w"> </span><span class="nv">m</span><span class="p">)</span>
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a><span class="c1">;=&gt; not-abandoned</span>
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nf">mutex-lock!</span><span class="w"> </span><span class="nv">m</span><span class="p">)</span>
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a><span class="c1">;=&gt; #t</span>
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nf">mutex-state</span><span class="w"> </span><span class="nv">m</span><span class="p">)</span>
+<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a><span class="c1">;=&gt; #&lt;thread main&gt;</span>
+</code></pre></div>
+<p><strong>See also:</strong> <a href="#mutex-lock"><code>mutex-lock!</code></a>, <a href="#mutex-unlock"><code>mutex-unlock!</code></a></p>
+<hr />
+<h3 id="mutex-lock"><code>mutex-lock!</code><a class="headerlink" href="#mutex-lock" title="Permanent link">&para;</a></h3>
+<p><strong>Syntax:</strong> <code>(mutex-lock! mutex)</code> | <code>(mutex-lock! mutex timeout)</code> | <code>(mutex-lock! mutex timeout thread)</code></p>
+<p>Locks <em>mutex</em>. If the mutex is already locked, the current thread blocks
+until it becomes available. Returns <code>#t</code> if the lock was acquired.</p>
+<p>If <em>timeout</em> is given (a time object or number of seconds) and the mutex
+cannot be acquired within that time, returns <code>#f</code>. The optional <em>thread</em>
+argument specifies the new owner of the mutex (defaults to the current
+thread); passing <code>#f</code> locks the mutex without an owner.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="nv">m</span><span class="w"> </span><span class="p">(</span><span class="nf">make-mutex</span><span class="p">))</span>
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nf">mutex-lock!</span><span class="w"> </span><span class="nv">m</span><span class="p">)</span>
+<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a><span class="c1">;=&gt; #t</span>
+<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nf">mutex-state</span><span class="w"> </span><span class="nv">m</span><span class="p">)</span>
+<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a><span class="c1">;=&gt; #&lt;thread main&gt;</span>
+<a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nf">mutex-unlock!</span><span class="w"> </span><span class="nv">m</span><span class="p">)</span>
+<a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a><span class="c1">;=&gt; #t</span>
+</code></pre></div>
+<p><strong>See also:</strong> <a href="#mutex-unlock"><code>mutex-unlock!</code></a>, <a href="#make-mutex"><code>make-mutex</code></a></p>
+<hr />
+<h3 id="mutex-unlock"><code>mutex-unlock!</code><a class="headerlink" href="#mutex-unlock" title="Permanent link">&para;</a></h3>
+<p><strong>Syntax:</strong> <code>(mutex-unlock! mutex)</code> | <code>(mutex-unlock! mutex condition-variable)</code> | <code>(mutex-unlock! mutex condition-variable timeout)</code></p>
+<p>Unlocks <em>mutex</em> and returns <code>#t</code>. If a <em>condition-variable</em> is given,
+the current thread is blocked on that condition variable and the mutex is
+unlocked atomically. If <em>timeout</em> is also given, the thread unblocks
+after the timeout even if the condition variable was not signaled, and
+returns <code>#f</code>.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="nv">m</span><span class="w"> </span><span class="p">(</span><span class="nf">make-mutex</span><span class="p">))</span>
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nf">mutex-lock!</span><span class="w"> </span><span class="nv">m</span><span class="p">)</span>
+<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a><span class="c1">;=&gt; #t</span>
+<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nf">mutex-unlock!</span><span class="w"> </span><span class="nv">m</span><span class="p">)</span>
+<a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a><span class="c1">;=&gt; #t</span>
+<a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nf">mutex-state</span><span class="w"> </span><span class="nv">m</span><span class="p">)</span>
+<a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a><span class="c1">;=&gt; not-abandoned</span>
+</code></pre></div>
+<p><strong>See also:</strong> <a href="#mutex-lock"><code>mutex-lock!</code></a>,
+<a href="#condition-variable-signal"><code>condition-variable-signal!</code></a>,
+<a href="#condition-variable-broadcast"><code>condition-variable-broadcast!</code></a></p>
+<hr />
+<h2 id="condition-variables">Condition Variables<a class="headerlink" href="#condition-variables" title="Permanent link">&para;</a></h2>
+<h3 id="condition-variable-pred"><code>condition-variable?</code><a class="headerlink" href="#condition-variable-pred" title="Permanent link">&para;</a></h3>
+<p><strong>Syntax:</strong> <code>(condition-variable? obj)</code></p>
+<p>Returns <code>#t</code> if <em>obj</em> is a condition variable, <code>#f</code> otherwise.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nf">condition-variable?</span><span class="w"> </span><span class="p">(</span><span class="nf">make-condition-variable</span><span class="p">))</span>
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a><span class="c1">;=&gt; #t</span>
+<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nf">condition-variable?</span><span class="w"> </span><span class="p">(</span><span class="nf">make-mutex</span><span class="p">))</span>
+<a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a><span class="c1">;=&gt; #f</span>
+</code></pre></div>
+<p><strong>See also:</strong> <a href="#make-condition-variable"><code>make-condition-variable</code></a></p>
+<hr />
+<h3 id="make-condition-variable"><code>make-condition-variable</code><a class="headerlink" href="#make-condition-variable" title="Permanent link">&para;</a></h3>
+<p><strong>Syntax:</strong> <code>(make-condition-variable)</code> | <code>(make-condition-variable name)</code></p>
+<p>Creates a new condition variable. The optional <em>name</em> is a string used
+for identification and debugging.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="nv">cv</span><span class="w"> </span><span class="p">(</span><span class="nf">make-condition-variable</span><span class="w"> </span><span class="s">&quot;data-ready&quot;</span><span class="p">))</span>
+<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="nv">cv</span>
+<a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a><span class="c1">;=&gt; #&lt;condition-variable data-ready&gt;</span>
+</code></pre></div>
+<p><strong>See also:</strong> <a href="#condition-variable-signal"><code>condition-variable-signal!</code></a>,
+<a href="#condition-variable-broadcast"><code>condition-variable-broadcast!</code></a></p>
+<hr />
+<h3 id="condition-variable-name"><code>condition-variable-name</code><a class="headerlink" href="#condition-variable-name" title="Permanent link">&para;</a></h3>
+<p><strong>Syntax:</strong> <code>(condition-variable-name condition-variable)</code></p>
+<p>Returns the name associated with <em>condition-variable</em>, or <code>#f</code> if no
+name was given.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nf">condition-variable-name</span><span class="w"> </span><span class="p">(</span><span class="nf">make-condition-variable</span><span class="w"> </span><span class="s">&quot;cv-1&quot;</span><span class="p">))</span>
+<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a><span class="c1">;=&gt; &quot;cv-1&quot;</span>
+<a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nf">condition-variable-name</span><span class="w"> </span><span class="p">(</span><span class="nf">make-condition-variable</span><span class="p">))</span>
+<a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a><span class="c1">;=&gt; #f</span>
+</code></pre></div>
+<p><strong>See also:</strong> <a href="#make-condition-variable"><code>make-condition-variable</code></a></p>
+<hr />
+<h3 id="condition-variable-specific"><code>condition-variable-specific</code><a class="headerlink" href="#condition-variable-specific" title="Permanent link">&para;</a></h3>
+<p><strong>Syntax:</strong> <code>(condition-variable-specific condition-variable)</code></p>
+<p>Returns the condition-variable-specific value, initially <code>#f</code>.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="nv">cv</span><span class="w"> </span><span class="p">(</span><span class="nf">make-condition-variable</span><span class="p">))</span>
+<a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nf">condition-variable-specific</span><span class="w"> </span><span class="nv">cv</span><span class="p">)</span>
+<a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a><span class="c1">;=&gt; #f</span>
+</code></pre></div>
+<p><strong>See also:</strong> <a href="#condition-variable-specific-set"><code>condition-variable-specific-set!</code></a></p>
+<hr />
+<h3 id="condition-variable-specific-set"><code>condition-variable-specific-set!</code><a class="headerlink" href="#condition-variable-specific-set" title="Permanent link">&para;</a></h3>
+<p><strong>Syntax:</strong> <code>(condition-variable-specific-set! condition-variable obj)</code></p>
+<p>Sets the condition-variable-specific value to <em>obj</em>.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="nv">cv</span><span class="w"> </span><span class="p">(</span><span class="nf">make-condition-variable</span><span class="p">))</span>
+<a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nf">condition-variable-specific-set!</span><span class="w"> </span><span class="nv">cv</span><span class="w"> </span><span class="ss">&#39;waiting</span><span class="p">)</span>
+<a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nf">condition-variable-specific</span><span class="w"> </span><span class="nv">cv</span><span class="p">)</span>
+<a id="__codelineno-24-4" name="__codelineno-24-4" href="#__codelineno-24-4"></a><span class="c1">;=&gt; waiting</span>
+</code></pre></div>
+<p><strong>See also:</strong> <a href="#condition-variable-specific"><code>condition-variable-specific</code></a></p>
+<hr />
+<h3 id="condition-variable-signal"><code>condition-variable-signal!</code><a class="headerlink" href="#condition-variable-signal" title="Permanent link">&para;</a></h3>
+<p><strong>Syntax:</strong> <code>(condition-variable-signal! condition-variable)</code></p>
+<p>Wakes one thread blocked on <em>condition-variable</em> (if any). If multiple
+threads are waiting, exactly one is selected to be woken. Which thread
+is chosen is implementation-dependent. If no threads are waiting, the
+signal has no effect.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="nv">cv</span><span class="w"> </span><span class="p">(</span><span class="nf">make-condition-variable</span><span class="p">))</span>
+<a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="nv">m</span><span class="w"> </span><span class="p">(</span><span class="nf">make-mutex</span><span class="p">))</span>
+<a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="c1">;; In a producer/consumer pattern:</span>
+<a id="__codelineno-25-4" name="__codelineno-25-4" href="#__codelineno-25-4"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nf">condition-variable-signal!</span><span class="w"> </span><span class="nv">cv</span><span class="p">)</span>
+</code></pre></div>
+<p><strong>See also:</strong> <a href="#condition-variable-broadcast"><code>condition-variable-broadcast!</code></a>,
+<a href="#mutex-unlock"><code>mutex-unlock!</code></a></p>
+<hr />
+<h3 id="condition-variable-broadcast"><code>condition-variable-broadcast!</code><a class="headerlink" href="#condition-variable-broadcast" title="Permanent link">&para;</a></h3>
+<p><strong>Syntax:</strong> <code>(condition-variable-broadcast! condition-variable)</code></p>
+<p>Wakes all threads blocked on <em>condition-variable</em>. If no threads are
+waiting, the broadcast has no effect.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="nv">cv</span><span class="w"> </span><span class="p">(</span><span class="nf">make-condition-variable</span><span class="p">))</span>
+<a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nf">condition-variable-broadcast!</span><span class="w"> </span><span class="nv">cv</span><span class="p">)</span>
+</code></pre></div>
+<p><strong>See also:</strong> <a href="#condition-variable-signal"><code>condition-variable-signal!</code></a>,
+<a href="#mutex-unlock"><code>mutex-unlock!</code></a></p>
+<hr />
+<h2 id="time">Time<a class="headerlink" href="#time" title="Permanent link">&para;</a></h2>
+<h3 id="current-time"><code>current-time</code><a class="headerlink" href="#current-time" title="Permanent link">&para;</a></h3>
+<p><strong>Syntax:</strong> <code>(current-time)</code></p>
+<p>Returns the current time as a time object. This is used with
+<code>time-&gt;seconds</code> and <code>seconds-&gt;time</code> for computing timeouts in threading
+operations.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nb">current-time</span><span class="p">)</span>
+<a id="__codelineno-27-2" name="__codelineno-27-2" href="#__codelineno-27-2"></a><span class="c1">;=&gt; #&lt;time&gt;</span>
+<a id="__codelineno-27-3" name="__codelineno-27-3" href="#__codelineno-27-3"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nf">time-&gt;seconds</span><span class="w"> </span><span class="p">(</span><span class="nb">current-time</span><span class="p">))</span>
+<a id="__codelineno-27-4" name="__codelineno-27-4" href="#__codelineno-27-4"></a><span class="c1">;=&gt; 1719000000.123</span>
+</code></pre></div>
+<p><strong>See also:</strong> <a href="#time-pred"><code>time?</code></a>, <a href="#time-to-seconds"><code>time-&gt;seconds</code></a>,
+<a href="#seconds-to-time"><code>seconds-&gt;time</code></a></p>
+<hr />
+<h3 id="time-pred"><code>time?</code><a class="headerlink" href="#time-pred" title="Permanent link">&para;</a></h3>
+<p><strong>Syntax:</strong> <code>(time? obj)</code></p>
+<p>Returns <code>#t</code> if <em>obj</em> is a time object, <code>#f</code> otherwise.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nf">time?</span><span class="w"> </span><span class="p">(</span><span class="nb">current-time</span><span class="p">))</span>
+<a id="__codelineno-28-2" name="__codelineno-28-2" href="#__codelineno-28-2"></a><span class="c1">;=&gt; #t</span>
+<a id="__codelineno-28-3" name="__codelineno-28-3" href="#__codelineno-28-3"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nf">time?</span><span class="w"> </span><span class="mi">42</span><span class="p">)</span>
+<a id="__codelineno-28-4" name="__codelineno-28-4" href="#__codelineno-28-4"></a><span class="c1">;=&gt; #f</span>
+</code></pre></div>
+<p><strong>See also:</strong> <a href="#current-time"><code>current-time</code></a></p>
+<hr />
+<h3 id="time-to-seconds"><code>time-&gt;seconds</code><a class="headerlink" href="#time-to-seconds" title="Permanent link">&para;</a></h3>
+<p><strong>Syntax:</strong> <code>(time-&gt;seconds time)</code></p>
+<p>Converts a time object to an inexact real number representing seconds
+since the epoch.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nf">time-&gt;seconds</span><span class="w"> </span><span class="p">(</span><span class="nb">current-time</span><span class="p">))</span>
+<a id="__codelineno-29-2" name="__codelineno-29-2" href="#__codelineno-29-2"></a><span class="c1">;=&gt; 1719000000.123</span>
+</code></pre></div>
+<p><strong>See also:</strong> <a href="#seconds-to-time"><code>seconds-&gt;time</code></a>,
+<a href="#current-time"><code>current-time</code></a></p>
+<hr />
+<h3 id="seconds-to-time"><code>seconds-&gt;time</code><a class="headerlink" href="#seconds-to-time" title="Permanent link">&para;</a></h3>
+<p><strong>Syntax:</strong> <code>(seconds-&gt;time seconds)</code></p>
+<p>Converts an inexact real number representing seconds since the epoch
+to a time object. Useful for constructing absolute timeouts for
+<code>thread-sleep!</code>, <code>mutex-lock!</code>, and <code>thread-join!</code>.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="nv">later</span><span class="w"> </span><span class="p">(</span><span class="nf">seconds-&gt;time</span><span class="w"> </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="p">(</span><span class="nf">time-&gt;seconds</span><span class="w"> </span><span class="p">(</span><span class="nb">current-time</span><span class="p">))</span><span class="w"> </span><span class="mi">5</span><span class="p">)))</span>
+<a id="__codelineno-30-2" name="__codelineno-30-2" href="#__codelineno-30-2"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nf">time?</span><span class="w"> </span><span class="nv">later</span><span class="p">)</span>
+<a id="__codelineno-30-3" name="__codelineno-30-3" href="#__codelineno-30-3"></a><span class="c1">;=&gt; #t</span>
+</code></pre></div>
+<p><strong>See also:</strong> <a href="#time-to-seconds"><code>time-&gt;seconds</code></a>,
+<a href="#thread-sleep"><code>thread-sleep!</code></a></p>
+<hr />
+<h2 id="exception-predicates">Exception Predicates<a class="headerlink" href="#exception-predicates" title="Permanent link">&para;</a></h2>
+<h3 id="join-timeout-exception"><code>join-timeout-exception?</code><a class="headerlink" href="#join-timeout-exception" title="Permanent link">&para;</a></h3>
+<p><strong>Syntax:</strong> <code>(join-timeout-exception? obj)</code></p>
+<p>Returns <code>#t</code> if <em>obj</em> is a join-timeout exception, which is raised by
+<code>thread-join!</code> when the timeout expires before the thread terminates.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-31-1" name="__codelineno-31-1" href="#__codelineno-31-1"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="nv">t</span><span class="w"> </span><span class="p">(</span><span class="nf">make-thread</span><span class="w"> </span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">(</span><span class="nf">thread-sleep!</span><span class="w"> </span><span class="mi">100</span><span class="p">))))</span>
+<a id="__codelineno-31-2" name="__codelineno-31-2" href="#__codelineno-31-2"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nf">thread-start!</span><span class="w"> </span><span class="nv">t</span><span class="p">)</span>
+<a id="__codelineno-31-3" name="__codelineno-31-3" href="#__codelineno-31-3"></a><span class="c1">;=&gt; #&lt;thread&gt;</span>
+<a id="__codelineno-31-4" name="__codelineno-31-4" href="#__codelineno-31-4"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nf">guard</span><span class="w"> </span><span class="p">(</span><span class="nf">e</span><span class="w"> </span><span class="p">((</span><span class="nf">join-timeout-exception?</span><span class="w"> </span><span class="nv">e</span><span class="p">)</span><span class="w"> </span><span class="ss">&#39;timed-out</span><span class="p">))</span>
+<a id="__codelineno-31-5" name="__codelineno-31-5" href="#__codelineno-31-5"></a><span class="w">         </span><span class="p">(</span><span class="nf">thread-join!</span><span class="w"> </span><span class="nv">t</span><span class="w"> </span><span class="p">(</span><span class="nf">seconds-&gt;time</span><span class="w"> </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="p">(</span><span class="nf">time-&gt;seconds</span><span class="w"> </span><span class="p">(</span><span class="nb">current-time</span><span class="p">))</span><span class="w"> </span><span class="mf">0.1</span><span class="p">))))</span>
+<a id="__codelineno-31-6" name="__codelineno-31-6" href="#__codelineno-31-6"></a><span class="c1">;=&gt; timed-out</span>
+</code></pre></div>
+<p><strong>See also:</strong> <a href="#thread-join"><code>thread-join!</code></a></p>
+<hr />
+<h3 id="abandoned-mutex-exception"><code>abandoned-mutex-exception?</code><a class="headerlink" href="#abandoned-mutex-exception" title="Permanent link">&para;</a></h3>
+<p><strong>Syntax:</strong> <code>(abandoned-mutex-exception? obj)</code></p>
+<p>Returns <code>#t</code> if <em>obj</em> is an abandoned-mutex exception, which is raised
+when attempting to lock a mutex that was left locked by a thread that
+has since been terminated.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-32-1" name="__codelineno-32-1" href="#__codelineno-32-1"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nf">abandoned-mutex-exception?</span><span class="w"> </span><span class="ss">&#39;foo</span><span class="p">)</span>
+<a id="__codelineno-32-2" name="__codelineno-32-2" href="#__codelineno-32-2"></a><span class="c1">;=&gt; #f</span>
+</code></pre></div>
+<p><strong>See also:</strong> <a href="#mutex-lock"><code>mutex-lock!</code></a>,
+<a href="#thread-terminate"><code>thread-terminate!</code></a></p>
+<hr />
+<h3 id="terminated-thread-exception"><code>terminated-thread-exception?</code><a class="headerlink" href="#terminated-thread-exception" title="Permanent link">&para;</a></h3>
+<p><strong>Syntax:</strong> <code>(terminated-thread-exception? obj)</code></p>
+<p>Returns <code>#t</code> if <em>obj</em> is a terminated-thread exception, which is raised
+by <code>thread-join!</code> when the joined thread was terminated with
+<code>thread-terminate!</code>.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-33-1" name="__codelineno-33-1" href="#__codelineno-33-1"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nf">terminated-thread-exception?</span><span class="w"> </span><span class="ss">&#39;foo</span><span class="p">)</span>
+<a id="__codelineno-33-2" name="__codelineno-33-2" href="#__codelineno-33-2"></a><span class="c1">;=&gt; #f</span>
+</code></pre></div>
+<p><strong>See also:</strong> <a href="#thread-join"><code>thread-join!</code></a>,
+<a href="#thread-terminate"><code>thread-terminate!</code></a></p>
+<hr />
+<h3 id="uncaught-exception"><code>uncaught-exception?</code><a class="headerlink" href="#uncaught-exception" title="Permanent link">&para;</a></h3>
+<p><strong>Syntax:</strong> <code>(uncaught-exception? obj)</code></p>
+<p>Returns <code>#t</code> if <em>obj</em> is an uncaught-exception object, which wraps the
+original exception raised by a thread that terminated abnormally. Use
+<code>uncaught-exception-reason</code> to extract the original exception.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-34-1" name="__codelineno-34-1" href="#__codelineno-34-1"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="nv">t</span><span class="w"> </span><span class="p">(</span><span class="nf">make-thread</span><span class="w"> </span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">(</span><span class="nb">error</span><span class="w"> </span><span class="s">&quot;oops&quot;</span><span class="p">))))</span>
+<a id="__codelineno-34-2" name="__codelineno-34-2" href="#__codelineno-34-2"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nf">thread-start!</span><span class="w"> </span><span class="nv">t</span><span class="p">)</span>
+<a id="__codelineno-34-3" name="__codelineno-34-3" href="#__codelineno-34-3"></a><span class="c1">;=&gt; #&lt;thread&gt;</span>
+<a id="__codelineno-34-4" name="__codelineno-34-4" href="#__codelineno-34-4"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nf">guard</span><span class="w"> </span><span class="p">(</span><span class="nf">e</span><span class="w"> </span><span class="p">((</span><span class="nf">uncaught-exception?</span><span class="w"> </span><span class="nv">e</span><span class="p">)</span>
+<a id="__codelineno-34-5" name="__codelineno-34-5" href="#__codelineno-34-5"></a><span class="w">                   </span><span class="p">(</span><span class="nf">error-object-message</span><span class="w"> </span><span class="p">(</span><span class="nf">uncaught-exception-reason</span><span class="w"> </span><span class="nv">e</span><span class="p">))))</span>
+<a id="__codelineno-34-6" name="__codelineno-34-6" href="#__codelineno-34-6"></a><span class="w">         </span><span class="p">(</span><span class="nf">thread-join!</span><span class="w"> </span><span class="nv">t</span><span class="p">))</span>
+<a id="__codelineno-34-7" name="__codelineno-34-7" href="#__codelineno-34-7"></a><span class="c1">;=&gt; &quot;oops&quot;</span>
+</code></pre></div>
+<p><strong>See also:</strong> <a href="#uncaught-exception-reason"><code>uncaught-exception-reason</code></a>,
+<a href="#thread-join"><code>thread-join!</code></a></p>
+<hr />
+<h3 id="uncaught-exception-reason"><code>uncaught-exception-reason</code><a class="headerlink" href="#uncaught-exception-reason" title="Permanent link">&para;</a></h3>
+<p><strong>Syntax:</strong> <code>(uncaught-exception-reason exception)</code></p>
+<p>Returns the original exception object that caused the thread to terminate
+abnormally. The <em>exception</em> must be an uncaught-exception object (as
+tested by <code>uncaught-exception?</code>).</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-35-1" name="__codelineno-35-1" href="#__codelineno-35-1"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="nv">t</span><span class="w"> </span><span class="p">(</span><span class="nf">make-thread</span><span class="w"> </span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">(</span><span class="nb">error</span><span class="w"> </span><span class="s">&quot;something broke&quot;</span><span class="w"> </span><span class="mi">42</span><span class="p">))))</span>
+<a id="__codelineno-35-2" name="__codelineno-35-2" href="#__codelineno-35-2"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nf">thread-start!</span><span class="w"> </span><span class="nv">t</span><span class="p">)</span>
+<a id="__codelineno-35-3" name="__codelineno-35-3" href="#__codelineno-35-3"></a><span class="c1">;=&gt; #&lt;thread&gt;</span>
+<a id="__codelineno-35-4" name="__codelineno-35-4" href="#__codelineno-35-4"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nf">guard</span><span class="w"> </span><span class="p">(</span><span class="nf">e</span><span class="w"> </span><span class="p">((</span><span class="nf">uncaught-exception?</span><span class="w"> </span><span class="nv">e</span><span class="p">)</span>
+<a id="__codelineno-35-5" name="__codelineno-35-5" href="#__codelineno-35-5"></a><span class="w">                   </span><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">((</span><span class="nf">reason</span><span class="w"> </span><span class="p">(</span><span class="nf">uncaught-exception-reason</span><span class="w"> </span><span class="nv">e</span><span class="p">)))</span>
+<a id="__codelineno-35-6" name="__codelineno-35-6" href="#__codelineno-35-6"></a><span class="w">                     </span><span class="p">(</span><span class="nb">list</span><span class="w"> </span><span class="p">(</span><span class="nf">error-object-message</span><span class="w"> </span><span class="nv">reason</span><span class="p">)</span>
+<a id="__codelineno-35-7" name="__codelineno-35-7" href="#__codelineno-35-7"></a><span class="w">                           </span><span class="p">(</span><span class="nf">error-object-irritants</span><span class="w"> </span><span class="nv">reason</span><span class="p">)))))</span>
+<a id="__codelineno-35-8" name="__codelineno-35-8" href="#__codelineno-35-8"></a><span class="w">         </span><span class="p">(</span><span class="nf">thread-join!</span><span class="w"> </span><span class="nv">t</span><span class="p">))</span>
+<a id="__codelineno-35-9" name="__codelineno-35-9" href="#__codelineno-35-9"></a><span class="c1">;=&gt; (&quot;something broke&quot; (42))</span>
+</code></pre></div>
+<p><strong>See also:</strong> <a href="#uncaught-exception"><code>uncaught-exception?</code></a>,
+<a href="../control-flow/#error-object-message"><code>error-object-message</code></a></p>
+<hr />
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      MIT License &mdash; Built with Zig
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/kaappi/kaappi" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/orgs/kaappi/discussions" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path d="M1.75 1h8.5c.966 0 1.75.784 1.75 1.75v5.5A1.75 1.75 0 0 1 10.25 10H7.061l-2.574 2.573A1.458 1.458 0 0 1 2 11.543V10h-.25A1.75 1.75 0 0 1 0 8.25v-5.5C0 1.784.784 1 1.75 1M1.5 2.75v5.5c0 .138.112.25.25.25h1a.75.75 0 0 1 .75.75v2.19l2.72-2.72a.75.75 0 0 1 .53-.22h3.5a.25.25 0 0 0 .25-.25v-5.5a.25.25 0 0 0-.25-.25h-8.5a.25.25 0 0 0-.25.25m13 2a.25.25 0 0 0-.25-.25h-.5a.75.75 0 0 1 0-1.5h.5c.966 0 1.75.784 1.75 1.75v5.5A1.75 1.75 0 0 1 14.25 12H14v1.543a1.458 1.458 0 0 1-2.487 1.03L9.22 12.28a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l2.22 2.22v-2.19a.75.75 0 0 1 .75-.75h1a.25.25 0 0 0 .25-.25Z"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.instant", "navigation.tracking", "navigation.sections", "navigation.expand", "navigation.top", "search.suggest", "search.highlight", "content.code.copy", "toc.follow"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

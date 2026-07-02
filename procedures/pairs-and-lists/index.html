@@ -1,0 +1,4318 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="A complete R7RS-small Scheme implementation written in Zig">
+      
+      
+      
+        <link rel="canonical" href="https://kaappi-lang.org/procedures/pairs-and-lists/">
+      
+      
+        <link rel="prev" href="../numbers/">
+      
+      
+        <link rel="next" href="../srfi-1/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Pairs and Lists - Kaappi</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,700,700i%7CJetBrains+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="amber">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#pairs-and-lists" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Kaappi" class="md-header__button md-logo" aria-label="Kaappi" data-md-component="logo">
+      
+  <img src="../../assets/logo.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Kaappi
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Pairs and Lists
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/kaappi/kaappi" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    kaappi/kaappi
+  </div>
+</a>
+      </div>
+    
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="amber"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="teal" data-md-color-accent="amber"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Kaappi" class="md-nav__button md-logo" aria-label="Kaappi" data-md-component="logo">
+      
+  <img src="../../assets/logo.svg" alt="logo">
+
+    </a>
+    Kaappi
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/kaappi/kaappi" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    kaappi/kaappi
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../playground/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Try It
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="https://kaappi-lang.org/tour/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tour
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../download/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Download
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guide
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Guide
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    User Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guide/installation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Installation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guide/first-program/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Your First Program
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guide/tutorial/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Scheme Tutorial
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guide/language/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Language Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guide/libraries/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Libraries
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guide/library-authoring/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Library Authoring
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guide/c-extensions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    C Extensions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guide/zig-extensions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Zig Extensions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guide/srfi-support/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SRFI Support
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guide/advanced/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Advanced Features
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guide/cli/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CLI Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guide/debugging/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Debugging
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guide/repl/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    REPL Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guide/editors/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Editor Support
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guide/tips/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tips
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guide/migrating/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Migrating from Other Schemes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guide/security/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Security
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guide/deployment/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deployment
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guide/troubleshooting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Troubleshooting
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Procedures
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Procedures
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Procedure Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../numbers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Numbers and Arithmetic
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pairs and Lists
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pairs and Lists
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#performance-characteristics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Performance characteristics
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#core-pairs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Core Pairs
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Core Pairs">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#cons" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        cons
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#car" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        car
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cdr" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        cdr
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#set-car" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        set-car!
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#set-cdr" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        set-cdr!
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#list-construction" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        List Construction
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="List Construction">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#list" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        list
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#make-list" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        make-list
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#list-copy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        list-copy
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#append" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        append
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#reverse" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        reverse
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#length" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        length
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#two-level-cxr" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Two-Level CXR
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Two-Level CXR">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#caar" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        caar
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cadr" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        cadr
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cdar" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        cdar
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cddr" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        cddr
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#list-access" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        List Access
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="List Access">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#list-ref" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        list-ref
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#list-tail" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        list-tail
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#list-set" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        list-set!
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#search" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Search
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Search">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#member" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        member
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#memq" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        memq
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#memv" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        memv
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#assoc" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        assoc
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#assq" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        assq
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#assv" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        assv
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#iteration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Iteration
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Iteration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#map" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        map
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#for-each" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        for-each
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#apply" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        apply
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cxr-compositions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CXR Compositions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="CXR Compositions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#three-level-compositions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Three-Level Compositions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#four-level-compositions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Four-Level Compositions
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../srfi-1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SRFI-1 List Library
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../strings/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Strings
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../srfi-13/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SRFI-13 String Library
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../characters/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Characters
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../vectors/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Vectors
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../srfi-133/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SRFI-133 Vector Library
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../bytevectors/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Bytevectors
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ports-and-io/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ports and I/O
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../control-flow/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Control Flow
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../type-checking/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Type Checking
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../hash-tables/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hash Tables
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../system/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    System and Environment
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../syntax-forms/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Syntax Forms
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../threads/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SRFI-18 Threads
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../extensions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Kaappi Extensions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../other/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Other Primitives
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../srfi-170/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SRFI-170 Filesystem
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cookbook
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Cookbook
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cookbook/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cookbook
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cookbook/rest-api/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Build a REST API
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cookbook/html-templates/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Serve HTML with Templates
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cookbook/json-processing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Process JSON Data
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cookbook/csv-processing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Parse and Generate CSV
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cookbook/testing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Write Tests
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cookbook/cli-tool/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Build a CLI Tool
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ecosystem
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Ecosystem
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ecosystem/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ecosystem
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ecosystem/thottam/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Package Manager (thottam)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ecosystem/json/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    JSON
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ecosystem/toml/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    TOML
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ecosystem/yaml/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    YAML
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ecosystem/csv/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CSV
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ecosystem/redis/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Redis
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ecosystem/pg/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PostgreSQL
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ecosystem/sqlite/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SQLite
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ecosystem/http/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    HTTP / HTTPS
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ecosystem/web/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Web Framework
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ecosystem/template/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Templates
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ecosystem/net/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Networking (TCP/TLS)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ecosystem/email/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Email (SMTP)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ecosystem/crypto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Crypto (Hashing)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ecosystem/test/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Testing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ecosystem/bdd/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    BDD Testing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ecosystem/log/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Logging
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ecosystem/cli/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CLI Parsing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ecosystem/examples/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Examples
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../glossary/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Glossary
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../stability/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Stability
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../community/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Community
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../changelog/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Changelog
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../faq/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    FAQ
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#performance-characteristics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Performance characteristics
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#core-pairs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Core Pairs
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Core Pairs">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#cons" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        cons
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#car" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        car
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cdr" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        cdr
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#set-car" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        set-car!
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#set-cdr" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        set-cdr!
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#list-construction" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        List Construction
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="List Construction">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#list" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        list
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#make-list" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        make-list
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#list-copy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        list-copy
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#append" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        append
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#reverse" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        reverse
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#length" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        length
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#two-level-cxr" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Two-Level CXR
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Two-Level CXR">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#caar" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        caar
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cadr" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        cadr
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cdar" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        cdar
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cddr" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        cddr
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#list-access" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        List Access
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="List Access">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#list-ref" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        list-ref
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#list-tail" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        list-tail
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#list-set" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        list-set!
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#search" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Search
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Search">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#member" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        member
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#memq" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        memq
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#memv" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        memv
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#assoc" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        assoc
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#assq" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        assq
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#assv" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        assv
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#iteration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Iteration
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Iteration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#map" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        map
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#for-each" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        for-each
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#apply" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        apply
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cxr-compositions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CXR Compositions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="CXR Compositions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#three-level-compositions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Three-Level Compositions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#four-level-compositions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Four-Level Compositions
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="pairs-and-lists">Pairs and Lists<a class="headerlink" href="#pairs-and-lists" title="Permanent link">&para;</a></h1>
+<p>Pairs are the fundamental building block of Scheme data structures. A list is
+either the empty list <code>'()</code> or a pair whose <code>cdr</code> is a list. These procedures
+are available from <code>(scheme base)</code>.</p>
+<h2 id="performance-characteristics">Performance characteristics<a class="headerlink" href="#performance-characteristics" title="Permanent link">&para;</a></h2>
+<p>Lists are linked chains of pairs. This makes some operations fast and others
+slow:</p>
+<table>
+<thead>
+<tr>
+<th>Operation</th>
+<th style="text-align: center;">Complexity</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>cons</code>, <code>car</code>, <code>cdr</code></td>
+<td style="text-align: center;">O(1)</td>
+<td>Constant time</td>
+</tr>
+<tr>
+<td><code>length</code></td>
+<td style="text-align: center;">O(n)</td>
+<td>Traverses the entire list</td>
+</tr>
+<tr>
+<td><code>list-ref</code></td>
+<td style="text-align: center;">O(n)</td>
+<td>Walks n pairs from the head</td>
+</tr>
+<tr>
+<td><code>append</code></td>
+<td style="text-align: center;">O(n)</td>
+<td>Copies the first list</td>
+</tr>
+<tr>
+<td><code>map</code>, <code>for-each</code></td>
+<td style="text-align: center;">O(n)</td>
+<td>One pass</td>
+</tr>
+<tr>
+<td><code>assoc</code></td>
+<td style="text-align: center;">O(n)</td>
+<td>Linear scan</td>
+</tr>
+<tr>
+<td><code>member</code></td>
+<td style="text-align: center;">O(n)</td>
+<td>Linear scan</td>
+</tr>
+</tbody>
+</table>
+<p><strong>When to use lists vs. other types:</strong></p>
+<ul>
+<li>Use lists for sequential processing, building up data with <code>cons</code>, and
+  recursive decomposition with <code>car</code>/<code>cdr</code></li>
+<li>Use <a href="../vectors/">vectors</a> when you need random access by index (<code>vector-ref</code>
+  is O(1), <code>list-ref</code> is O(n))</li>
+<li>Use <a href="../hash-tables/">hash tables</a> when you need fast key-value lookup
+  (<code>hash-table-ref</code> is O(1), <code>assoc</code> is O(n))</li>
+</ul>
+<hr />
+<h2 id="core-pairs">Core Pairs<a class="headerlink" href="#core-pairs" title="Permanent link">&para;</a></h2>
+<h3 id="cons"><code>cons</code><a class="headerlink" href="#cons" title="Permanent link">&para;</a></h3>
+<p><strong>Syntax:</strong> <code>(cons obj1 obj2)</code></p>
+<p>Returns a newly allocated mutable pair whose <code>car</code> is <em>obj1</em> and whose <code>cdr</code> is
+<em>obj2</em>. If <em>obj2</em> is a proper list the result is a proper list; otherwise the
+result is a dotted pair.</p>
+<p>O(1). Allocates one pair on the heap.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nb">cons</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="c1">;=&gt; (1 . 2)</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nb">cons</span><span class="w"> </span><span class="ss">&#39;a</span><span class="w"> </span><span class="o">&#39;</span><span class="p">(</span><span class="nv">b</span><span class="w"> </span><span class="nv">c</span><span class="p">))</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1">;=&gt; (a b c)</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nb">cons</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="o">&#39;</span><span class="p">())</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="c1">;=&gt; (1)</span>
+</code></pre></div>
+<p><strong>Common pattern</strong> — building a list from back to front:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="nb">iota</span><span class="w"> </span><span class="nv">n</span><span class="p">)</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="nv">loop</span><span class="w"> </span><span class="p">((</span><span class="nf">i</span><span class="w"> </span><span class="p">(</span><span class="nb">-</span><span class="w"> </span><span class="nv">n</span><span class="w"> </span><span class="mi">1</span><span class="p">))</span><span class="w"> </span><span class="p">(</span><span class="nf">acc</span><span class="w"> </span><span class="o">&#39;</span><span class="p">()))</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">    </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">&lt;</span><span class="w"> </span><span class="nv">i</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="nv">acc</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">        </span><span class="p">(</span><span class="nf">loop</span><span class="w"> </span><span class="p">(</span><span class="nb">-</span><span class="w"> </span><span class="nv">i</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">cons</span><span class="w"> </span><span class="nv">i</span><span class="w"> </span><span class="nv">acc</span><span class="p">)))))</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="p">(</span><span class="nb">iota</span><span class="w"> </span><span class="mi">5</span><span class="p">)</span><span class="w"> </span><span class="c1">;=&gt; (0 1 2 3 4)</span>
+</code></pre></div>
+<p><strong>See also:</strong> <a href="#car"><code>car</code></a>, <a href="#cdr"><code>cdr</code></a></p>
+<hr />
+<h3 id="car"><code>car</code><a class="headerlink" href="#car" title="Permanent link">&para;</a></h3>
+<p><strong>Syntax:</strong> <code>(car pair)</code></p>
+<p>Returns the contents of the <code>car</code> field of <em>pair</em>. O(1). JIT-inlined.</p>
+<p><strong>Errors:</strong> Raises <code>TypeError</code> if the argument is not a pair.
+<code>(car '())</code> is an error — the empty list is not a pair.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nb">car</span><span class="w"> </span><span class="o">&#39;</span><span class="p">(</span><span class="nv">a</span><span class="w"> </span><span class="nv">b</span><span class="w"> </span><span class="nv">c</span><span class="p">))</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c1">;=&gt; a</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nb">car</span><span class="w"> </span><span class="p">(</span><span class="nb">cons</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="mi">2</span><span class="p">))</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1">;=&gt; 1</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nb">car</span><span class="w"> </span><span class="o">&#39;</span><span class="p">((</span><span class="mi">1</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="mi">3</span><span class="p">))</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1">;=&gt; (1 2)</span>
+</code></pre></div>
+<p><strong>See also:</strong> <a href="#cdr"><code>cdr</code></a>, <a href="#caar"><code>caar</code></a>, <a href="#cadr"><code>cadr</code></a></p>
+<hr />
+<h3 id="cdr"><code>cdr</code><a class="headerlink" href="#cdr" title="Permanent link">&para;</a></h3>
+<p><strong>Syntax:</strong> <code>(cdr pair)</code></p>
+<p>Returns the contents of the <code>cdr</code> field of <em>pair</em>. O(1). JIT-inlined.</p>
+<p><strong>Errors:</strong> Raises <code>TypeError</code> if the argument is not a pair.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nb">cdr</span><span class="w"> </span><span class="o">&#39;</span><span class="p">(</span><span class="nv">a</span><span class="w"> </span><span class="nv">b</span><span class="w"> </span><span class="nv">c</span><span class="p">))</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="c1">;=&gt; (b c)</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nb">cdr</span><span class="w"> </span><span class="p">(</span><span class="nb">cons</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="mi">2</span><span class="p">))</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1">;=&gt; 2</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nb">cdr</span><span class="w"> </span><span class="o">&#39;</span><span class="p">(</span><span class="nv">a</span><span class="p">))</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c1">;=&gt; ()</span>
+</code></pre></div>
+<p><strong>See also:</strong> <a href="#car"><code>car</code></a>, <a href="#cdar"><code>cdar</code></a>, <a href="#cddr"><code>cddr</code></a></p>
+<hr />
+<h3 id="set-car"><code>set-car!</code><a class="headerlink" href="#set-car" title="Permanent link">&para;</a></h3>
+<p><strong>Syntax:</strong> <code>(set-car! pair obj)</code></p>
+<p>Stores <em>obj</em> in the <code>car</code> field of <em>pair</em>. The return value is unspecified.
+Raises a type error if the first argument is not a pair.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="nv">p</span><span class="w"> </span><span class="p">(</span><span class="nb">cons</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="mi">2</span><span class="p">))</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nb">set-car!</span><span class="w"> </span><span class="nv">p</span><span class="w"> </span><span class="mi">99</span><span class="p">)</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="nv">p</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1">;=&gt; (99 . 2)</span>
+</code></pre></div>
+<p><strong>See also:</strong> <a href="#set-cdr"><code>set-cdr!</code></a>, <a href="#car"><code>car</code></a></p>
+<hr />
+<h3 id="set-cdr"><code>set-cdr!</code><a class="headerlink" href="#set-cdr" title="Permanent link">&para;</a></h3>
+<p><strong>Syntax:</strong> <code>(set-cdr! pair obj)</code></p>
+<p>Stores <em>obj</em> in the <code>cdr</code> field of <em>pair</em>. The return value is unspecified.
+Raises a type error if the first argument is not a pair.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="nv">p</span><span class="w"> </span><span class="p">(</span><span class="nb">cons</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="mi">2</span><span class="p">))</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nb">set-cdr!</span><span class="w"> </span><span class="nv">p</span><span class="w"> </span><span class="mi">99</span><span class="p">)</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="nv">p</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1">;=&gt; (1 . 99)</span>
+</code></pre></div>
+<p><strong>See also:</strong> <a href="#set-car"><code>set-car!</code></a>, <a href="#cdr"><code>cdr</code></a></p>
+<hr />
+<h2 id="list-construction">List Construction<a class="headerlink" href="#list-construction" title="Permanent link">&para;</a></h2>
+<h3 id="list"><code>list</code><a class="headerlink" href="#list" title="Permanent link">&para;</a></h3>
+<p><strong>Syntax:</strong> <code>(list obj ...)</code></p>
+<p>Returns a newly allocated proper list whose elements are the arguments.
+Called with no arguments it returns the empty list. O(n) where n is the
+number of arguments.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nb">list</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="mi">3</span><span class="p">)</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="c1">;=&gt; (1 2 3)</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nb">list</span><span class="w"> </span><span class="ss">&#39;a</span><span class="w"> </span><span class="ss">&#39;b</span><span class="p">)</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1">;=&gt; (a b)</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nb">list</span><span class="p">)</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="c1">;=&gt; ()</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nb">list</span><span class="w"> </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="mi">4</span><span class="p">))</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="c1">;=&gt; (3 12)</span>
+</code></pre></div>
+<p><strong>See also:</strong> <a href="#make-list"><code>make-list</code></a>, <a href="#cons"><code>cons</code></a></p>
+<hr />
+<h3 id="make-list"><code>make-list</code><a class="headerlink" href="#make-list" title="Permanent link">&para;</a></h3>
+<p><strong>Syntax:</strong> <code>(make-list k)</code> | <code>(make-list k fill)</code></p>
+<p>Returns a newly allocated list of <em>k</em> elements. If <em>fill</em> is given, each
+element is initialized to <em>fill</em>; otherwise the elements are unspecified.
+Raises a type error if <em>k</em> is not a non-negative integer.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nb">make-list</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="c1">;=&gt; (0 0 0)</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nb">make-list</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1">;=&gt; ()</span>
+</code></pre></div>
+<p><strong>See also:</strong> <a href="#list"><code>list</code></a>, <a href="#list-copy"><code>list-copy</code></a></p>
+<hr />
+<h3 id="list-copy"><code>list-copy</code><a class="headerlink" href="#list-copy" title="Permanent link">&para;</a></h3>
+<p><strong>Syntax:</strong> <code>(list-copy obj)</code></p>
+<p>Returns a newly allocated shallow copy of <em>obj</em>. If <em>obj</em> is a proper list,
+the result is a new list with the same elements. If <em>obj</em> is not a pair, it
+is returned unchanged. Improper lists are copied faithfully, preserving the
+dotted tail.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="nv">original</span><span class="w"> </span><span class="p">(</span><span class="nb">list</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="mi">3</span><span class="p">))</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="nv">copy</span><span class="w"> </span><span class="p">(</span><span class="nb">list-copy</span><span class="w"> </span><span class="nv">original</span><span class="p">))</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nb">list-set!</span><span class="w"> </span><span class="nv">copy</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="mi">99</span><span class="p">)</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="nv">original</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="c1">;=&gt; (1 2 3)</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="nv">copy</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c1">;=&gt; (99 2 3)</span>
+</code></pre></div>
+<p><strong>See also:</strong> <a href="#list"><code>list</code></a>, <a href="#make-list"><code>make-list</code></a></p>
+<hr />
+<h3 id="append"><code>append</code><a class="headerlink" href="#append" title="Permanent link">&para;</a></h3>
+<p><strong>Syntax:</strong> <code>(append list ...)</code></p>
+<p>Returns a list consisting of the elements of the first <em>list</em> followed by the
+elements of the other <em>lists</em>. The last argument may be any object and is used
+directly as the tail of the result. All preceding arguments must be proper
+lists. Called with no arguments it returns the empty list.</p>
+<p>O(n) where n is the total length of all lists except the last (the last
+list is shared, not copied).</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nb">append</span><span class="w"> </span><span class="o">&#39;</span><span class="p">(</span><span class="nv">a</span><span class="w"> </span><span class="nv">b</span><span class="p">)</span><span class="w"> </span><span class="o">&#39;</span><span class="p">(</span><span class="nv">c</span><span class="w"> </span><span class="nv">d</span><span class="p">))</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="c1">;=&gt; (a b c d)</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nb">append</span><span class="w"> </span><span class="o">&#39;</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">&#39;</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="o">&#39;</span><span class="p">(</span><span class="mi">3</span><span class="p">))</span>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1">;=&gt; (1 2 3)</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nb">append</span><span class="w"> </span><span class="o">&#39;</span><span class="p">(</span><span class="nv">a</span><span class="w"> </span><span class="nv">b</span><span class="p">)</span><span class="w"> </span><span class="ss">&#39;c</span><span class="p">)</span>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="c1">;=&gt; (a b . c)</span>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nb">append</span><span class="w"> </span><span class="o">&#39;</span><span class="p">()</span><span class="w"> </span><span class="o">&#39;</span><span class="p">(</span><span class="mi">1</span><span class="w"> </span><span class="mi">2</span><span class="p">))</span>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="c1">;=&gt; (1 2)</span>
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nb">append</span><span class="p">)</span>
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="c1">;=&gt; ()</span>
+</code></pre></div>
+<div class="admonition note">
+<p class="admonition-title">append copies all but the last list</p>
+<p><code>(append list1 list2)</code> copies <code>list1</code> and points its tail at <code>list2</code>.
+Mutating <code>list2</code> later will affect the result. If you need an independent
+copy, use <code>list-copy</code> on the result.</p>
+</div>
+<p><strong>See also:</strong> <a href="#reverse"><code>reverse</code></a>, <a href="../srfi-1/#concatenate"><code>concatenate</code></a></p>
+<hr />
+<h3 id="reverse"><code>reverse</code><a class="headerlink" href="#reverse" title="Permanent link">&para;</a></h3>
+<p><strong>Syntax:</strong> <code>(reverse list)</code></p>
+<p>Returns a newly allocated list consisting of the elements of <em>list</em> in
+reverse order. Raises a type error if the argument is an improper list.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nb">reverse</span><span class="w"> </span><span class="o">&#39;</span><span class="p">(</span><span class="nv">a</span><span class="w"> </span><span class="nv">b</span><span class="w"> </span><span class="nv">c</span><span class="p">))</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="c1">;=&gt; (c b a)</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nb">reverse</span><span class="w"> </span><span class="o">&#39;</span><span class="p">())</span>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1">;=&gt; ()</span>
+</code></pre></div>
+<p><strong>See also:</strong> <a href="#append"><code>append</code></a>, <a href="../srfi-1/#append-reverse"><code>append-reverse</code></a></p>
+<hr />
+<h3 id="length"><code>length</code><a class="headerlink" href="#length" title="Permanent link">&para;</a></h3>
+<p><strong>Syntax:</strong> <code>(length list)</code></p>
+<p>Returns the number of elements in <em>list</em>. O(n) — traverses the entire list.</p>
+<p><strong>Errors:</strong> Raises <code>TypeError</code> if the argument is an improper or circular
+list. Uses Floyd's cycle-detection algorithm internally so circular lists
+are caught rather than causing an infinite loop.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nb">length</span><span class="w"> </span><span class="o">&#39;</span><span class="p">(</span><span class="nv">a</span><span class="w"> </span><span class="nv">b</span><span class="w"> </span><span class="nv">c</span><span class="p">))</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="c1">;=&gt; 3</span>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nb">length</span><span class="w"> </span><span class="o">&#39;</span><span class="p">())</span>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="c1">;=&gt; 0</span>
+</code></pre></div>
+<div class="admonition note">
+<p class="admonition-title">Avoid repeated length calls</p>
+<p>Since <code>length</code> is O(n), avoid calling it in a loop condition. Instead,
+use recursion with <code>null?</code> to check for the end of a list.</p>
+</div>
+<p><strong>See also:</strong> <a href="../type-checking/#list"><code>list?</code></a>, <a href="../srfi-1/#length-plus"><code>length+</code></a></p>
+<hr />
+<h2 id="two-level-cxr">Two-Level CXR<a class="headerlink" href="#two-level-cxr" title="Permanent link">&para;</a></h2>
+<p>These four compositions of <code>car</code> and <code>cdr</code> are part of <code>(scheme base)</code>.
+Each takes exactly one pair argument and applies two accessor operations
+from right to left (innermost first).</p>
+<h3 id="caar"><code>caar</code><a class="headerlink" href="#caar" title="Permanent link">&para;</a></h3>
+<p><strong>Syntax:</strong> <code>(caar pair)</code></p>
+<p>Equivalent to <code>(car (car pair))</code>. Returns the <code>car</code> of the <code>car</code> of <em>pair</em>.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nb">caar</span><span class="w"> </span><span class="o">&#39;</span><span class="p">((</span><span class="mi">1</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="mi">3</span><span class="p">))</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="c1">;=&gt; 1</span>
+</code></pre></div>
+<hr />
+<h3 id="cadr"><code>cadr</code><a class="headerlink" href="#cadr" title="Permanent link">&para;</a></h3>
+<p><strong>Syntax:</strong> <code>(cadr pair)</code></p>
+<p>Equivalent to <code>(car (cdr pair))</code>. Returns the second element of a list.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nb">cadr</span><span class="w"> </span><span class="o">&#39;</span><span class="p">(</span><span class="mi">1</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="mi">3</span><span class="p">))</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="c1">;=&gt; 2</span>
+</code></pre></div>
+<hr />
+<h3 id="cdar"><code>cdar</code><a class="headerlink" href="#cdar" title="Permanent link">&para;</a></h3>
+<p><strong>Syntax:</strong> <code>(cdar pair)</code></p>
+<p>Equivalent to <code>(cdr (car pair))</code>. Returns the <code>cdr</code> of the <code>car</code> of <em>pair</em>.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nb">cdar</span><span class="w"> </span><span class="o">&#39;</span><span class="p">((</span><span class="mi">1</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="mi">3</span><span class="p">))</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="c1">;=&gt; (2)</span>
+</code></pre></div>
+<hr />
+<h3 id="cddr"><code>cddr</code><a class="headerlink" href="#cddr" title="Permanent link">&para;</a></h3>
+<p><strong>Syntax:</strong> <code>(cddr pair)</code></p>
+<p>Equivalent to <code>(cdr (cdr pair))</code>. Returns the list after dropping the first
+two elements.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nb">cddr</span><span class="w"> </span><span class="o">&#39;</span><span class="p">(</span><span class="mi">1</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="mi">3</span><span class="p">))</span>
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="c1">;=&gt; (3)</span>
+</code></pre></div>
+<hr />
+<h2 id="list-access">List Access<a class="headerlink" href="#list-access" title="Permanent link">&para;</a></h2>
+<h3 id="list-ref"><code>list-ref</code><a class="headerlink" href="#list-ref" title="Permanent link">&para;</a></h3>
+<p><strong>Syntax:</strong> <code>(list-ref list k)</code></p>
+<p>Returns the <em>k</em>th element of <em>list</em> (zero-indexed). O(k) — walks k pairs
+from the head.</p>
+<p><strong>Errors:</strong> Raises <code>IndexOutOfBounds</code> if <em>k</em> is out of range. Raises
+<code>TypeError</code> if <em>k</em> is not a non-negative integer or <em>list</em> is not a proper
+list.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nb">list-ref</span><span class="w"> </span><span class="o">&#39;</span><span class="p">(</span><span class="nv">a</span><span class="w"> </span><span class="nv">b</span><span class="w"> </span><span class="nv">c</span><span class="w"> </span><span class="nv">d</span><span class="p">)</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="c1">;=&gt; a</span>
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nb">list-ref</span><span class="w"> </span><span class="o">&#39;</span><span class="p">(</span><span class="nv">a</span><span class="w"> </span><span class="nv">b</span><span class="w"> </span><span class="nv">c</span><span class="w"> </span><span class="nv">d</span><span class="p">)</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span>
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="c1">;=&gt; c</span>
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nb">list-ref</span><span class="w"> </span><span class="o">&#39;</span><span class="p">(</span><span class="nv">a</span><span class="w"> </span><span class="nv">b</span><span class="w"> </span><span class="nv">c</span><span class="w"> </span><span class="nv">d</span><span class="p">)</span><span class="w"> </span><span class="mi">3</span><span class="p">)</span>
+<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a><span class="c1">;=&gt; d</span>
+</code></pre></div>
+<div class="admonition note">
+<p class="admonition-title">Use vectors for indexed access</p>
+<p><code>list-ref</code> is O(k) because it walks the list. If you need frequent
+random access by index, use a <a href="../vectors/">vector</a> instead —
+<code>vector-ref</code> is O(1).</p>
+</div>
+<p><strong>See also:</strong> <a href="#list-tail"><code>list-tail</code></a>, <a href="#list-set"><code>list-set!</code></a></p>
+<hr />
+<h3 id="list-tail"><code>list-tail</code><a class="headerlink" href="#list-tail" title="Permanent link">&para;</a></h3>
+<p><strong>Syntax:</strong> <code>(list-tail list k)</code></p>
+<p>Returns the sublist of <em>list</em> obtained by omitting the first <em>k</em> elements.
+Equivalent to applying <code>cdr</code> <em>k</em> times. Raises <code>IndexOutOfBounds</code> if <em>k</em>
+is out of range.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nb">list-tail</span><span class="w"> </span><span class="o">&#39;</span><span class="p">(</span><span class="nv">a</span><span class="w"> </span><span class="nv">b</span><span class="w"> </span><span class="nv">c</span><span class="w"> </span><span class="nv">d</span><span class="p">)</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a><span class="c1">;=&gt; (a b c d)</span>
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nb">list-tail</span><span class="w"> </span><span class="o">&#39;</span><span class="p">(</span><span class="nv">a</span><span class="w"> </span><span class="nv">b</span><span class="w"> </span><span class="nv">c</span><span class="w"> </span><span class="nv">d</span><span class="p">)</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span>
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a><span class="c1">;=&gt; (c d)</span>
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nb">list-tail</span><span class="w"> </span><span class="o">&#39;</span><span class="p">(</span><span class="nv">a</span><span class="w"> </span><span class="nv">b</span><span class="w"> </span><span class="nv">c</span><span class="w"> </span><span class="nv">d</span><span class="p">)</span><span class="w"> </span><span class="mi">4</span><span class="p">)</span>
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a><span class="c1">;=&gt; ()</span>
+</code></pre></div>
+<p><strong>See also:</strong> <a href="#list-ref"><code>list-ref</code></a>, <a href="../srfi-1/#drop"><code>drop</code></a></p>
+<hr />
+<h3 id="list-set"><code>list-set!</code><a class="headerlink" href="#list-set" title="Permanent link">&para;</a></h3>
+<p><strong>Syntax:</strong> <code>(list-set! list k obj)</code></p>
+<p>Stores <em>obj</em> in element <em>k</em> of <em>list</em> (zero-indexed), mutating the pair in
+place. The return value is unspecified. Raises <code>IndexOutOfBounds</code> if <em>k</em> is
+out of range and <code>TypeError</code> if <em>k</em> is not a non-negative integer.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="nv">ls</span><span class="w"> </span><span class="p">(</span><span class="nb">list</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="mi">3</span><span class="p">))</span>
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nb">list-set!</span><span class="w"> </span><span class="nv">ls</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="mi">99</span><span class="p">)</span>
+<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="nv">ls</span>
+<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a><span class="c1">;=&gt; (1 99 3)</span>
+</code></pre></div>
+<p><strong>See also:</strong> <a href="#list-ref"><code>list-ref</code></a>, <a href="#set-car"><code>set-car!</code></a></p>
+<hr />
+<h2 id="search">Search<a class="headerlink" href="#search" title="Permanent link">&para;</a></h2>
+<h3 id="member"><code>member</code><a class="headerlink" href="#member" title="Permanent link">&para;</a></h3>
+<p><strong>Syntax:</strong> <code>(member obj list)</code> | <code>(member obj list compare)</code></p>
+<p>Returns the first sublist of <em>list</em> whose <code>car</code> is equal to <em>obj</em>, or <code>#f</code>
+if <em>obj</em> does not appear. By default elements are compared with <code>equal?</code>.
+An optional third argument <em>compare</em> specifies a two-argument predicate to
+use instead.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nb">member</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="o">&#39;</span><span class="p">(</span><span class="mi">1</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="mi">4</span><span class="w"> </span><span class="mi">5</span><span class="p">))</span>
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a><span class="c1">;=&gt; (3 4 5)</span>
+<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nb">member</span><span class="w"> </span><span class="mi">6</span><span class="w"> </span><span class="o">&#39;</span><span class="p">(</span><span class="mi">1</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="mi">4</span><span class="w"> </span><span class="mi">5</span><span class="p">))</span>
+<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a><span class="c1">;=&gt; #f</span>
+<a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nb">member</span><span class="w"> </span><span class="o">&#39;</span><span class="p">(</span><span class="nv">b</span><span class="p">)</span><span class="w"> </span><span class="o">&#39;</span><span class="p">((</span><span class="nf">a</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nf">b</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nf">c</span><span class="p">)))</span>
+<a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a><span class="c1">;=&gt; ((b) (c))</span>
+<a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nb">member</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="o">&#39;</span><span class="p">(</span><span class="mi">1</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="mi">3</span><span class="p">)</span><span class="w"> </span><span class="nb">=</span><span class="p">)</span>
+<a id="__codelineno-19-8" name="__codelineno-19-8" href="#__codelineno-19-8"></a><span class="c1">;=&gt; (2 3)</span>
+</code></pre></div>
+<p><strong>See also:</strong> <a href="#memq"><code>memq</code></a>, <a href="#memv"><code>memv</code></a>, <a href="../srfi-1/#find"><code>find</code></a></p>
+<hr />
+<h3 id="memq"><code>memq</code><a class="headerlink" href="#memq" title="Permanent link">&para;</a></h3>
+<p><strong>Syntax:</strong> <code>(memq obj list)</code></p>
+<p>Like <code>member</code>, but compares elements using <code>eq?</code> (pointer identity). Returns
+the first sublist whose <code>car</code> is <code>eq?</code> to <em>obj</em>, or <code>#f</code>.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nb">memq</span><span class="w"> </span><span class="ss">&#39;b</span><span class="w"> </span><span class="o">&#39;</span><span class="p">(</span><span class="nv">a</span><span class="w"> </span><span class="nv">b</span><span class="w"> </span><span class="nv">c</span><span class="p">))</span>
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a><span class="c1">;=&gt; (b c)</span>
+<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nb">memq</span><span class="w"> </span><span class="ss">&#39;d</span><span class="w"> </span><span class="o">&#39;</span><span class="p">(</span><span class="nv">a</span><span class="w"> </span><span class="nv">b</span><span class="w"> </span><span class="nv">c</span><span class="p">))</span>
+<a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a><span class="c1">;=&gt; #f</span>
+</code></pre></div>
+<p><strong>See also:</strong> <a href="#member"><code>member</code></a>, <a href="#memv"><code>memv</code></a></p>
+<hr />
+<h3 id="memv"><code>memv</code><a class="headerlink" href="#memv" title="Permanent link">&para;</a></h3>
+<p><strong>Syntax:</strong> <code>(memv obj list)</code></p>
+<p>Like <code>member</code>, but compares elements using <code>eqv?</code> (value equivalence for
+numbers and characters). Returns the first sublist whose <code>car</code> is <code>eqv?</code>
+to <em>obj</em>, or <code>#f</code>. For flonums, comparison is bitwise so <code>+0.0</code> and <code>-0.0</code>
+are distinguished.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nb">memv</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="o">&#39;</span><span class="p">(</span><span class="mi">1</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="mi">3</span><span class="p">))</span>
+<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a><span class="c1">;=&gt; (2 3)</span>
+<a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nb">memv</span><span class="w"> </span><span class="mi">4</span><span class="w"> </span><span class="o">&#39;</span><span class="p">(</span><span class="mi">1</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="mi">3</span><span class="p">))</span>
+<a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a><span class="c1">;=&gt; #f</span>
+</code></pre></div>
+<p><strong>See also:</strong> <a href="#member"><code>member</code></a>, <a href="#memq"><code>memq</code></a></p>
+<hr />
+<h3 id="assoc"><code>assoc</code><a class="headerlink" href="#assoc" title="Permanent link">&para;</a></h3>
+<p><strong>Syntax:</strong> <code>(assoc obj alist)</code> | <code>(assoc obj alist compare)</code></p>
+<p>Searches the association list <em>alist</em> (a list of pairs) for the first pair
+whose <code>car</code> is equal to <em>obj</em> using <code>equal?</code>. Returns the matching pair, or
+<code>#f</code> if not found. An optional third argument <em>compare</em> specifies a
+two-argument predicate to use instead of <code>equal?</code>. O(n) linear scan.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nb">assoc</span><span class="w"> </span><span class="ss">&#39;b</span><span class="w"> </span><span class="o">&#39;</span><span class="p">((</span><span class="nf">a</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nf">b</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nf">c</span><span class="w"> </span><span class="mi">3</span><span class="p">)))</span>
+<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a><span class="c1">;=&gt; (b 2)</span>
+<a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nb">assoc</span><span class="w"> </span><span class="ss">&#39;d</span><span class="w"> </span><span class="o">&#39;</span><span class="p">((</span><span class="nf">a</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nf">b</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nf">c</span><span class="w"> </span><span class="mi">3</span><span class="p">)))</span>
+<a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a><span class="c1">;=&gt; #f</span>
+<a id="__codelineno-22-5" name="__codelineno-22-5" href="#__codelineno-22-5"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nb">assoc</span><span class="w"> </span><span class="s">&quot;name&quot;</span><span class="w"> </span><span class="o">&#39;</span><span class="p">((</span><span class="s">&quot;name&quot;</span><span class="w"> </span><span class="o">.</span><span class="w"> </span><span class="s">&quot;Alice&quot;</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="s">&quot;age&quot;</span><span class="w"> </span><span class="o">.</span><span class="w"> </span><span class="mi">30</span><span class="p">)))</span>
+<a id="__codelineno-22-6" name="__codelineno-22-6" href="#__codelineno-22-6"></a><span class="c1">;=&gt; (&quot;name&quot; . &quot;Alice&quot;)</span>
+<a id="__codelineno-22-7" name="__codelineno-22-7" href="#__codelineno-22-7"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nb">assoc</span><span class="w"> </span><span class="mf">2.0</span><span class="w"> </span><span class="o">&#39;</span><span class="p">((</span><span class="mi">1</span><span class="w"> </span><span class="nv">a</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="mi">2</span><span class="w"> </span><span class="nv">b</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="mi">3</span><span class="w"> </span><span class="nv">c</span><span class="p">))</span><span class="w"> </span><span class="nb">=</span><span class="p">)</span>
+<a id="__codelineno-22-8" name="__codelineno-22-8" href="#__codelineno-22-8"></a><span class="c1">;=&gt; (2 b)</span>
+</code></pre></div>
+<p><strong>Common pattern</strong> — safe value extraction:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">((</span><span class="nf">pair</span><span class="w"> </span><span class="p">(</span><span class="nb">assoc</span><span class="w"> </span><span class="s">&quot;key&quot;</span><span class="w"> </span><span class="nv">alist</span><span class="p">)))</span>
+<a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a><span class="w">  </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="nv">pair</span><span class="w"> </span><span class="p">(</span><span class="nb">cdr</span><span class="w"> </span><span class="nv">pair</span><span class="p">)</span><span class="w"> </span><span class="nv">default-value</span><span class="p">))</span>
+</code></pre></div>
+<div class="admonition note">
+<p class="admonition-title">Use hash tables for large alists</p>
+<p><code>assoc</code> is O(n). For more than ~10 key-value pairs, use a
+<a href="../hash-tables/">hash table</a> — <code>hash-table-ref</code> is O(1).</p>
+</div>
+<p><strong>See also:</strong> <a href="#assq"><code>assq</code></a>, <a href="#assv"><code>assv</code></a>, <a href="../srfi-1/#alist-cons"><code>alist-cons</code></a></p>
+<hr />
+<h3 id="assq"><code>assq</code><a class="headerlink" href="#assq" title="Permanent link">&para;</a></h3>
+<p><strong>Syntax:</strong> <code>(assq obj alist)</code></p>
+<p>Like <code>assoc</code>, but compares keys using <code>eq?</code> (pointer identity). Returns the
+first pair whose <code>car</code> is <code>eq?</code> to <em>obj</em>, or <code>#f</code>.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nb">assq</span><span class="w"> </span><span class="ss">&#39;b</span><span class="w"> </span><span class="o">&#39;</span><span class="p">((</span><span class="nf">a</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nf">b</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nf">c</span><span class="w"> </span><span class="mi">3</span><span class="p">)))</span>
+<a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a><span class="c1">;=&gt; (b 2)</span>
+<a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nb">assq</span><span class="w"> </span><span class="ss">&#39;d</span><span class="w"> </span><span class="o">&#39;</span><span class="p">((</span><span class="nf">a</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nf">b</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nf">c</span><span class="w"> </span><span class="mi">3</span><span class="p">)))</span>
+<a id="__codelineno-24-4" name="__codelineno-24-4" href="#__codelineno-24-4"></a><span class="c1">;=&gt; #f</span>
+</code></pre></div>
+<p><strong>See also:</strong> <a href="#assoc"><code>assoc</code></a>, <a href="#assv"><code>assv</code></a></p>
+<hr />
+<h3 id="assv"><code>assv</code><a class="headerlink" href="#assv" title="Permanent link">&para;</a></h3>
+<p><strong>Syntax:</strong> <code>(assv obj alist)</code></p>
+<p>Like <code>assoc</code>, but compares keys using <code>eqv?</code> (value equivalence for numbers
+and characters). Returns the first pair whose <code>car</code> is <code>eqv?</code> to <em>obj</em>, or
+<code>#f</code>. For flonums, comparison is bitwise.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nb">assv</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="o">&#39;</span><span class="p">((</span><span class="mi">1</span><span class="w"> </span><span class="nv">a</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="mi">2</span><span class="w"> </span><span class="nv">b</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="mi">3</span><span class="w"> </span><span class="nv">c</span><span class="p">)))</span>
+<a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a><span class="c1">;=&gt; (2 b)</span>
+<a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nb">assv</span><span class="w"> </span><span class="mi">4</span><span class="w"> </span><span class="o">&#39;</span><span class="p">((</span><span class="mi">1</span><span class="w"> </span><span class="nv">a</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="mi">2</span><span class="w"> </span><span class="nv">b</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="mi">3</span><span class="w"> </span><span class="nv">c</span><span class="p">)))</span>
+<a id="__codelineno-25-4" name="__codelineno-25-4" href="#__codelineno-25-4"></a><span class="c1">;=&gt; #f</span>
+</code></pre></div>
+<p><strong>See also:</strong> <a href="#assoc"><code>assoc</code></a>, <a href="#assq"><code>assq</code></a></p>
+<hr />
+<h2 id="iteration">Iteration<a class="headerlink" href="#iteration" title="Permanent link">&para;</a></h2>
+<h3 id="map"><code>map</code><a class="headerlink" href="#map" title="Permanent link">&para;</a></h3>
+<p><strong>Syntax:</strong> <code>(map proc list1 list2 ...)</code></p>
+<p>Applies <em>proc</em> element-wise to the elements of the given lists and returns
+a list of the results. When multiple lists are given, <em>proc</em> receives one
+argument from each list and iteration stops at the shortest list. The order
+of application is unspecified by R7RS but Kaappi processes elements left to
+right. O(n).</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nb">map</span><span class="w"> </span><span class="nb">car</span><span class="w"> </span><span class="o">&#39;</span><span class="p">((</span><span class="mi">1</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="mi">3</span><span class="w"> </span><span class="mi">4</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="mi">5</span><span class="w"> </span><span class="mi">6</span><span class="p">)))</span>
+<a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a><span class="c1">;=&gt; (1 3 5)</span>
+<a id="__codelineno-26-3" name="__codelineno-26-3" href="#__codelineno-26-3"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nb">map</span><span class="w"> </span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="nf">x</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="nv">x</span><span class="w"> </span><span class="nv">x</span><span class="p">))</span><span class="w"> </span><span class="o">&#39;</span><span class="p">(</span><span class="mi">1</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="mi">3</span><span class="p">))</span>
+<a id="__codelineno-26-4" name="__codelineno-26-4" href="#__codelineno-26-4"></a><span class="c1">;=&gt; (1 4 9)</span>
+<a id="__codelineno-26-5" name="__codelineno-26-5" href="#__codelineno-26-5"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nb">map</span><span class="w"> </span><span class="nb">+</span><span class="w"> </span><span class="o">&#39;</span><span class="p">(</span><span class="mi">1</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="mi">3</span><span class="p">)</span><span class="w"> </span><span class="o">&#39;</span><span class="p">(</span><span class="mi">10</span><span class="w"> </span><span class="mi">20</span><span class="w"> </span><span class="mi">30</span><span class="p">))</span>
+<a id="__codelineno-26-6" name="__codelineno-26-6" href="#__codelineno-26-6"></a><span class="c1">;=&gt; (11 22 33)</span>
+<a id="__codelineno-26-7" name="__codelineno-26-7" href="#__codelineno-26-7"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nb">map</span><span class="w"> </span><span class="nb">car</span><span class="w"> </span><span class="o">&#39;</span><span class="p">())</span>
+<a id="__codelineno-26-8" name="__codelineno-26-8" href="#__codelineno-26-8"></a><span class="c1">;=&gt; ()</span>
+<a id="__codelineno-26-9" name="__codelineno-26-9" href="#__codelineno-26-9"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nb">map</span><span class="w"> </span><span class="nb">+</span><span class="w"> </span><span class="o">&#39;</span><span class="p">(</span><span class="mi">1</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="mi">3</span><span class="p">)</span><span class="w"> </span><span class="o">&#39;</span><span class="p">(</span><span class="mi">10</span><span class="w"> </span><span class="mi">20</span><span class="p">))</span>
+<a id="__codelineno-26-10" name="__codelineno-26-10" href="#__codelineno-26-10"></a><span class="c1">;=&gt; (11 22)</span>
+</code></pre></div>
+<div class="admonition note">
+<p class="admonition-title">map vs for-each</p>
+<p><code>map</code> allocates a new list for the results. If you only need the side
+effects (printing, mutation), use <a href="#for-each"><code>for-each</code></a> instead — it
+doesn't allocate.</p>
+</div>
+<p><strong>See also:</strong> <a href="#for-each"><code>for-each</code></a>, <a href="../srfi-1/#filter-map"><code>filter-map</code></a></p>
+<hr />
+<h3 id="for-each"><code>for-each</code><a class="headerlink" href="#for-each" title="Permanent link">&para;</a></h3>
+<p><strong>Syntax:</strong> <code>(for-each proc list1 list2 ...)</code></p>
+<p>Like <code>map</code>, but calls <em>proc</em> for its side effects rather than collecting
+results. The return value is unspecified. When multiple lists are given,
+iteration stops at the shortest. Elements are guaranteed to be processed
+left to right. O(n), no allocation.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nb">for-each</span><span class="w"> </span><span class="nb">display</span><span class="w"> </span><span class="o">&#39;</span><span class="p">(</span><span class="mi">1</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="mi">3</span><span class="p">))</span>
+<a id="__codelineno-27-2" name="__codelineno-27-2" href="#__codelineno-27-2"></a><span class="mi">123</span>
+<a id="__codelineno-27-3" name="__codelineno-27-3" href="#__codelineno-27-3"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">((</span><span class="nf">sum</span><span class="w"> </span><span class="mi">0</span><span class="p">))</span>
+<a id="__codelineno-27-4" name="__codelineno-27-4" href="#__codelineno-27-4"></a><span class="w">         </span><span class="p">(</span><span class="nb">for-each</span><span class="w"> </span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="nf">a</span><span class="w"> </span><span class="nv">b</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="k">set!</span><span class="w"> </span><span class="nv">sum</span><span class="w"> </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="nv">sum</span><span class="w"> </span><span class="nv">a</span><span class="w"> </span><span class="nv">b</span><span class="p">)))</span>
+<a id="__codelineno-27-5" name="__codelineno-27-5" href="#__codelineno-27-5"></a><span class="w">                   </span><span class="o">&#39;</span><span class="p">(</span><span class="mi">1</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="mi">3</span><span class="p">)</span><span class="w"> </span><span class="o">&#39;</span><span class="p">(</span><span class="mi">10</span><span class="w"> </span><span class="mi">20</span><span class="w"> </span><span class="mi">30</span><span class="p">))</span>
+<a id="__codelineno-27-6" name="__codelineno-27-6" href="#__codelineno-27-6"></a><span class="w">         </span><span class="nv">sum</span><span class="p">)</span>
+<a id="__codelineno-27-7" name="__codelineno-27-7" href="#__codelineno-27-7"></a><span class="c1">;=&gt; 66</span>
+</code></pre></div>
+<p><strong>See also:</strong> <a href="#map"><code>map</code></a>, <a href="../srfi-1/#pair-for-each"><code>pair-for-each</code></a></p>
+<hr />
+<h3 id="apply"><code>apply</code><a class="headerlink" href="#apply" title="Permanent link">&para;</a></h3>
+<p><strong>Syntax:</strong> <code>(apply proc arg1 ... args)</code></p>
+<p>Calls <em>proc</em> with the given arguments. The last argument must be a list;
+its elements are spread as individual arguments. Any arguments before the
+final list are prepended as individual arguments.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nb">apply</span><span class="w"> </span><span class="nb">+</span><span class="w"> </span><span class="o">&#39;</span><span class="p">(</span><span class="mi">1</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="mi">3</span><span class="p">))</span>
+<a id="__codelineno-28-2" name="__codelineno-28-2" href="#__codelineno-28-2"></a><span class="c1">;=&gt; 6</span>
+<a id="__codelineno-28-3" name="__codelineno-28-3" href="#__codelineno-28-3"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nb">apply</span><span class="w"> </span><span class="nb">+</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="o">&#39;</span><span class="p">(</span><span class="mi">3</span><span class="w"> </span><span class="mi">4</span><span class="p">))</span>
+<a id="__codelineno-28-4" name="__codelineno-28-4" href="#__codelineno-28-4"></a><span class="c1">;=&gt; 10</span>
+<a id="__codelineno-28-5" name="__codelineno-28-5" href="#__codelineno-28-5"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nb">apply</span><span class="w"> </span><span class="nb">list</span><span class="w"> </span><span class="ss">&#39;a</span><span class="w"> </span><span class="ss">&#39;b</span><span class="w"> </span><span class="o">&#39;</span><span class="p">(</span><span class="nv">c</span><span class="w"> </span><span class="nv">d</span><span class="p">))</span>
+<a id="__codelineno-28-6" name="__codelineno-28-6" href="#__codelineno-28-6"></a><span class="c1">;=&gt; (a b c d)</span>
+</code></pre></div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><code>apply</code> requires at least two arguments: the procedure and the trailing
+list. The trailing list is always spread, so <code>(apply + '(1 2 3))</code> is
+equivalent to <code>(+ 1 2 3)</code>.</p>
+</div>
+<p><strong>See also:</strong> <a href="#map"><code>map</code></a>, <a href="../control-flow/#call-with-values"><code>call-with-values</code></a></p>
+<hr />
+<h2 id="cxr-compositions">CXR Compositions<a class="headerlink" href="#cxr-compositions" title="Permanent link">&para;</a></h2>
+<p>The <code>(scheme cxr)</code> library provides all 24 compositions of <code>car</code> and <code>cdr</code>
+at three and four levels deep. Each procedure takes exactly one argument and
+applies the accessor operations from right to left (innermost first). For
+example, <code>(caddar x)</code> is equivalent to <code>(car (cdr (cdr (car x))))</code>.</p>
+<p>The naming convention encodes the operation sequence between <code>c</code> and <code>r</code>:
+each <code>a</code> stands for <code>car</code> and each <code>d</code> stands for <code>cdr</code>, read right to left.</p>
+<h3 id="three-level-compositions">Three-Level Compositions<a class="headerlink" href="#three-level-compositions" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Procedure</th>
+<th>Expansion</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>caaar</code></td>
+<td><code>(car (car (car x)))</code></td>
+<td><code>(caaar '(((1 2) 3) 4))</code> =&gt; <code>1</code></td>
+</tr>
+<tr>
+<td><code>caadr</code></td>
+<td><code>(car (car (cdr x)))</code></td>
+<td><code>(caadr '(1 (2 3) 4))</code> =&gt; <code>2</code></td>
+</tr>
+<tr>
+<td><code>cadar</code></td>
+<td><code>(car (cdr (car x)))</code></td>
+<td><code>(cadar '((1 2 3) 4))</code> =&gt; <code>2</code></td>
+</tr>
+<tr>
+<td><code>caddr</code></td>
+<td><code>(car (cdr (cdr x)))</code></td>
+<td><code>(caddr '(1 2 3 4))</code> =&gt; <code>3</code></td>
+</tr>
+<tr>
+<td><code>cdaar</code></td>
+<td><code>(cdr (car (car x)))</code></td>
+<td><code>(cdaar '(((1 2) 3) 4))</code> =&gt; <code>(2)</code></td>
+</tr>
+<tr>
+<td><code>cdadr</code></td>
+<td><code>(cdr (car (cdr x)))</code></td>
+<td><code>(cdadr '(1 (2 3) 4))</code> =&gt; <code>(3)</code></td>
+</tr>
+<tr>
+<td><code>cddar</code></td>
+<td><code>(cdr (cdr (car x)))</code></td>
+<td><code>(cddar '((1 2 3) 4))</code> =&gt; <code>(3)</code></td>
+</tr>
+<tr>
+<td><code>cdddr</code></td>
+<td><code>(cdr (cdr (cdr x)))</code></td>
+<td><code>(cdddr '(1 2 3 4))</code> =&gt; <code>(4)</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="four-level-compositions">Four-Level Compositions<a class="headerlink" href="#four-level-compositions" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Procedure</th>
+<th>Expansion</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>caaaar</code></td>
+<td><code>(car (car (car (car x))))</code></td>
+</tr>
+<tr>
+<td><code>caaadr</code></td>
+<td><code>(car (car (car (cdr x))))</code></td>
+</tr>
+<tr>
+<td><code>caadar</code></td>
+<td><code>(car (car (cdr (car x))))</code></td>
+</tr>
+<tr>
+<td><code>caaddr</code></td>
+<td><code>(car (car (cdr (cdr x))))</code></td>
+</tr>
+<tr>
+<td><code>cadaar</code></td>
+<td><code>(car (cdr (car (car x))))</code></td>
+</tr>
+<tr>
+<td><code>cadadr</code></td>
+<td><code>(car (cdr (car (cdr x))))</code></td>
+</tr>
+<tr>
+<td><code>caddar</code></td>
+<td><code>(car (cdr (cdr (car x))))</code></td>
+</tr>
+<tr>
+<td><code>cadddr</code></td>
+<td><code>(car (cdr (cdr (cdr x))))</code></td>
+</tr>
+<tr>
+<td><code>cdaaar</code></td>
+<td><code>(cdr (car (car (car x))))</code></td>
+</tr>
+<tr>
+<td><code>cdaadr</code></td>
+<td><code>(cdr (car (car (cdr x))))</code></td>
+</tr>
+<tr>
+<td><code>cdadar</code></td>
+<td><code>(cdr (car (cdr (car x))))</code></td>
+</tr>
+<tr>
+<td><code>cdaddr</code></td>
+<td><code>(cdr (car (cdr (cdr x))))</code></td>
+</tr>
+<tr>
+<td><code>cddaar</code></td>
+<td><code>(cdr (cdr (car (car x))))</code></td>
+</tr>
+<tr>
+<td><code>cddadr</code></td>
+<td><code>(cdr (cdr (car (cdr x))))</code></td>
+</tr>
+<tr>
+<td><code>cdddar</code></td>
+<td><code>(cdr (cdr (cdr (car x))))</code></td>
+</tr>
+<tr>
+<td><code>cddddr</code></td>
+<td><code>(cdr (cdr (cdr (cdr x))))</code></td>
+</tr>
+</tbody>
+</table>
+<p>All 24 compositions raise a <code>TypeError</code> if any intermediate value along
+the access path is not a pair.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nb">caddr</span><span class="w"> </span><span class="o">&#39;</span><span class="p">(</span><span class="nv">a</span><span class="w"> </span><span class="nv">b</span><span class="w"> </span><span class="nv">c</span><span class="w"> </span><span class="nv">d</span><span class="p">))</span>
+<a id="__codelineno-29-2" name="__codelineno-29-2" href="#__codelineno-29-2"></a><span class="c1">;=&gt; c</span>
+<a id="__codelineno-29-3" name="__codelineno-29-3" href="#__codelineno-29-3"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nb">cadddr</span><span class="w"> </span><span class="o">&#39;</span><span class="p">(</span><span class="nv">a</span><span class="w"> </span><span class="nv">b</span><span class="w"> </span><span class="nv">c</span><span class="w"> </span><span class="nv">d</span><span class="w"> </span><span class="nv">e</span><span class="p">))</span>
+<a id="__codelineno-29-4" name="__codelineno-29-4" href="#__codelineno-29-4"></a><span class="c1">;=&gt; d</span>
+</code></pre></div>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      MIT License &mdash; Built with Zig
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/kaappi/kaappi" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/orgs/kaappi/discussions" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path d="M1.75 1h8.5c.966 0 1.75.784 1.75 1.75v5.5A1.75 1.75 0 0 1 10.25 10H7.061l-2.574 2.573A1.458 1.458 0 0 1 2 11.543V10h-.25A1.75 1.75 0 0 1 0 8.25v-5.5C0 1.784.784 1 1.75 1M1.5 2.75v5.5c0 .138.112.25.25.25h1a.75.75 0 0 1 .75.75v2.19l2.72-2.72a.75.75 0 0 1 .53-.22h3.5a.25.25 0 0 0 .25-.25v-5.5a.25.25 0 0 0-.25-.25h-8.5a.25.25 0 0 0-.25.25m13 2a.25.25 0 0 0-.25-.25h-.5a.75.75 0 0 1 0-1.5h.5c.966 0 1.75.784 1.75 1.75v5.5A1.75 1.75 0 0 1 14.25 12H14v1.543a1.458 1.458 0 0 1-2.487 1.03L9.22 12.28a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l2.22 2.22v-2.19a.75.75 0 0 1 .75-.75h1a.25.25 0 0 0 .25-.25Z"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.instant", "navigation.tracking", "navigation.sections", "navigation.expand", "navigation.top", "search.suggest", "search.highlight", "content.code.copy", "toc.follow"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

@@ -1,0 +1,3698 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="A complete R7RS-small Scheme implementation written in Zig">
+      
+      
+      
+        <link rel="canonical" href="https://kaappi-lang.org/tour/">
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Tour - Kaappi</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,700,700i%7CJetBrains+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="amber">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Kaappi" class="md-header__button md-logo" aria-label="Kaappi" data-md-component="logo">
+      
+  <img src="../assets/logo.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Kaappi
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Tour
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/kaappi/kaappi" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    kaappi/kaappi
+  </div>
+</a>
+      </div>
+    
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="amber"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="teal" data-md-color-accent="amber"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+                
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" hidden>
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Kaappi" class="md-nav__button md-logo" aria-label="Kaappi" data-md-component="logo">
+      
+  <img src="../assets/logo.svg" alt="logo">
+
+    </a>
+    Kaappi
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/kaappi/kaappi" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    kaappi/kaappi
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../playground/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Try It
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="https://kaappi-lang.org/tour/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tour
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../download/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Download
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guide
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Guide
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    User Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../guide/installation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Installation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../guide/first-program/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Your First Program
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../guide/tutorial/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Scheme Tutorial
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../guide/language/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Language Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../guide/libraries/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Libraries
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../guide/library-authoring/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Library Authoring
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../guide/c-extensions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    C Extensions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../guide/zig-extensions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Zig Extensions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../guide/srfi-support/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SRFI Support
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../guide/advanced/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Advanced Features
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../guide/cli/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CLI Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../guide/debugging/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Debugging
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../guide/repl/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    REPL Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../guide/editors/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Editor Support
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../guide/tips/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tips
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../guide/migrating/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Migrating from Other Schemes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../guide/security/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Security
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../guide/deployment/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deployment
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../guide/troubleshooting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Troubleshooting
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Procedures
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Procedures
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../procedures/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Procedure Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../procedures/numbers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Numbers and Arithmetic
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../procedures/pairs-and-lists/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pairs and Lists
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../procedures/srfi-1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SRFI-1 List Library
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../procedures/strings/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Strings
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../procedures/srfi-13/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SRFI-13 String Library
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../procedures/characters/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Characters
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../procedures/vectors/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Vectors
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../procedures/srfi-133/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SRFI-133 Vector Library
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../procedures/bytevectors/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Bytevectors
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../procedures/ports-and-io/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ports and I/O
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../procedures/control-flow/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Control Flow
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../procedures/type-checking/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Type Checking
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../procedures/hash-tables/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hash Tables
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../procedures/system/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    System and Environment
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../procedures/syntax-forms/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Syntax Forms
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../procedures/threads/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SRFI-18 Threads
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../procedures/extensions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Kaappi Extensions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../procedures/other/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Other Primitives
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../procedures/srfi-170/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SRFI-170 Filesystem
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cookbook
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Cookbook
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cookbook/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cookbook
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cookbook/rest-api/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Build a REST API
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cookbook/html-templates/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Serve HTML with Templates
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cookbook/json-processing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Process JSON Data
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cookbook/csv-processing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Parse and Generate CSV
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cookbook/testing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Write Tests
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cookbook/cli-tool/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Build a CLI Tool
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ecosystem
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Ecosystem
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ecosystem/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ecosystem
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ecosystem/thottam/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Package Manager (thottam)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ecosystem/json/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    JSON
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ecosystem/toml/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    TOML
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ecosystem/yaml/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    YAML
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ecosystem/csv/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CSV
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ecosystem/redis/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Redis
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ecosystem/pg/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PostgreSQL
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ecosystem/sqlite/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SQLite
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ecosystem/http/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    HTTP / HTTPS
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ecosystem/web/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Web Framework
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ecosystem/template/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Templates
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ecosystem/net/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Networking (TCP/TLS)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ecosystem/email/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Email (SMTP)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ecosystem/crypto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Crypto (Hashing)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ecosystem/test/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Testing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ecosystem/bdd/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    BDD Testing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ecosystem/log/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Logging
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ecosystem/cli/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CLI Parsing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ecosystem/examples/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Examples
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../glossary/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Glossary
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../stability/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Stability
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../community/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Community
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../changelog/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Changelog
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../faq/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    FAQ
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+                
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" hidden>
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+<style>
+  .md-content__inner > h1 { display: none; }
+  .md-content__inner { margin-top: 0; padding: 0; max-width: none; }
+  .md-content__inner::before { display: none; }
+
+  :root {
+    --kp-roast:   #1A1410;
+    --kp-roast-2: #241B14;
+    --kp-roast-3: #34281D;
+    --kp-crema:   #F3E9DB;
+    --kp-brass:   #D08B3C;
+    --kp-brass-2: #E8B563;
+    --kp-filter:  #4FC4B2;
+    --kp-ash:     #9C8A77;
+    --kp-mono:    var(--md-code-font-family), "JetBrains Mono", monospace;
+    --kp-disp:    "Space Grotesk", "Inter", system-ui, sans-serif;
+  }
+
+  /* ---- Layout ---- */
+  .kp-tour {
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 3rem);
+    height: calc(100dvh - 3rem);
+    min-height: 500px;
+  }
+
+  .kp-tour-toolbar {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    padding: .4rem .75rem;
+    background: var(--kp-roast);
+    border-bottom: 1px solid var(--kp-roast-3);
+    flex-shrink: 0;
+  }
+
+  .kp-tour-body {
+    display: flex;
+    flex: 1;
+    min-height: 0;
+  }
+
+  /* ---- Toolbar ---- */
+  .kp-tour-toolbar button {
+    background: var(--kp-roast-2);
+    color: var(--kp-crema);
+    border: 1px solid var(--kp-roast-3);
+    padding: .35rem .7rem;
+    border-radius: 4px;
+    font-family: var(--kp-mono);
+    font-size: .8rem;
+    cursor: pointer;
+    transition: background .15s;
+  }
+  .kp-tour-toolbar button:hover { background: var(--kp-roast-3); }
+  .kp-tour-toolbar button:disabled { opacity: .35; cursor: default; }
+
+  #kp-tour-run {
+    background: var(--kp-brass);
+    color: var(--kp-roast);
+    border: none;
+    font-weight: 700;
+  }
+  #kp-tour-run:hover { background: var(--kp-brass-2); }
+  #kp-tour-run:active { transform: scale(.97); }
+  #kp-tour-run:disabled { opacity: .5; cursor: not-allowed; }
+
+  #kp-tour-reset {
+  }
+
+  .kp-tour-link {
+    margin-left: auto;
+    font-size: .78rem;
+    color: var(--kp-ash);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: color .15s, border-color .15s;
+  }
+  .kp-tour-link:hover { color: var(--kp-brass-2); border-bottom-color: var(--kp-brass); }
+  [data-md-color-scheme="default"] .kp-tour-link { color: #8A7A6A; }
+  [data-md-color-scheme="default"] .kp-tour-link:hover { color: #9A6520; border-bottom-color: #9A6520; }
+
+  .kp-tour-title {
+    color: var(--kp-crema);
+    font-family: var(--kp-disp);
+    font-size: .85rem;
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    flex: 1;
+    text-align: center;
+  }
+
+  #kp-tour-status {
+    color: var(--kp-ash);
+    font-size: .75rem;
+    font-family: var(--kp-mono);
+  }
+  #kp-tour-status.running { color: var(--kp-brass-2); }
+  #kp-tour-status.done    { color: var(--kp-filter); }
+  #kp-tour-status.error   { color: #E07070; }
+
+  /* ---- Sidebar ---- */
+  .kp-tour-sidebar {
+    width: 220px;
+    min-width: 220px;
+    background: var(--kp-roast);
+    border-right: 1px solid var(--kp-roast-3);
+    overflow-y: auto;
+    padding: .5rem 0;
+    flex-shrink: 0;
+  }
+
+  .kp-tour-sidebar ol {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .kp-tour-sidebar li {
+    padding: .4rem .75rem .4rem 1rem;
+    font-family: var(--kp-mono);
+    font-size: .78rem;
+    color: var(--kp-ash);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: .4rem;
+    transition: background .1s, color .1s;
+    border-left: 3px solid transparent;
+  }
+  .kp-tour-sidebar li:hover {
+    background: var(--kp-roast-2);
+    color: var(--kp-crema);
+  }
+  .kp-tour-sidebar li.active {
+    background: var(--kp-roast-2);
+    color: var(--kp-crema);
+    border-left-color: var(--kp-brass);
+    font-weight: 600;
+  }
+  .kp-tour-sidebar li .check {
+    color: var(--kp-filter);
+    font-size: .7rem;
+    width: 1rem;
+    text-align: center;
+    flex-shrink: 0;
+  }
+
+  /* ---- Main panel ---- */
+  .kp-tour-main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    overflow: hidden;
+  }
+
+  .kp-tour-prose {
+    padding: 1rem 1.25rem;
+    overflow-y: auto;
+    color: var(--kp-crema);
+    font-family: var(--md-text-font-family), "Inter", sans-serif;
+    font-size: .88rem;
+    line-height: 1.65;
+    max-height: 40%;
+    flex-shrink: 0;
+    border-bottom: 1px solid var(--kp-roast-3);
+    background: var(--kp-roast);
+  }
+  .kp-tour-prose h3 { margin: 0 0 .5rem; font-family: var(--kp-disp); color: var(--kp-brass-2); font-size: 1.1rem; }
+  .kp-tour-prose p { margin: 0 0 .6rem; }
+  .kp-tour-prose code {
+    font-family: var(--kp-mono);
+    background: var(--kp-roast-2);
+    padding: .1rem .3rem;
+    border-radius: 3px;
+    font-size: .82rem;
+    color: var(--kp-filter);
+  }
+  .kp-tour-prose strong { color: var(--kp-brass-2); font-weight: 600; }
+
+  .kp-tour-editor {
+    flex: 1;
+    min-height: 120px;
+    overflow: hidden;
+    background: var(--kp-roast-2);
+  }
+
+  .kp-tour-output {
+    min-height: 60px;
+    max-height: 30%;
+    overflow-y: auto;
+    background: var(--kp-roast);
+    border-top: 1px solid var(--kp-roast-3);
+    padding: .5rem .75rem;
+  }
+  .kp-tour-output pre {
+    margin: 0;
+    white-space: pre-wrap;
+    word-break: break-word;
+    font-family: var(--kp-mono);
+    font-size: .82rem;
+    line-height: 1.5;
+  }
+  #kp-tour-stdout { color: var(--kp-crema); }
+  #kp-tour-stderr { color: #E07070; }
+
+  .kp-tour-challenge {
+    margin-top: .4rem;
+    padding: .4rem .6rem;
+    background: var(--kp-roast-2);
+    border-radius: 4px;
+    font-family: var(--kp-mono);
+    font-size: .78rem;
+    color: var(--kp-brass-2);
+    border-left: 3px solid var(--kp-brass);
+  }
+
+  /* ---- CodeMirror overrides ---- */
+  .kp-tour-editor .cm-editor { height: 100%; font-size: .85rem; }
+  .kp-tour-editor .cm-editor.cm-focused { outline: none; }
+  .kp-tour-editor .cm-scroller { overflow: auto; }
+  .kp-tour-editor .cm-gutters { background: var(--kp-roast-2); color: var(--kp-ash); border-right: 1px solid var(--kp-roast-3); }
+  .kp-tour-editor .cm-content { padding: .4rem 0; color: var(--kp-crema); }
+  .kp-tour-editor .cm-line { padding: 0 .75rem; }
+  .kp-tour-editor .cm-activeLine { background: rgba(255,255,255,.03); }
+  .kp-tour-editor .cm-selectionBackground { background: rgba(208,139,60,.25) !important; }
+  .kp-tour-editor .cm-cursor { border-left-color: var(--kp-crema); }
+  .kp-tour-editor .cm-matchingBracket { background: rgba(79,196,178,.2); outline: 1px solid var(--kp-filter); }
+
+  /* ---- Mobile sidebar toggle ---- */
+  #kp-tour-menu-toggle {
+    display: none;
+    background: var(--kp-roast-2);
+    color: var(--kp-crema);
+    border: 1px solid var(--kp-roast-3);
+    padding: .35rem .5rem;
+    border-radius: 4px;
+    font-size: .85rem;
+    cursor: pointer;
+  }
+
+  @media (max-width: 820px) {
+    .kp-tour {
+      height: calc(100dvh - 3rem);
+      min-height: 0;
+    }
+    .kp-tour-link { display: none; }
+    #kp-tour-menu-toggle { display: block; min-height: 44px; }
+    .kp-tour-toolbar {
+      flex-wrap: wrap;
+      row-gap: .25rem;
+      padding: .35rem .5rem;
+    }
+    .kp-tour-toolbar button { min-height: 44px; }
+    .kp-tour-title {
+      font-size: .78rem;
+      min-width: 5rem;
+    }
+    .kp-tour-sidebar {
+      position: fixed;
+      top: 3rem;
+      left: 0;
+      bottom: 0;
+      z-index: 100;
+      width: 260px;
+      min-width: 260px;
+      transform: translateX(-100%);
+      transition: transform .2s;
+      box-shadow: 2px 0 8px rgba(0,0,0,.4);
+    }
+    .kp-tour-sidebar.open { transform: translateX(0); }
+    .kp-tour-sidebar li { min-height: 44px; }
+    .kp-tour-prose {
+      max-height: 30%;
+      font-size: .84rem;
+      padding: .75rem 1rem;
+    }
+    .kp-tour-editor { min-height: 30%; }
+    .kp-tour-output { max-height: 25%; }
+  }
+
+  @media (max-width: 480px) {
+    .kp-tour-title { font-size: .72rem; }
+    .kp-tour-prose {
+      max-height: 25%;
+      padding: .6rem .75rem;
+    }
+    .kp-tour-prose h3 { font-size: .95rem; margin-bottom: .35rem; }
+    .kp-tour-editor .cm-editor { font-size: .8rem; }
+    #kp-tour-reset { font-size: .7rem; padding: .35rem .4rem; }
+  }
+
+  /* ---- Light mode ---- */
+  [data-md-color-scheme="default"] .kp-tour-toolbar { background: #F5F0EB; border-color: #DDD5CB; }
+  [data-md-color-scheme="default"] .kp-tour-toolbar button { background: #EDE6DC; color: #1A1410; border-color: #DDD5CB; }
+  [data-md-color-scheme="default"] .kp-tour-title { color: #1A1410; }
+  [data-md-color-scheme="default"] .kp-tour-sidebar { background: #FDFAF6; border-color: #EDE6DC; }
+  [data-md-color-scheme="default"] .kp-tour-sidebar li { color: #8A7A6A; }
+  [data-md-color-scheme="default"] .kp-tour-sidebar li:hover { background: #F5F0EB; color: #1A1410; }
+  [data-md-color-scheme="default"] .kp-tour-sidebar li.active { background: #F5F0EB; color: #1A1410; }
+  [data-md-color-scheme="default"] .kp-tour-prose { background: #FDFAF6; color: #1A1410; border-color: #EDE6DC; }
+  [data-md-color-scheme="default"] .kp-tour-prose code { background: #EDE6DC; color: #1A6E5E; }
+  [data-md-color-scheme="default"] .kp-tour-prose strong { color: #9A6520; }
+  [data-md-color-scheme="default"] .kp-tour-editor { background: #F5F0EB; }
+  [data-md-color-scheme="default"] .kp-tour-editor .cm-gutters { background: #F5F0EB; color: #BBA890; border-color: #EDE6DC; }
+  [data-md-color-scheme="default"] .kp-tour-editor .cm-content { color: #1A1410; }
+  [data-md-color-scheme="default"] .kp-tour-editor .cm-cursor { border-left-color: #1A1410; }
+  [data-md-color-scheme="default"] .kp-tour-editor .cm-activeLine { background: rgba(0,0,0,.03); }
+  [data-md-color-scheme="default"] .kp-tour-output { background: #FDFAF6; border-color: #EDE6DC; }
+  [data-md-color-scheme="default"] #kp-tour-stdout { color: #1A1410; }
+  [data-md-color-scheme="default"] .kp-tour-challenge { background: #EDE6DC; color: #7A5A20; }
+  [data-md-color-scheme="default"] #kp-tour-status { color: #8A7A6A; }
+</style>
+
+<div class="kp-tour">
+  <div class="kp-tour-toolbar">
+    <button id="kp-tour-menu-toggle" title="Lessons">&#9776;</button>
+    <button id="kp-tour-prev" title="Previous lesson">&larr;</button>
+    <span class="kp-tour-title" id="kp-tour-title">1 / 12 &mdash; Hello, Scheme!</span>
+    <button id="kp-tour-next" title="Next lesson">&rarr;</button>
+    <button id="kp-tour-run" title="Run (Ctrl+Enter)">&#9654; Run</button>
+    <span id="kp-tour-status"></span>
+    <a href="../playground/" class="kp-tour-link">Free playground &rarr;</a>
+    <button id="kp-tour-reset" title="Reset code">Reset</button>
+  </div>
+
+  <div class="kp-tour-body">
+    <nav class="kp-tour-sidebar" id="kp-tour-sidebar">
+      <ol id="kp-tour-lesson-list"></ol>
+    </nav>
+
+    <div class="kp-tour-main">
+      <div class="kp-tour-prose" id="kp-tour-prose"></div>
+      <div class="kp-tour-editor" id="kp-tour-editor"></div>
+      <div class="kp-tour-output">
+        <pre id="kp-tour-stdout"></pre>
+        <pre id="kp-tour-stderr"></pre>
+        <div class="kp-tour-challenge" id="kp-tour-challenge" hidden></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="module">
+
+const LESSONS = [
+  {
+    title: "Hello, Scheme!",
+    prose: `<h3>Hello, Scheme!</h3>
+<p>In Scheme, everything is an <strong>expression</strong> that produces a value. There are no statements — even <code>if</code> returns a result.</p>
+<p>The syntax is uniform: <code>(operator operand ...)</code>. The first element is always the function, and parentheses are never optional.</p>
+<p>Try running this program. Then change the message or try an arithmetic expression like <code>(+ 2 (* 3 4))</code>.</p>`,
+    code: `; Your first Scheme program!
+(display "Hello from Kaappi!")
+(newline)
+
+; Arithmetic — everything is an expression
+(display (+ 2 (* 3 4)))
+(newline)
+
+; Nesting is explicit — no precedence rules
+(display (/ (+ 10 20) 3))
+(newline)`,
+    challenge: "Try replacing the arithmetic with (- 100 (* 7 13)). What do you get?",
+  },
+  {
+    title: "Numbers",
+    prose: `<h3>Numbers</h3>
+<p>Kaappi supports the full <strong>numeric tower</strong>: integers of any size, exact rationals like <code>1/3</code>, floating-point, and complex numbers like <code>3+4i</code>.</p>
+<p>Integers and rationals are <strong>exact</strong> — no rounding, no overflow. Floating-point numbers are <strong>inexact</strong>. Kaappi tracks this distinction and never silently loses precision.</p>
+<p>Arithmetic operators work across all types: <code>+</code>, <code>-</code>, <code>*</code>, <code>/</code> handle mixed exact/inexact automatically.</p>`,
+    code: `; Exact integers — no size limit
+(display (* 100000000000 100000000000))
+(newline)
+
+; Exact rationals — no rounding
+(display (+ 1/3 1/6))
+(newline)
+
+; Floating point (inexact)
+(display (sqrt 2))
+(newline)
+
+; Complex numbers
+(display (+ 3+4i 1-2i))
+(newline)
+
+; Mixing exact and inexact
+(display (exact? (* 2 1/3)))
+(newline)
+(display (inexact? (+ 1 0.5)))
+(newline)`,
+    challenge: "What does (/ 1 3) give? How about (* 1/3 3)? Try both.",
+  },
+  {
+    title: "Strings & Booleans",
+    prose: `<h3>Strings & Booleans</h3>
+<p>Strings are <strong>UTF-8</strong> sequences enclosed in double quotes. You can index them by codepoint, concatenate, split, and search.</p>
+<p>Booleans are <code>#t</code> (true) and <code>#f</code> (false). In Scheme, <strong>only <code>#f</code> is false</strong> — everything else is true, including <code>0</code>, <code>""</code>, and the empty list <code>'()</code>. This differs from most languages.</p>`,
+    code: `; String operations
+(display (string-append "Hello" ", " "world!"))
+(newline)
+(display (string-length "Kaappi"))
+(newline)
+(display (substring "Hello, world!" 7 12))
+(newline)
+
+; Booleans — only #f is false
+(display (if 0 "zero is true!" "zero is false"))
+(newline)
+(display (if "" "empty string is true!" "empty string is false"))
+(newline)
+(display (if '() "empty list is true!" "empty list is false"))
+(newline)
+
+; Predicates
+(display (string? "hello"))
+(newline)
+(display (number? 42))
+(newline)`,
+    challenge: "What does (if #f \"yes\" \"no\") return? What about (if #t \"yes\" \"no\")?",
+  },
+  {
+    title: "Lists",
+    prose: `<h3>Lists</h3>
+<p>Lists are Scheme's fundamental data structure. A list is a chain of <strong>pairs</strong> — each pair holds a value (<code>car</code>) and a pointer to the next pair (<code>cdr</code>). The empty list <code>'()</code> terminates the chain.</p>
+<p>The quote <code>'</code> prevents evaluation: <code>'(1 2 3)</code> is a list, while <code>(1 2 3)</code> would try to call <code>1</code> as a function.</p>
+<p><code>cons</code> builds a pair, <code>car</code> extracts the first element, and <code>cdr</code> extracts the rest.</p>`,
+    code: `; Quoted lists
+(display '(1 2 3))
+(newline)
+
+; Building with cons
+(display (cons 1 (cons 2 (cons 3 '()))))
+(newline)
+
+; Extracting elements
+(display (car '(a b c)))    ; first element
+(newline)
+(display (cdr '(a b c)))    ; rest of the list
+(newline)
+(display (cadr '(a b c)))   ; second element (car of cdr)
+(newline)
+
+; list builds a list directly
+(display (list 'x 'y 'z))
+(newline)
+
+; length, append, reverse
+(display (length '(1 2 3 4 5)))
+(newline)
+(display (reverse '(1 2 3)))
+(newline)`,
+    challenge: "What does (cons 'a '(b c)) produce? What about (cons '(a) '(b c))?",
+  },
+  {
+    title: "Defining Functions",
+    prose: `<h3>Defining Functions</h3>
+<p><code>define</code> binds a name to a value. For functions, there's a convenient shorthand: <code>(define (name params) body)</code> is equivalent to <code>(define name (lambda (params) body))</code>.</p>
+<p><code>lambda</code> creates an anonymous function — a value you can pass around, store, or call. Functions are <strong>first-class</strong>: they're values like any other.</p>`,
+    code: `; Define a function
+(define (square x)
+  (* x x))
+
+(display (square 5))
+(newline)
+
+; Lambda — anonymous function
+(define cube (lambda (x) (* x x x)))
+(display (cube 4))
+(newline)
+
+; Functions are values — pass them around
+(define (apply-twice f x)
+  (f (f x)))
+
+(display (apply-twice square 3))   ; (3^2)^2 = 81
+(newline)
+(display (apply-twice add1 10))    ; 10 + 1 + 1 = 12
+(newline)
+
+; Multiple parameters
+(define (greet name greeting)
+  (string-append greeting ", " name "!"))
+
+(display (greet "world" "Hello"))
+(newline)`,
+    challenge: "Define a function (double x) that doubles a number. Then try (apply-twice double 3).",
+  },
+  {
+    title: "Conditionals",
+    prose: `<h3>Conditionals</h3>
+<p><code>if</code> is an expression with three parts: <code>(if test then else)</code>. It always returns a value.</p>
+<p><code>cond</code> handles multiple branches — each clause is <code>(test expression)</code>, with an optional <code>(else ...)</code> fallback. <code>and</code> and <code>or</code> short-circuit and return the deciding value, not just <code>#t</code>/<code>#f</code>.</p>`,
+    code: `; if is an expression — it returns a value
+(display (if (> 3 2) "yes" "no"))
+(newline)
+
+; cond for multiple branches
+(define (classify n)
+  (cond
+    ((negative? n) "negative")
+    ((zero? n)     "zero")
+    ((even? n)     "even")
+    (else          "odd")))
+
+(display (classify -5))  (newline)
+(display (classify 0))   (newline)
+(display (classify 4))   (newline)
+(display (classify 7))   (newline)
+
+; and/or return values, not just #t/#f
+(display (or #f #f 42))       ; first truthy value
+(newline)
+(display (and 1 2 3))         ; last value if all true
+(newline)
+(display (and 1 #f 3))        ; #f — short-circuits
+(newline)`,
+    challenge: "Write a FizzBuzz: if n is divisible by 15, print \"FizzBuzz\"; by 3, \"Fizz\"; by 5, \"Buzz\"; else the number.",
+  },
+  {
+    title: "Recursion",
+    prose: `<h3>Recursion</h3>
+<p>Scheme has no <code>for</code> or <code>while</code> loops. Iteration happens through <strong>recursion</strong>: a function that calls itself with a smaller problem until it reaches a base case.</p>
+<p>Every recursive function needs two parts: the <strong>base case</strong> (when to stop) and the <strong>recursive step</strong> (how to break the problem down).</p>`,
+    code: `; Factorial: n! = n * (n-1) * ... * 1
+(define (factorial n)
+  (if (<= n 1)
+      1
+      (* n (factorial (- n 1)))))
+
+(display (factorial 10))
+(newline)
+
+; List length — recursion over lists
+(define (my-length lst)
+  (if (null? lst)
+      0
+      (+ 1 (my-length (cdr lst)))))
+
+(display (my-length '(a b c d e)))
+(newline)
+
+; Sum of a list
+(define (my-sum lst)
+  (if (null? lst)
+      0
+      (+ (car lst) (my-sum (cdr lst)))))
+
+(display (my-sum '(1 2 3 4 5)))
+(newline)`,
+    challenge: "Write (my-reverse lst) that reverses a list using recursion and append.",
+  },
+  {
+    title: "Tail Calls",
+    prose: `<h3>Tail Calls</h3>
+<p>A <strong>tail call</strong> is a call in the last position of a function — nothing happens after it returns. Scheme guarantees that tail calls reuse the current stack frame, so <strong>tail-recursive functions use constant stack space</strong>.</p>
+<p>The trick: use an <strong>accumulator</strong> parameter to carry the result, so the recursive call is the very last thing the function does.</p>
+<p>Named <code>let</code> is the idiomatic way to write loops in Scheme.</p>`,
+    code: `; Naive recursion — builds stack frames
+; (define (sum-naive n)
+;   (if (= n 0) 0 (+ n (sum-naive (- n 1)))))
+; This would overflow for large n!
+
+; Tail-recursive with accumulator — constant stack
+(define (sum n)
+  (define (loop i acc)
+    (if (= i 0) acc (loop (- i 1) (+ acc i))))
+  (loop n 0))
+
+(display (sum 1000000))  ; 1 million — no stack overflow
+(newline)
+
+; Named let — idiomatic Scheme loop
+(define (sum-named n)
+  (let loop ((i n) (acc 0))
+    (if (= i 0) acc
+        (loop (- i 1) (+ acc i)))))
+
+(display (sum-named 100))
+(newline)
+
+; Fibonacci with accumulator
+(define (fib n)
+  (let loop ((i n) (a 0) (b 1))
+    (if (= i 0) a (loop (- i 1) b (+ a b)))))
+
+(display (fib 50))
+(newline)`,
+    challenge: "The naive sum would crash at 1M. Try changing (sum 1000000) to see it work instantly.",
+  },
+  {
+    title: "Higher-Order Functions",
+    prose: `<h3>Higher-Order Functions</h3>
+<p>Functions that take or return other functions are <strong>higher-order</strong>. The big three for lists: <code>map</code> applies a function to each element, <code>filter</code> keeps elements matching a predicate, and <code>fold</code> reduces a list to a single value.</p>
+<p>Use <code>lambda</code> for one-off functions you don't need to name.</p>`,
+    code: `(import (srfi 1))
+
+; map — transform each element
+(display (map (lambda (x) (* x x)) '(1 2 3 4 5)))
+(newline)
+
+; filter — keep elements matching a predicate
+(display (filter even? '(1 2 3 4 5 6 7 8)))
+(newline)
+
+; fold — reduce to a single value
+(display (fold + 0 '(1 2 3 4 5)))   ; sum
+(newline)
+(display (fold * 1 '(1 2 3 4 5)))   ; product
+(newline)
+
+; Compose operations — pipeline style
+(let ((nums '(1 2 3 4 5 6 7 8 9 10)))
+  (display "Squares of odds: ")
+  (display
+    (map (lambda (x) (* x x))
+         (filter odd? nums)))
+  (newline)
+
+  (display "Sum of evens: ")
+  (display
+    (fold + 0 (filter even? nums)))
+  (newline))`,
+    challenge: "Use map and filter to get the lengths of strings longer than 3 characters from '(\"hi\" \"hello\" \"hey\" \"greetings\").",
+  },
+  {
+    title: "Let & Closures",
+    prose: `<h3>Let & Closures</h3>
+<p><code>let</code> introduces local bindings: <code>(let ((x 1) (y 2)) body)</code>. The bindings are parallel — <code>y</code> can't see <code>x</code>. Use <code>let*</code> for sequential bindings where each can reference the previous.</p>
+<p>A <strong>closure</strong> is a function that captures variables from its enclosing scope. The classic example: a counter function that remembers its state.</p>`,
+    code: `; let — parallel bindings
+(let ((x 10)
+      (y 20))
+  (display (+ x y))
+  (newline))
+
+; let* — sequential (each sees the previous)
+(let* ((x 10)
+       (y (* x 2)))
+  (display y)
+  (newline))
+
+; Closures — functions that capture state
+(define (make-counter)
+  (let ((count 0))
+    (lambda ()
+      (set! count (+ count 1))
+      count)))
+
+(define c1 (make-counter))
+(define c2 (make-counter))
+
+(display (c1)) (newline)   ; 1
+(display (c1)) (newline)   ; 2
+(display (c1)) (newline)   ; 3
+(display (c2)) (newline)   ; 1 — independent counter
+(display (c2)) (newline)   ; 2`,
+    challenge: "Modify make-counter to take a start value and a step size.",
+  },
+  {
+    title: "Macros",
+    prose: `<h3>Macros</h3>
+<p>Scheme macros transform code at compile time using <code>define-syntax</code> and <code>syntax-rules</code>. Unlike text macros, they're <strong>hygienic</strong> — introduced variables never clash with user code.</p>
+<p>A macro takes a code pattern and rewrites it. The <code>...</code> ellipsis matches zero or more repetitions.</p>`,
+    code: `; swap! — a macro that swaps two variables
+(define-syntax swap!
+  (syntax-rules ()
+    ((_ a b)
+     (let ((tmp a))
+       (set! a b)
+       (set! b tmp)))))
+
+(define x 1)
+(define y 2)
+(swap! x y)
+(display x) (display " ") (display y)
+(newline)
+
+; my-when — like 'when' in other languages
+(define-syntax my-when
+  (syntax-rules ()
+    ((_ test body ...)
+     (if test (begin body ...)))))
+
+(my-when (> 3 2)
+  (display "3 > 2 is true")
+  (newline))
+
+; unless — the opposite
+(define-syntax unless
+  (syntax-rules ()
+    ((_ test body ...)
+     (if (not test) (begin body ...)))))
+
+(unless (= 1 2)
+  (display "1 is not 2")
+  (newline))`,
+    challenge: "Write a (repeat n body ...) macro that executes body n times. Hint: use a named let inside.",
+  },
+  {
+    title: "Libraries",
+    prose: `<h3>Libraries</h3>
+<p><code>define-library</code> creates a module with explicit <code>export</code> and <code>import</code> declarations. Only exported names are visible to importers — everything else is private.</p>
+<p>Libraries are Scheme's module system. They let you organize code into reusable, encapsulated units.</p>`,
+    code: `; Define a library inline
+(define-library (math utils)
+  (import (scheme base))
+  (export square cube average)
+  (begin
+    (define (square x) (* x x))
+    (define (cube x) (* x x x))
+    (define (average . nums)
+      (/ (apply + nums) (length nums)))))
+
+; Import and use it
+(import (math utils))
+
+(display "square(7) = ")
+(display (square 7))
+(newline)
+
+(display "cube(3) = ")
+(display (cube 3))
+(newline)
+
+(display "average(2,4,6,8) = ")
+(display (average 2 4 6 8))
+(newline)
+
+; Can't access internal helpers (they're private)
+; (display (helper)) ; would error`,
+    challenge: "Add a (factorial n) function to the library, export it, and call it.",
+  },
+];
+
+// ---- State ----
+let currentLesson = 0;
+let editorView = null;
+const progress = JSON.parse(localStorage.getItem("kaappi-tour-progress") || "[]");
+
+// ---- Sidebar ----
+const listEl = document.getElementById("kp-tour-lesson-list");
+function buildSidebar() {
+  listEl.innerHTML = "";
+  LESSONS.forEach((lesson, i) => {
+    const li = document.createElement("li");
+    const check = document.createElement("span");
+    check.className = "check";
+    check.textContent = progress.includes(i) ? "✓" : (i + 1);
+    li.appendChild(check);
+    li.appendChild(document.createTextNode(lesson.title));
+    if (i === currentLesson) li.classList.add("active");
+    li.addEventListener("click", () => { goToLesson(i); });
+    listEl.appendChild(li);
+  });
+}
+
+// ---- Lesson loading ----
+const proseEl = document.getElementById("kp-tour-prose");
+const titleEl = document.getElementById("kp-tour-title");
+const challengeEl = document.getElementById("kp-tour-challenge");
+const prevBtn = document.getElementById("kp-tour-prev");
+const nextBtn = document.getElementById("kp-tour-next");
+
+function loadLesson(idx) {
+  const lesson = LESSONS[idx];
+  currentLesson = idx;
+  proseEl.innerHTML = lesson.prose;
+  titleEl.textContent = `${idx + 1} / ${LESSONS.length} — ${lesson.title}`;
+  setEditorContent(lesson.code);
+  document.getElementById("kp-tour-stdout").textContent = "";
+  document.getElementById("kp-tour-stderr").textContent = "";
+  if (lesson.challenge) {
+    challengeEl.textContent = "💡 " + lesson.challenge;
+    challengeEl.hidden = false;
+  } else {
+    challengeEl.hidden = true;
+  }
+  prevBtn.disabled = idx === 0;
+  nextBtn.disabled = idx === LESSONS.length - 1;
+  buildSidebar();
+  setStatus("");
+
+  // Close mobile sidebar
+  document.getElementById("kp-tour-sidebar").classList.remove("open");
+}
+
+function goToLesson(idx) {
+  if (idx >= 0 && idx < LESSONS.length) {
+    location.hash = "#" + (idx + 1);
+  }
+}
+
+function readHash() {
+  const h = parseInt(location.hash.replace("#", ""), 10);
+  return (h >= 1 && h <= LESSONS.length) ? h - 1 : 0;
+}
+
+prevBtn.addEventListener("click", () => goToLesson(currentLesson - 1));
+nextBtn.addEventListener("click", () => goToLesson(currentLesson + 1));
+window.addEventListener("hashchange", () => loadLesson(readHash()));
+
+// ---- Mobile sidebar ----
+document.getElementById("kp-tour-menu-toggle").addEventListener("click", () => {
+  document.getElementById("kp-tour-sidebar").classList.toggle("open");
+});
+document.querySelector(".kp-tour-main").addEventListener("click", () => {
+  document.getElementById("kp-tour-sidebar").classList.remove("open");
+});
+
+// ---- CodeMirror setup ----
+async function initEditor() {
+  try {
+    const cmRoot = new URL("..", document.baseURI).href.replace(/\/$/, "");
+    const { EditorView, basicSetup, EditorState, StreamLanguage, HighlightStyle, syntaxHighlighting, tags, scheme: schemeMode } =
+      await import(cmRoot + "/js/codemirror-bundle.mjs");
+
+    const darkHighlight = HighlightStyle.define([
+      { tag: [tags.keyword, tags.standard(tags.variableName)], color: "#E8B563" },
+      { tag: tags.comment, color: "#9C8A77", fontStyle: "italic" },
+      { tag: tags.string, color: "#BFD08A" },
+      { tag: tags.number, color: "#E0A867" },
+      { tag: tags.atom, color: "#E8B563" },
+      { tag: [tags.variableName, tags.definition(tags.variableName)], color: "#4FC4B2" },
+      { tag: tags.bracket, color: "#BBA890" },
+      { tag: [tags.meta, tags.operator], color: "#D08B3C" },
+    ]);
+
+    const lightHighlight = HighlightStyle.define([
+      { tag: [tags.keyword, tags.standard(tags.variableName)], color: "#9A6A1E" },
+      { tag: tags.comment, color: "#9C8A77", fontStyle: "italic" },
+      { tag: tags.string, color: "#5A7A22" },
+      { tag: tags.number, color: "#9A6A1E" },
+      { tag: tags.atom, color: "#9A6A1E" },
+      { tag: [tags.variableName, tags.definition(tags.variableName)], color: "#1E8A7A" },
+      { tag: tags.bracket, color: "#8A7A6A" },
+      { tag: [tags.meta, tags.operator], color: "#A06A20" },
+    ]);
+
+    const isDark = document.documentElement.dataset.mdColorScheme === "slate";
+    const theme = EditorView.theme({
+      "&": { backgroundColor: "transparent" },
+      ".cm-content": { caretColor: isDark ? "#F3E9DB" : "#1A1410" },
+    }, { dark: isDark });
+
+    const extensions = [
+      basicSetup, theme,
+      syntaxHighlighting(isDark ? darkHighlight : lightHighlight),
+      EditorView.domEventHandlers({
+        keydown(e) {
+          if ((e.ctrlKey || e.metaKey) && e.key === "Enter") {
+            e.preventDefault();
+            document.getElementById("kp-tour-run").click();
+          }
+        }
+      }),
+    ];
+    extensions.push(StreamLanguage.define(schemeMode));
+
+    editorView = new EditorView({
+      state: EditorState.create({ doc: LESSONS[currentLesson].code, extensions }),
+      parent: document.getElementById("kp-tour-editor"),
+    });
+  } catch {
+    const el = document.getElementById("kp-tour-editor");
+    const ta = document.createElement("textarea");
+    ta.id = "kp-tour-ta";
+    ta.value = LESSONS[currentLesson].code;
+    ta.spellcheck = false;
+    Object.assign(ta.style, {
+      width: "100%", height: "100%", resize: "none", background: "transparent",
+      color: "inherit", border: "none", outline: "none", padding: ".75rem",
+      fontFamily: "var(--kp-mono)", fontSize: ".85rem", lineHeight: "1.5", tabSize: 2,
+    });
+    ta.addEventListener("keydown", e => {
+      if ((e.ctrlKey || e.metaKey) && e.key === "Enter") { e.preventDefault(); document.getElementById("kp-tour-run").click(); }
+    });
+    el.appendChild(ta);
+  }
+}
+
+function getEditorContent() {
+  if (editorView) return editorView.state.doc.toString();
+  const ta = document.getElementById("kp-tour-ta");
+  return ta ? ta.value : "";
+}
+
+function setEditorContent(code) {
+  if (editorView) {
+    editorView.dispatch({ changes: { from: 0, to: editorView.state.doc.length, insert: code } });
+  } else {
+    const ta = document.getElementById("kp-tour-ta");
+    if (ta) ta.value = code;
+  }
+}
+
+// ---- Reset ----
+document.getElementById("kp-tour-reset").addEventListener("click", () => {
+  setEditorContent(LESSONS[currentLesson].code);
+  document.getElementById("kp-tour-stdout").textContent = "";
+  document.getElementById("kp-tour-stderr").textContent = "";
+  setStatus("");
+});
+
+// ---- Execution ----
+const TIMEOUT_MS = 5000;
+const siteRoot = new URL("..", document.baseURI).href.replace(/\/$/, "");
+const workerUrl = siteRoot + "/js/playground-worker.js";
+const wasmUrl = siteRoot + "/wasm/kaappi.wasm";
+let worker = new Worker(workerUrl, { type: "module" });
+
+const statusEl = document.getElementById("kp-tour-status");
+const runBtn = document.getElementById("kp-tour-run");
+
+function setStatus(text, cls) {
+  statusEl.textContent = text;
+  statusEl.className = cls || "";
+}
+
+async function runCode() {
+  const code = getEditorContent();
+  if (!code.trim()) return;
+
+  document.getElementById("kp-tour-stdout").textContent = "";
+  document.getElementById("kp-tour-stderr").textContent = "";
+  setStatus("Running…", "running");
+  runBtn.disabled = true;
+
+  try {
+    const result = await new Promise((resolve, reject) => {
+      const timer = setTimeout(() => {
+        worker.terminate();
+        worker = new Worker(workerUrl, { type: "module" });
+        reject(new Error("Timed out (5 s limit)"));
+      }, TIMEOUT_MS);
+      worker.onmessage = ({ data }) => { clearTimeout(timer); resolve(data); };
+      worker.onerror = (e) => { clearTimeout(timer); reject(new Error(e.message || "Worker error")); };
+      worker.postMessage({ code, wasmUrl });
+    });
+
+    document.getElementById("kp-tour-stdout").textContent = result.stdout;
+    document.getElementById("kp-tour-stderr").textContent = result.stderr;
+    const ms = Math.round(result.elapsed);
+    setStatus(result.stderr ? `Done (${ms} ms)` : `Done (${ms} ms)`, result.stderr ? "error" : "done");
+
+    // Mark lesson complete on successful run
+    if (!result.stderr && !progress.includes(currentLesson)) {
+      progress.push(currentLesson);
+      localStorage.setItem("kaappi-tour-progress", JSON.stringify(progress));
+      buildSidebar();
+    }
+  } catch (e) {
+    document.getElementById("kp-tour-stderr").textContent = e.message;
+    setStatus("Error", "error");
+  } finally {
+    runBtn.disabled = false;
+  }
+}
+
+runBtn.addEventListener("click", runCode);
+
+// ---- Init ----
+currentLesson = readHash();
+buildSidebar();
+initEditor().then(() => loadLesson(currentLesson));
+
+</script>
+
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      MIT License &mdash; Built with Zig
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/kaappi/kaappi" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/orgs/kaappi/discussions" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path d="M1.75 1h8.5c.966 0 1.75.784 1.75 1.75v5.5A1.75 1.75 0 0 1 10.25 10H7.061l-2.574 2.573A1.458 1.458 0 0 1 2 11.543V10h-.25A1.75 1.75 0 0 1 0 8.25v-5.5C0 1.784.784 1 1.75 1M1.5 2.75v5.5c0 .138.112.25.25.25h1a.75.75 0 0 1 .75.75v2.19l2.72-2.72a.75.75 0 0 1 .53-.22h3.5a.25.25 0 0 0 .25-.25v-5.5a.25.25 0 0 0-.25-.25h-8.5a.25.25 0 0 0-.25.25m13 2a.25.25 0 0 0-.25-.25h-.5a.75.75 0 0 1 0-1.5h.5c.966 0 1.75.784 1.75 1.75v5.5A1.75 1.75 0 0 1 14.25 12H14v1.543a1.458 1.458 0 0 1-2.487 1.03L9.22 12.28a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l2.22 2.22v-2.19a.75.75 0 0 1 .75-.75h1a.25.25 0 0 0 .25-.25Z"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.instant", "navigation.tracking", "navigation.sections", "navigation.expand", "navigation.top", "search.suggest", "search.highlight", "content.code.copy", "toc.follow"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

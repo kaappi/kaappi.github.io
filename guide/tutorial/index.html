@@ -1,0 +1,3527 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="A complete R7RS-small Scheme implementation written in Zig">
+      
+      
+      
+        <link rel="canonical" href="https://kaappi-lang.org/guide/tutorial/">
+      
+      
+        <link rel="prev" href="../first-program/">
+      
+      
+        <link rel="next" href="../language/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Scheme Tutorial - Kaappi</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,700,700i%7CJetBrains+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="amber">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#scheme-tutorial" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Kaappi" class="md-header__button md-logo" aria-label="Kaappi" data-md-component="logo">
+      
+  <img src="../../assets/logo.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Kaappi
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Scheme Tutorial
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/kaappi/kaappi" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    kaappi/kaappi
+  </div>
+</a>
+      </div>
+    
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="amber"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="teal" data-md-color-accent="amber"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Kaappi" class="md-nav__button md-logo" aria-label="Kaappi" data-md-component="logo">
+      
+  <img src="../../assets/logo.svg" alt="logo">
+
+    </a>
+    Kaappi
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/kaappi/kaappi" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    kaappi/kaappi
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../playground/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Try It
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="https://kaappi-lang.org/tour/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tour
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../download/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Download
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guide
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Guide
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    User Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../installation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Installation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../first-program/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Your First Program
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Scheme Tutorial
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Scheme Tutorial
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#expressions-not-statements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Expressions, Not Statements
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#atoms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Atoms
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#lists" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Lists
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#defining-things" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Defining Things
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#conditionals" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Conditionals
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#recursion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recursion
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#higher-order-functions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Higher-Order Functions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#local-bindings" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Local Bindings
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#closures" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Closures
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mutation-and-why-its-rare" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Mutation and Why It's Rare
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#input-and-output" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Input and Output
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#where-to-go-next" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Where to Go Next
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../language/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Language Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../libraries/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Libraries
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../library-authoring/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Library Authoring
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../c-extensions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    C Extensions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../zig-extensions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Zig Extensions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../srfi-support/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SRFI Support
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../advanced/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Advanced Features
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cli/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CLI Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../debugging/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Debugging
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../repl/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    REPL Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../editors/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Editor Support
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tips/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tips
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../migrating/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Migrating from Other Schemes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../security/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Security
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../deployment/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deployment
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../troubleshooting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Troubleshooting
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Procedures
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Procedures
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../procedures/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Procedure Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../procedures/numbers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Numbers and Arithmetic
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../procedures/pairs-and-lists/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pairs and Lists
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../procedures/srfi-1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SRFI-1 List Library
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../procedures/strings/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Strings
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../procedures/srfi-13/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SRFI-13 String Library
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../procedures/characters/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Characters
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../procedures/vectors/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Vectors
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../procedures/srfi-133/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SRFI-133 Vector Library
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../procedures/bytevectors/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Bytevectors
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../procedures/ports-and-io/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ports and I/O
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../procedures/control-flow/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Control Flow
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../procedures/type-checking/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Type Checking
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../procedures/hash-tables/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hash Tables
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../procedures/system/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    System and Environment
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../procedures/syntax-forms/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Syntax Forms
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../procedures/threads/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SRFI-18 Threads
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../procedures/extensions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Kaappi Extensions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../procedures/other/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Other Primitives
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../procedures/srfi-170/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SRFI-170 Filesystem
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cookbook
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Cookbook
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cookbook/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cookbook
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cookbook/rest-api/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Build a REST API
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cookbook/html-templates/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Serve HTML with Templates
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cookbook/json-processing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Process JSON Data
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cookbook/csv-processing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Parse and Generate CSV
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cookbook/testing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Write Tests
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cookbook/cli-tool/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Build a CLI Tool
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ecosystem
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Ecosystem
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ecosystem/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ecosystem
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ecosystem/thottam/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Package Manager (thottam)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ecosystem/json/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    JSON
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ecosystem/toml/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    TOML
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ecosystem/yaml/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    YAML
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ecosystem/csv/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CSV
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ecosystem/redis/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Redis
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ecosystem/pg/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PostgreSQL
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ecosystem/sqlite/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SQLite
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ecosystem/http/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    HTTP / HTTPS
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ecosystem/web/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Web Framework
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ecosystem/template/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Templates
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ecosystem/net/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Networking (TCP/TLS)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ecosystem/email/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Email (SMTP)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ecosystem/crypto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Crypto (Hashing)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ecosystem/test/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Testing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ecosystem/bdd/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    BDD Testing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ecosystem/log/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Logging
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ecosystem/cli/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CLI Parsing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ecosystem/examples/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Examples
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../glossary/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Glossary
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../stability/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Stability
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../community/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Community
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../changelog/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Changelog
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../faq/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    FAQ
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#expressions-not-statements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Expressions, Not Statements
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#atoms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Atoms
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#lists" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Lists
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#defining-things" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Defining Things
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#conditionals" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Conditionals
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#recursion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recursion
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#higher-order-functions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Higher-Order Functions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#local-bindings" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Local Bindings
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#closures" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Closures
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mutation-and-why-its-rare" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Mutation and Why It's Rare
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#input-and-output" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Input and Output
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#where-to-go-next" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Where to Go Next
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="scheme-tutorial">Scheme Tutorial<a class="headerlink" href="#scheme-tutorial" title="Permanent link">&para;</a></h1>
+<p>A hands-on introduction to Scheme for programmers coming from Python,
+JavaScript, or similar languages. Open a REPL with <code>kaappi</code> and follow
+along. For a browser-based version with guided exercises, see the
+<a href="../../tour/">interactive tour</a>.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>kaappi
+</code></pre></div>
+<p>The REPL imports <code>(scheme base)</code> automatically, so you can start typing
+expressions right away.</p>
+<h2 id="expressions-not-statements">Expressions, Not Statements<a class="headerlink" href="#expressions-not-statements" title="Permanent link">&para;</a></h2>
+<p>In most languages you write <em>statements</em> that do things and <em>expressions</em>
+that produce values. In Scheme, there is only one category: everything is
+an expression, and every expression returns a value.</p>
+<p>The syntax is uniform: open parenthesis, operator, operands, close
+parenthesis. The operator always comes first.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="mi">3</span><span class="p">)</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c1">;=&gt; 5</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="mi">6</span><span class="w"> </span><span class="mi">7</span><span class="p">)</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1">;=&gt; 42</span>
+</code></pre></div>
+<p>There is no operator precedence to memorize. You nest expressions
+explicitly:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="mi">4</span><span class="p">))</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c1">;=&gt; 14</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">-</span><span class="w"> </span><span class="mi">10</span><span class="w"> </span><span class="mi">4</span><span class="p">))</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1">;=&gt; 18</span>
+</code></pre></div>
+<p>In Python you would write <code>2 + 3 * 4</code> and need to remember that <code>*</code> binds
+tighter than <code>+</code>. In Scheme the parentheses <em>are</em> the precedence, and they
+are always unambiguous.</p>
+<p>There is no <code>return</code> keyword. The value of the last expression in a body
+is the result. There are no semicolons and no curly braces. Parentheses
+are the only grouping mechanism, and you will grow to appreciate their
+regularity.</p>
+<h2 id="atoms">Atoms<a class="headerlink" href="#atoms" title="Permanent link">&para;</a></h2>
+<p>Scheme has several kinds of atomic (indivisible) values.</p>
+<p><strong>Numbers</strong> come in many flavors:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="mi">42</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="c1">;=&gt; 42</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="mf">3.14</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1">;=&gt; 3.14</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="mi">1/3</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c1">;=&gt; 1/3</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="mi">1/3</span><span class="w"> </span><span class="mi">1/6</span><span class="p">)</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="c1">;=&gt; 1/2</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="mi">3+4i</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1">;=&gt; 3+4i</span>
+</code></pre></div>
+<p>Integers, rationals, floating-point, and complex numbers are all
+first-class. Exact rationals like <code>1/3</code> stay exact -- no floating-point
+drift.</p>
+<p><strong>Strings</strong> use double quotes:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="s">&quot;hello, world&quot;</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="c1">;=&gt; &quot;hello, world&quot;</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nb">string-length</span><span class="w"> </span><span class="s">&quot;hello&quot;</span><span class="p">)</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1">;=&gt; 5</span>
+</code></pre></div>
+<p>Single quotes mean something else in Scheme (see below), so strings are
+always double-quoted.</p>
+<p><strong>Booleans</strong> are <code>#t</code> (true) and <code>#f</code> (false). The critical rule: only
+<code>#f</code> is false. Everything else -- including <code>0</code>, <code>""</code>, and <code>'()</code> -- is
+true.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="s">&quot;truthy&quot;</span><span class="w"> </span><span class="s">&quot;falsy&quot;</span><span class="p">)</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="c1">;=&gt; &quot;truthy&quot;</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="s">&quot;&quot;</span><span class="w"> </span><span class="s">&quot;truthy&quot;</span><span class="w"> </span><span class="s">&quot;falsy&quot;</span><span class="p">)</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1">;=&gt; &quot;truthy&quot;</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="no">#f</span><span class="w"> </span><span class="s">&quot;truthy&quot;</span><span class="w"> </span><span class="s">&quot;falsy&quot;</span><span class="p">)</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="c1">;=&gt; &quot;falsy&quot;</span>
+</code></pre></div>
+<p>This surprises Python programmers, where <code>0</code> and <code>""</code> are falsy.</p>
+<p><strong>Characters</strong> are written with <code>#\</code> prefix:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="sc">#\a</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="c1">;=&gt; #\a</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="sc">#\space</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1">;=&gt; #\space</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nb">char-alphabetic?</span><span class="w"> </span><span class="sc">#\Z</span><span class="p">)</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="c1">;=&gt; #t</span>
+</code></pre></div>
+<p><strong>Symbols</strong> are interned names. A symbol is not a string -- it is a
+lightweight identifier that is compared by identity, not by character
+content.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="ss">&#39;hello</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="c1">;=&gt; hello</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nb">symbol?</span><span class="w"> </span><span class="ss">&#39;hello</span><span class="p">)</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1">;=&gt; #t</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nb">eq?</span><span class="w"> </span><span class="ss">&#39;abc</span><span class="w"> </span><span class="ss">&#39;abc</span><span class="p">)</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="c1">;=&gt; #t</span>
+</code></pre></div>
+<p>The <code>'</code> (single quote) is called <em>quote</em>. It prevents the expression that
+follows from being evaluated. Without it, <code>hello</code> would be looked up as a
+variable name.</p>
+<h2 id="lists">Lists<a class="headerlink" href="#lists" title="Permanent link">&para;</a></h2>
+<p>Lists are Scheme's universal data structure. A quoted list looks like this:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="o">&#39;</span><span class="p">(</span><span class="mi">1</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="mi">3</span><span class="p">)</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="c1">;=&gt; (1 2 3)</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="o">&#39;</span><span class="p">(</span><span class="nv">red</span><span class="w"> </span><span class="nv">green</span><span class="w"> </span><span class="nv">blue</span><span class="p">)</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1">;=&gt; (red green blue)</span>
+</code></pre></div>
+<p>Under the hood, a list is a chain of <em>pairs</em>. Each pair holds one element
+and a pointer to the next pair. The chain ends with the empty list <code>'()</code>.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nb">cons</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="p">(</span><span class="nb">cons</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="p">(</span><span class="nb">cons</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="o">&#39;</span><span class="p">())))</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="c1">;=&gt; (1 2 3)</span>
+</code></pre></div>
+<p>Here is the structure as a box-and-pointer diagram:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>(cons 1 (cons 2 (cons 3 &#39;())))
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>  [1|*]--&gt;[2|*]--&gt;[3|/]
+</code></pre></div>
+<p>Each box is a pair. The left half holds the element, the right half points
+to the next pair. The <code>/</code> represents <code>'()</code>, the end of the list.</p>
+<p><code>car</code> extracts the first element, <code>cdr</code> extracts the rest:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nb">car</span><span class="w"> </span><span class="o">&#39;</span><span class="p">(</span><span class="nv">a</span><span class="w"> </span><span class="nv">b</span><span class="w"> </span><span class="nv">c</span><span class="p">))</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="c1">;=&gt; a</span>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nb">cdr</span><span class="w"> </span><span class="o">&#39;</span><span class="p">(</span><span class="nv">a</span><span class="w"> </span><span class="nv">b</span><span class="w"> </span><span class="nv">c</span><span class="p">))</span>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="c1">;=&gt; (b c)</span>
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nb">car</span><span class="w"> </span><span class="p">(</span><span class="nb">cdr</span><span class="w"> </span><span class="o">&#39;</span><span class="p">(</span><span class="nv">a</span><span class="w"> </span><span class="nv">b</span><span class="w"> </span><span class="nv">c</span><span class="p">)))</span>
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="c1">;=&gt; b</span>
+</code></pre></div>
+<p>The <code>list</code> procedure is shorthand for the <code>cons</code> chain:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nb">list</span><span class="w"> </span><span class="mi">10</span><span class="w"> </span><span class="mi">20</span><span class="w"> </span><span class="mi">30</span><span class="p">)</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="c1">;=&gt; (10 20 30)</span>
+</code></pre></div>
+<p>Lists serve double duty: they are data, and they are also how Scheme code
+is represented. The expression <code>(+ 1 2)</code> is a list of three elements.
+This property -- code is data -- is what makes Lisps uniquely powerful,
+but you do not need to exploit it yet.</p>
+<h2 id="defining-things">Defining Things<a class="headerlink" href="#defining-things" title="Permanent link">&para;</a></h2>
+<p>Use <code>define</code> to bind a name to a value:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="nv">pi</span><span class="w"> </span><span class="mf">3.14159</span><span class="p">)</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="nv">pi</span><span class="w"> </span><span class="mi">10</span><span class="w"> </span><span class="mi">10</span><span class="p">)</span>
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="c1">;=&gt; 314.159</span>
+</code></pre></div>
+<p>To define a function, put the name and parameters in a list:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="nf">square</span><span class="w"> </span><span class="nv">x</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="nv">x</span><span class="w"> </span><span class="nv">x</span><span class="p">))</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nf">square</span><span class="w"> </span><span class="mi">7</span><span class="p">)</span>
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="c1">;=&gt; 49</span>
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nf">square</span><span class="w"> </span><span class="mf">1.5</span><span class="p">)</span>
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="c1">;=&gt; 2.25</span>
+</code></pre></div>
+<p>This is shorthand for the more explicit form using <code>lambda</code>, which creates
+an anonymous function:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="nv">square</span><span class="w"> </span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="nf">x</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="nv">x</span><span class="w"> </span><span class="nv">x</span><span class="p">)))</span>
+</code></pre></div>
+<p><code>lambda</code> is like <code>=&gt;</code> in JavaScript or <code>lambda</code> in Python, but it can
+contain multiple expressions in its body. Functions are ordinary values --
+you can pass them as arguments, return them from other functions, and
+store them in data structures.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="nf">apply-twice</span><span class="w"> </span><span class="nv">f</span><span class="w"> </span><span class="nv">x</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nf">f</span><span class="w"> </span><span class="p">(</span><span class="nf">f</span><span class="w"> </span><span class="nv">x</span><span class="p">)))</span>
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nf">apply-twice</span><span class="w"> </span><span class="nv">square</span><span class="w"> </span><span class="mi">3</span><span class="p">)</span>
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="c1">;=&gt; 81</span>
+</code></pre></div>
+<p><code>(square 3)</code> gives <code>9</code>, then <code>(square 9)</code> gives <code>81</code>.</p>
+<h2 id="conditionals">Conditionals<a class="headerlink" href="#conditionals" title="Permanent link">&para;</a></h2>
+<p><code>if</code> is an expression with three parts: test, then, else.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">&gt;</span><span class="w"> </span><span class="mi">5</span><span class="w"> </span><span class="mi">3</span><span class="p">)</span><span class="w"> </span><span class="s">&quot;yes&quot;</span><span class="w"> </span><span class="s">&quot;no&quot;</span><span class="p">)</span>
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a><span class="c1">;=&gt; &quot;yes&quot;</span>
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="nb">abs</span><span class="w"> </span><span class="nv">x</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">&lt;</span><span class="w"> </span><span class="nv">x</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">-</span><span class="w"> </span><span class="nv">x</span><span class="p">)</span><span class="w"> </span><span class="nv">x</span><span class="p">))</span>
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nb">abs</span><span class="w"> </span><span class="mi">-7</span><span class="p">)</span>
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a><span class="c1">;=&gt; 7</span>
+</code></pre></div>
+<p>Compare to Python's ternary: <code>"yes" if 5 &gt; 3 else "no"</code>. The Scheme
+version puts the condition first and does not need keywords between the
+branches.</p>
+<p>For multiple branches, use <code>cond</code>. It works like an if/elif/else chain:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="nf">classify</span><span class="w"> </span><span class="nv">n</span><span class="p">)</span>
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a><span class="w">  </span><span class="o">...</span><span class="w">     </span><span class="p">(</span><span class="k">cond</span>
+<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a><span class="w">  </span><span class="o">...</span><span class="w">       </span><span class="p">((</span><span class="nb">&lt;</span><span class="w"> </span><span class="nv">n</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="s">&quot;negative&quot;</span><span class="p">)</span>
+<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a><span class="w">  </span><span class="o">...</span><span class="w">       </span><span class="p">((</span><span class="nb">=</span><span class="w"> </span><span class="nv">n</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="s">&quot;zero&quot;</span><span class="p">)</span>
+<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a><span class="w">  </span><span class="o">...</span><span class="w">       </span><span class="p">(</span><span class="k">else</span><span class="w"> </span><span class="s">&quot;positive&quot;</span><span class="p">)))</span>
+<a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nf">classify</span><span class="w"> </span><span class="mi">-3</span><span class="p">)</span>
+<a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a><span class="c1">;=&gt; &quot;negative&quot;</span>
+<a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nf">classify</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
+<a id="__codelineno-18-9" name="__codelineno-18-9" href="#__codelineno-18-9"></a><span class="c1">;=&gt; &quot;zero&quot;</span>
+<a id="__codelineno-18-10" name="__codelineno-18-10" href="#__codelineno-18-10"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nf">classify</span><span class="w"> </span><span class="mi">42</span><span class="p">)</span>
+<a id="__codelineno-18-11" name="__codelineno-18-11" href="#__codelineno-18-11"></a><span class="c1">;=&gt; &quot;positive&quot;</span>
+</code></pre></div>
+<p><code>and</code> and <code>or</code> short-circuit and return the deciding value, not just
+<code>#t</code>/<code>#f</code>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="k">and</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="mi">3</span><span class="p">)</span>
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a><span class="c1">;=&gt; 3</span>
+<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="k">and</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="no">#f</span><span class="w"> </span><span class="mi">3</span><span class="p">)</span>
+<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a><span class="c1">;=&gt; #f</span>
+<a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="k">or</span><span class="w"> </span><span class="no">#f</span><span class="w"> </span><span class="no">#f</span><span class="w"> </span><span class="mi">42</span><span class="p">)</span>
+<a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a><span class="c1">;=&gt; 42</span>
+<a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="k">or</span><span class="w"> </span><span class="no">#f</span><span class="w"> </span><span class="no">#f</span><span class="w"> </span><span class="no">#f</span><span class="p">)</span>
+<a id="__codelineno-19-8" name="__codelineno-19-8" href="#__codelineno-19-8"></a><span class="c1">;=&gt; #f</span>
+</code></pre></div>
+<p>This is useful for defaults: <code>(or (get-config "port") 8080)</code> returns
+the configured port or <code>8080</code> if the config returns <code>#f</code>.</p>
+<p><code>when</code> and <code>unless</code> are for side-effect-only conditionals where you do
+not need an else branch:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="k">when</span><span class="w"> </span><span class="p">(</span><span class="nb">&gt;</span><span class="w"> </span><span class="mi">5</span><span class="w"> </span><span class="mi">3</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">display</span><span class="w"> </span><span class="s">&quot;big</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">))</span>
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a><span class="nv">big</span>
+</code></pre></div>
+<h2 id="recursion">Recursion<a class="headerlink" href="#recursion" title="Permanent link">&para;</a></h2>
+<p>Scheme has no <code>for</code> or <code>while</code> loops. Repetition is expressed through
+recursion, and the language is designed to make this efficient.</p>
+<p>Start with factorial:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="nf">factorial</span><span class="w"> </span><span class="nv">n</span><span class="p">)</span>
+<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a><span class="w">  </span><span class="o">...</span><span class="w">     </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">=</span><span class="w"> </span><span class="nv">n</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
+<a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a><span class="w">  </span><span class="o">...</span><span class="w">         </span><span class="mi">1</span>
+<a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a><span class="w">  </span><span class="o">...</span><span class="w">         </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="nv">n</span><span class="w"> </span><span class="p">(</span><span class="nf">factorial</span><span class="w"> </span><span class="p">(</span><span class="nb">-</span><span class="w"> </span><span class="nv">n</span><span class="w"> </span><span class="mi">1</span><span class="p">)))))</span>
+<a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nf">factorial</span><span class="w"> </span><span class="mi">5</span><span class="p">)</span>
+<a id="__codelineno-21-6" name="__codelineno-21-6" href="#__codelineno-21-6"></a><span class="c1">;=&gt; 120</span>
+<a id="__codelineno-21-7" name="__codelineno-21-7" href="#__codelineno-21-7"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nf">factorial</span><span class="w"> </span><span class="mi">20</span><span class="p">)</span>
+<a id="__codelineno-21-8" name="__codelineno-21-8" href="#__codelineno-21-8"></a><span class="c1">;=&gt; 2432902008176640000</span>
+</code></pre></div>
+<p>Here is a function that computes the length of a list by walking the <code>cdr</code>
+chain:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="nf">my-length</span><span class="w"> </span><span class="nv">lst</span><span class="p">)</span>
+<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a><span class="w">  </span><span class="o">...</span><span class="w">     </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">null?</span><span class="w"> </span><span class="nv">lst</span><span class="p">)</span>
+<a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a><span class="w">  </span><span class="o">...</span><span class="w">         </span><span class="mi">0</span>
+<a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a><span class="w">  </span><span class="o">...</span><span class="w">         </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="p">(</span><span class="nf">my-length</span><span class="w"> </span><span class="p">(</span><span class="nb">cdr</span><span class="w"> </span><span class="nv">lst</span><span class="p">)))))</span>
+<a id="__codelineno-22-5" name="__codelineno-22-5" href="#__codelineno-22-5"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nf">my-length</span><span class="w"> </span><span class="o">&#39;</span><span class="p">(</span><span class="nv">a</span><span class="w"> </span><span class="nv">b</span><span class="w"> </span><span class="nv">c</span><span class="w"> </span><span class="nv">d</span><span class="p">))</span>
+<a id="__codelineno-22-6" name="__codelineno-22-6" href="#__codelineno-22-6"></a><span class="c1">;=&gt; 4</span>
+</code></pre></div>
+<p>Named <code>let</code> is the idiomatic way to write a loop. It defines a local
+function and calls it immediately:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="nv">loop</span><span class="w"> </span><span class="p">((</span><span class="nf">i</span><span class="w"> </span><span class="mi">1</span><span class="p">))</span>
+<a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a><span class="w">  </span><span class="o">...</span><span class="w">     </span><span class="p">(</span><span class="k">when</span><span class="w"> </span><span class="p">(</span><span class="nb">&lt;=</span><span class="w"> </span><span class="nv">i</span><span class="w"> </span><span class="mi">5</span><span class="p">)</span>
+<a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a><span class="w">  </span><span class="o">...</span><span class="w">       </span><span class="p">(</span><span class="nb">display</span><span class="w"> </span><span class="nv">i</span><span class="p">)</span>
+<a id="__codelineno-23-4" name="__codelineno-23-4" href="#__codelineno-23-4"></a><span class="w">  </span><span class="o">...</span><span class="w">       </span><span class="p">(</span><span class="nb">display</span><span class="w"> </span><span class="s">&quot; &quot;</span><span class="p">)</span>
+<a id="__codelineno-23-5" name="__codelineno-23-5" href="#__codelineno-23-5"></a><span class="w">  </span><span class="o">...</span><span class="w">       </span><span class="p">(</span><span class="nf">loop</span><span class="w"> </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="nv">i</span><span class="w"> </span><span class="mi">1</span><span class="p">))))</span>
+<a id="__codelineno-23-6" name="__codelineno-23-6" href="#__codelineno-23-6"></a><span class="mi">1</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="mi">4</span><span class="w"> </span><span class="mi">5</span>
+</code></pre></div>
+<p><code>loop</code> is just a name you choose -- it is bound to a function with
+parameter <code>i</code>, and calling <code>(loop (+ i 1))</code> recurses with the next value.</p>
+<p><strong>Tail calls.</strong> When a recursive call is the last thing a function does
+(it is in <em>tail position</em>), Scheme reuses the current stack frame instead
+of allocating a new one. This means tail-recursive functions run in
+constant space, like a loop.</p>
+<p>The factorial above is <em>not</em> tail-recursive because it still needs to
+multiply after the recursive call. Here is a tail-recursive version using
+an accumulator:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="nf">factorial</span><span class="w"> </span><span class="nv">n</span><span class="p">)</span>
+<a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a><span class="w">  </span><span class="o">...</span><span class="w">     </span><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="nv">loop</span><span class="w"> </span><span class="p">((</span><span class="nf">i</span><span class="w"> </span><span class="nv">n</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nf">acc</span><span class="w"> </span><span class="mi">1</span><span class="p">))</span>
+<a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a><span class="w">  </span><span class="o">...</span><span class="w">       </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">=</span><span class="w"> </span><span class="nv">i</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
+<a id="__codelineno-24-4" name="__codelineno-24-4" href="#__codelineno-24-4"></a><span class="w">  </span><span class="o">...</span><span class="w">           </span><span class="nv">acc</span>
+<a id="__codelineno-24-5" name="__codelineno-24-5" href="#__codelineno-24-5"></a><span class="w">  </span><span class="o">...</span><span class="w">           </span><span class="p">(</span><span class="nf">loop</span><span class="w"> </span><span class="p">(</span><span class="nb">-</span><span class="w"> </span><span class="nv">i</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="nv">acc</span><span class="w"> </span><span class="nv">i</span><span class="p">)))))</span>
+<a id="__codelineno-24-6" name="__codelineno-24-6" href="#__codelineno-24-6"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nf">factorial</span><span class="w"> </span><span class="mi">100</span><span class="p">)</span>
+<a id="__codelineno-24-7" name="__codelineno-24-7" href="#__codelineno-24-7"></a><span class="c1">;=&gt; 93326215443944152681699238856266700490715968264381621468592963895217599993229915608941463976156518286253697920827223758251185210916864000000000000000000000000</span>
+</code></pre></div>
+<p>The call to <code>loop</code> is the last expression -- nothing wraps it -- so it
+runs without growing the stack, even for <code>(factorial 100000)</code>.</p>
+<h2 id="higher-order-functions">Higher-Order Functions<a class="headerlink" href="#higher-order-functions" title="Permanent link">&para;</a></h2>
+<p>A higher-order function takes a function as an argument or returns one.
+This is where Scheme starts to feel powerful.</p>
+<p><code>map</code> applies a function to every element of a list:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nb">map</span><span class="w"> </span><span class="nv">square</span><span class="w"> </span><span class="o">&#39;</span><span class="p">(</span><span class="mi">1</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="mi">4</span><span class="w"> </span><span class="mi">5</span><span class="p">))</span>
+<a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a><span class="c1">;=&gt; (1 4 9 16 25)</span>
+<a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nb">map</span><span class="w"> </span><span class="nb">string-length</span><span class="w"> </span><span class="o">&#39;</span><span class="p">(</span><span class="s">&quot;cat&quot;</span><span class="w"> </span><span class="s">&quot;elephant&quot;</span><span class="w"> </span><span class="s">&quot;ox&quot;</span><span class="p">))</span>
+<a id="__codelineno-25-4" name="__codelineno-25-4" href="#__codelineno-25-4"></a><span class="c1">;=&gt; (3 8 2)</span>
+</code></pre></div>
+<p><code>filter</code> keeps elements that satisfy a predicate (requires
+<code>(import (srfi 1))</code> in a file; the REPL has it available):</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="k">import</span><span class="w"> </span><span class="p">(</span><span class="nf">srfi</span><span class="w"> </span><span class="mi">1</span><span class="p">))</span>
+<a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nb">filter</span><span class="w"> </span><span class="nb">even?</span><span class="w"> </span><span class="o">&#39;</span><span class="p">(</span><span class="mi">1</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="mi">4</span><span class="w"> </span><span class="mi">5</span><span class="w"> </span><span class="mi">6</span><span class="p">))</span>
+<a id="__codelineno-26-3" name="__codelineno-26-3" href="#__codelineno-26-3"></a><span class="c1">;=&gt; (2 4 6)</span>
+</code></pre></div>
+<p><code>fold</code> reduces a list to a single value by combining elements left to
+right:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nb">fold</span><span class="w"> </span><span class="nb">+</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="o">&#39;</span><span class="p">(</span><span class="mi">1</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="mi">4</span><span class="w"> </span><span class="mi">5</span><span class="p">))</span>
+<a id="__codelineno-27-2" name="__codelineno-27-2" href="#__codelineno-27-2"></a><span class="c1">;=&gt; 15</span>
+<a id="__codelineno-27-3" name="__codelineno-27-3" href="#__codelineno-27-3"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nb">fold</span><span class="w"> </span><span class="nb">max</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="o">&#39;</span><span class="p">(</span><span class="mi">3</span><span class="w"> </span><span class="mi">7</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="mi">9</span><span class="w"> </span><span class="mi">4</span><span class="p">))</span>
+<a id="__codelineno-27-4" name="__codelineno-27-4" href="#__codelineno-27-4"></a><span class="c1">;=&gt; 9</span>
+</code></pre></div>
+<p>You can use <code>lambda</code> inline when you need a one-off function:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nb">map</span><span class="w"> </span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="nf">x</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="nv">x</span><span class="w"> </span><span class="mi">10</span><span class="p">))</span><span class="w"> </span><span class="o">&#39;</span><span class="p">(</span><span class="mi">1</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="mi">3</span><span class="p">))</span>
+<a id="__codelineno-28-2" name="__codelineno-28-2" href="#__codelineno-28-2"></a><span class="c1">;=&gt; (11 12 13)</span>
+<a id="__codelineno-28-3" name="__codelineno-28-3" href="#__codelineno-28-3"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nb">filter</span><span class="w"> </span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="nf">s</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">&gt;</span><span class="w"> </span><span class="p">(</span><span class="nb">string-length</span><span class="w"> </span><span class="nv">s</span><span class="p">)</span><span class="w"> </span><span class="mi">3</span><span class="p">))</span>
+<a id="__codelineno-28-4" name="__codelineno-28-4" href="#__codelineno-28-4"></a><span class="w">  </span><span class="o">...</span><span class="w">           </span><span class="o">&#39;</span><span class="p">(</span><span class="s">&quot;hi&quot;</span><span class="w"> </span><span class="s">&quot;hello&quot;</span><span class="w"> </span><span class="s">&quot;hey&quot;</span><span class="w"> </span><span class="s">&quot;good morning&quot;</span><span class="p">))</span>
+<a id="__codelineno-28-5" name="__codelineno-28-5" href="#__codelineno-28-5"></a><span class="c1">;=&gt; (&quot;hello&quot; &quot;good morning&quot;)</span>
+</code></pre></div>
+<p>If you come from Python, <code>map</code> is like a list comprehension
+<code>[f(x) for x in lst]</code>, and <code>filter</code> is the <code>if</code> clause. In JavaScript,
+these are <code>.map()</code> and <code>.filter()</code>. Scheme had them first -- in 1975.</p>
+<p><code>for-each</code> is like <code>map</code> but discards the results. Use it for side
+effects:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nb">for-each</span><span class="w"> </span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="nf">name</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">display</span><span class="w"> </span><span class="s">&quot;Hello, &quot;</span><span class="p">)</span>
+<a id="__codelineno-29-2" name="__codelineno-29-2" href="#__codelineno-29-2"></a><span class="w">  </span><span class="o">...</span><span class="w">                             </span><span class="p">(</span><span class="nb">display</span><span class="w"> </span><span class="nv">name</span><span class="p">)</span>
+<a id="__codelineno-29-3" name="__codelineno-29-3" href="#__codelineno-29-3"></a><span class="w">  </span><span class="o">...</span><span class="w">                             </span><span class="p">(</span><span class="nb">newline</span><span class="p">))</span>
+<a id="__codelineno-29-4" name="__codelineno-29-4" href="#__codelineno-29-4"></a><span class="w">  </span><span class="o">...</span><span class="w">             </span><span class="o">&#39;</span><span class="p">(</span><span class="s">&quot;Alice&quot;</span><span class="w"> </span><span class="s">&quot;Bob&quot;</span><span class="w"> </span><span class="s">&quot;Carol&quot;</span><span class="p">))</span>
+<a id="__codelineno-29-5" name="__codelineno-29-5" href="#__codelineno-29-5"></a><span class="nv">Hello,</span><span class="w"> </span><span class="nv">Alice</span>
+<a id="__codelineno-29-6" name="__codelineno-29-6" href="#__codelineno-29-6"></a><span class="nv">Hello,</span><span class="w"> </span><span class="nv">Bob</span>
+<a id="__codelineno-29-7" name="__codelineno-29-7" href="#__codelineno-29-7"></a><span class="nv">Hello,</span><span class="w"> </span><span class="nv">Carol</span>
+</code></pre></div>
+<h2 id="local-bindings">Local Bindings<a class="headerlink" href="#local-bindings" title="Permanent link">&para;</a></h2>
+<p><code>let</code> binds names inside a limited scope. The bindings exist only within
+the body.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">((</span><span class="nf">x</span><span class="w"> </span><span class="mi">10</span><span class="p">)</span>
+<a id="__codelineno-30-2" name="__codelineno-30-2" href="#__codelineno-30-2"></a><span class="w">  </span><span class="o">...</span><span class="w">         </span><span class="p">(</span><span class="nf">y</span><span class="w"> </span><span class="mi">20</span><span class="p">))</span>
+<a id="__codelineno-30-3" name="__codelineno-30-3" href="#__codelineno-30-3"></a><span class="w">  </span><span class="o">...</span><span class="w">     </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="nv">x</span><span class="w"> </span><span class="nv">y</span><span class="p">))</span>
+<a id="__codelineno-30-4" name="__codelineno-30-4" href="#__codelineno-30-4"></a><span class="c1">;=&gt; 30</span>
+</code></pre></div>
+<p>The bindings are parallel: <code>x</code> and <code>y</code> are computed before either is
+visible. If you need sequential bindings where each can refer to the
+previous ones, use <code>let*</code>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-31-1" name="__codelineno-31-1" href="#__codelineno-31-1"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="k">let*</span><span class="w"> </span><span class="p">((</span><span class="nf">x</span><span class="w"> </span><span class="mi">3</span><span class="p">)</span>
+<a id="__codelineno-31-2" name="__codelineno-31-2" href="#__codelineno-31-2"></a><span class="w">  </span><span class="o">...</span><span class="w">          </span><span class="p">(</span><span class="nf">y</span><span class="w"> </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="nv">x</span><span class="w"> </span><span class="nv">x</span><span class="p">))</span>
+<a id="__codelineno-31-3" name="__codelineno-31-3" href="#__codelineno-31-3"></a><span class="w">  </span><span class="o">...</span><span class="w">          </span><span class="p">(</span><span class="nf">z</span><span class="w"> </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="nv">x</span><span class="w"> </span><span class="nv">y</span><span class="p">)))</span>
+<a id="__codelineno-31-4" name="__codelineno-31-4" href="#__codelineno-31-4"></a><span class="w">  </span><span class="o">...</span><span class="w">     </span><span class="nv">z</span><span class="p">)</span>
+<a id="__codelineno-31-5" name="__codelineno-31-5" href="#__codelineno-31-5"></a><span class="c1">;=&gt; 12</span>
+</code></pre></div>
+<p><code>letrec</code> allows mutual recursion. Here is a classic example:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-32-1" name="__codelineno-32-1" href="#__codelineno-32-1"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="k">letrec</span><span class="w"> </span><span class="p">((</span><span class="nf">my-even?</span><span class="w"> </span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="nf">n</span><span class="p">)</span>
+<a id="__codelineno-32-2" name="__codelineno-32-2" href="#__codelineno-32-2"></a><span class="w">  </span><span class="o">...</span><span class="w">                        </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">=</span><span class="w"> </span><span class="nv">n</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="no">#t</span><span class="w"> </span><span class="p">(</span><span class="nf">my-odd?</span><span class="w"> </span><span class="p">(</span><span class="nb">-</span><span class="w"> </span><span class="nv">n</span><span class="w"> </span><span class="mi">1</span><span class="p">)))))</span>
+<a id="__codelineno-32-3" name="__codelineno-32-3" href="#__codelineno-32-3"></a><span class="w">  </span><span class="o">...</span><span class="w">            </span><span class="p">(</span><span class="nf">my-odd?</span><span class="w"> </span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="nf">n</span><span class="p">)</span>
+<a id="__codelineno-32-4" name="__codelineno-32-4" href="#__codelineno-32-4"></a><span class="w">  </span><span class="o">...</span><span class="w">                       </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">=</span><span class="w"> </span><span class="nv">n</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="no">#f</span><span class="w"> </span><span class="p">(</span><span class="nf">my-even?</span><span class="w"> </span><span class="p">(</span><span class="nb">-</span><span class="w"> </span><span class="nv">n</span><span class="w"> </span><span class="mi">1</span><span class="p">))))))</span>
+<a id="__codelineno-32-5" name="__codelineno-32-5" href="#__codelineno-32-5"></a><span class="w">  </span><span class="o">...</span><span class="w">     </span><span class="p">(</span><span class="nf">my-even?</span><span class="w"> </span><span class="mi">10</span><span class="p">))</span>
+<a id="__codelineno-32-6" name="__codelineno-32-6" href="#__codelineno-32-6"></a><span class="c1">;=&gt; #t</span>
+</code></pre></div>
+<p>Scope in Scheme is <em>lexical</em>: a name is resolved where the function is
+defined, not where it is called. This is the same as Python and
+JavaScript (but not Emacs Lisp or Bash).</p>
+<p>Under the hood, <code>let</code> is syntactic sugar for an immediately-called
+<code>lambda</code>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-33-1" name="__codelineno-33-1" href="#__codelineno-33-1"></a><span class="c1">;; These two are equivalent:</span>
+<a id="__codelineno-33-2" name="__codelineno-33-2" href="#__codelineno-33-2"></a><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">((</span><span class="nf">x</span><span class="w"> </span><span class="mi">5</span><span class="p">))</span><span class="w"> </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="nv">x</span><span class="w"> </span><span class="nv">x</span><span class="p">))</span>
+<a id="__codelineno-33-3" name="__codelineno-33-3" href="#__codelineno-33-3"></a><span class="p">((</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="nf">x</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="nv">x</span><span class="w"> </span><span class="nv">x</span><span class="p">))</span><span class="w"> </span><span class="mi">5</span><span class="p">)</span>
+</code></pre></div>
+<h2 id="closures">Closures<a class="headerlink" href="#closures" title="Permanent link">&para;</a></h2>
+<p>A closure is a function that captures variables from its enclosing scope.
+When the enclosing scope exits, those variables live on inside the
+closure.</p>
+<p>Here is a function that creates a counter:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-34-1" name="__codelineno-34-1" href="#__codelineno-34-1"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="nf">make-counter</span><span class="p">)</span>
+<a id="__codelineno-34-2" name="__codelineno-34-2" href="#__codelineno-34-2"></a><span class="w">  </span><span class="o">...</span><span class="w">     </span><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">((</span><span class="nf">n</span><span class="w"> </span><span class="mi">0</span><span class="p">))</span>
+<a id="__codelineno-34-3" name="__codelineno-34-3" href="#__codelineno-34-3"></a><span class="w">  </span><span class="o">...</span><span class="w">       </span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="p">()</span>
+<a id="__codelineno-34-4" name="__codelineno-34-4" href="#__codelineno-34-4"></a><span class="w">  </span><span class="o">...</span><span class="w">         </span><span class="p">(</span><span class="k">set!</span><span class="w"> </span><span class="nv">n</span><span class="w"> </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="nv">n</span><span class="w"> </span><span class="mi">1</span><span class="p">))</span>
+<a id="__codelineno-34-5" name="__codelineno-34-5" href="#__codelineno-34-5"></a><span class="w">  </span><span class="o">...</span><span class="w">         </span><span class="nv">n</span><span class="p">)))</span>
+<a id="__codelineno-34-6" name="__codelineno-34-6" href="#__codelineno-34-6"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="nv">c</span><span class="w"> </span><span class="p">(</span><span class="nf">make-counter</span><span class="p">))</span>
+<a id="__codelineno-34-7" name="__codelineno-34-7" href="#__codelineno-34-7"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nf">c</span><span class="p">)</span>
+<a id="__codelineno-34-8" name="__codelineno-34-8" href="#__codelineno-34-8"></a><span class="c1">;=&gt; 1</span>
+<a id="__codelineno-34-9" name="__codelineno-34-9" href="#__codelineno-34-9"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nf">c</span><span class="p">)</span>
+<a id="__codelineno-34-10" name="__codelineno-34-10" href="#__codelineno-34-10"></a><span class="c1">;=&gt; 2</span>
+<a id="__codelineno-34-11" name="__codelineno-34-11" href="#__codelineno-34-11"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nf">c</span><span class="p">)</span>
+<a id="__codelineno-34-12" name="__codelineno-34-12" href="#__codelineno-34-12"></a><span class="c1">;=&gt; 3</span>
+</code></pre></div>
+<p>Each call to <code>make-counter</code> creates a fresh <code>n</code>. The returned <code>lambda</code>
+closes over that <code>n</code> and updates it on every call. This is the same
+mechanism as closures in JavaScript:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-35-1" name="__codelineno-35-1" href="#__codelineno-35-1"></a><span class="c1">// JavaScript equivalent</span>
+<a id="__codelineno-35-2" name="__codelineno-35-2" href="#__codelineno-35-2"></a><span class="kd">function</span><span class="w"> </span><span class="nx">makeCounter</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-35-3" name="__codelineno-35-3" href="#__codelineno-35-3"></a><span class="w">  </span><span class="kd">let</span><span class="w"> </span><span class="nx">n</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0</span><span class="p">;</span>
+<a id="__codelineno-35-4" name="__codelineno-35-4" href="#__codelineno-35-4"></a><span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="o">++</span><span class="nx">n</span><span class="p">;</span>
+<a id="__codelineno-35-5" name="__codelineno-35-5" href="#__codelineno-35-5"></a><span class="p">}</span>
+</code></pre></div>
+<p>Closures give you encapsulation without classes. The variable <code>n</code> is
+completely private -- no code outside the closure can access it.</p>
+<p>You can return multiple closures that share the same state:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-36-1" name="__codelineno-36-1" href="#__codelineno-36-1"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="nf">make-account</span><span class="w"> </span><span class="nv">balance</span><span class="p">)</span>
+<a id="__codelineno-36-2" name="__codelineno-36-2" href="#__codelineno-36-2"></a><span class="w">  </span><span class="o">...</span><span class="w">     </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="nf">deposit</span><span class="w"> </span><span class="nv">amount</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="k">set!</span><span class="w"> </span><span class="nv">balance</span><span class="w"> </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="nv">balance</span><span class="w"> </span><span class="nv">amount</span><span class="p">))</span><span class="w"> </span><span class="nv">balance</span><span class="p">)</span>
+<a id="__codelineno-36-3" name="__codelineno-36-3" href="#__codelineno-36-3"></a><span class="w">  </span><span class="o">...</span><span class="w">     </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="nf">withdraw</span><span class="w"> </span><span class="nv">amount</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="k">set!</span><span class="w"> </span><span class="nv">balance</span><span class="w"> </span><span class="p">(</span><span class="nb">-</span><span class="w"> </span><span class="nv">balance</span><span class="w"> </span><span class="nv">amount</span><span class="p">))</span><span class="w"> </span><span class="nv">balance</span><span class="p">)</span>
+<a id="__codelineno-36-4" name="__codelineno-36-4" href="#__codelineno-36-4"></a><span class="w">  </span><span class="o">...</span><span class="w">     </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="nf">check</span><span class="p">)</span><span class="w"> </span><span class="nv">balance</span><span class="p">)</span>
+<a id="__codelineno-36-5" name="__codelineno-36-5" href="#__codelineno-36-5"></a><span class="w">  </span><span class="o">...</span><span class="w">     </span><span class="p">(</span><span class="nb">list</span><span class="w"> </span><span class="nv">deposit</span><span class="w"> </span><span class="nv">withdraw</span><span class="w"> </span><span class="nv">check</span><span class="p">))</span>
+<a id="__codelineno-36-6" name="__codelineno-36-6" href="#__codelineno-36-6"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="nv">acct</span><span class="w"> </span><span class="p">(</span><span class="nf">make-account</span><span class="w"> </span><span class="mi">100</span><span class="p">))</span>
+<a id="__codelineno-36-7" name="__codelineno-36-7" href="#__codelineno-36-7"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">((</span><span class="nb">first</span><span class="w"> </span><span class="nv">acct</span><span class="p">)</span><span class="w"> </span><span class="mi">50</span><span class="p">)</span>
+<a id="__codelineno-36-8" name="__codelineno-36-8" href="#__codelineno-36-8"></a><span class="c1">;=&gt; 150</span>
+<a id="__codelineno-36-9" name="__codelineno-36-9" href="#__codelineno-36-9"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">((</span><span class="nb">second</span><span class="w"> </span><span class="nv">acct</span><span class="p">)</span><span class="w"> </span><span class="mi">30</span><span class="p">)</span>
+<a id="__codelineno-36-10" name="__codelineno-36-10" href="#__codelineno-36-10"></a><span class="c1">;=&gt; 120</span>
+<a id="__codelineno-36-11" name="__codelineno-36-11" href="#__codelineno-36-11"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">((</span><span class="nb">third</span><span class="w"> </span><span class="nv">acct</span><span class="p">))</span>
+<a id="__codelineno-36-12" name="__codelineno-36-12" href="#__codelineno-36-12"></a><span class="c1">;=&gt; 120</span>
+</code></pre></div>
+<h2 id="mutation-and-why-its-rare">Mutation and Why It's Rare<a class="headerlink" href="#mutation-and-why-its-rare" title="Permanent link">&para;</a></h2>
+<p>Scheme <em>can</em> mutate variables and data structures. The convention is that
+mutating operations end with <code>!</code> (pronounced "bang").</p>
+<p><code>set!</code> changes an existing binding:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-37-1" name="__codelineno-37-1" href="#__codelineno-37-1"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="nv">x</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span>
+<a id="__codelineno-37-2" name="__codelineno-37-2" href="#__codelineno-37-2"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="k">set!</span><span class="w"> </span><span class="nv">x</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span>
+<a id="__codelineno-37-3" name="__codelineno-37-3" href="#__codelineno-37-3"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="nv">x</span>
+<a id="__codelineno-37-4" name="__codelineno-37-4" href="#__codelineno-37-4"></a><span class="c1">;=&gt; 2</span>
+</code></pre></div>
+<p><code>set-car!</code> and <code>set-cdr!</code> modify the contents of a pair in place:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-38-1" name="__codelineno-38-1" href="#__codelineno-38-1"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="nv">p</span><span class="w"> </span><span class="p">(</span><span class="nb">list</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="mi">3</span><span class="p">))</span>
+<a id="__codelineno-38-2" name="__codelineno-38-2" href="#__codelineno-38-2"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nb">set-car!</span><span class="w"> </span><span class="nv">p</span><span class="w"> </span><span class="mi">99</span><span class="p">)</span>
+<a id="__codelineno-38-3" name="__codelineno-38-3" href="#__codelineno-38-3"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="nv">p</span>
+<a id="__codelineno-38-4" name="__codelineno-38-4" href="#__codelineno-38-4"></a><span class="c1">;=&gt; (99 2 3)</span>
+</code></pre></div>
+<p>However, idiomatic Scheme prefers building new values over mutating
+existing ones. Instead of changing a list, you construct a new list with
+the desired shape:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-39-1" name="__codelineno-39-1" href="#__codelineno-39-1"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="nf">replace-first</span><span class="w"> </span><span class="nv">lst</span><span class="w"> </span><span class="nv">val</span><span class="p">)</span>
+<a id="__codelineno-39-2" name="__codelineno-39-2" href="#__codelineno-39-2"></a><span class="w">  </span><span class="o">...</span><span class="w">     </span><span class="p">(</span><span class="nb">cons</span><span class="w"> </span><span class="nv">val</span><span class="w"> </span><span class="p">(</span><span class="nb">cdr</span><span class="w"> </span><span class="nv">lst</span><span class="p">)))</span>
+<a id="__codelineno-39-3" name="__codelineno-39-3" href="#__codelineno-39-3"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nf">replace-first</span><span class="w"> </span><span class="o">&#39;</span><span class="p">(</span><span class="mi">1</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="mi">3</span><span class="p">)</span><span class="w"> </span><span class="mi">99</span><span class="p">)</span>
+<a id="__codelineno-39-4" name="__codelineno-39-4" href="#__codelineno-39-4"></a><span class="c1">;=&gt; (99 2 3)</span>
+</code></pre></div>
+<p>Why avoid mutation? Pure functions -- those that depend only on their
+inputs and produce no side effects -- are easier to test, easier to reason
+about, and safer in concurrent programs. Save mutation for things that are
+inherently stateful: counters, caches, I/O buffers.</p>
+<h2 id="input-and-output">Input and Output<a class="headerlink" href="#input-and-output" title="Permanent link">&para;</a></h2>
+<p><code>display</code> writes a value in human-readable form. Strings appear without
+quotes, characters without the <code>#\</code> prefix.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-40-1" name="__codelineno-40-1" href="#__codelineno-40-1"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nb">display</span><span class="w"> </span><span class="s">&quot;The answer is &quot;</span><span class="p">)</span>
+<a id="__codelineno-40-2" name="__codelineno-40-2" href="#__codelineno-40-2"></a><span class="nv">The</span><span class="w"> </span><span class="nv">answer</span><span class="w"> </span><span class="nv">is</span>
+<a id="__codelineno-40-3" name="__codelineno-40-3" href="#__codelineno-40-3"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nb">display</span><span class="w"> </span><span class="mi">42</span><span class="p">)</span>
+<a id="__codelineno-40-4" name="__codelineno-40-4" href="#__codelineno-40-4"></a><span class="mi">42</span>
+<a id="__codelineno-40-5" name="__codelineno-40-5" href="#__codelineno-40-5"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nb">newline</span><span class="p">)</span>
+</code></pre></div>
+<p><code>write</code> produces machine-readable output that can be read back with
+<code>read</code>. Strings include quotes, characters include <code>#\</code>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-41-1" name="__codelineno-41-1" href="#__codelineno-41-1"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nb">write</span><span class="w"> </span><span class="s">&quot;hello&quot;</span><span class="p">)</span>
+<a id="__codelineno-41-2" name="__codelineno-41-2" href="#__codelineno-41-2"></a><span class="s">&quot;hello&quot;</span>
+<a id="__codelineno-41-3" name="__codelineno-41-3" href="#__codelineno-41-3"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nb">write</span><span class="w"> </span><span class="sc">#\a</span><span class="p">)</span>
+<a id="__codelineno-41-4" name="__codelineno-41-4" href="#__codelineno-41-4"></a><span class="sc">#\a</span>
+</code></pre></div>
+<p><code>read-line</code> reads a line of text from standard input:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-42-1" name="__codelineno-42-1" href="#__codelineno-42-1"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nb">display</span><span class="w"> </span><span class="s">&quot;Name: &quot;</span><span class="p">)</span>
+<a id="__codelineno-42-2" name="__codelineno-42-2" href="#__codelineno-42-2"></a><span class="nv">Name:</span>
+<a id="__codelineno-42-3" name="__codelineno-42-3" href="#__codelineno-42-3"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="nv">name</span><span class="w"> </span><span class="p">(</span><span class="nf">read-line</span><span class="p">))</span>
+<a id="__codelineno-42-4" name="__codelineno-42-4" href="#__codelineno-42-4"></a><span class="nv">Alice</span>
+<a id="__codelineno-42-5" name="__codelineno-42-5" href="#__codelineno-42-5"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nb">string-append</span><span class="w"> </span><span class="s">&quot;Hello, &quot;</span><span class="w"> </span><span class="nv">name</span><span class="w"> </span><span class="s">&quot;!&quot;</span><span class="p">)</span>
+<a id="__codelineno-42-6" name="__codelineno-42-6" href="#__codelineno-42-6"></a><span class="c1">;=&gt; &quot;Hello, Alice!&quot;</span>
+</code></pre></div>
+<p><code>read</code> reads and parses a complete Scheme datum:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-43-1" name="__codelineno-43-1" href="#__codelineno-43-1"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="nv">x</span><span class="w"> </span><span class="p">(</span><span class="nb">read</span><span class="p">))</span>
+<a id="__codelineno-43-2" name="__codelineno-43-2" href="#__codelineno-43-2"></a><span class="p">(</span><span class="mi">1</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="mi">3</span><span class="p">)</span>
+<a id="__codelineno-43-3" name="__codelineno-43-3" href="#__codelineno-43-3"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nb">car</span><span class="w"> </span><span class="nv">x</span><span class="p">)</span>
+<a id="__codelineno-43-4" name="__codelineno-43-4" href="#__codelineno-43-4"></a><span class="c1">;=&gt; 1</span>
+</code></pre></div>
+<p>String ports let you capture output as a string without writing to the
+console:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-44-1" name="__codelineno-44-1" href="#__codelineno-44-1"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="nv">port</span><span class="w"> </span><span class="p">(</span><span class="nb">open-output-string</span><span class="p">))</span>
+<a id="__codelineno-44-2" name="__codelineno-44-2" href="#__codelineno-44-2"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nb">write</span><span class="w"> </span><span class="mi">42</span><span class="w"> </span><span class="nv">port</span><span class="p">)</span>
+<a id="__codelineno-44-3" name="__codelineno-44-3" href="#__codelineno-44-3"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nb">write</span><span class="w"> </span><span class="s">&quot; bottles&quot;</span><span class="w"> </span><span class="nv">port</span><span class="p">)</span>
+<a id="__codelineno-44-4" name="__codelineno-44-4" href="#__codelineno-44-4"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nb">get-output-string</span><span class="w"> </span><span class="nv">port</span><span class="p">)</span>
+<a id="__codelineno-44-5" name="__codelineno-44-5" href="#__codelineno-44-5"></a><span class="c1">;=&gt; &quot;42\&quot; bottles\&quot;&quot;</span>
+</code></pre></div>
+<p>For file I/O, <code>with-input-from-file</code> redirects standard input to read
+from a file:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-45-1" name="__codelineno-45-1" href="#__codelineno-45-1"></a><span class="p">(</span><span class="nb">with-input-from-file</span><span class="w"> </span><span class="s">&quot;data.txt&quot;</span>
+<a id="__codelineno-45-2" name="__codelineno-45-2" href="#__codelineno-45-2"></a><span class="w">  </span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="p">()</span>
+<a id="__codelineno-45-3" name="__codelineno-45-3" href="#__codelineno-45-3"></a><span class="w">    </span><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="nv">loop</span><span class="w"> </span><span class="p">((</span><span class="nf">line</span><span class="w"> </span><span class="p">(</span><span class="nf">read-line</span><span class="p">)))</span>
+<a id="__codelineno-45-4" name="__codelineno-45-4" href="#__codelineno-45-4"></a><span class="w">      </span><span class="p">(</span><span class="k">unless</span><span class="w"> </span><span class="p">(</span><span class="nb">eof-object?</span><span class="w"> </span><span class="nv">line</span><span class="p">)</span>
+<a id="__codelineno-45-5" name="__codelineno-45-5" href="#__codelineno-45-5"></a><span class="w">        </span><span class="p">(</span><span class="nb">display</span><span class="w"> </span><span class="nv">line</span><span class="p">)</span>
+<a id="__codelineno-45-6" name="__codelineno-45-6" href="#__codelineno-45-6"></a><span class="w">        </span><span class="p">(</span><span class="nb">newline</span><span class="p">)</span>
+<a id="__codelineno-45-7" name="__codelineno-45-7" href="#__codelineno-45-7"></a><span class="w">        </span><span class="p">(</span><span class="nf">loop</span><span class="w"> </span><span class="p">(</span><span class="nf">read-line</span><span class="p">))))))</span>
+</code></pre></div>
+<h2 id="where-to-go-next">Where to Go Next<a class="headerlink" href="#where-to-go-next" title="Permanent link">&para;</a></h2>
+<p>This tutorial covered the core of Scheme: expressions, data types, lists,
+functions, recursion, higher-order functions, closures, and I/O. There is
+more to explore.</p>
+<ul>
+<li><a href="../language/">Language Reference</a> -- quick syntax lookup for everything
+  shown here plus macros, continuations, records, exceptions, and lazy
+  evaluation</li>
+<li><a href="../../procedures/">Procedure Reference</a> -- detailed documentation
+  for every built-in procedure, organized by category</li>
+<li><a href="../libraries/">Libraries</a> -- how to import SRFIs and write your own
+  libraries</li>
+<li><a href="../tips/">Tips</a> -- performance tips, common pitfalls, and REPL workflow</li>
+<li><a href="../../playground/">Browser Playground</a> -- edit and run Scheme online
+  with example programs</li>
+</ul>
+<hr />
+<p>Next: <a href="../language/">Language Reference</a></p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      MIT License &mdash; Built with Zig
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/kaappi/kaappi" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/orgs/kaappi/discussions" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path d="M1.75 1h8.5c.966 0 1.75.784 1.75 1.75v5.5A1.75 1.75 0 0 1 10.25 10H7.061l-2.574 2.573A1.458 1.458 0 0 1 2 11.543V10h-.25A1.75 1.75 0 0 1 0 8.25v-5.5C0 1.784.784 1 1.75 1M1.5 2.75v5.5c0 .138.112.25.25.25h1a.75.75 0 0 1 .75.75v2.19l2.72-2.72a.75.75 0 0 1 .53-.22h3.5a.25.25 0 0 0 .25-.25v-5.5a.25.25 0 0 0-.25-.25h-8.5a.25.25 0 0 0-.25.25m13 2a.25.25 0 0 0-.25-.25h-.5a.75.75 0 0 1 0-1.5h.5c.966 0 1.75.784 1.75 1.75v5.5A1.75 1.75 0 0 1 14.25 12H14v1.543a1.458 1.458 0 0 1-2.487 1.03L9.22 12.28a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l2.22 2.22v-2.19a.75.75 0 0 1 .75-.75h1a.25.25 0 0 0 .25-.25Z"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.instant", "navigation.tracking", "navigation.sections", "navigation.expand", "navigation.top", "search.suggest", "search.highlight", "content.code.copy", "toc.follow"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

@@ -1,0 +1,6510 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="A complete R7RS-small Scheme implementation written in Zig">
+      
+      
+      
+        <link rel="canonical" href="https://kaappi-lang.org/procedures/">
+      
+      
+        <link rel="prev" href="../guide/troubleshooting/">
+      
+      
+        <link rel="next" href="numbers/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Procedure Reference - Kaappi</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,700,700i%7CJetBrains+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="amber">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#procedure-reference" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Kaappi" class="md-header__button md-logo" aria-label="Kaappi" data-md-component="logo">
+      
+  <img src="../assets/logo.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Kaappi
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Procedure Reference
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/kaappi/kaappi" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    kaappi/kaappi
+  </div>
+</a>
+      </div>
+    
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="amber"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="teal" data-md-color-accent="amber"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Kaappi" class="md-nav__button md-logo" aria-label="Kaappi" data-md-component="logo">
+      
+  <img src="../assets/logo.svg" alt="logo">
+
+    </a>
+    Kaappi
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/kaappi/kaappi" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    kaappi/kaappi
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../playground/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Try It
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="https://kaappi-lang.org/tour/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tour
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../download/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Download
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guide
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Guide
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    User Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../guide/installation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Installation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../guide/first-program/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Your First Program
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../guide/tutorial/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Scheme Tutorial
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../guide/language/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Language Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../guide/libraries/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Libraries
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../guide/library-authoring/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Library Authoring
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../guide/c-extensions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    C Extensions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../guide/zig-extensions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Zig Extensions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../guide/srfi-support/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SRFI Support
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../guide/advanced/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Advanced Features
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../guide/cli/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CLI Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../guide/debugging/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Debugging
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../guide/repl/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    REPL Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../guide/editors/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Editor Support
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../guide/tips/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tips
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../guide/migrating/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Migrating from Other Schemes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../guide/security/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Security
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../guide/deployment/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deployment
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../guide/troubleshooting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Troubleshooting
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Procedures
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Procedures
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Procedure Reference
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Procedure Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#numbers-and-arithmetic" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Numbers and Arithmetic
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pairs-and-lists" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pairs and Lists
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Pairs and Lists">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#cxr-compositions-3-and-4-level" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CXR Compositions (3- and 4-level)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#srfi-1-list-library" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SRFI-1 List Library
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#strings" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Strings
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#srfi-13-string-library" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SRFI-13 String Library
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#characters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Characters
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#vectors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Vectors
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#srfi-133-vector-library" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SRFI-133 Vector Library
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bytevectors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Bytevectors
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ports-and-io" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ports and I/O
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#control-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Control Flow
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#type-checking-and-equivalence" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Type Checking and Equivalence
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#hash-tables-srfi-69" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Hash Tables (SRFI-69)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#system-and-environment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        System and Environment
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#syntax-forms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Syntax Forms
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#srfi-18-threads" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SRFI-18 Threads
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#kaappi-extensions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Kaappi Extensions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Kaappi Extensions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ffi-foreign-function-interface" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        FFI (Foreign Function Interface)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#green-threads-fibers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Green Threads (Fibers)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#other-primitives" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Other Primitives
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Other Primitives">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#lazy-evaluation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Lazy Evaluation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#records-internal-primitives" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Records (Internal Primitives)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#random-numbers-srfi-27" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Random Numbers (SRFI-27)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#srfi-170-filesystem" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SRFI-170 Filesystem
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="numbers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Numbers and Arithmetic
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="pairs-and-lists/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pairs and Lists
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="srfi-1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SRFI-1 List Library
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="strings/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Strings
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="srfi-13/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SRFI-13 String Library
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="characters/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Characters
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="vectors/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Vectors
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="srfi-133/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SRFI-133 Vector Library
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="bytevectors/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Bytevectors
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="ports-and-io/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ports and I/O
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="control-flow/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Control Flow
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="type-checking/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Type Checking
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="hash-tables/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hash Tables
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="system/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    System and Environment
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="syntax-forms/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Syntax Forms
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="threads/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SRFI-18 Threads
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="extensions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Kaappi Extensions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="other/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Other Primitives
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="srfi-170/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SRFI-170 Filesystem
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cookbook
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Cookbook
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cookbook/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cookbook
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cookbook/rest-api/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Build a REST API
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cookbook/html-templates/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Serve HTML with Templates
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cookbook/json-processing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Process JSON Data
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cookbook/csv-processing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Parse and Generate CSV
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cookbook/testing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Write Tests
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cookbook/cli-tool/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Build a CLI Tool
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ecosystem
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Ecosystem
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ecosystem/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ecosystem
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ecosystem/thottam/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Package Manager (thottam)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ecosystem/json/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    JSON
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ecosystem/toml/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    TOML
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ecosystem/yaml/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    YAML
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ecosystem/csv/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CSV
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ecosystem/redis/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Redis
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ecosystem/pg/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PostgreSQL
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ecosystem/sqlite/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SQLite
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ecosystem/http/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    HTTP / HTTPS
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ecosystem/web/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Web Framework
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ecosystem/template/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Templates
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ecosystem/net/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Networking (TCP/TLS)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ecosystem/email/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Email (SMTP)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ecosystem/crypto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Crypto (Hashing)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ecosystem/test/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Testing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ecosystem/bdd/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    BDD Testing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ecosystem/log/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Logging
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ecosystem/cli/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CLI Parsing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ecosystem/examples/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Examples
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../glossary/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Glossary
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../stability/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Stability
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../community/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Community
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../changelog/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Changelog
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../faq/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    FAQ
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#numbers-and-arithmetic" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Numbers and Arithmetic
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pairs-and-lists" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pairs and Lists
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Pairs and Lists">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#cxr-compositions-3-and-4-level" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CXR Compositions (3- and 4-level)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#srfi-1-list-library" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SRFI-1 List Library
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#strings" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Strings
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#srfi-13-string-library" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SRFI-13 String Library
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#characters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Characters
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#vectors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Vectors
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#srfi-133-vector-library" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SRFI-133 Vector Library
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bytevectors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Bytevectors
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ports-and-io" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ports and I/O
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#control-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Control Flow
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#type-checking-and-equivalence" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Type Checking and Equivalence
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#hash-tables-srfi-69" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Hash Tables (SRFI-69)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#system-and-environment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        System and Environment
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#syntax-forms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Syntax Forms
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#srfi-18-threads" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SRFI-18 Threads
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#kaappi-extensions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Kaappi Extensions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Kaappi Extensions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ffi-foreign-function-interface" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        FFI (Foreign Function Interface)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#green-threads-fibers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Green Threads (Fibers)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#other-primitives" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Other Primitives
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Other Primitives">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#lazy-evaluation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Lazy Evaluation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#records-internal-primitives" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Records (Internal Primitives)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#random-numbers-srfi-27" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Random Numbers (SRFI-27)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#srfi-170-filesystem" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SRFI-170 Filesystem
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="procedure-reference">Procedure Reference<a class="headerlink" href="#procedure-reference" title="Permanent link">&para;</a></h1>
+<p>This document lists all built-in procedures organized by domain. Each procedure
+shows its arity (<code>N</code> = exactly N arguments, <code>N+</code> = N or more arguments) and a
+short description. Click any category heading for detailed documentation with
+examples.</p>
+<hr />
+<h2 id="numbers-and-arithmetic"><a href="numbers/">Numbers and Arithmetic</a><a class="headerlink" href="#numbers-and-arithmetic" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Procedure</th>
+<th>Arity</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="numbers/#plus"><code>+</code></a></td>
+<td>0+</td>
+<td>Sum of all arguments (0 with no args)</td>
+</tr>
+<tr>
+<td><a href="numbers/#minus"><code>-</code></a></td>
+<td>1+</td>
+<td>Negation (1 arg) or subtraction (2+ args)</td>
+</tr>
+<tr>
+<td><a href="numbers/#star"><code>*</code></a></td>
+<td>0+</td>
+<td>Product of all arguments (1 with no args)</td>
+</tr>
+<tr>
+<td><a href="numbers/#slash"><code>/</code></a></td>
+<td>1+</td>
+<td>Reciprocal (1 arg) or division (2+ args)</td>
+</tr>
+<tr>
+<td><a href="numbers/#quotient"><code>quotient</code></a></td>
+<td>2</td>
+<td>Integer division truncated toward zero</td>
+</tr>
+<tr>
+<td><a href="numbers/#remainder"><code>remainder</code></a></td>
+<td>2</td>
+<td>Remainder after truncated division</td>
+</tr>
+<tr>
+<td><a href="numbers/#modulo"><code>modulo</code></a></td>
+<td>2</td>
+<td>Modulo (sign follows divisor)</td>
+</tr>
+<tr>
+<td><a href="numbers/#num-equal"><code>=</code></a></td>
+<td>2+</td>
+<td>Numeric equality</td>
+</tr>
+<tr>
+<td><a href="numbers/#num-lt"><code>&lt;</code></a></td>
+<td>2+</td>
+<td>Monotonically increasing</td>
+</tr>
+<tr>
+<td><a href="numbers/#num-gt"><code>&gt;</code></a></td>
+<td>2+</td>
+<td>Monotonically decreasing</td>
+</tr>
+<tr>
+<td><a href="numbers/#num-le"><code>&lt;=</code></a></td>
+<td>2+</td>
+<td>Monotonically non-decreasing</td>
+</tr>
+<tr>
+<td><a href="numbers/#num-ge"><code>&gt;=</code></a></td>
+<td>2+</td>
+<td>Monotonically non-increasing</td>
+</tr>
+<tr>
+<td><a href="numbers/#zero"><code>zero?</code></a></td>
+<td>1</td>
+<td>True if argument is zero</td>
+</tr>
+<tr>
+<td><a href="numbers/#positive"><code>positive?</code></a></td>
+<td>1</td>
+<td>True if argument is positive</td>
+</tr>
+<tr>
+<td><a href="numbers/#negative"><code>negative?</code></a></td>
+<td>1</td>
+<td>True if argument is negative</td>
+</tr>
+<tr>
+<td><a href="numbers/#abs"><code>abs</code></a></td>
+<td>1</td>
+<td>Absolute value</td>
+</tr>
+<tr>
+<td><a href="numbers/#min"><code>min</code></a></td>
+<td>1+</td>
+<td>Minimum of arguments</td>
+</tr>
+<tr>
+<td><a href="numbers/#max"><code>max</code></a></td>
+<td>1+</td>
+<td>Maximum of arguments</td>
+</tr>
+<tr>
+<td><a href="numbers/#even"><code>even?</code></a></td>
+<td>1</td>
+<td>True if integer is even</td>
+</tr>
+<tr>
+<td><a href="numbers/#odd"><code>odd?</code></a></td>
+<td>1</td>
+<td>True if integer is odd</td>
+</tr>
+<tr>
+<td><a href="numbers/#gcd"><code>gcd</code></a></td>
+<td>0+</td>
+<td>Greatest common divisor</td>
+</tr>
+<tr>
+<td><a href="numbers/#lcm"><code>lcm</code></a></td>
+<td>0+</td>
+<td>Least common multiple</td>
+</tr>
+<tr>
+<td><a href="numbers/#floor"><code>floor</code></a></td>
+<td>1</td>
+<td>Largest integer not greater than argument</td>
+</tr>
+<tr>
+<td><a href="numbers/#ceiling"><code>ceiling</code></a></td>
+<td>1</td>
+<td>Smallest integer not less than argument</td>
+</tr>
+<tr>
+<td><a href="numbers/#truncate"><code>truncate</code></a></td>
+<td>1</td>
+<td>Integer part, truncated toward zero</td>
+</tr>
+<tr>
+<td><a href="numbers/#round"><code>round</code></a></td>
+<td>1</td>
+<td>Round to nearest integer (banker's rounding)</td>
+</tr>
+<tr>
+<td><a href="numbers/#exact-pred"><code>exact?</code></a></td>
+<td>1</td>
+<td>True if number is exact</td>
+</tr>
+<tr>
+<td><a href="numbers/#inexact-pred"><code>inexact?</code></a></td>
+<td>1</td>
+<td>True if number is inexact</td>
+</tr>
+<tr>
+<td><a href="numbers/#exact-integer"><code>exact-integer?</code></a></td>
+<td>1</td>
+<td>True if number is an exact integer</td>
+</tr>
+<tr>
+<td><a href="numbers/#exact"><code>exact</code></a></td>
+<td>1</td>
+<td>Convert to exact representation</td>
+</tr>
+<tr>
+<td><a href="numbers/#inexact"><code>inexact</code></a></td>
+<td>1</td>
+<td>Convert to inexact representation</td>
+</tr>
+<tr>
+<td><a href="numbers/#exact-to-inexact"><code>exact-&gt;inexact</code></a></td>
+<td>1</td>
+<td>Alias for <code>inexact</code></td>
+</tr>
+<tr>
+<td><a href="numbers/#inexact-to-exact"><code>inexact-&gt;exact</code></a></td>
+<td>1</td>
+<td>Alias for <code>exact</code></td>
+</tr>
+<tr>
+<td><a href="numbers/#expt"><code>expt</code></a></td>
+<td>2</td>
+<td>Raise base to a power</td>
+</tr>
+<tr>
+<td><a href="numbers/#square"><code>square</code></a></td>
+<td>1</td>
+<td>Square of a number</td>
+</tr>
+<tr>
+<td><a href="numbers/#sqrt"><code>sqrt</code></a></td>
+<td>1</td>
+<td>Square root (complex result for negative reals)</td>
+</tr>
+<tr>
+<td><a href="numbers/#exact-integer-sqrt"><code>exact-integer-sqrt</code></a></td>
+<td>1</td>
+<td>Integer square root, returns root and remainder via values</td>
+</tr>
+<tr>
+<td><a href="numbers/#sin"><code>sin</code></a></td>
+<td>1</td>
+<td>Sine (radians)</td>
+</tr>
+<tr>
+<td><a href="numbers/#cos"><code>cos</code></a></td>
+<td>1</td>
+<td>Cosine (radians)</td>
+</tr>
+<tr>
+<td><a href="numbers/#tan"><code>tan</code></a></td>
+<td>1</td>
+<td>Tangent (radians)</td>
+</tr>
+<tr>
+<td><a href="numbers/#asin"><code>asin</code></a></td>
+<td>1</td>
+<td>Arcsine</td>
+</tr>
+<tr>
+<td><a href="numbers/#acos"><code>acos</code></a></td>
+<td>1</td>
+<td>Arccosine</td>
+</tr>
+<tr>
+<td><a href="numbers/#atan"><code>atan</code></a></td>
+<td>1+</td>
+<td>Arctangent (1 arg) or two-argument atan2</td>
+</tr>
+<tr>
+<td><a href="numbers/#exp"><code>exp</code></a></td>
+<td>1</td>
+<td>Exponential (e^x)</td>
+</tr>
+<tr>
+<td><a href="numbers/#log"><code>log</code></a></td>
+<td>1+</td>
+<td>Natural log (1 arg) or log base b (2 args)</td>
+</tr>
+<tr>
+<td><a href="numbers/#finite"><code>finite?</code></a></td>
+<td>1</td>
+<td>True if number is finite</td>
+</tr>
+<tr>
+<td><a href="numbers/#infinite"><code>infinite?</code></a></td>
+<td>1</td>
+<td>True if number is infinite</td>
+</tr>
+<tr>
+<td><a href="numbers/#nan"><code>nan?</code></a></td>
+<td>1</td>
+<td>True if number is NaN</td>
+</tr>
+<tr>
+<td><a href="numbers/#number-to-string"><code>number-&gt;string</code></a></td>
+<td>1</td>
+<td>Convert number to string representation</td>
+</tr>
+<tr>
+<td><a href="numbers/#string-to-number"><code>string-&gt;number</code></a></td>
+<td>1+</td>
+<td>Parse string as number (optional radix)</td>
+</tr>
+<tr>
+<td><a href="numbers/#floor-quotient"><code>floor-quotient</code></a></td>
+<td>2</td>
+<td>Quotient from floor division</td>
+</tr>
+<tr>
+<td><a href="numbers/#floor-remainder"><code>floor-remainder</code></a></td>
+<td>2</td>
+<td>Remainder from floor division</td>
+</tr>
+<tr>
+<td><a href="numbers/#floor-div"><code>floor/</code></a></td>
+<td>2</td>
+<td>Floor division returning quotient and remainder</td>
+</tr>
+<tr>
+<td><a href="numbers/#truncate-quotient"><code>truncate-quotient</code></a></td>
+<td>2</td>
+<td>Quotient from truncated division</td>
+</tr>
+<tr>
+<td><a href="numbers/#truncate-remainder"><code>truncate-remainder</code></a></td>
+<td>2</td>
+<td>Remainder from truncated division</td>
+</tr>
+<tr>
+<td><a href="numbers/#truncate-div"><code>truncate/</code></a></td>
+<td>2</td>
+<td>Truncated division returning quotient and remainder</td>
+</tr>
+<tr>
+<td><a href="numbers/#numerator"><code>numerator</code></a></td>
+<td>1</td>
+<td>Numerator of a rational (identity for integers)</td>
+</tr>
+<tr>
+<td><a href="numbers/#denominator"><code>denominator</code></a></td>
+<td>1</td>
+<td>Denominator of a rational (1 for integers)</td>
+</tr>
+<tr>
+<td><a href="numbers/#rationalize"><code>rationalize</code></a></td>
+<td>2</td>
+<td>Simplest rational within tolerance</td>
+</tr>
+<tr>
+<td><a href="numbers/#make-rectangular"><code>make-rectangular</code></a></td>
+<td>2</td>
+<td>Construct complex from real and imaginary parts</td>
+</tr>
+<tr>
+<td><a href="numbers/#make-polar"><code>make-polar</code></a></td>
+<td>2</td>
+<td>Construct complex from magnitude and angle</td>
+</tr>
+<tr>
+<td><a href="numbers/#real-part"><code>real-part</code></a></td>
+<td>1</td>
+<td>Real part of a complex number</td>
+</tr>
+<tr>
+<td><a href="numbers/#imag-part"><code>imag-part</code></a></td>
+<td>1</td>
+<td>Imaginary part of a complex number</td>
+</tr>
+<tr>
+<td><a href="numbers/#magnitude"><code>magnitude</code></a></td>
+<td>1</td>
+<td>Magnitude (absolute value) of a complex number</td>
+</tr>
+<tr>
+<td><a href="numbers/#angle"><code>angle</code></a></td>
+<td>1</td>
+<td>Angle (argument) of a complex number</td>
+</tr>
+</tbody>
+</table>
+<h2 id="pairs-and-lists"><a href="pairs-and-lists/">Pairs and Lists</a><a class="headerlink" href="#pairs-and-lists" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Procedure</th>
+<th>Arity</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="pairs-and-lists/#cons"><code>cons</code></a></td>
+<td>2</td>
+<td>Construct a pair</td>
+</tr>
+<tr>
+<td><a href="pairs-and-lists/#car"><code>car</code></a></td>
+<td>1</td>
+<td>First element of a pair</td>
+</tr>
+<tr>
+<td><a href="pairs-and-lists/#cdr"><code>cdr</code></a></td>
+<td>1</td>
+<td>Second element of a pair</td>
+</tr>
+<tr>
+<td><a href="pairs-and-lists/#set-car"><code>set-car!</code></a></td>
+<td>2</td>
+<td>Mutate the car of a pair</td>
+</tr>
+<tr>
+<td><a href="pairs-and-lists/#set-cdr"><code>set-cdr!</code></a></td>
+<td>2</td>
+<td>Mutate the cdr of a pair</td>
+</tr>
+<tr>
+<td><a href="pairs-and-lists/#list"><code>list</code></a></td>
+<td>0+</td>
+<td>Construct a list from arguments</td>
+</tr>
+<tr>
+<td><a href="pairs-and-lists/#length"><code>length</code></a></td>
+<td>1</td>
+<td>Length of a proper list</td>
+</tr>
+<tr>
+<td><a href="pairs-and-lists/#append"><code>append</code></a></td>
+<td>0+</td>
+<td>Append lists together</td>
+</tr>
+<tr>
+<td><a href="pairs-and-lists/#reverse"><code>reverse</code></a></td>
+<td>1</td>
+<td>Reverse a list</td>
+</tr>
+<tr>
+<td><a href="pairs-and-lists/#caar"><code>caar</code></a></td>
+<td>1</td>
+<td><code>(car (car x))</code></td>
+</tr>
+<tr>
+<td><a href="pairs-and-lists/#cadr"><code>cadr</code></a></td>
+<td>1</td>
+<td><code>(car (cdr x))</code></td>
+</tr>
+<tr>
+<td><a href="pairs-and-lists/#cdar"><code>cdar</code></a></td>
+<td>1</td>
+<td><code>(cdr (car x))</code></td>
+</tr>
+<tr>
+<td><a href="pairs-and-lists/#cddr"><code>cddr</code></a></td>
+<td>1</td>
+<td><code>(cdr (cdr x))</code></td>
+</tr>
+<tr>
+<td><a href="pairs-and-lists/#list-ref"><code>list-ref</code></a></td>
+<td>2</td>
+<td>Element at index k</td>
+</tr>
+<tr>
+<td><a href="pairs-and-lists/#list-tail"><code>list-tail</code></a></td>
+<td>2</td>
+<td>Sublist starting at index k</td>
+</tr>
+<tr>
+<td><a href="pairs-and-lists/#list-set"><code>list-set!</code></a></td>
+<td>3</td>
+<td>Set element at index k</td>
+</tr>
+<tr>
+<td><a href="pairs-and-lists/#list-copy"><code>list-copy</code></a></td>
+<td>1</td>
+<td>Shallow copy of a list</td>
+</tr>
+<tr>
+<td><a href="pairs-and-lists/#make-list"><code>make-list</code></a></td>
+<td>1+</td>
+<td>Create list of k elements (optional fill value)</td>
+</tr>
+<tr>
+<td><a href="pairs-and-lists/#member"><code>member</code></a></td>
+<td>2+</td>
+<td>Search by <code>equal?</code> (optional comparator)</td>
+</tr>
+<tr>
+<td><a href="pairs-and-lists/#memq"><code>memq</code></a></td>
+<td>2</td>
+<td>Search by <code>eq?</code></td>
+</tr>
+<tr>
+<td><a href="pairs-and-lists/#memv"><code>memv</code></a></td>
+<td>2</td>
+<td>Search by <code>eqv?</code></td>
+</tr>
+<tr>
+<td><a href="pairs-and-lists/#assoc"><code>assoc</code></a></td>
+<td>2+</td>
+<td>Association list lookup by <code>equal?</code> (optional comparator)</td>
+</tr>
+<tr>
+<td><a href="pairs-and-lists/#assq"><code>assq</code></a></td>
+<td>2</td>
+<td>Association list lookup by <code>eq?</code></td>
+</tr>
+<tr>
+<td><a href="pairs-and-lists/#assv"><code>assv</code></a></td>
+<td>2</td>
+<td>Association list lookup by <code>eqv?</code></td>
+</tr>
+<tr>
+<td><a href="pairs-and-lists/#map"><code>map</code></a></td>
+<td>2+</td>
+<td>Apply procedure to corresponding elements of lists</td>
+</tr>
+<tr>
+<td><a href="pairs-and-lists/#for-each"><code>for-each</code></a></td>
+<td>2+</td>
+<td>Like <code>map</code> but for side effects only</td>
+</tr>
+<tr>
+<td><a href="pairs-and-lists/#apply"><code>apply</code></a></td>
+<td>2+</td>
+<td>Apply procedure to a list of arguments</td>
+</tr>
+</tbody>
+</table>
+<h3 id="cxr-compositions-3-and-4-level">CXR Compositions (3- and 4-level)<a class="headerlink" href="#cxr-compositions-3-and-4-level" title="Permanent link">&para;</a></h3>
+<p>All 24 compositions of <code>car</code> and <code>cdr</code> up to four deep. Each takes exactly 1 argument.
+See <a href="pairs-and-lists/#cxr-compositions">Pairs and Lists</a> for the full table.</p>
+<h2 id="srfi-1-list-library"><a href="srfi-1/">SRFI-1 List Library</a><a class="headerlink" href="#srfi-1-list-library" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Procedure</th>
+<th>Arity</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="srfi-1/#fold"><code>fold</code></a></td>
+<td>3+</td>
+<td>Left fold over one or more lists</td>
+</tr>
+<tr>
+<td><a href="srfi-1/#fold-right"><code>fold-right</code></a></td>
+<td>3+</td>
+<td>Right fold over one or more lists</td>
+</tr>
+<tr>
+<td><a href="srfi-1/#reduce"><code>reduce</code></a></td>
+<td>3</td>
+<td>Like fold with identity element</td>
+</tr>
+<tr>
+<td><a href="srfi-1/#reduce-right"><code>reduce-right</code></a></td>
+<td>3</td>
+<td>Like fold-right with identity element</td>
+</tr>
+<tr>
+<td><a href="srfi-1/#filter"><code>filter</code></a></td>
+<td>2</td>
+<td>Keep elements satisfying predicate</td>
+</tr>
+<tr>
+<td><a href="srfi-1/#remove"><code>remove</code></a></td>
+<td>2</td>
+<td>Remove elements satisfying predicate</td>
+</tr>
+<tr>
+<td><a href="srfi-1/#partition"><code>partition</code></a></td>
+<td>2</td>
+<td>Split list by predicate into two lists</td>
+</tr>
+<tr>
+<td><a href="srfi-1/#find"><code>find</code></a></td>
+<td>2</td>
+<td>First element satisfying predicate, or <code>#f</code></td>
+</tr>
+<tr>
+<td><a href="srfi-1/#find-tail"><code>find-tail</code></a></td>
+<td>2</td>
+<td>Tail starting at first element satisfying predicate</td>
+</tr>
+<tr>
+<td><a href="srfi-1/#any"><code>any</code></a></td>
+<td>2+</td>
+<td>True if predicate holds for any element</td>
+</tr>
+<tr>
+<td><a href="srfi-1/#every"><code>every</code></a></td>
+<td>2+</td>
+<td>True if predicate holds for every element</td>
+</tr>
+<tr>
+<td><a href="srfi-1/#count"><code>count</code></a></td>
+<td>2+</td>
+<td>Count elements satisfying predicate</td>
+</tr>
+<tr>
+<td><a href="srfi-1/#iota"><code>iota</code></a></td>
+<td>1+</td>
+<td>Generate list of integers (count, optional start and step)</td>
+</tr>
+<tr>
+<td><a href="srfi-1/#zip"><code>zip</code></a></td>
+<td>1+</td>
+<td>Transpose lists into list of lists</td>
+</tr>
+<tr>
+<td><a href="srfi-1/#concatenate"><code>concatenate</code></a></td>
+<td>1</td>
+<td>Append a list of lists</td>
+</tr>
+<tr>
+<td><a href="srfi-1/#take"><code>take</code></a></td>
+<td>2</td>
+<td>First k elements</td>
+</tr>
+<tr>
+<td><a href="srfi-1/#drop"><code>drop</code></a></td>
+<td>2</td>
+<td>All but first k elements</td>
+</tr>
+<tr>
+<td><a href="srfi-1/#take-while"><code>take-while</code></a></td>
+<td>2</td>
+<td>Leading elements satisfying predicate</td>
+</tr>
+<tr>
+<td><a href="srfi-1/#drop-while"><code>drop-while</code></a></td>
+<td>2</td>
+<td>Drop leading elements satisfying predicate</td>
+</tr>
+<tr>
+<td><a href="srfi-1/#filter-map"><code>filter-map</code></a></td>
+<td>2+</td>
+<td>Map then filter false values</td>
+</tr>
+<tr>
+<td><a href="srfi-1/#append-map"><code>append-map</code></a></td>
+<td>2+</td>
+<td>Map then append results</td>
+</tr>
+<tr>
+<td><a href="srfi-1/#last"><code>last</code></a></td>
+<td>1</td>
+<td>Last element of a non-empty list</td>
+</tr>
+<tr>
+<td><a href="srfi-1/#last-pair"><code>last-pair</code></a></td>
+<td>1</td>
+<td>Last pair of a non-empty list</td>
+</tr>
+<tr>
+<td><a href="srfi-1/#proper-list"><code>proper-list?</code></a></td>
+<td>1</td>
+<td>True if argument is a proper list</td>
+</tr>
+<tr>
+<td><a href="srfi-1/#dotted-list"><code>dotted-list?</code></a></td>
+<td>1</td>
+<td>True if argument is a dotted (improper) list</td>
+</tr>
+<tr>
+<td><a href="srfi-1/#circular-list-pred"><code>circular-list?</code></a></td>
+<td>1</td>
+<td>True if argument is a circular list</td>
+</tr>
+<tr>
+<td><a href="srfi-1/#not-pair"><code>not-pair?</code></a></td>
+<td>1</td>
+<td>True if argument is not a pair</td>
+</tr>
+<tr>
+<td><a href="srfi-1/#null-list"><code>null-list?</code></a></td>
+<td>1</td>
+<td>True if argument is the empty list (error on non-list)</td>
+</tr>
+<tr>
+<td><a href="srfi-1/#list-equal"><code>list=</code></a></td>
+<td>2+</td>
+<td>Compare lists element-wise with a given equality predicate</td>
+</tr>
+<tr>
+<td><a href="srfi-1/#cons-star"><code>cons*</code></a></td>
+<td>1+</td>
+<td>Like <code>list</code> but last arg is the tail</td>
+</tr>
+<tr>
+<td><a href="srfi-1/#xcons"><code>xcons</code></a></td>
+<td>2</td>
+<td><code>(cons cdr car)</code> — reversed cons</td>
+</tr>
+<tr>
+<td><a href="srfi-1/#list-tabulate"><code>list-tabulate</code></a></td>
+<td>2</td>
+<td>Build list of k elements from init procedure</td>
+</tr>
+<tr>
+<td><a href="srfi-1/#circular-list"><code>circular-list</code></a></td>
+<td>1+</td>
+<td>Build a circular list from arguments</td>
+</tr>
+<tr>
+<td><a href="srfi-1/#first"><code>first</code></a></td>
+<td>1</td>
+<td>First element (same as <code>car</code>)</td>
+</tr>
+<tr>
+<td><a href="srfi-1/#second"><code>second</code></a></td>
+<td>1</td>
+<td>Second element</td>
+</tr>
+<tr>
+<td><a href="srfi-1/#third"><code>third</code></a></td>
+<td>1</td>
+<td>Third element</td>
+</tr>
+<tr>
+<td><a href="srfi-1/#fourth"><code>fourth</code></a></td>
+<td>1</td>
+<td>Fourth element</td>
+</tr>
+<tr>
+<td><a href="srfi-1/#fifth"><code>fifth</code></a></td>
+<td>1</td>
+<td>Fifth element</td>
+</tr>
+<tr>
+<td><a href="srfi-1/#sixth"><code>sixth</code></a></td>
+<td>1</td>
+<td>Sixth element</td>
+</tr>
+<tr>
+<td><a href="srfi-1/#seventh"><code>seventh</code></a></td>
+<td>1</td>
+<td>Seventh element</td>
+</tr>
+<tr>
+<td><a href="srfi-1/#eighth"><code>eighth</code></a></td>
+<td>1</td>
+<td>Eighth element</td>
+</tr>
+<tr>
+<td><a href="srfi-1/#ninth"><code>ninth</code></a></td>
+<td>1</td>
+<td>Ninth element</td>
+</tr>
+<tr>
+<td><a href="srfi-1/#tenth"><code>tenth</code></a></td>
+<td>1</td>
+<td>Tenth element</td>
+</tr>
+<tr>
+<td><a href="srfi-1/#carcdr"><code>car+cdr</code></a></td>
+<td>1</td>
+<td>Return car and cdr as multiple values</td>
+</tr>
+<tr>
+<td><a href="srfi-1/#take-right"><code>take-right</code></a></td>
+<td>2</td>
+<td>Last k elements</td>
+</tr>
+<tr>
+<td><a href="srfi-1/#drop-right"><code>drop-right</code></a></td>
+<td>2</td>
+<td>All but last k elements</td>
+</tr>
+<tr>
+<td><a href="srfi-1/#split-at"><code>split-at</code></a></td>
+<td>2</td>
+<td>Split list at index k into two values</td>
+</tr>
+<tr>
+<td><a href="srfi-1/#span"><code>span</code></a></td>
+<td>2</td>
+<td>Split list at first element not satisfying predicate</td>
+</tr>
+<tr>
+<td><a href="srfi-1/#break"><code>break</code></a></td>
+<td>2</td>
+<td>Split list at first element satisfying predicate</td>
+</tr>
+<tr>
+<td><a href="srfi-1/#unfold"><code>unfold</code></a></td>
+<td>4+</td>
+<td>Unfold a list from a seed value</td>
+</tr>
+<tr>
+<td><a href="srfi-1/#unfold-right"><code>unfold-right</code></a></td>
+<td>4+</td>
+<td>Unfold a list in reverse from a seed value</td>
+</tr>
+<tr>
+<td><a href="srfi-1/#pair-fold"><code>pair-fold</code></a></td>
+<td>3+</td>
+<td>Fold over pairs (not elements)</td>
+</tr>
+<tr>
+<td><a href="srfi-1/#pair-fold-right"><code>pair-fold-right</code></a></td>
+<td>3+</td>
+<td>Right fold over pairs</td>
+</tr>
+<tr>
+<td><a href="srfi-1/#pair-for-each"><code>pair-for-each</code></a></td>
+<td>2+</td>
+<td>For-each over pairs</td>
+</tr>
+<tr>
+<td><a href="srfi-1/#map-in-order"><code>map-in-order</code></a></td>
+<td>2+</td>
+<td>Map with guaranteed left-to-right evaluation</td>
+</tr>
+<tr>
+<td><a href="srfi-1/#list-index"><code>list-index</code></a></td>
+<td>2+</td>
+<td>Index of first element satisfying predicate</td>
+</tr>
+<tr>
+<td><a href="srfi-1/#delete"><code>delete</code></a></td>
+<td>2+</td>
+<td>Remove all occurrences equal to element</td>
+</tr>
+<tr>
+<td><a href="srfi-1/#delete-duplicates"><code>delete-duplicates</code></a></td>
+<td>1+</td>
+<td>Remove duplicate elements</td>
+</tr>
+<tr>
+<td><a href="srfi-1/#alist-cons"><code>alist-cons</code></a></td>
+<td>3</td>
+<td><code>(cons (cons key value) alist)</code></td>
+</tr>
+<tr>
+<td><a href="srfi-1/#alist-copy"><code>alist-copy</code></a></td>
+<td>1</td>
+<td>Shallow copy of an association list</td>
+</tr>
+<tr>
+<td><a href="srfi-1/#alist-delete"><code>alist-delete</code></a></td>
+<td>2+</td>
+<td>Remove entries with matching key</td>
+</tr>
+<tr>
+<td><a href="srfi-1/#lset-equal"><code>lset=</code></a></td>
+<td>2+</td>
+<td>Set equality</td>
+</tr>
+<tr>
+<td><a href="srfi-1/#lset-adjoin"><code>lset-adjoin</code></a></td>
+<td>2+</td>
+<td>Add elements to a set</td>
+</tr>
+<tr>
+<td><a href="srfi-1/#lset-union"><code>lset-union</code></a></td>
+<td>2+</td>
+<td>Set union</td>
+</tr>
+<tr>
+<td><a href="srfi-1/#lset-intersection"><code>lset-intersection</code></a></td>
+<td>2+</td>
+<td>Set intersection</td>
+</tr>
+<tr>
+<td><a href="srfi-1/#lset-difference"><code>lset-difference</code></a></td>
+<td>2+</td>
+<td>Set difference</td>
+</tr>
+<tr>
+<td><a href="srfi-1/#lset-xor"><code>lset-xor</code></a></td>
+<td>2+</td>
+<td>Set symmetric difference</td>
+</tr>
+<tr>
+<td><a href="srfi-1/#append-reverse"><code>append-reverse</code></a></td>
+<td>2</td>
+<td><code>(append (reverse list1) list2)</code></td>
+</tr>
+<tr>
+<td><a href="srfi-1/#length-plus"><code>length+</code></a></td>
+<td>1</td>
+<td>Length or <code>#f</code> for circular lists</td>
+</tr>
+<tr>
+<td><a href="srfi-1/#unzip1"><code>unzip1</code></a></td>
+<td>1</td>
+<td>Unzip list of lists (first elements)</td>
+</tr>
+<tr>
+<td><a href="srfi-1/#unzip2"><code>unzip2</code></a></td>
+<td>1</td>
+<td>Unzip list of lists (first two elements as values)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="strings"><a href="strings/">Strings</a><a class="headerlink" href="#strings" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Procedure</th>
+<th>Arity</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="strings/#string"><code>string</code></a></td>
+<td>0+</td>
+<td>Construct string from characters</td>
+</tr>
+<tr>
+<td><a href="strings/#make-string"><code>make-string</code></a></td>
+<td>1+</td>
+<td>Create string of k characters (optional fill char)</td>
+</tr>
+<tr>
+<td><a href="strings/#string-length"><code>string-length</code></a></td>
+<td>1</td>
+<td>Number of codepoints in string</td>
+</tr>
+<tr>
+<td><a href="strings/#string-ref"><code>string-ref</code></a></td>
+<td>2</td>
+<td>Character at codepoint index k</td>
+</tr>
+<tr>
+<td><a href="strings/#string-set"><code>string-set!</code></a></td>
+<td>3</td>
+<td>Set character at codepoint index k</td>
+</tr>
+<tr>
+<td><a href="strings/#substring"><code>substring</code></a></td>
+<td>3</td>
+<td>Extract substring by codepoint indices</td>
+</tr>
+<tr>
+<td><a href="strings/#string-append"><code>string-append</code></a></td>
+<td>0+</td>
+<td>Concatenate strings</td>
+</tr>
+<tr>
+<td><a href="strings/#string-copy"><code>string-copy</code></a></td>
+<td>1+</td>
+<td>Copy string (optional start and end)</td>
+</tr>
+<tr>
+<td><a href="strings/#string-copy-bang"><code>string-copy!</code></a></td>
+<td>3+</td>
+<td>Copy into mutable string at offset</td>
+</tr>
+<tr>
+<td><a href="strings/#string-fill"><code>string-fill!</code></a></td>
+<td>2+</td>
+<td>Fill string with a character (optional start/end)</td>
+</tr>
+<tr>
+<td><a href="strings/#string-to-list"><code>string-&gt;list</code></a></td>
+<td>1+</td>
+<td>Convert string to list of characters</td>
+</tr>
+<tr>
+<td><a href="strings/#list-to-string"><code>list-&gt;string</code></a></td>
+<td>1</td>
+<td>Convert list of characters to string</td>
+</tr>
+<tr>
+<td><a href="strings/#string-to-symbol"><code>string-&gt;symbol</code></a></td>
+<td>1</td>
+<td>Intern string as a symbol</td>
+</tr>
+<tr>
+<td><a href="strings/#symbol-to-string"><code>symbol-&gt;string</code></a></td>
+<td>1</td>
+<td>Symbol name as a string</td>
+</tr>
+<tr>
+<td><a href="strings/#string-to-utf8"><code>string-&gt;utf8</code></a></td>
+<td>1</td>
+<td>Convert string to UTF-8 bytevector</td>
+</tr>
+<tr>
+<td><a href="strings/#utf8-to-string"><code>utf8-&gt;string</code></a></td>
+<td>1</td>
+<td>Convert UTF-8 bytevector to string</td>
+</tr>
+<tr>
+<td><a href="strings/#string-to-vector"><code>string-&gt;vector</code></a></td>
+<td>1+</td>
+<td>Convert string to vector of characters</td>
+</tr>
+<tr>
+<td><a href="strings/#string-to-number"><code>string-&gt;number</code></a></td>
+<td>1+</td>
+<td>Parse string as number (optional radix)</td>
+</tr>
+<tr>
+<td><a href="strings/#number-to-string"><code>number-&gt;string</code></a></td>
+<td>1</td>
+<td>Convert number to string</td>
+</tr>
+<tr>
+<td><a href="strings/#string-for-each"><code>string-for-each</code></a></td>
+<td>2+</td>
+<td>Apply procedure to each character</td>
+</tr>
+<tr>
+<td><a href="strings/#string-map"><code>string-map</code></a></td>
+<td>2+</td>
+<td>Map procedure over characters</td>
+</tr>
+<tr>
+<td><a href="strings/#string-lt"><code>string&lt;?</code></a></td>
+<td>2+</td>
+<td>Lexicographic less-than</td>
+</tr>
+<tr>
+<td><a href="strings/#string-le"><code>string&lt;=?</code></a></td>
+<td>2+</td>
+<td>Lexicographic less-than-or-equal</td>
+</tr>
+<tr>
+<td><a href="strings/#string-eq"><code>string=?</code></a></td>
+<td>2+</td>
+<td>String equality</td>
+</tr>
+<tr>
+<td><a href="strings/#string-ge"><code>string&gt;=?</code></a></td>
+<td>2+</td>
+<td>Lexicographic greater-than-or-equal</td>
+</tr>
+<tr>
+<td><a href="strings/#string-gt"><code>string&gt;?</code></a></td>
+<td>2+</td>
+<td>Lexicographic greater-than</td>
+</tr>
+</tbody>
+</table>
+<h2 id="srfi-13-string-library"><a href="srfi-13/">SRFI-13 String Library</a><a class="headerlink" href="#srfi-13-string-library" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Procedure</th>
+<th>Arity</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="srfi-13/#string-contains"><code>string-contains</code></a></td>
+<td>2+</td>
+<td>Index of substring in string, or <code>#f</code> (optional start/end)</td>
+</tr>
+<tr>
+<td><a href="srfi-13/#string-prefix"><code>string-prefix?</code></a></td>
+<td>2+</td>
+<td>True if first string is a prefix of second (optional start/end)</td>
+</tr>
+<tr>
+<td><a href="srfi-13/#string-suffix"><code>string-suffix?</code></a></td>
+<td>2+</td>
+<td>True if first string is a suffix of second (optional start/end)</td>
+</tr>
+<tr>
+<td><a href="srfi-13/#string-index"><code>string-index</code></a></td>
+<td>2+</td>
+<td>Index of first char satisfying predicate/char-set (optional start/end)</td>
+</tr>
+<tr>
+<td><a href="srfi-13/#string-index-right"><code>string-index-right</code></a></td>
+<td>2+</td>
+<td>Index of last char satisfying predicate/char-set (optional start/end)</td>
+</tr>
+<tr>
+<td><a href="srfi-13/#string-skip"><code>string-skip</code></a></td>
+<td>2+</td>
+<td>Index of first char NOT satisfying predicate/char-set (optional start/end)</td>
+</tr>
+<tr>
+<td><a href="srfi-13/#string-skip-right"><code>string-skip-right</code></a></td>
+<td>2+</td>
+<td>Index of last char NOT satisfying predicate/char-set (optional start/end)</td>
+</tr>
+<tr>
+<td><a href="srfi-13/#string-count"><code>string-count</code></a></td>
+<td>2+</td>
+<td>Count chars satisfying predicate/char-set (optional start/end)</td>
+</tr>
+<tr>
+<td><a href="srfi-13/#string-trim"><code>string-trim</code></a></td>
+<td>1+</td>
+<td>Remove leading chars matching predicate/char-set (optional start/end)</td>
+</tr>
+<tr>
+<td><a href="srfi-13/#string-trim-right"><code>string-trim-right</code></a></td>
+<td>1+</td>
+<td>Remove trailing chars matching predicate/char-set (optional start/end)</td>
+</tr>
+<tr>
+<td><a href="srfi-13/#string-trim-both"><code>string-trim-both</code></a></td>
+<td>1+</td>
+<td>Remove leading and trailing chars (optional start/end)</td>
+</tr>
+<tr>
+<td><a href="srfi-13/#string-split"><code>string-split</code></a></td>
+<td>2</td>
+<td>Split string by delimiter into list of strings</td>
+</tr>
+<tr>
+<td><a href="srfi-13/#string-join"><code>string-join</code></a></td>
+<td>1+</td>
+<td>Join list of strings with delimiter</td>
+</tr>
+<tr>
+<td><a href="srfi-13/#string-concatenate"><code>string-concatenate</code></a></td>
+<td>1</td>
+<td>Concatenate a list of strings</td>
+</tr>
+<tr>
+<td><a href="srfi-13/#string-take"><code>string-take</code></a></td>
+<td>2</td>
+<td>First k characters</td>
+</tr>
+<tr>
+<td><a href="srfi-13/#string-drop"><code>string-drop</code></a></td>
+<td>2</td>
+<td>All but first k characters</td>
+</tr>
+<tr>
+<td><a href="srfi-13/#string-take-right"><code>string-take-right</code></a></td>
+<td>2</td>
+<td>Last k characters</td>
+</tr>
+<tr>
+<td><a href="srfi-13/#string-drop-right"><code>string-drop-right</code></a></td>
+<td>2</td>
+<td>All but last k characters</td>
+</tr>
+<tr>
+<td><a href="srfi-13/#string-pad"><code>string-pad</code></a></td>
+<td>2+</td>
+<td>Pad string on the left to given length</td>
+</tr>
+<tr>
+<td><a href="srfi-13/#string-pad-right"><code>string-pad-right</code></a></td>
+<td>2+</td>
+<td>Pad string on the right to given length</td>
+</tr>
+<tr>
+<td><a href="srfi-13/#string-reverse"><code>string-reverse</code></a></td>
+<td>1+</td>
+<td>Reverse a string (optional start/end)</td>
+</tr>
+<tr>
+<td><a href="srfi-13/#string-filter"><code>string-filter</code></a></td>
+<td>2+</td>
+<td>Keep chars satisfying predicate/char-set (optional start/end)</td>
+</tr>
+<tr>
+<td><a href="srfi-13/#string-delete"><code>string-delete</code></a></td>
+<td>2+</td>
+<td>Remove chars satisfying predicate/char-set (optional start/end)</td>
+</tr>
+<tr>
+<td><a href="srfi-13/#string-replace"><code>string-replace</code></a></td>
+<td>4</td>
+<td>Replace substring by codepoint indices</td>
+</tr>
+<tr>
+<td><a href="srfi-13/#string-titlecase"><code>string-titlecase</code></a></td>
+<td>1+</td>
+<td>Titlecase a string (optional start/end)</td>
+</tr>
+<tr>
+<td><a href="srfi-13/#string-every"><code>string-every</code></a></td>
+<td>2+</td>
+<td>True if predicate/char-set matches every char (optional start/end)</td>
+</tr>
+<tr>
+<td><a href="srfi-13/#string-any"><code>string-any</code></a></td>
+<td>2+</td>
+<td>True if predicate/char-set matches any char (optional start/end)</td>
+</tr>
+<tr>
+<td><a href="srfi-13/#string-tabulate"><code>string-tabulate</code></a></td>
+<td>2</td>
+<td>Build string from index-to-char procedure</td>
+</tr>
+<tr>
+<td><a href="srfi-13/#string-unfold"><code>string-unfold</code></a></td>
+<td>4+</td>
+<td>Unfold a string from a seed</td>
+</tr>
+<tr>
+<td><a href="srfi-13/#string-unfold-right"><code>string-unfold-right</code></a></td>
+<td>4+</td>
+<td>Unfold a string in reverse from a seed</td>
+</tr>
+</tbody>
+</table>
+<h2 id="characters"><a href="characters/">Characters</a><a class="headerlink" href="#characters" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Procedure</th>
+<th>Arity</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="characters/#char-to-integer"><code>char-&gt;integer</code></a></td>
+<td>1</td>
+<td>Unicode codepoint as integer</td>
+</tr>
+<tr>
+<td><a href="characters/#integer-to-char"><code>integer-&gt;char</code></a></td>
+<td>1</td>
+<td>Character from Unicode codepoint</td>
+</tr>
+<tr>
+<td><a href="characters/#char-lt"><code>char&lt;?</code></a></td>
+<td>2+</td>
+<td>Character less-than by codepoint</td>
+</tr>
+<tr>
+<td><a href="characters/#char-le"><code>char&lt;=?</code></a></td>
+<td>2+</td>
+<td>Character less-than-or-equal</td>
+</tr>
+<tr>
+<td><a href="characters/#char-eq"><code>char=?</code></a></td>
+<td>2+</td>
+<td>Character equality</td>
+</tr>
+<tr>
+<td><a href="characters/#char-ge"><code>char&gt;=?</code></a></td>
+<td>2+</td>
+<td>Character greater-than-or-equal</td>
+</tr>
+<tr>
+<td><a href="characters/#char-gt"><code>char&gt;?</code></a></td>
+<td>2+</td>
+<td>Character greater-than</td>
+</tr>
+<tr>
+<td><a href="characters/#char-alphabetic"><code>char-alphabetic?</code></a></td>
+<td>1</td>
+<td>True if Unicode alphabetic</td>
+</tr>
+<tr>
+<td><a href="characters/#char-numeric"><code>char-numeric?</code></a></td>
+<td>1</td>
+<td>True if Unicode numeric</td>
+</tr>
+<tr>
+<td><a href="characters/#char-whitespace"><code>char-whitespace?</code></a></td>
+<td>1</td>
+<td>True if Unicode whitespace</td>
+</tr>
+<tr>
+<td><a href="characters/#char-upper-case"><code>char-upper-case?</code></a></td>
+<td>1</td>
+<td>True if Unicode uppercase</td>
+</tr>
+<tr>
+<td><a href="characters/#char-lower-case"><code>char-lower-case?</code></a></td>
+<td>1</td>
+<td>True if Unicode lowercase</td>
+</tr>
+<tr>
+<td><a href="characters/#char-upcase"><code>char-upcase</code></a></td>
+<td>1</td>
+<td>Convert to uppercase</td>
+</tr>
+<tr>
+<td><a href="characters/#char-downcase"><code>char-downcase</code></a></td>
+<td>1</td>
+<td>Convert to lowercase</td>
+</tr>
+<tr>
+<td><a href="characters/#char-foldcase"><code>char-foldcase</code></a></td>
+<td>1</td>
+<td>Convert to foldcase (for case-insensitive comparison)</td>
+</tr>
+<tr>
+<td><a href="characters/#digit-value"><code>digit-value</code></a></td>
+<td>1</td>
+<td>Numeric value of digit character, or <code>#f</code></td>
+</tr>
+<tr>
+<td><a href="characters/#char-ci-lt"><code>char-ci&lt;?</code></a></td>
+<td>2+</td>
+<td>Case-insensitive character less-than</td>
+</tr>
+<tr>
+<td><a href="characters/#char-ci-le"><code>char-ci&lt;=?</code></a></td>
+<td>2+</td>
+<td>Case-insensitive character less-than-or-equal</td>
+</tr>
+<tr>
+<td><a href="characters/#char-ci-eq"><code>char-ci=?</code></a></td>
+<td>2+</td>
+<td>Case-insensitive character equality</td>
+</tr>
+<tr>
+<td><a href="characters/#char-ci-ge"><code>char-ci&gt;=?</code></a></td>
+<td>2+</td>
+<td>Case-insensitive character greater-than-or-equal</td>
+</tr>
+<tr>
+<td><a href="characters/#char-ci-gt"><code>char-ci&gt;?</code></a></td>
+<td>2+</td>
+<td>Case-insensitive character greater-than</td>
+</tr>
+<tr>
+<td><a href="characters/#string-ci-lt"><code>string-ci&lt;?</code></a></td>
+<td>2+</td>
+<td>Case-insensitive string less-than</td>
+</tr>
+<tr>
+<td><a href="characters/#string-ci-le"><code>string-ci&lt;=?</code></a></td>
+<td>2+</td>
+<td>Case-insensitive string less-than-or-equal</td>
+</tr>
+<tr>
+<td><a href="characters/#string-ci-eq"><code>string-ci=?</code></a></td>
+<td>2+</td>
+<td>Case-insensitive string equality</td>
+</tr>
+<tr>
+<td><a href="characters/#string-ci-ge"><code>string-ci&gt;=?</code></a></td>
+<td>2+</td>
+<td>Case-insensitive string greater-than-or-equal</td>
+</tr>
+<tr>
+<td><a href="characters/#string-ci-gt"><code>string-ci&gt;?</code></a></td>
+<td>2+</td>
+<td>Case-insensitive string greater-than</td>
+</tr>
+<tr>
+<td><a href="characters/#string-upcase"><code>string-upcase</code></a></td>
+<td>1</td>
+<td>Convert entire string to uppercase</td>
+</tr>
+<tr>
+<td><a href="characters/#string-downcase"><code>string-downcase</code></a></td>
+<td>1</td>
+<td>Convert entire string to lowercase</td>
+</tr>
+<tr>
+<td><a href="characters/#string-foldcase"><code>string-foldcase</code></a></td>
+<td>1</td>
+<td>Foldcase entire string</td>
+</tr>
+</tbody>
+</table>
+<h2 id="vectors"><a href="vectors/">Vectors</a><a class="headerlink" href="#vectors" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Procedure</th>
+<th>Arity</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="vectors/#vector"><code>vector</code></a></td>
+<td>0+</td>
+<td>Construct vector from arguments</td>
+</tr>
+<tr>
+<td><a href="vectors/#make-vector"><code>make-vector</code></a></td>
+<td>1+</td>
+<td>Create vector of k elements (optional fill value)</td>
+</tr>
+<tr>
+<td><a href="vectors/#vector-pred"><code>vector?</code></a></td>
+<td>1</td>
+<td>True if argument is a vector</td>
+</tr>
+<tr>
+<td><a href="vectors/#vector-length"><code>vector-length</code></a></td>
+<td>1</td>
+<td>Number of elements</td>
+</tr>
+<tr>
+<td><a href="vectors/#vector-ref"><code>vector-ref</code></a></td>
+<td>2</td>
+<td>Element at index k</td>
+</tr>
+<tr>
+<td><a href="vectors/#vector-set"><code>vector-set!</code></a></td>
+<td>3</td>
+<td>Set element at index k</td>
+</tr>
+<tr>
+<td><a href="vectors/#vector-to-list"><code>vector-&gt;list</code></a></td>
+<td>1+</td>
+<td>Convert to list (optional start and end)</td>
+</tr>
+<tr>
+<td><a href="vectors/#list-to-vector"><code>list-&gt;vector</code></a></td>
+<td>1</td>
+<td>Convert list to vector</td>
+</tr>
+<tr>
+<td><a href="vectors/#vector-to-string"><code>vector-&gt;string</code></a></td>
+<td>1</td>
+<td>Convert vector of characters to string</td>
+</tr>
+<tr>
+<td><a href="vectors/#vector-fill"><code>vector-fill!</code></a></td>
+<td>2</td>
+<td>Fill vector with a value</td>
+</tr>
+<tr>
+<td><a href="vectors/#vector-copy"><code>vector-copy</code></a></td>
+<td>1+</td>
+<td>Copy vector (optional start and end)</td>
+</tr>
+<tr>
+<td><a href="vectors/#vector-copy-mut"><code>vector-copy!</code></a></td>
+<td>3+</td>
+<td>Copy into vector at offset</td>
+</tr>
+<tr>
+<td><a href="vectors/#vector-append"><code>vector-append</code></a></td>
+<td>0+</td>
+<td>Concatenate vectors</td>
+</tr>
+<tr>
+<td><a href="vectors/#vector-for-each"><code>vector-for-each</code></a></td>
+<td>2+</td>
+<td>Apply procedure to each element</td>
+</tr>
+<tr>
+<td><a href="vectors/#vector-map"><code>vector-map</code></a></td>
+<td>2+</td>
+<td>Map procedure over elements</td>
+</tr>
+</tbody>
+</table>
+<h2 id="srfi-133-vector-library"><a href="srfi-133/">SRFI-133 Vector Library</a><a class="headerlink" href="#srfi-133-vector-library" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Procedure</th>
+<th>Arity</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="srfi-133/#vector-unfold"><code>vector-unfold</code></a></td>
+<td>2+</td>
+<td>Build vector from seed function</td>
+</tr>
+<tr>
+<td><a href="srfi-133/#vector-unfold-right"><code>vector-unfold-right</code></a></td>
+<td>2+</td>
+<td>Build vector in reverse from seed function</td>
+</tr>
+<tr>
+<td><a href="srfi-133/#vector-concatenate"><code>vector-concatenate</code></a></td>
+<td>1</td>
+<td>Concatenate a list of vectors</td>
+</tr>
+<tr>
+<td><a href="srfi-133/#vector-any"><code>vector-any</code></a></td>
+<td>2+</td>
+<td>True if predicate holds for any element</td>
+</tr>
+<tr>
+<td><a href="srfi-133/#vector-every"><code>vector-every</code></a></td>
+<td>2+</td>
+<td>True if predicate holds for every element</td>
+</tr>
+<tr>
+<td><a href="srfi-133/#vector-index"><code>vector-index</code></a></td>
+<td>2+</td>
+<td>Index of first element satisfying predicate</td>
+</tr>
+<tr>
+<td><a href="srfi-133/#vector-index-right"><code>vector-index-right</code></a></td>
+<td>2+</td>
+<td>Index of last element satisfying predicate</td>
+</tr>
+<tr>
+<td><a href="srfi-133/#vector-skip"><code>vector-skip</code></a></td>
+<td>2+</td>
+<td>Index of first element NOT satisfying predicate</td>
+</tr>
+<tr>
+<td><a href="srfi-133/#vector-skip-right"><code>vector-skip-right</code></a></td>
+<td>2+</td>
+<td>Index of last element NOT satisfying predicate</td>
+</tr>
+<tr>
+<td><a href="srfi-133/#vector-binary-search"><code>vector-binary-search</code></a></td>
+<td>3</td>
+<td>Binary search with comparator</td>
+</tr>
+<tr>
+<td><a href="srfi-133/#vector-swap"><code>vector-swap!</code></a></td>
+<td>3</td>
+<td>Swap two elements by index</td>
+</tr>
+<tr>
+<td><a href="srfi-133/#vector-reverse-mut"><code>vector-reverse!</code></a></td>
+<td>1+</td>
+<td>Reverse vector in place (optional start/end)</td>
+</tr>
+<tr>
+<td><a href="srfi-133/#vector-reverse-copy"><code>vector-reverse-copy</code></a></td>
+<td>1+</td>
+<td>Reversed copy (optional start/end)</td>
+</tr>
+<tr>
+<td><a href="srfi-133/#vector-cumulate"><code>vector-cumulate</code></a></td>
+<td>3</td>
+<td>Cumulative fold into new vector</td>
+</tr>
+<tr>
+<td><a href="srfi-133/#vector-partition"><code>vector-partition</code></a></td>
+<td>2</td>
+<td>Partition by predicate into two vectors</td>
+</tr>
+<tr>
+<td><a href="srfi-133/#vector-count"><code>vector-count</code></a></td>
+<td>2+</td>
+<td>Count elements satisfying predicate</td>
+</tr>
+<tr>
+<td><a href="srfi-133/#vector-fold"><code>vector-fold</code></a></td>
+<td>3+</td>
+<td>Left fold over vector</td>
+</tr>
+<tr>
+<td><a href="srfi-133/#vector-fold-right"><code>vector-fold-right</code></a></td>
+<td>3+</td>
+<td>Right fold over vector</td>
+</tr>
+<tr>
+<td><a href="srfi-133/#vector-map-mut"><code>vector-map!</code></a></td>
+<td>2+</td>
+<td>In-place map</td>
+</tr>
+<tr>
+<td><a href="srfi-133/#vector-empty"><code>vector-empty?</code></a></td>
+<td>1</td>
+<td>True if vector has zero length</td>
+</tr>
+<tr>
+<td><a href="srfi-133/#vector-equal"><code>vector=</code></a></td>
+<td>3</td>
+<td>Element-wise equality with comparator</td>
+</tr>
+</tbody>
+</table>
+<h2 id="bytevectors"><a href="bytevectors/">Bytevectors</a><a class="headerlink" href="#bytevectors" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Procedure</th>
+<th>Arity</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="bytevectors/#bytevector-pred"><code>bytevector?</code></a></td>
+<td>1</td>
+<td>True if argument is a bytevector</td>
+</tr>
+<tr>
+<td><a href="bytevectors/#make-bytevector"><code>make-bytevector</code></a></td>
+<td>1+</td>
+<td>Create bytevector of k bytes (optional fill)</td>
+</tr>
+<tr>
+<td><a href="bytevectors/#bytevector"><code>bytevector</code></a></td>
+<td>0+</td>
+<td>Construct bytevector from byte values</td>
+</tr>
+<tr>
+<td><a href="bytevectors/#bytevector-length"><code>bytevector-length</code></a></td>
+<td>1</td>
+<td>Number of bytes</td>
+</tr>
+<tr>
+<td><a href="bytevectors/#bytevector-u8-ref"><code>bytevector-u8-ref</code></a></td>
+<td>2</td>
+<td>Byte at index k</td>
+</tr>
+<tr>
+<td><a href="bytevectors/#bytevector-u8-set"><code>bytevector-u8-set!</code></a></td>
+<td>3</td>
+<td>Set byte at index k</td>
+</tr>
+<tr>
+<td><a href="bytevectors/#bytevector-copy"><code>bytevector-copy</code></a></td>
+<td>1+</td>
+<td>Copy bytevector (optional start and end)</td>
+</tr>
+<tr>
+<td><a href="bytevectors/#bytevector-copy-mut"><code>bytevector-copy!</code></a></td>
+<td>3+</td>
+<td>Copy into bytevector at offset</td>
+</tr>
+<tr>
+<td><a href="bytevectors/#bytevector-append"><code>bytevector-append</code></a></td>
+<td>0+</td>
+<td>Concatenate bytevectors</td>
+</tr>
+<tr>
+<td><a href="bytevectors/#utf8-to-string"><code>utf8-&gt;string</code></a></td>
+<td>1+</td>
+<td>Decode UTF-8 bytevector to string</td>
+</tr>
+<tr>
+<td><a href="bytevectors/#string-to-utf8"><code>string-&gt;utf8</code></a></td>
+<td>1+</td>
+<td>Encode string to UTF-8 bytevector</td>
+</tr>
+<tr>
+<td><a href="bytevectors/#read-u8"><code>read-u8</code></a></td>
+<td>0+</td>
+<td>Read one byte from port</td>
+</tr>
+<tr>
+<td><a href="bytevectors/#peek-u8"><code>peek-u8</code></a></td>
+<td>0+</td>
+<td>Peek at next byte without consuming</td>
+</tr>
+<tr>
+<td><a href="bytevectors/#write-u8"><code>write-u8</code></a></td>
+<td>1+</td>
+<td>Write one byte to port</td>
+</tr>
+<tr>
+<td><a href="bytevectors/#u8-ready"><code>u8-ready?</code></a></td>
+<td>0+</td>
+<td>True if a byte is available to read</td>
+</tr>
+<tr>
+<td><a href="bytevectors/#read-bytevector"><code>read-bytevector</code></a></td>
+<td>1+</td>
+<td>Read k bytes into a new bytevector</td>
+</tr>
+<tr>
+<td><a href="bytevectors/#read-bytevector-mut"><code>read-bytevector!</code></a></td>
+<td>1+</td>
+<td>Read bytes into an existing bytevector</td>
+</tr>
+<tr>
+<td><a href="bytevectors/#write-bytevector"><code>write-bytevector</code></a></td>
+<td>1+</td>
+<td>Write bytevector to port</td>
+</tr>
+<tr>
+<td><a href="bytevectors/#open-input-bytevector"><code>open-input-bytevector</code></a></td>
+<td>1</td>
+<td>Open bytevector as input port</td>
+</tr>
+<tr>
+<td><a href="bytevectors/#open-output-bytevector"><code>open-output-bytevector</code></a></td>
+<td>0</td>
+<td>Create output port backed by bytevector</td>
+</tr>
+<tr>
+<td><a href="bytevectors/#get-output-bytevector"><code>get-output-bytevector</code></a></td>
+<td>1</td>
+<td>Get accumulated bytevector from output port</td>
+</tr>
+</tbody>
+</table>
+<h2 id="ports-and-io"><a href="ports-and-io/">Ports and I/O</a><a class="headerlink" href="#ports-and-io" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Procedure</th>
+<th>Arity</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="ports-and-io/#current-input-port"><code>current-input-port</code></a></td>
+<td>0</td>
+<td>Current default input port (stdin)</td>
+</tr>
+<tr>
+<td><a href="ports-and-io/#current-output-port"><code>current-output-port</code></a></td>
+<td>0</td>
+<td>Current default output port (stdout)</td>
+</tr>
+<tr>
+<td><a href="ports-and-io/#current-error-port"><code>current-error-port</code></a></td>
+<td>0</td>
+<td>Current default error port (stderr)</td>
+</tr>
+<tr>
+<td><a href="ports-and-io/#port-pred"><code>port?</code></a></td>
+<td>1</td>
+<td>True if argument is a port</td>
+</tr>
+<tr>
+<td><a href="ports-and-io/#input-port"><code>input-port?</code></a></td>
+<td>1</td>
+<td>True if port supports input</td>
+</tr>
+<tr>
+<td><a href="ports-and-io/#output-port"><code>output-port?</code></a></td>
+<td>1</td>
+<td>True if port supports output</td>
+</tr>
+<tr>
+<td><a href="ports-and-io/#textual-port"><code>textual-port?</code></a></td>
+<td>1</td>
+<td>True if port is textual</td>
+</tr>
+<tr>
+<td><a href="ports-and-io/#binary-port"><code>binary-port?</code></a></td>
+<td>1</td>
+<td>True if port is binary</td>
+</tr>
+<tr>
+<td><a href="ports-and-io/#input-port-open"><code>input-port-open?</code></a></td>
+<td>1</td>
+<td>True if input port is open</td>
+</tr>
+<tr>
+<td><a href="ports-and-io/#output-port-open"><code>output-port-open?</code></a></td>
+<td>1</td>
+<td>True if output port is open</td>
+</tr>
+<tr>
+<td><a href="ports-and-io/#open-input-file"><code>open-input-file</code></a></td>
+<td>1</td>
+<td>Open file for textual input</td>
+</tr>
+<tr>
+<td><a href="ports-and-io/#open-output-file"><code>open-output-file</code></a></td>
+<td>1</td>
+<td>Open file for textual output</td>
+</tr>
+<tr>
+<td><a href="ports-and-io/#open-binary-input-file"><code>open-binary-input-file</code></a></td>
+<td>1</td>
+<td>Open file for binary input</td>
+</tr>
+<tr>
+<td><a href="ports-and-io/#open-binary-output-file"><code>open-binary-output-file</code></a></td>
+<td>1</td>
+<td>Open file for binary output</td>
+</tr>
+<tr>
+<td><a href="ports-and-io/#close-port"><code>close-port</code></a></td>
+<td>1</td>
+<td>Close a port</td>
+</tr>
+<tr>
+<td><a href="ports-and-io/#close-input-port"><code>close-input-port</code></a></td>
+<td>1</td>
+<td>Close an input port</td>
+</tr>
+<tr>
+<td><a href="ports-and-io/#close-output-port"><code>close-output-port</code></a></td>
+<td>1</td>
+<td>Close an output port</td>
+</tr>
+<tr>
+<td><a href="ports-and-io/#file-exists"><code>file-exists?</code></a></td>
+<td>1</td>
+<td>True if file exists at path</td>
+</tr>
+<tr>
+<td><a href="ports-and-io/#delete-file"><code>delete-file</code></a></td>
+<td>1</td>
+<td>Delete a file</td>
+</tr>
+<tr>
+<td><a href="ports-and-io/#call-with-input-file"><code>call-with-input-file</code></a></td>
+<td>2</td>
+<td>Open file, call proc, close file</td>
+</tr>
+<tr>
+<td><a href="ports-and-io/#call-with-output-file"><code>call-with-output-file</code></a></td>
+<td>2</td>
+<td>Open file, call proc, close file</td>
+</tr>
+<tr>
+<td><a href="ports-and-io/#call-with-port"><code>call-with-port</code></a></td>
+<td>2</td>
+<td>Call proc with port, close port when done</td>
+</tr>
+<tr>
+<td><a href="ports-and-io/#with-input-from-file"><code>with-input-from-file</code></a></td>
+<td>2</td>
+<td>Parameterize current-input-port for proc</td>
+</tr>
+<tr>
+<td><a href="ports-and-io/#with-output-to-file"><code>with-output-to-file</code></a></td>
+<td>2</td>
+<td>Parameterize current-output-port for proc</td>
+</tr>
+<tr>
+<td><a href="ports-and-io/#read"><code>read</code></a></td>
+<td>0+</td>
+<td>Read a Scheme datum from port</td>
+</tr>
+<tr>
+<td><a href="ports-and-io/#read-char"><code>read-char</code></a></td>
+<td>0+</td>
+<td>Read one character</td>
+</tr>
+<tr>
+<td><a href="ports-and-io/#peek-char"><code>peek-char</code></a></td>
+<td>0+</td>
+<td>Peek at next character without consuming</td>
+</tr>
+<tr>
+<td><a href="ports-and-io/#read-line"><code>read-line</code></a></td>
+<td>0+</td>
+<td>Read a line as a string</td>
+</tr>
+<tr>
+<td><a href="ports-and-io/#read-string"><code>read-string</code></a></td>
+<td>1+</td>
+<td>Read k characters as a string</td>
+</tr>
+<tr>
+<td><a href="ports-and-io/#char-ready"><code>char-ready?</code></a></td>
+<td>0+</td>
+<td>True if a character is available to read</td>
+</tr>
+<tr>
+<td><a href="ports-and-io/#display"><code>display</code></a></td>
+<td>1+</td>
+<td>Write value in human-readable form</td>
+</tr>
+<tr>
+<td><a href="ports-and-io/#write"><code>write</code></a></td>
+<td>1+</td>
+<td>Write value in machine-readable form (with quotes)</td>
+</tr>
+<tr>
+<td><a href="ports-and-io/#write-shared"><code>write-shared</code></a></td>
+<td>1+</td>
+<td>Write with datum labels for shared structure</td>
+</tr>
+<tr>
+<td><a href="ports-and-io/#write-simple"><code>write-simple</code></a></td>
+<td>1+</td>
+<td>Write without datum labels</td>
+</tr>
+<tr>
+<td><a href="ports-and-io/#write-char"><code>write-char</code></a></td>
+<td>1+</td>
+<td>Write a single character</td>
+</tr>
+<tr>
+<td><a href="ports-and-io/#write-string"><code>write-string</code></a></td>
+<td>1+</td>
+<td>Write a string (or substring)</td>
+</tr>
+<tr>
+<td><a href="ports-and-io/#newline"><code>newline</code></a></td>
+<td>0+</td>
+<td>Write a newline character</td>
+</tr>
+<tr>
+<td><a href="ports-and-io/#flush-output-port"><code>flush-output-port</code></a></td>
+<td>0+</td>
+<td>Flush output port buffer</td>
+</tr>
+<tr>
+<td><a href="ports-and-io/#open-input-string"><code>open-input-string</code></a></td>
+<td>1</td>
+<td>Open string as input port</td>
+</tr>
+<tr>
+<td><a href="ports-and-io/#open-output-string"><code>open-output-string</code></a></td>
+<td>0</td>
+<td>Create output port backed by string</td>
+</tr>
+<tr>
+<td><a href="ports-and-io/#get-output-string"><code>get-output-string</code></a></td>
+<td>1</td>
+<td>Get accumulated string from output port</td>
+</tr>
+<tr>
+<td><a href="ports-and-io/#eof-object-pred"><code>eof-object?</code></a></td>
+<td>1</td>
+<td>True if argument is the EOF object</td>
+</tr>
+<tr>
+<td><a href="ports-and-io/#eof-object"><code>eof-object</code></a></td>
+<td>0</td>
+<td>Return the EOF object</td>
+</tr>
+</tbody>
+</table>
+<h2 id="control-flow"><a href="control-flow/">Control Flow</a><a class="headerlink" href="#control-flow" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Procedure</th>
+<th>Arity</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="control-flow/#apply"><code>apply</code></a></td>
+<td>2+</td>
+<td>Apply procedure to arguments</td>
+</tr>
+<tr>
+<td><a href="control-flow/#call-with-current-continuation"><code>call-with-current-continuation</code></a></td>
+<td>1</td>
+<td>Capture the current continuation</td>
+</tr>
+<tr>
+<td><a href="control-flow/#callcc"><code>call/cc</code></a></td>
+<td>1</td>
+<td>Alias for <code>call-with-current-continuation</code></td>
+</tr>
+<tr>
+<td><a href="control-flow/#call-with-escape-continuation"><code>call-with-escape-continuation</code></a></td>
+<td>1</td>
+<td>Capture a one-shot escape continuation</td>
+</tr>
+<tr>
+<td><a href="control-flow/#callec"><code>call/ec</code></a></td>
+<td>1</td>
+<td>Alias for <code>call-with-escape-continuation</code></td>
+</tr>
+<tr>
+<td><a href="control-flow/#dynamic-wind"><code>dynamic-wind</code></a></td>
+<td>3</td>
+<td>Install before/after thunks around a body</td>
+</tr>
+<tr>
+<td><a href="control-flow/#values"><code>values</code></a></td>
+<td>0+</td>
+<td>Return multiple values</td>
+</tr>
+<tr>
+<td><a href="control-flow/#call-with-values"><code>call-with-values</code></a></td>
+<td>2</td>
+<td>Pass multiple values from producer to consumer</td>
+</tr>
+<tr>
+<td><a href="control-flow/#raise"><code>raise</code></a></td>
+<td>1</td>
+<td>Raise an exception</td>
+</tr>
+<tr>
+<td><a href="control-flow/#raise-continuable"><code>raise-continuable</code></a></td>
+<td>1</td>
+<td>Raise a continuable exception</td>
+</tr>
+<tr>
+<td><a href="control-flow/#with-exception-handler"><code>with-exception-handler</code></a></td>
+<td>2</td>
+<td>Install an exception handler</td>
+</tr>
+<tr>
+<td><a href="control-flow/#error"><code>error</code></a></td>
+<td>1+</td>
+<td>Create error object and raise it</td>
+</tr>
+<tr>
+<td><a href="control-flow/#error-object-pred"><code>error-object?</code></a></td>
+<td>1</td>
+<td>True if argument is an error object</td>
+</tr>
+<tr>
+<td><a href="control-flow/#error-object-message"><code>error-object-message</code></a></td>
+<td>1</td>
+<td>Error message string</td>
+</tr>
+<tr>
+<td><a href="control-flow/#error-object-irritants"><code>error-object-irritants</code></a></td>
+<td>1</td>
+<td>List of irritant values from error</td>
+</tr>
+<tr>
+<td><a href="control-flow/#file-error"><code>file-error?</code></a></td>
+<td>1</td>
+<td>True if error is a file error</td>
+</tr>
+<tr>
+<td><a href="control-flow/#read-error"><code>read-error?</code></a></td>
+<td>1</td>
+<td>True if error is a read error</td>
+</tr>
+</tbody>
+</table>
+<h2 id="type-checking-and-equivalence"><a href="type-checking/">Type Checking and Equivalence</a><a class="headerlink" href="#type-checking-and-equivalence" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Procedure</th>
+<th>Arity</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="type-checking/#not"><code>not</code></a></td>
+<td>1</td>
+<td>Boolean negation</td>
+</tr>
+<tr>
+<td><a href="type-checking/#boolean-equal"><code>boolean=?</code></a></td>
+<td>2+</td>
+<td>True if all arguments are the same boolean</td>
+</tr>
+<tr>
+<td><a href="type-checking/#eq"><code>eq?</code></a></td>
+<td>2</td>
+<td>Pointer identity</td>
+</tr>
+<tr>
+<td><a href="type-checking/#eqv"><code>eqv?</code></a></td>
+<td>2</td>
+<td>Value equivalence (numbers, chars, booleans)</td>
+</tr>
+<tr>
+<td><a href="type-checking/#equal"><code>equal?</code></a></td>
+<td>2</td>
+<td>Deep structural equality</td>
+</tr>
+<tr>
+<td><a href="type-checking/#symbol-equal"><code>symbol=?</code></a></td>
+<td>2+</td>
+<td>True if all arguments are the same symbol</td>
+</tr>
+<tr>
+<td><a href="type-checking/#pair"><code>pair?</code></a></td>
+<td>1</td>
+<td>True if argument is a pair</td>
+</tr>
+<tr>
+<td><a href="type-checking/#null"><code>null?</code></a></td>
+<td>1</td>
+<td>True if argument is the empty list</td>
+</tr>
+<tr>
+<td><a href="type-checking/#number"><code>number?</code></a></td>
+<td>1</td>
+<td>True if argument is a number</td>
+</tr>
+<tr>
+<td><a href="type-checking/#integer"><code>integer?</code></a></td>
+<td>1</td>
+<td>True if argument is an integer</td>
+</tr>
+<tr>
+<td><a href="type-checking/#real"><code>real?</code></a></td>
+<td>1</td>
+<td>True if argument is a real number</td>
+</tr>
+<tr>
+<td><a href="type-checking/#complex"><code>complex?</code></a></td>
+<td>1</td>
+<td>True if argument is a complex number</td>
+</tr>
+<tr>
+<td><a href="type-checking/#rational"><code>rational?</code></a></td>
+<td>1</td>
+<td>True if argument is rational</td>
+</tr>
+<tr>
+<td><a href="type-checking/#symbol"><code>symbol?</code></a></td>
+<td>1</td>
+<td>True if argument is a symbol</td>
+</tr>
+<tr>
+<td><a href="type-checking/#string"><code>string?</code></a></td>
+<td>1</td>
+<td>True if argument is a string</td>
+</tr>
+<tr>
+<td><a href="type-checking/#boolean"><code>boolean?</code></a></td>
+<td>1</td>
+<td>True if argument is a boolean</td>
+</tr>
+<tr>
+<td><a href="type-checking/#char"><code>char?</code></a></td>
+<td>1</td>
+<td>True if argument is a character</td>
+</tr>
+<tr>
+<td><a href="type-checking/#procedure"><code>procedure?</code></a></td>
+<td>1</td>
+<td>True if argument is a procedure</td>
+</tr>
+<tr>
+<td><a href="type-checking/#list"><code>list?</code></a></td>
+<td>1</td>
+<td>True if argument is a proper list</td>
+</tr>
+<tr>
+<td><a href="type-checking/#vector"><code>vector?</code></a></td>
+<td>1</td>
+<td>True if argument is a vector</td>
+</tr>
+<tr>
+<td><a href="type-checking/#bytevector"><code>bytevector?</code></a></td>
+<td>1</td>
+<td>True if argument is a bytevector</td>
+</tr>
+<tr>
+<td><a href="type-checking/#port"><code>port?</code></a></td>
+<td>1</td>
+<td>True if argument is a port</td>
+</tr>
+<tr>
+<td><a href="type-checking/#hash-table"><code>hash-table?</code></a></td>
+<td>1</td>
+<td>True if argument is a hash table</td>
+</tr>
+<tr>
+<td><a href="type-checking/#promise"><code>promise?</code></a></td>
+<td>1</td>
+<td>True if argument is a promise</td>
+</tr>
+<tr>
+<td><a href="type-checking/#error-object"><code>error-object?</code></a></td>
+<td>1</td>
+<td>True if argument is an error object</td>
+</tr>
+</tbody>
+</table>
+<h2 id="hash-tables-srfi-69"><a href="hash-tables/">Hash Tables (SRFI-69)</a><a class="headerlink" href="#hash-tables-srfi-69" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Procedure</th>
+<th>Arity</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="hash-tables/#make-hash-table"><code>make-hash-table</code></a></td>
+<td>0+</td>
+<td>Create a new hash table</td>
+</tr>
+<tr>
+<td><a href="hash-tables/#hash-table-pred"><code>hash-table?</code></a></td>
+<td>1</td>
+<td>True if argument is a hash table</td>
+</tr>
+<tr>
+<td><a href="hash-tables/#hash-table-ref"><code>hash-table-ref</code></a></td>
+<td>2+</td>
+<td>Look up key (optional default value)</td>
+</tr>
+<tr>
+<td><a href="hash-tables/#hash-table-set"><code>hash-table-set!</code></a></td>
+<td>3</td>
+<td>Associate key with value</td>
+</tr>
+<tr>
+<td><a href="hash-tables/#hash-table-delete"><code>hash-table-delete!</code></a></td>
+<td>2</td>
+<td>Remove key</td>
+</tr>
+<tr>
+<td><a href="hash-tables/#hash-table-exists"><code>hash-table-exists?</code></a></td>
+<td>2</td>
+<td>True if key is present</td>
+</tr>
+<tr>
+<td><a href="hash-tables/#hash-table-size"><code>hash-table-size</code></a></td>
+<td>1</td>
+<td>Number of key-value pairs</td>
+</tr>
+<tr>
+<td><a href="hash-tables/#hash-table-keys"><code>hash-table-keys</code></a></td>
+<td>1</td>
+<td>List of all keys</td>
+</tr>
+<tr>
+<td><a href="hash-tables/#hash-table-values"><code>hash-table-values</code></a></td>
+<td>1</td>
+<td>List of all values</td>
+</tr>
+<tr>
+<td><a href="hash-tables/#hash-table-walk"><code>hash-table-walk</code></a></td>
+<td>2</td>
+<td>Call procedure on each key-value pair</td>
+</tr>
+<tr>
+<td><a href="hash-tables/#hash-table-to-alist"><code>hash-table-&gt;alist</code></a></td>
+<td>1</td>
+<td>Convert to association list</td>
+</tr>
+<tr>
+<td><a href="hash-tables/#alist-to-hash-table"><code>alist-&gt;hash-table</code></a></td>
+<td>1</td>
+<td>Convert association list to hash table</td>
+</tr>
+<tr>
+<td><a href="hash-tables/#hash-table-copy"><code>hash-table-copy</code></a></td>
+<td>1</td>
+<td>Shallow copy of hash table</td>
+</tr>
+<tr>
+<td><a href="hash-tables/#hash-table-update-default"><code>hash-table-update!/default</code></a></td>
+<td>4</td>
+<td>Update value for key using procedure, with default</td>
+</tr>
+</tbody>
+</table>
+<h2 id="system-and-environment"><a href="system/">System and Environment</a><a class="headerlink" href="#system-and-environment" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Procedure</th>
+<th>Arity</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="system/#exit"><code>exit</code></a></td>
+<td>0+</td>
+<td>Exit the process (optional status code)</td>
+</tr>
+<tr>
+<td><a href="system/#emergency-exit"><code>emergency-exit</code></a></td>
+<td>0+</td>
+<td>Immediate exit without cleanup</td>
+</tr>
+<tr>
+<td><a href="system/#command-line"><code>command-line</code></a></td>
+<td>0</td>
+<td>List of command-line arguments</td>
+</tr>
+<tr>
+<td><a href="system/#get-environment-variable"><code>get-environment-variable</code></a></td>
+<td>1</td>
+<td>Value of environment variable, or <code>#f</code></td>
+</tr>
+<tr>
+<td><a href="system/#get-environment-variables"><code>get-environment-variables</code></a></td>
+<td>0</td>
+<td>Association list of all environment variables</td>
+</tr>
+<tr>
+<td><a href="system/#current-second"><code>current-second</code></a></td>
+<td>0</td>
+<td>Current TAI time as inexact real</td>
+</tr>
+<tr>
+<td><a href="system/#current-jiffy"><code>current-jiffy</code></a></td>
+<td>0</td>
+<td>Current time in jiffies (high resolution)</td>
+</tr>
+<tr>
+<td><a href="system/#jiffies-per-second"><code>jiffies-per-second</code></a></td>
+<td>0</td>
+<td>Number of jiffies per second</td>
+</tr>
+<tr>
+<td><a href="system/#features"><code>features</code></a></td>
+<td>0</td>
+<td>List of implementation feature identifiers</td>
+</tr>
+<tr>
+<td><a href="system/#eval"><code>eval</code></a></td>
+<td>1+</td>
+<td>Evaluate expression in an environment</td>
+</tr>
+<tr>
+<td><a href="system/#environment"><code>environment</code></a></td>
+<td>0+</td>
+<td>Create environment from library imports</td>
+</tr>
+<tr>
+<td><a href="system/#interaction-environment"><code>interaction-environment</code></a></td>
+<td>0</td>
+<td>REPL environment with all bindings</td>
+</tr>
+<tr>
+<td><a href="system/#load"><code>load</code></a></td>
+<td>1</td>
+<td>Load and evaluate a Scheme source file</td>
+</tr>
+<tr>
+<td><a href="system/#make-parameter"><code>make-parameter</code></a></td>
+<td>1+</td>
+<td>Create a parameter object (optional converter)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="syntax-forms"><a href="syntax-forms/">Syntax Forms</a><a class="headerlink" href="#syntax-forms" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Form</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="syntax-forms/#define"><code>define</code></a></td>
+<td>Variable and function definition</td>
+</tr>
+<tr>
+<td><a href="syntax-forms/#lambda"><code>lambda</code></a></td>
+<td>Anonymous function</td>
+</tr>
+<tr>
+<td><a href="syntax-forms/#if"><code>if</code></a></td>
+<td>Conditional</td>
+</tr>
+<tr>
+<td><a href="syntax-forms/#quote"><code>quote</code></a></td>
+<td>Literal datum</td>
+</tr>
+<tr>
+<td><a href="syntax-forms/#set"><code>set!</code></a></td>
+<td>Variable mutation</td>
+</tr>
+<tr>
+<td><a href="syntax-forms/#begin"><code>begin</code></a></td>
+<td>Sequence of expressions</td>
+</tr>
+<tr>
+<td><a href="syntax-forms/#cond"><code>cond</code></a></td>
+<td>Multi-branch conditional</td>
+</tr>
+<tr>
+<td><a href="syntax-forms/#case"><code>case</code></a></td>
+<td>Dispatch on datum equality</td>
+</tr>
+<tr>
+<td><a href="syntax-forms/#and"><code>and</code></a></td>
+<td>Short-circuit logical and</td>
+</tr>
+<tr>
+<td><a href="syntax-forms/#or"><code>or</code></a></td>
+<td>Short-circuit logical or</td>
+</tr>
+<tr>
+<td><a href="syntax-forms/#when"><code>when</code></a></td>
+<td>One-armed conditional with implicit begin</td>
+</tr>
+<tr>
+<td><a href="syntax-forms/#unless"><code>unless</code></a></td>
+<td>Negated one-armed conditional</td>
+</tr>
+<tr>
+<td><a href="syntax-forms/#let"><code>let</code></a></td>
+<td>Local bindings</td>
+</tr>
+<tr>
+<td><a href="syntax-forms/#let-star"><code>let*</code></a></td>
+<td>Sequential local bindings</td>
+</tr>
+<tr>
+<td><a href="syntax-forms/#letrec"><code>letrec</code></a></td>
+<td>Mutually recursive bindings</td>
+</tr>
+<tr>
+<td><a href="syntax-forms/#letrec-star"><code>letrec*</code></a></td>
+<td>Sequential mutually recursive bindings</td>
+</tr>
+<tr>
+<td><a href="syntax-forms/#let-values"><code>let-values</code></a></td>
+<td>Destructure multiple values</td>
+</tr>
+<tr>
+<td><a href="syntax-forms/#let-star-values"><code>let*-values</code></a></td>
+<td>Sequential destructure multiple values</td>
+</tr>
+<tr>
+<td><a href="syntax-forms/#do"><code>do</code></a></td>
+<td>Iteration with step expressions</td>
+</tr>
+<tr>
+<td><a href="syntax-forms/#case-lambda"><code>case-lambda</code></a></td>
+<td>Arity-dispatched lambda</td>
+</tr>
+<tr>
+<td><a href="syntax-forms/#define-syntax"><code>define-syntax</code></a></td>
+<td>Define a macro</td>
+</tr>
+<tr>
+<td><a href="syntax-forms/#syntax-rules"><code>syntax-rules</code></a></td>
+<td>Pattern-based macro transformer</td>
+</tr>
+<tr>
+<td><a href="syntax-forms/#let-syntax"><code>let-syntax</code></a></td>
+<td>Local macro bindings</td>
+</tr>
+<tr>
+<td><a href="syntax-forms/#letrec-syntax"><code>letrec-syntax</code></a></td>
+<td>Mutually recursive local macro bindings</td>
+</tr>
+<tr>
+<td><a href="syntax-forms/#quasiquote"><code>quasiquote</code></a></td>
+<td>Template with unquote and unquote-splicing</td>
+</tr>
+<tr>
+<td><a href="syntax-forms/#define-record-type"><code>define-record-type</code></a></td>
+<td>Define a record type</td>
+</tr>
+<tr>
+<td><a href="syntax-forms/#define-library"><code>define-library</code></a></td>
+<td>Define a library</td>
+</tr>
+<tr>
+<td><a href="syntax-forms/#import"><code>import</code></a></td>
+<td>Import library bindings</td>
+</tr>
+<tr>
+<td><a href="syntax-forms/#guard"><code>guard</code></a></td>
+<td>Exception handling with cond clauses</td>
+</tr>
+<tr>
+<td><a href="syntax-forms/#delay"><code>delay</code></a></td>
+<td>Create a promise (lazy thunk)</td>
+</tr>
+<tr>
+<td><a href="syntax-forms/#delay-force"><code>delay-force</code></a></td>
+<td>Create an iterative promise</td>
+</tr>
+<tr>
+<td><a href="syntax-forms/#parameterize"><code>parameterize</code></a></td>
+<td>Dynamically bind parameters</td>
+</tr>
+<tr>
+<td><a href="syntax-forms/#cond-expand"><code>cond-expand</code></a></td>
+<td>Feature-based conditional expansion</td>
+</tr>
+</tbody>
+</table>
+<h2 id="srfi-18-threads"><a href="threads/">SRFI-18 Threads</a><a class="headerlink" href="#srfi-18-threads" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Procedure</th>
+<th>Arity</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="threads/#current-thread"><code>current-thread</code></a></td>
+<td>0</td>
+<td>Current thread object</td>
+</tr>
+<tr>
+<td><a href="threads/#thread-pred"><code>thread?</code></a></td>
+<td>1</td>
+<td>True if argument is a thread</td>
+</tr>
+<tr>
+<td><a href="threads/#make-thread"><code>make-thread</code></a></td>
+<td>1+</td>
+<td>Create a new thread (thunk, optional name)</td>
+</tr>
+<tr>
+<td><a href="threads/#thread-name"><code>thread-name</code></a></td>
+<td>1</td>
+<td>Thread's name</td>
+</tr>
+<tr>
+<td><a href="threads/#thread-specific"><code>thread-specific</code></a></td>
+<td>1</td>
+<td>Thread's specific value</td>
+</tr>
+<tr>
+<td><a href="threads/#thread-specific-set"><code>thread-specific-set!</code></a></td>
+<td>2</td>
+<td>Set thread's specific value</td>
+</tr>
+<tr>
+<td><a href="threads/#thread-start"><code>thread-start!</code></a></td>
+<td>1</td>
+<td>Start a thread</td>
+</tr>
+<tr>
+<td><a href="threads/#thread-yield"><code>thread-yield!</code></a></td>
+<td>0</td>
+<td>Yield to the scheduler</td>
+</tr>
+<tr>
+<td><a href="threads/#thread-sleep"><code>thread-sleep!</code></a></td>
+<td>1</td>
+<td>Sleep for a duration</td>
+</tr>
+<tr>
+<td><a href="threads/#thread-terminate"><code>thread-terminate!</code></a></td>
+<td>1</td>
+<td>Terminate a thread</td>
+</tr>
+<tr>
+<td><a href="threads/#thread-join"><code>thread-join!</code></a></td>
+<td>1+</td>
+<td>Wait for thread completion (optional timeout)</td>
+</tr>
+<tr>
+<td><a href="threads/#mutex-pred"><code>mutex?</code></a></td>
+<td>1</td>
+<td>True if argument is a mutex</td>
+</tr>
+<tr>
+<td><a href="threads/#make-mutex"><code>make-mutex</code></a></td>
+<td>0+</td>
+<td>Create a mutex (optional name)</td>
+</tr>
+<tr>
+<td><a href="threads/#mutex-name"><code>mutex-name</code></a></td>
+<td>1</td>
+<td>Mutex name</td>
+</tr>
+<tr>
+<td><a href="threads/#mutex-specific"><code>mutex-specific</code></a></td>
+<td>1</td>
+<td>Mutex specific value</td>
+</tr>
+<tr>
+<td><a href="threads/#mutex-specific-set"><code>mutex-specific-set!</code></a></td>
+<td>2</td>
+<td>Set mutex specific value</td>
+</tr>
+<tr>
+<td><a href="threads/#mutex-state"><code>mutex-state</code></a></td>
+<td>1</td>
+<td>Mutex state (locked/unlocked/owner)</td>
+</tr>
+<tr>
+<td><a href="threads/#mutex-lock"><code>mutex-lock!</code></a></td>
+<td>1+</td>
+<td>Lock a mutex (optional timeout/thread)</td>
+</tr>
+<tr>
+<td><a href="threads/#mutex-unlock"><code>mutex-unlock!</code></a></td>
+<td>1+</td>
+<td>Unlock a mutex (optional condition variable/timeout)</td>
+</tr>
+<tr>
+<td><a href="threads/#condition-variable-pred"><code>condition-variable?</code></a></td>
+<td>1</td>
+<td>True if argument is a condition variable</td>
+</tr>
+<tr>
+<td><a href="threads/#make-condition-variable"><code>make-condition-variable</code></a></td>
+<td>0+</td>
+<td>Create a condition variable (optional name)</td>
+</tr>
+<tr>
+<td><a href="threads/#condition-variable-name"><code>condition-variable-name</code></a></td>
+<td>1</td>
+<td>Condition variable name</td>
+</tr>
+<tr>
+<td><a href="threads/#condition-variable-specific"><code>condition-variable-specific</code></a></td>
+<td>1</td>
+<td>Condition variable specific value</td>
+</tr>
+<tr>
+<td><a href="threads/#condition-variable-specific-set"><code>condition-variable-specific-set!</code></a></td>
+<td>2</td>
+<td>Set condition variable specific value</td>
+</tr>
+<tr>
+<td><a href="threads/#condition-variable-signal"><code>condition-variable-signal!</code></a></td>
+<td>1</td>
+<td>Wake one waiting thread</td>
+</tr>
+<tr>
+<td><a href="threads/#condition-variable-broadcast"><code>condition-variable-broadcast!</code></a></td>
+<td>1</td>
+<td>Wake all waiting threads</td>
+</tr>
+<tr>
+<td><a href="threads/#current-time"><code>current-time</code></a></td>
+<td>0</td>
+<td>Current time as time object</td>
+</tr>
+<tr>
+<td><a href="threads/#time-pred"><code>time?</code></a></td>
+<td>1</td>
+<td>True if argument is a time object</td>
+</tr>
+<tr>
+<td><a href="threads/#time-to-seconds"><code>time-&gt;seconds</code></a></td>
+<td>1</td>
+<td>Convert time to seconds</td>
+</tr>
+<tr>
+<td><a href="threads/#seconds-to-time"><code>seconds-&gt;time</code></a></td>
+<td>1</td>
+<td>Convert seconds to time</td>
+</tr>
+<tr>
+<td><a href="threads/#join-timeout-exception"><code>join-timeout-exception?</code></a></td>
+<td>1</td>
+<td>True if exception is a join timeout</td>
+</tr>
+<tr>
+<td><a href="threads/#abandoned-mutex-exception"><code>abandoned-mutex-exception?</code></a></td>
+<td>1</td>
+<td>True if exception is an abandoned mutex</td>
+</tr>
+<tr>
+<td><a href="threads/#terminated-thread-exception"><code>terminated-thread-exception?</code></a></td>
+<td>1</td>
+<td>True if exception is a terminated thread</td>
+</tr>
+<tr>
+<td><a href="threads/#uncaught-exception"><code>uncaught-exception?</code></a></td>
+<td>1</td>
+<td>True if exception is an uncaught exception</td>
+</tr>
+<tr>
+<td><a href="threads/#uncaught-exception-reason"><code>uncaught-exception-reason</code></a></td>
+<td>1</td>
+<td>Get the reason from an uncaught exception</td>
+</tr>
+</tbody>
+</table>
+<h2 id="kaappi-extensions"><a href="extensions/">Kaappi Extensions</a><a class="headerlink" href="#kaappi-extensions" title="Permanent link">&para;</a></h2>
+<h3 id="ffi-foreign-function-interface">FFI (Foreign Function Interface)<a class="headerlink" href="#ffi-foreign-function-interface" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Procedure</th>
+<th>Arity</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="extensions/#ffi-open"><code>ffi-open</code></a></td>
+<td>1</td>
+<td>Open a shared library by path</td>
+</tr>
+<tr>
+<td><a href="extensions/#ffi-fn"><code>ffi-fn</code></a></td>
+<td>4</td>
+<td>Bind a C function: <code>(ffi-fn lib "name" '(param-types) 'return-type)</code></td>
+</tr>
+<tr>
+<td><a href="extensions/#ffi-close"><code>ffi-close</code></a></td>
+<td>1</td>
+<td>Close a shared library handle</td>
+</tr>
+</tbody>
+</table>
+<h3 id="green-threads-fibers">Green Threads (Fibers)<a class="headerlink" href="#green-threads-fibers" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Procedure</th>
+<th>Arity</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="extensions/#spawn"><code>spawn</code></a></td>
+<td>1</td>
+<td>Create and start a fiber running a thunk</td>
+</tr>
+<tr>
+<td><a href="extensions/#yield"><code>yield</code></a></td>
+<td>0</td>
+<td>Yield to the fiber scheduler</td>
+</tr>
+<tr>
+<td><a href="extensions/#fiber-pred"><code>fiber?</code></a></td>
+<td>1</td>
+<td>True if argument is a fiber</td>
+</tr>
+<tr>
+<td><a href="extensions/#fiber-join"><code>fiber-join</code></a></td>
+<td>1</td>
+<td>Wait for fiber completion, return its result</td>
+</tr>
+<tr>
+<td><a href="extensions/#make-channel"><code>make-channel</code></a></td>
+<td>0</td>
+<td>Create a new channel</td>
+</tr>
+<tr>
+<td><a href="extensions/#channel-send"><code>channel-send</code></a></td>
+<td>2</td>
+<td>Send a value on a channel</td>
+</tr>
+<tr>
+<td><a href="extensions/#channel-receive"><code>channel-receive</code></a></td>
+<td>1</td>
+<td>Receive a value from a channel</td>
+</tr>
+<tr>
+<td><a href="extensions/#channel-pred"><code>channel?</code></a></td>
+<td>1</td>
+<td>True if argument is a channel</td>
+</tr>
+</tbody>
+</table>
+<h2 id="other-primitives"><a href="other/">Other Primitives</a><a class="headerlink" href="#other-primitives" title="Permanent link">&para;</a></h2>
+<h3 id="lazy-evaluation">Lazy Evaluation<a class="headerlink" href="#lazy-evaluation" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Procedure</th>
+<th>Arity</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="other/#promise-pred"><code>promise?</code></a></td>
+<td>1</td>
+<td>True if argument is a promise</td>
+</tr>
+<tr>
+<td><a href="other/#make-promise"><code>make-promise</code></a></td>
+<td>1</td>
+<td>Wrap a value as an already-forced promise</td>
+</tr>
+<tr>
+<td><a href="other/#force"><code>force</code></a></td>
+<td>1</td>
+<td>Force a promise, memoizing the result</td>
+</tr>
+</tbody>
+</table>
+<h3 id="records-internal-primitives">Records (Internal Primitives)<a class="headerlink" href="#records-internal-primitives" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Procedure</th>
+<th>Arity</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="other/#make-record-type"><code>%make-record-type</code></a></td>
+<td>2</td>
+<td>Create a record type descriptor</td>
+</tr>
+<tr>
+<td><a href="other/#make-record"><code>%make-record</code></a></td>
+<td>1+</td>
+<td>Construct a record instance</td>
+</tr>
+<tr>
+<td><a href="other/#record-pred"><code>%record?</code></a></td>
+<td>2</td>
+<td>Check if value is instance of record type</td>
+</tr>
+<tr>
+<td><a href="other/#record-ref"><code>%record-ref</code></a></td>
+<td>2</td>
+<td>Access field by index</td>
+</tr>
+<tr>
+<td><a href="other/#record-set"><code>%record-set!</code></a></td>
+<td>3</td>
+<td>Mutate field by index</td>
+</tr>
+</tbody>
+</table>
+<h3 id="random-numbers-srfi-27">Random Numbers (SRFI-27)<a class="headerlink" href="#random-numbers-srfi-27" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Procedure</th>
+<th>Arity</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="other/#random-integer"><code>random-integer</code></a></td>
+<td>1</td>
+<td>Random integer in [0, n)</td>
+</tr>
+<tr>
+<td><a href="other/#random-real"><code>random-real</code></a></td>
+<td>0</td>
+<td>Random real in [0, 1)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="srfi-170-filesystem"><a href="srfi-170/">SRFI-170 Filesystem</a><a class="headerlink" href="#srfi-170-filesystem" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Procedure</th>
+<th>Arity</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="srfi-170/#file-info"><code>file-info</code></a></td>
+<td>1+</td>
+<td>Get file metadata (optional follow-symlinks?)</td>
+</tr>
+<tr>
+<td><a href="srfi-170/#file-info-pred"><code>file-info?</code></a></td>
+<td>1</td>
+<td>True if argument is a file-info object</td>
+</tr>
+<tr>
+<td><a href="srfi-170/#file-info-type"><code>file-info-type</code></a></td>
+<td>1</td>
+<td>File type as symbol (regular, directory, symlink, ...)</td>
+</tr>
+<tr>
+<td><a href="srfi-170/#file-info-size"><code>file-info:size</code></a></td>
+<td>1</td>
+<td>File size in bytes</td>
+</tr>
+<tr>
+<td><a href="srfi-170/#file-info-mtime"><code>file-info:mtime</code></a></td>
+<td>1</td>
+<td>Modification time</td>
+</tr>
+<tr>
+<td><a href="srfi-170/#file-info-atime"><code>file-info:atime</code></a></td>
+<td>1</td>
+<td>Access time</td>
+</tr>
+<tr>
+<td><a href="srfi-170/#file-info-ctime"><code>file-info:ctime</code></a></td>
+<td>1</td>
+<td>Status change time</td>
+</tr>
+<tr>
+<td><a href="srfi-170/#file-info-mode"><code>file-info:mode</code></a></td>
+<td>1</td>
+<td>File permission mode</td>
+</tr>
+<tr>
+<td><a href="srfi-170/#file-info-nlinks"><code>file-info:nlinks</code></a></td>
+<td>1</td>
+<td>Number of hard links</td>
+</tr>
+<tr>
+<td><a href="srfi-170/#file-info-uid"><code>file-info:uid</code></a></td>
+<td>1</td>
+<td>Owner user ID</td>
+</tr>
+<tr>
+<td><a href="srfi-170/#file-info-gid"><code>file-info:gid</code></a></td>
+<td>1</td>
+<td>Owner group ID</td>
+</tr>
+<tr>
+<td><a href="srfi-170/#file-info-inode"><code>file-info:inode</code></a></td>
+<td>1</td>
+<td>Inode number</td>
+</tr>
+<tr>
+<td><a href="srfi-170/#file-info-device-id"><code>file-info:device</code></a></td>
+<td>1</td>
+<td>Device ID</td>
+</tr>
+<tr>
+<td><a href="srfi-170/#file-info-rdev"><code>file-info:rdev</code></a></td>
+<td>1</td>
+<td>Device ID (for device files)</td>
+</tr>
+<tr>
+<td><a href="srfi-170/#file-info-blksize"><code>file-info:blksize</code></a></td>
+<td>1</td>
+<td>Block size</td>
+</tr>
+<tr>
+<td><a href="srfi-170/#file-info-blocks"><code>file-info:blocks</code></a></td>
+<td>1</td>
+<td>Number of blocks</td>
+</tr>
+<tr>
+<td><a href="srfi-170/#file-info-directory"><code>file-info-directory?</code></a></td>
+<td>1</td>
+<td>True if file is a directory</td>
+</tr>
+<tr>
+<td><a href="srfi-170/#file-info-regular"><code>file-info-regular?</code></a></td>
+<td>1</td>
+<td>True if file is a regular file</td>
+</tr>
+<tr>
+<td><a href="srfi-170/#file-info-symlink"><code>file-info-symlink?</code></a></td>
+<td>1</td>
+<td>True if file is a symlink</td>
+</tr>
+<tr>
+<td><a href="srfi-170/#file-info-fifo"><code>file-info-fifo?</code></a></td>
+<td>1</td>
+<td>True if file is a FIFO</td>
+</tr>
+<tr>
+<td><a href="srfi-170/#file-info-socket"><code>file-info-socket?</code></a></td>
+<td>1</td>
+<td>True if file is a socket</td>
+</tr>
+<tr>
+<td><a href="srfi-170/#file-info-device"><code>file-info-device?</code></a></td>
+<td>1</td>
+<td>True if file is a device</td>
+</tr>
+<tr>
+<td><a href="srfi-170/#create-directory"><code>create-directory</code></a></td>
+<td>1+</td>
+<td>Create a directory (optional mode)</td>
+</tr>
+<tr>
+<td><a href="srfi-170/#delete-directory"><code>delete-directory</code></a></td>
+<td>1</td>
+<td>Delete a directory</td>
+</tr>
+<tr>
+<td><a href="srfi-170/#rename-file"><code>rename-file</code></a></td>
+<td>2</td>
+<td>Rename a file</td>
+</tr>
+<tr>
+<td><a href="srfi-170/#create-symlink"><code>create-symlink</code></a></td>
+<td>2</td>
+<td>Create a symbolic link</td>
+</tr>
+<tr>
+<td><a href="srfi-170/#read-symlink"><code>read-symlink</code></a></td>
+<td>1</td>
+<td>Read the target of a symbolic link</td>
+</tr>
+<tr>
+<td><a href="srfi-170/#create-hard-link"><code>create-hard-link</code></a></td>
+<td>2</td>
+<td>Create a hard link</td>
+</tr>
+<tr>
+<td><a href="srfi-170/#real-path"><code>real-path</code></a></td>
+<td>1</td>
+<td>Resolve to canonical absolute path</td>
+</tr>
+<tr>
+<td><a href="srfi-170/#set-file-mode"><code>set-file-mode</code></a></td>
+<td>2</td>
+<td>Set file permissions</td>
+</tr>
+<tr>
+<td><a href="srfi-170/#truncate-file"><code>truncate-file</code></a></td>
+<td>2</td>
+<td>Truncate file to given length</td>
+</tr>
+<tr>
+<td><a href="srfi-170/#create-fifo"><code>create-fifo</code></a></td>
+<td>1+</td>
+<td>Create a named pipe (optional mode)</td>
+</tr>
+<tr>
+<td><a href="srfi-170/#set-file-owner"><code>set-file-owner</code></a></td>
+<td>3</td>
+<td>Set file owner (uid, gid)</td>
+</tr>
+<tr>
+<td><a href="srfi-170/#set-file-times"><code>set-file-times</code></a></td>
+<td>1+</td>
+<td>Set access and modification times</td>
+</tr>
+<tr>
+<td><a href="srfi-170/#directory-files"><code>directory-files</code></a></td>
+<td>1+</td>
+<td>List files in a directory</td>
+</tr>
+<tr>
+<td><a href="srfi-170/#open-directory"><code>open-directory</code></a></td>
+<td>1+</td>
+<td>Open a directory stream</td>
+</tr>
+<tr>
+<td><a href="srfi-170/#read-directory"><code>read-directory</code></a></td>
+<td>1</td>
+<td>Read next entry from directory stream</td>
+</tr>
+<tr>
+<td><a href="srfi-170/#close-directory"><code>close-directory</code></a></td>
+<td>1</td>
+<td>Close a directory stream</td>
+</tr>
+<tr>
+<td><a href="srfi-170/#pid"><code>pid</code></a></td>
+<td>0</td>
+<td>Current process ID</td>
+</tr>
+<tr>
+<td><a href="srfi-170/#umask"><code>umask</code></a></td>
+<td>0</td>
+<td>Current umask</td>
+</tr>
+<tr>
+<td><a href="srfi-170/#set-umask"><code>set-umask!</code></a></td>
+<td>1</td>
+<td>Set umask</td>
+</tr>
+<tr>
+<td><a href="srfi-170/#current-directory"><code>current-directory</code></a></td>
+<td>0</td>
+<td>Current working directory</td>
+</tr>
+<tr>
+<td><a href="srfi-170/#set-current-directory"><code>set-current-directory!</code></a></td>
+<td>1</td>
+<td>Change working directory</td>
+</tr>
+<tr>
+<td><a href="srfi-170/#user-uid"><code>user-uid</code></a></td>
+<td>0</td>
+<td>Current user ID</td>
+</tr>
+<tr>
+<td><a href="srfi-170/#user-gid"><code>user-gid</code></a></td>
+<td>0</td>
+<td>Current group ID</td>
+</tr>
+<tr>
+<td><a href="srfi-170/#user-effective-uid"><code>user-effective-uid</code></a></td>
+<td>0</td>
+<td>Effective user ID</td>
+</tr>
+<tr>
+<td><a href="srfi-170/#user-effective-gid"><code>user-effective-gid</code></a></td>
+<td>0</td>
+<td>Effective group ID</td>
+</tr>
+<tr>
+<td><a href="srfi-170/#user-supplementary-gids"><code>user-supplementary-gids</code></a></td>
+<td>0</td>
+<td>Supplementary group IDs</td>
+</tr>
+<tr>
+<td><a href="srfi-170/#nice"><code>nice</code></a></td>
+<td>0+</td>
+<td>Adjust process priority</td>
+</tr>
+<tr>
+<td><a href="srfi-170/#user-info"><code>user-info</code></a></td>
+<td>1</td>
+<td>Get user info by UID or username</td>
+</tr>
+<tr>
+<td><a href="srfi-170/#user-info-pred"><code>user-info?</code></a></td>
+<td>1</td>
+<td>True if argument is a user-info object</td>
+</tr>
+<tr>
+<td><a href="srfi-170/#user-info-name"><code>user-info:name</code></a></td>
+<td>1</td>
+<td>User login name</td>
+</tr>
+<tr>
+<td><a href="srfi-170/#user-info-uid"><code>user-info:uid</code></a></td>
+<td>1</td>
+<td>User ID</td>
+</tr>
+<tr>
+<td><a href="srfi-170/#user-info-gid"><code>user-info:gid</code></a></td>
+<td>1</td>
+<td>User group ID</td>
+</tr>
+<tr>
+<td><a href="srfi-170/#user-info-home-dir"><code>user-info:home-dir</code></a></td>
+<td>1</td>
+<td>Home directory path</td>
+</tr>
+<tr>
+<td><a href="srfi-170/#user-info-shell"><code>user-info:shell</code></a></td>
+<td>1</td>
+<td>Login shell path</td>
+</tr>
+<tr>
+<td><a href="srfi-170/#user-info-full-name"><code>user-info:full-name</code></a></td>
+<td>1</td>
+<td>Full name (GECOS field)</td>
+</tr>
+<tr>
+<td><a href="srfi-170/#group-info"><code>group-info</code></a></td>
+<td>1</td>
+<td>Get group info by GID or group name</td>
+</tr>
+<tr>
+<td><a href="srfi-170/#group-info-pred"><code>group-info?</code></a></td>
+<td>1</td>
+<td>True if argument is a group-info object</td>
+</tr>
+<tr>
+<td><a href="srfi-170/#group-info-name"><code>group-info:name</code></a></td>
+<td>1</td>
+<td>Group name</td>
+</tr>
+<tr>
+<td><a href="srfi-170/#group-info-gid"><code>group-info:gid</code></a></td>
+<td>1</td>
+<td>Group ID</td>
+</tr>
+<tr>
+<td><a href="srfi-170/#set-environment-variable"><code>set-environment-variable!</code></a></td>
+<td>2</td>
+<td>Set an environment variable</td>
+</tr>
+<tr>
+<td><a href="srfi-170/#delete-environment-variable"><code>delete-environment-variable!</code></a></td>
+<td>1</td>
+<td>Delete an environment variable</td>
+</tr>
+<tr>
+<td><a href="srfi-170/#terminal"><code>terminal?</code></a></td>
+<td>1</td>
+<td>True if port is connected to a terminal</td>
+</tr>
+<tr>
+<td><a href="srfi-170/#posix-time"><code>posix-time</code></a></td>
+<td>0</td>
+<td>Current time as seconds since epoch</td>
+</tr>
+<tr>
+<td><a href="srfi-170/#monotonic-time"><code>monotonic-time</code></a></td>
+<td>0</td>
+<td>Monotonic clock time</td>
+</tr>
+<tr>
+<td><a href="srfi-170/#temp-file-prefix"><code>temp-file-prefix</code></a></td>
+<td>0</td>
+<td>Default temporary file prefix</td>
+</tr>
+<tr>
+<td><a href="srfi-170/#create-temp-file"><code>create-temp-file</code></a></td>
+<td>0+</td>
+<td>Create a temporary file (optional prefix)</td>
+</tr>
+</tbody>
+</table>
+<hr />
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      MIT License &mdash; Built with Zig
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/kaappi/kaappi" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/orgs/kaappi/discussions" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path d="M1.75 1h8.5c.966 0 1.75.784 1.75 1.75v5.5A1.75 1.75 0 0 1 10.25 10H7.061l-2.574 2.573A1.458 1.458 0 0 1 2 11.543V10h-.25A1.75 1.75 0 0 1 0 8.25v-5.5C0 1.784.784 1 1.75 1M1.5 2.75v5.5c0 .138.112.25.25.25h1a.75.75 0 0 1 .75.75v2.19l2.72-2.72a.75.75 0 0 1 .53-.22h3.5a.25.25 0 0 0 .25-.25v-5.5a.25.25 0 0 0-.25-.25h-8.5a.25.25 0 0 0-.25.25m13 2a.25.25 0 0 0-.25-.25h-.5a.75.75 0 0 1 0-1.5h.5c.966 0 1.75.784 1.75 1.75v5.5A1.75 1.75 0 0 1 14.25 12H14v1.543a1.458 1.458 0 0 1-2.487 1.03L9.22 12.28a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l2.22 2.22v-2.19a.75.75 0 0 1 .75-.75h1a.25.25 0 0 0 .25-.25Z"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.instant", "navigation.tracking", "navigation.sections", "navigation.expand", "navigation.top", "search.suggest", "search.highlight", "content.code.copy", "toc.follow"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

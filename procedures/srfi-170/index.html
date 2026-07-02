@@ -1,0 +1,5010 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="A complete R7RS-small Scheme implementation written in Zig">
+      
+      
+      
+        <link rel="canonical" href="https://kaappi-lang.org/procedures/srfi-170/">
+      
+      
+        <link rel="prev" href="../other/">
+      
+      
+        <link rel="next" href="../../cookbook/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>SRFI-170 Filesystem - Kaappi</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,700,700i%7CJetBrains+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="amber">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#srfi-170-filesystem" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Kaappi" class="md-header__button md-logo" aria-label="Kaappi" data-md-component="logo">
+      
+  <img src="../../assets/logo.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Kaappi
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              SRFI-170 Filesystem
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/kaappi/kaappi" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    kaappi/kaappi
+  </div>
+</a>
+      </div>
+    
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="amber"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="teal" data-md-color-accent="amber"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Kaappi" class="md-nav__button md-logo" aria-label="Kaappi" data-md-component="logo">
+      
+  <img src="../../assets/logo.svg" alt="logo">
+
+    </a>
+    Kaappi
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/kaappi/kaappi" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    kaappi/kaappi
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../playground/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Try It
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="https://kaappi-lang.org/tour/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tour
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../download/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Download
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guide
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Guide
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    User Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guide/installation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Installation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guide/first-program/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Your First Program
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guide/tutorial/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Scheme Tutorial
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guide/language/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Language Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guide/libraries/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Libraries
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guide/library-authoring/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Library Authoring
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guide/c-extensions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    C Extensions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guide/zig-extensions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Zig Extensions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guide/srfi-support/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SRFI Support
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guide/advanced/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Advanced Features
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guide/cli/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CLI Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guide/debugging/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Debugging
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guide/repl/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    REPL Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guide/editors/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Editor Support
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guide/tips/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tips
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guide/migrating/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Migrating from Other Schemes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guide/security/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Security
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guide/deployment/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deployment
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guide/troubleshooting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Troubleshooting
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Procedures
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Procedures
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Procedure Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../numbers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Numbers and Arithmetic
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pairs-and-lists/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pairs and Lists
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../srfi-1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SRFI-1 List Library
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../strings/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Strings
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../srfi-13/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SRFI-13 String Library
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../characters/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Characters
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../vectors/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Vectors
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../srfi-133/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SRFI-133 Vector Library
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../bytevectors/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Bytevectors
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ports-and-io/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ports and I/O
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../control-flow/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Control Flow
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../type-checking/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Type Checking
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../hash-tables/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hash Tables
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../system/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    System and Environment
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../syntax-forms/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Syntax Forms
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../threads/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SRFI-18 Threads
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../extensions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Kaappi Extensions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../other/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Other Primitives
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SRFI-170 Filesystem
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SRFI-170 Filesystem
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#file-information" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        File Information
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="File Information">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#file-info" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        file-info
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#file-info-pred" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        file-info?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#file-info-type" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        file-info-type
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#file-info-directory" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        file-info-directory?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#file-info-regular" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        file-info-regular?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#file-info-symlink" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        file-info-symlink?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#file-info-fifo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        file-info-fifo?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#file-info-socket" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        file-info-socket?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#file-info-device" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        file-info-device?
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#file-info-accessors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        File-Info Accessors
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#directory-operations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Directory Operations
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Directory Operations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#directory-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        directory-files
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#create-directory" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        create-directory
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#delete-directory" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        delete-directory
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#open-directory" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        open-directory
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#read-directory" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        read-directory
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#close-directory" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        close-directory
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#file-manipulation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        File Manipulation
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="File Manipulation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#rename-file" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        rename-file
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#create-symlink" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        create-symlink
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#read-symlink" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        read-symlink
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#create-hard-link" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        create-hard-link
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#real-path" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        real-path
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#set-file-mode" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        set-file-mode
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#set-file-owner" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        set-file-owner
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#truncate-file" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        truncate-file
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#set-file-times" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        set-file-times
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#create-fifo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        create-fifo
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#process-state" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Process State
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Process State">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pid" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        pid
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#umask" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        umask
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#set-umask" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        set-umask!
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#current-directory" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        current-directory
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#set-current-directory" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        set-current-directory!
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#user-uid" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        user-uid
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#user-gid" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        user-gid
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#user-effective-uid" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        user-effective-uid
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#user-effective-gid" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        user-effective-gid
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#user-supplementary-gids" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        user-supplementary-gids
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nice" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        nice
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#user-database" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        User Database
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="User Database">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#user-info" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        user-info
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#user-info-pred" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        user-info?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#user-info-name" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        user-info:name
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#user-info-uid" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        user-info:uid
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#user-info-gid" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        user-info:gid
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#user-info-home-dir" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        user-info:home-dir
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#user-info-shell" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        user-info:shell
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#user-info-full-name" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        user-info:full-name
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#group-database" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Group Database
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Group Database">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#group-info" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        group-info
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#group-info-pred" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        group-info?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#group-info-name" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        group-info:name
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#group-info-gid" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        group-info:gid
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#environment-variables" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Environment Variables
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Environment Variables">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#set-environment-variable" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        set-environment-variable!
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#delete-environment-variable" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        delete-environment-variable!
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#terminal_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Terminal
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Terminal">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#terminal" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        terminal?
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#time" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Time
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Time">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#posix-time" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        posix-time
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#monotonic-time" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        monotonic-time
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#temporary-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Temporary Files
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Temporary Files">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#create-temp-file" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        create-temp-file
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#temp-file-prefix" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        temp-file-prefix
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cookbook
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Cookbook
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cookbook/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cookbook
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cookbook/rest-api/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Build a REST API
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cookbook/html-templates/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Serve HTML with Templates
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cookbook/json-processing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Process JSON Data
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cookbook/csv-processing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Parse and Generate CSV
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cookbook/testing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Write Tests
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cookbook/cli-tool/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Build a CLI Tool
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ecosystem
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Ecosystem
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ecosystem/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ecosystem
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ecosystem/thottam/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Package Manager (thottam)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ecosystem/json/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    JSON
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ecosystem/toml/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    TOML
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ecosystem/yaml/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    YAML
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ecosystem/csv/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CSV
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ecosystem/redis/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Redis
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ecosystem/pg/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PostgreSQL
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ecosystem/sqlite/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SQLite
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ecosystem/http/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    HTTP / HTTPS
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ecosystem/web/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Web Framework
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ecosystem/template/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Templates
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ecosystem/net/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Networking (TCP/TLS)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ecosystem/email/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Email (SMTP)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ecosystem/crypto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Crypto (Hashing)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ecosystem/test/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Testing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ecosystem/bdd/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    BDD Testing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ecosystem/log/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Logging
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ecosystem/cli/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CLI Parsing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ecosystem/examples/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Examples
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../glossary/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Glossary
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../stability/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Stability
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../community/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Community
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../changelog/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Changelog
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../faq/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    FAQ
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#file-information" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        File Information
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="File Information">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#file-info" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        file-info
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#file-info-pred" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        file-info?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#file-info-type" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        file-info-type
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#file-info-directory" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        file-info-directory?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#file-info-regular" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        file-info-regular?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#file-info-symlink" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        file-info-symlink?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#file-info-fifo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        file-info-fifo?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#file-info-socket" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        file-info-socket?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#file-info-device" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        file-info-device?
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#file-info-accessors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        File-Info Accessors
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#directory-operations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Directory Operations
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Directory Operations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#directory-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        directory-files
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#create-directory" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        create-directory
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#delete-directory" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        delete-directory
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#open-directory" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        open-directory
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#read-directory" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        read-directory
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#close-directory" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        close-directory
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#file-manipulation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        File Manipulation
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="File Manipulation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#rename-file" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        rename-file
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#create-symlink" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        create-symlink
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#read-symlink" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        read-symlink
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#create-hard-link" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        create-hard-link
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#real-path" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        real-path
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#set-file-mode" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        set-file-mode
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#set-file-owner" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        set-file-owner
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#truncate-file" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        truncate-file
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#set-file-times" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        set-file-times
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#create-fifo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        create-fifo
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#process-state" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Process State
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Process State">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pid" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        pid
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#umask" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        umask
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#set-umask" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        set-umask!
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#current-directory" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        current-directory
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#set-current-directory" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        set-current-directory!
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#user-uid" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        user-uid
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#user-gid" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        user-gid
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#user-effective-uid" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        user-effective-uid
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#user-effective-gid" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        user-effective-gid
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#user-supplementary-gids" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        user-supplementary-gids
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nice" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        nice
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#user-database" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        User Database
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="User Database">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#user-info" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        user-info
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#user-info-pred" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        user-info?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#user-info-name" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        user-info:name
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#user-info-uid" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        user-info:uid
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#user-info-gid" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        user-info:gid
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#user-info-home-dir" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        user-info:home-dir
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#user-info-shell" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        user-info:shell
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#user-info-full-name" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        user-info:full-name
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#group-database" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Group Database
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Group Database">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#group-info" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        group-info
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#group-info-pred" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        group-info?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#group-info-name" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        group-info:name
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#group-info-gid" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        group-info:gid
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#environment-variables" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Environment Variables
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Environment Variables">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#set-environment-variable" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        set-environment-variable!
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#delete-environment-variable" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        delete-environment-variable!
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#terminal_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Terminal
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Terminal">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#terminal" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        terminal?
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#time" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Time
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Time">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#posix-time" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        posix-time
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#monotonic-time" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        monotonic-time
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#temporary-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Temporary Files
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Temporary Files">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#create-temp-file" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        create-temp-file
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#temp-file-prefix" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        temp-file-prefix
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="srfi-170-filesystem">SRFI-170 Filesystem<a class="headerlink" href="#srfi-170-filesystem" title="Permanent link">&para;</a></h1>
+<p>POSIX filesystem operations. Import with <code>(import (srfi 170))</code>.</p>
+<hr />
+<h2 id="file-information">File Information<a class="headerlink" href="#file-information" title="Permanent link">&para;</a></h2>
+<h3 id="file-info"><code>file-info</code><a class="headerlink" href="#file-info" title="Permanent link">&para;</a></h3>
+<p><strong>Syntax:</strong> <code>(file-info path)</code> | <code>(file-info path follow?)</code></p>
+<p>Returns a file-info object for <em>path</em>. When <em>follow?</em> is <code>#t</code> (the
+default), symbolic links are followed (stat). When <em>follow?</em> is <code>#f</code>,
+the link itself is examined (lstat). Raises a file error if the path
+does not exist or cannot be accessed.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nf">file-info</span><span class="w"> </span><span class="s">&quot;.&quot;</span><span class="p">)</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="c1">;=&gt; #&lt;file-info&gt;</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="nv">fi</span><span class="w"> </span><span class="p">(</span><span class="nf">file-info</span><span class="w"> </span><span class="s">&quot;/tmp&quot;</span><span class="p">))</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nf">file-info-directory?</span><span class="w"> </span><span class="nv">fi</span><span class="p">)</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1">;=&gt; #t</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nf">file-info</span><span class="w"> </span><span class="s">&quot;/tmp/mylink&quot;</span><span class="w"> </span><span class="no">#f</span><span class="p">)</span><span class="w">   </span><span class="c1">; inspect the symlink itself</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1">;=&gt; #&lt;file-info&gt;</span>
+</code></pre></div>
+<p><strong>See also:</strong> <a href="#file-info-pred"><code>file-info?</code></a>,
+<a href="#file-info-type"><code>file-info-type</code></a></p>
+<hr />
+<h3 id="file-info-pred"><code>file-info?</code><a class="headerlink" href="#file-info-pred" title="Permanent link">&para;</a></h3>
+<p><strong>Syntax:</strong> <code>(file-info? obj)</code></p>
+<p>Returns <code>#t</code> if <em>obj</em> is a file-info object, <code>#f</code> otherwise.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nf">file-info?</span><span class="w"> </span><span class="p">(</span><span class="nf">file-info</span><span class="w"> </span><span class="s">&quot;.&quot;</span><span class="p">))</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c1">;=&gt; #t</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nf">file-info?</span><span class="w"> </span><span class="s">&quot;not a file-info&quot;</span><span class="p">)</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1">;=&gt; #f</span>
+</code></pre></div>
+<hr />
+<h3 id="file-info-type"><code>file-info-type</code><a class="headerlink" href="#file-info-type" title="Permanent link">&para;</a></h3>
+<p><strong>Syntax:</strong> <code>(file-info-type file-info)</code></p>
+<p>Returns a symbol describing the type of the filesystem entry:
+<code>regular</code>, <code>directory</code>, <code>symlink</code>, <code>fifo</code>, <code>socket</code>, <code>block-special</code>,
+or <code>unknown</code>.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nf">file-info-type</span><span class="w"> </span><span class="p">(</span><span class="nf">file-info</span><span class="w"> </span><span class="s">&quot;.&quot;</span><span class="p">))</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c1">;=&gt; directory</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nf">file-info-type</span><span class="w"> </span><span class="p">(</span><span class="nf">file-info</span><span class="w"> </span><span class="s">&quot;/etc/hosts&quot;</span><span class="p">))</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1">;=&gt; regular</span>
+</code></pre></div>
+<p><strong>See also:</strong> <a href="#file-info-directory"><code>file-info-directory?</code></a>,
+<a href="#file-info-regular"><code>file-info-regular?</code></a></p>
+<hr />
+<h3 id="file-info-directory"><code>file-info-directory?</code><a class="headerlink" href="#file-info-directory" title="Permanent link">&para;</a></h3>
+<p><strong>Syntax:</strong> <code>(file-info-directory? file-info)</code></p>
+<p>Returns <code>#t</code> if the file-info describes a directory.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nf">file-info-directory?</span><span class="w"> </span><span class="p">(</span><span class="nf">file-info</span><span class="w"> </span><span class="s">&quot;.&quot;</span><span class="p">))</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="c1">;=&gt; #t</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nf">file-info-directory?</span><span class="w"> </span><span class="p">(</span><span class="nf">file-info</span><span class="w"> </span><span class="s">&quot;/etc/hosts&quot;</span><span class="p">))</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1">;=&gt; #f</span>
+</code></pre></div>
+<hr />
+<h3 id="file-info-regular"><code>file-info-regular?</code><a class="headerlink" href="#file-info-regular" title="Permanent link">&para;</a></h3>
+<p><strong>Syntax:</strong> <code>(file-info-regular? file-info)</code></p>
+<p>Returns <code>#t</code> if the file-info describes a regular file.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nf">file-info-regular?</span><span class="w"> </span><span class="p">(</span><span class="nf">file-info</span><span class="w"> </span><span class="s">&quot;/etc/hosts&quot;</span><span class="p">))</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="c1">;=&gt; #t</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nf">file-info-regular?</span><span class="w"> </span><span class="p">(</span><span class="nf">file-info</span><span class="w"> </span><span class="s">&quot;.&quot;</span><span class="p">))</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1">;=&gt; #f</span>
+</code></pre></div>
+<hr />
+<h3 id="file-info-symlink"><code>file-info-symlink?</code><a class="headerlink" href="#file-info-symlink" title="Permanent link">&para;</a></h3>
+<p><strong>Syntax:</strong> <code>(file-info-symlink? file-info)</code></p>
+<p>Returns <code>#t</code> if the file-info describes a symbolic link. Only meaningful
+when <code>file-info</code> was called with <em>follow?</em> set to <code>#f</code>.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nf">create-symlink</span><span class="w"> </span><span class="s">&quot;/etc/hosts&quot;</span><span class="w"> </span><span class="s">&quot;/tmp/test-link&quot;</span><span class="p">)</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nf">file-info-symlink?</span><span class="w"> </span><span class="p">(</span><span class="nf">file-info</span><span class="w"> </span><span class="s">&quot;/tmp/test-link&quot;</span><span class="w"> </span><span class="no">#f</span><span class="p">))</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="c1">;=&gt; #t</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nf">file-info-symlink?</span><span class="w"> </span><span class="p">(</span><span class="nf">file-info</span><span class="w"> </span><span class="s">&quot;/tmp/test-link&quot;</span><span class="p">))</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c1">;=&gt; #f   ; followed the link, so it appears as regular</span>
+</code></pre></div>
+<hr />
+<h3 id="file-info-fifo"><code>file-info-fifo?</code><a class="headerlink" href="#file-info-fifo" title="Permanent link">&para;</a></h3>
+<p><strong>Syntax:</strong> <code>(file-info-fifo? file-info)</code></p>
+<p>Returns <code>#t</code> if the file-info describes a FIFO (named pipe).</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nf">create-fifo</span><span class="w"> </span><span class="s">&quot;/tmp/test-fifo&quot;</span><span class="p">)</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nf">file-info-fifo?</span><span class="w"> </span><span class="p">(</span><span class="nf">file-info</span><span class="w"> </span><span class="s">&quot;/tmp/test-fifo&quot;</span><span class="p">))</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="c1">;=&gt; #t</span>
+</code></pre></div>
+<hr />
+<h3 id="file-info-socket"><code>file-info-socket?</code><a class="headerlink" href="#file-info-socket" title="Permanent link">&para;</a></h3>
+<p><strong>Syntax:</strong> <code>(file-info-socket? file-info)</code></p>
+<p>Returns <code>#t</code> if the file-info describes a socket.</p>
+<hr />
+<h3 id="file-info-device"><code>file-info-device?</code><a class="headerlink" href="#file-info-device" title="Permanent link">&para;</a></h3>
+<p><strong>Syntax:</strong> <code>(file-info-device? file-info)</code></p>
+<p>Returns <code>#t</code> if the file-info describes a device (block or character
+special file).</p>
+<hr />
+<h2 id="file-info-accessors">File-Info Accessors<a class="headerlink" href="#file-info-accessors" title="Permanent link">&para;</a></h2>
+<p>All accessors take a single file-info object and return an integer.</p>
+<table>
+<thead>
+<tr>
+<th>Accessor</th>
+<th>Returns</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td id="file-info-size"><code>file-info:size</code></td>
+<td>File size in bytes</td>
+</tr>
+<tr>
+<td id="file-info-mtime"><code>file-info:mtime</code></td>
+<td>Last modification time (seconds since epoch)</td>
+</tr>
+<tr>
+<td id="file-info-atime"><code>file-info:atime</code></td>
+<td>Last access time (seconds since epoch)</td>
+</tr>
+<tr>
+<td id="file-info-ctime"><code>file-info:ctime</code></td>
+<td>Last status-change time (seconds since epoch)</td>
+</tr>
+<tr>
+<td id="file-info-mode"><code>file-info:mode</code></td>
+<td>POSIX permission mode (e.g. <code>#o755</code>)</td>
+</tr>
+<tr>
+<td id="file-info-device-id"><code>file-info:device</code></td>
+<td>Device ID of the filesystem</td>
+</tr>
+<tr>
+<td id="file-info-inode"><code>file-info:inode</code></td>
+<td>Inode number</td>
+</tr>
+<tr>
+<td id="file-info-nlinks"><code>file-info:nlinks</code></td>
+<td>Number of hard links</td>
+</tr>
+<tr>
+<td id="file-info-uid"><code>file-info:uid</code></td>
+<td>Owner user ID</td>
+</tr>
+<tr>
+<td id="file-info-gid"><code>file-info:gid</code></td>
+<td>Owner group ID</td>
+</tr>
+<tr>
+<td id="file-info-rdev"><code>file-info:rdev</code></td>
+<td>Device ID (for special files)</td>
+</tr>
+<tr>
+<td id="file-info-blksize"><code>file-info:blksize</code></td>
+<td>Preferred I/O block size</td>
+</tr>
+<tr>
+<td id="file-info-blocks"><code>file-info:blocks</code></td>
+<td>Number of 512-byte blocks allocated</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="nv">fi</span><span class="w"> </span><span class="p">(</span><span class="nf">file-info</span><span class="w"> </span><span class="s">&quot;/etc/hosts&quot;</span><span class="p">))</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nf">file-info:size</span><span class="w"> </span><span class="nv">fi</span><span class="p">)</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="c1">;=&gt; 583</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nf">file-info:mtime</span><span class="w"> </span><span class="nv">fi</span><span class="p">)</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="c1">;=&gt; 1718900000</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nf">file-info:nlinks</span><span class="w"> </span><span class="nv">fi</span><span class="p">)</span>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="c1">;=&gt; 1</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nf">file-info:uid</span><span class="w"> </span><span class="nv">fi</span><span class="p">)</span>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="c1">;=&gt; 0</span>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nf">file-info:mode</span><span class="w"> </span><span class="nv">fi</span><span class="p">)</span>
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="c1">;=&gt; 420   ; decimal for #o644</span>
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nb">&gt;</span><span class="w"> </span><span class="p">(</span><span class="nf">file-info:blksize</span><span class="w"> </span><span class="nv">fi</span><span class="p">)</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a><span class="c1">;=&gt; #t</span>
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nb">&gt;</span><span class="w"> </span><span class="p">(</span><span class="nf">file-info:blocks</span><span class="w"> </span><span class="nv">fi</span><span class="p">)</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a><span class="c1">;=&gt; #t</span>
+</code></pre></div>
+<hr />
+<h2 id="directory-operations">Directory Operations<a class="headerlink" href="#directory-operations" title="Permanent link">&para;</a></h2>
+<h3 id="directory-files"><code>directory-files</code><a class="headerlink" href="#directory-files" title="Permanent link">&para;</a></h3>
+<p><strong>Syntax:</strong> <code>(directory-files path)</code> | <code>(directory-files path dotfiles?)</code></p>
+<p>Returns a list of filenames (strings) in the directory at <em>path</em>. The
+entries <code>.</code> and <code>..</code> are always excluded. When <em>dotfiles?</em> is <code>#t</code>,
+hidden files (names beginning with <code>.</code>) are included; the default is
+<code>#f</code>.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nf">directory-files</span><span class="w"> </span><span class="s">&quot;/tmp&quot;</span><span class="p">)</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="c1">;=&gt; (&quot;kaappi-abcdef&quot; &quot;test.txt&quot; ...)</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nf">directory-files</span><span class="w"> </span><span class="s">&quot;/tmp&quot;</span><span class="w"> </span><span class="no">#t</span><span class="p">)</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1">;=&gt; (&quot;.hidden&quot; &quot;kaappi-abcdef&quot; &quot;test.txt&quot; ...)</span>
+</code></pre></div>
+<p><strong>See also:</strong> <a href="#open-directory"><code>open-directory</code></a></p>
+<hr />
+<h3 id="create-directory"><code>create-directory</code><a class="headerlink" href="#create-directory" title="Permanent link">&para;</a></h3>
+<p><strong>Syntax:</strong> <code>(create-directory path)</code> | <code>(create-directory path mode)</code></p>
+<p>Creates a new directory at <em>path</em>. The optional <em>mode</em> specifies the
+POSIX permission bits; the default is <code>#o755</code>. Raises a file error if
+the directory cannot be created.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nf">create-directory</span><span class="w"> </span><span class="s">&quot;/tmp/mydir&quot;</span><span class="p">)</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nf">create-directory</span><span class="w"> </span><span class="s">&quot;/tmp/secure-dir&quot;</span><span class="w"> </span><span class="mo">#o700</span><span class="p">)</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nf">file-info-directory?</span><span class="w"> </span><span class="p">(</span><span class="nf">file-info</span><span class="w"> </span><span class="s">&quot;/tmp/mydir&quot;</span><span class="p">))</span>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1">;=&gt; #t</span>
+</code></pre></div>
+<p><strong>See also:</strong> <a href="#delete-directory"><code>delete-directory</code></a></p>
+<hr />
+<h3 id="delete-directory"><code>delete-directory</code><a class="headerlink" href="#delete-directory" title="Permanent link">&para;</a></h3>
+<p><strong>Syntax:</strong> <code>(delete-directory path)</code></p>
+<p>Removes the directory at <em>path</em>. The directory must be empty. Raises a
+file error if the directory cannot be removed.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nf">delete-directory</span><span class="w"> </span><span class="s">&quot;/tmp/mydir&quot;</span><span class="p">)</span>
+</code></pre></div>
+<p><strong>See also:</strong> <a href="#create-directory"><code>create-directory</code></a></p>
+<hr />
+<h3 id="open-directory"><code>open-directory</code><a class="headerlink" href="#open-directory" title="Permanent link">&para;</a></h3>
+<p><strong>Syntax:</strong> <code>(open-directory path)</code> | <code>(open-directory path dotfiles?)</code></p>
+<p>Opens the directory at <em>path</em> for sequential reading and returns a
+directory object. When <em>dotfiles?</em> is <code>#t</code>, hidden files are included
+during traversal; the default is <code>#f</code>. The entries <code>.</code> and <code>..</code> are
+always skipped.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="nv">d</span><span class="w"> </span><span class="p">(</span><span class="nf">open-directory</span><span class="w"> </span><span class="s">&quot;.&quot;</span><span class="p">))</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nf">read-directory</span><span class="w"> </span><span class="nv">d</span><span class="p">)</span>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="c1">;=&gt; &quot;README.md&quot;</span>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nf">close-directory</span><span class="w"> </span><span class="nv">d</span><span class="p">)</span>
+</code></pre></div>
+<p><strong>See also:</strong> <a href="#read-directory"><code>read-directory</code></a>,
+<a href="#close-directory"><code>close-directory</code></a>,
+<a href="#directory-files"><code>directory-files</code></a></p>
+<hr />
+<h3 id="read-directory"><code>read-directory</code><a class="headerlink" href="#read-directory" title="Permanent link">&para;</a></h3>
+<p><strong>Syntax:</strong> <code>(read-directory dir-object)</code></p>
+<p>Returns the next filename (a string) from the directory object, or
+an eof-object when no entries remain. Once the eof-object is returned,
+the directory is automatically closed.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="nv">d</span><span class="w"> </span><span class="p">(</span><span class="nf">open-directory</span><span class="w"> </span><span class="s">&quot;.&quot;</span><span class="p">))</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="nv">loop</span><span class="w"> </span><span class="p">((</span><span class="nf">entry</span><span class="w"> </span><span class="p">(</span><span class="nf">read-directory</span><span class="w"> </span><span class="nv">d</span><span class="p">)))</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="w">         </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">eof-object?</span><span class="w"> </span><span class="nv">entry</span><span class="p">)</span>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="w">             </span><span class="ss">&#39;done</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="w">             </span><span class="p">(</span><span class="k">begin</span><span class="w"> </span><span class="p">(</span><span class="nb">display</span><span class="w"> </span><span class="nv">entry</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">newline</span><span class="p">)</span>
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="w">                    </span><span class="p">(</span><span class="nf">loop</span><span class="w"> </span><span class="p">(</span><span class="nf">read-directory</span><span class="w"> </span><span class="nv">d</span><span class="p">)))))</span>
+</code></pre></div>
+<p><strong>See also:</strong> <a href="#open-directory"><code>open-directory</code></a></p>
+<hr />
+<h3 id="close-directory"><code>close-directory</code><a class="headerlink" href="#close-directory" title="Permanent link">&para;</a></h3>
+<p><strong>Syntax:</strong> <code>(close-directory dir-object)</code></p>
+<p>Closes the directory object, releasing the underlying file descriptor.
+Safe to call multiple times; subsequent calls are a no-op.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="nv">d</span><span class="w"> </span><span class="p">(</span><span class="nf">open-directory</span><span class="w"> </span><span class="s">&quot;/tmp&quot;</span><span class="p">))</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nf">close-directory</span><span class="w"> </span><span class="nv">d</span><span class="p">)</span>
+</code></pre></div>
+<p><strong>See also:</strong> <a href="#open-directory"><code>open-directory</code></a></p>
+<hr />
+<h2 id="file-manipulation">File Manipulation<a class="headerlink" href="#file-manipulation" title="Permanent link">&para;</a></h2>
+<h3 id="rename-file"><code>rename-file</code><a class="headerlink" href="#rename-file" title="Permanent link">&para;</a></h3>
+<p><strong>Syntax:</strong> <code>(rename-file old-path new-path)</code></p>
+<p>Renames the file from <em>old-path</em> to <em>new-path</em>. This is an atomic
+operation on the same filesystem. Raises a file error on failure.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nb">rename-file</span><span class="w"> </span><span class="s">&quot;/tmp/old-name.txt&quot;</span><span class="w"> </span><span class="s">&quot;/tmp/new-name.txt&quot;</span><span class="p">)</span>
+</code></pre></div>
+<hr />
+<h3 id="create-symlink"><code>create-symlink</code><a class="headerlink" href="#create-symlink" title="Permanent link">&para;</a></h3>
+<p><strong>Syntax:</strong> <code>(create-symlink old-path new-path)</code></p>
+<p>Creates a symbolic link at <em>new-path</em> pointing to <em>old-path</em>. Raises
+a file error if the link cannot be created.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nf">create-symlink</span><span class="w"> </span><span class="s">&quot;/etc/hosts&quot;</span><span class="w"> </span><span class="s">&quot;/tmp/hosts-link&quot;</span><span class="p">)</span>
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nf">read-symlink</span><span class="w"> </span><span class="s">&quot;/tmp/hosts-link&quot;</span><span class="p">)</span>
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a><span class="c1">;=&gt; &quot;/etc/hosts&quot;</span>
+</code></pre></div>
+<p><strong>See also:</strong> <a href="#read-symlink"><code>read-symlink</code></a>,
+<a href="#create-hard-link"><code>create-hard-link</code></a></p>
+<hr />
+<h3 id="read-symlink"><code>read-symlink</code><a class="headerlink" href="#read-symlink" title="Permanent link">&para;</a></h3>
+<p><strong>Syntax:</strong> <code>(read-symlink path)</code></p>
+<p>Returns the target of the symbolic link at <em>path</em> as a string. Raises
+a file error if <em>path</em> is not a symbolic link.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nf">create-symlink</span><span class="w"> </span><span class="s">&quot;/etc/hosts&quot;</span><span class="w"> </span><span class="s">&quot;/tmp/test-link&quot;</span><span class="p">)</span>
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nf">read-symlink</span><span class="w"> </span><span class="s">&quot;/tmp/test-link&quot;</span><span class="p">)</span>
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="c1">;=&gt; &quot;/etc/hosts&quot;</span>
+</code></pre></div>
+<p><strong>See also:</strong> <a href="#create-symlink"><code>create-symlink</code></a></p>
+<hr />
+<h3 id="create-hard-link"><code>create-hard-link</code><a class="headerlink" href="#create-hard-link" title="Permanent link">&para;</a></h3>
+<p><strong>Syntax:</strong> <code>(create-hard-link old-path new-path)</code></p>
+<p>Creates a hard link at <em>new-path</em> referring to the same inode as
+<em>old-path</em>. Both paths must reside on the same filesystem. Raises a
+file error on failure.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nf">create-hard-link</span><span class="w"> </span><span class="s">&quot;/tmp/original.txt&quot;</span><span class="w"> </span><span class="s">&quot;/tmp/linked.txt&quot;</span><span class="p">)</span>
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nb">=</span><span class="w"> </span><span class="p">(</span><span class="nf">file-info:inode</span><span class="w"> </span><span class="p">(</span><span class="nf">file-info</span><span class="w"> </span><span class="s">&quot;/tmp/original.txt&quot;</span><span class="p">))</span>
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a><span class="w">           </span><span class="p">(</span><span class="nf">file-info:inode</span><span class="w"> </span><span class="p">(</span><span class="nf">file-info</span><span class="w"> </span><span class="s">&quot;/tmp/linked.txt&quot;</span><span class="p">)))</span>
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a><span class="c1">;=&gt; #t</span>
+</code></pre></div>
+<p><strong>See also:</strong> <a href="#create-symlink"><code>create-symlink</code></a></p>
+<hr />
+<h3 id="real-path"><code>real-path</code><a class="headerlink" href="#real-path" title="Permanent link">&para;</a></h3>
+<p><strong>Syntax:</strong> <code>(real-path path)</code></p>
+<p>Returns the canonicalized absolute pathname for <em>path</em>, resolving all
+symbolic links, <code>.</code>, and <code>..</code> components. Raises a file error if the
+path cannot be resolved.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nf">real-path</span><span class="w"> </span><span class="s">&quot;.&quot;</span><span class="p">)</span>
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a><span class="c1">;=&gt; &quot;/home/user/project&quot;</span>
+<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nb">char=?</span><span class="w"> </span><span class="sc">#\/</span><span class="w"> </span><span class="p">(</span><span class="nb">string-ref</span><span class="w"> </span><span class="p">(</span><span class="nf">real-path</span><span class="w"> </span><span class="s">&quot;.&quot;</span><span class="p">)</span><span class="w"> </span><span class="mi">0</span><span class="p">))</span>
+<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a><span class="c1">;=&gt; #t</span>
+</code></pre></div>
+<hr />
+<h3 id="set-file-mode"><code>set-file-mode</code><a class="headerlink" href="#set-file-mode" title="Permanent link">&para;</a></h3>
+<p><strong>Syntax:</strong> <code>(set-file-mode path mode)</code></p>
+<p>Sets the POSIX permission bits of the file at <em>path</em> to <em>mode</em>.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nf">set-file-mode</span><span class="w"> </span><span class="s">&quot;/tmp/test.txt&quot;</span><span class="w"> </span><span class="mo">#o644</span><span class="p">)</span>
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nf">set-file-mode</span><span class="w"> </span><span class="s">&quot;/tmp/script.sh&quot;</span><span class="w"> </span><span class="mo">#o755</span><span class="p">)</span>
+</code></pre></div>
+<hr />
+<h3 id="set-file-owner"><code>set-file-owner</code><a class="headerlink" href="#set-file-owner" title="Permanent link">&para;</a></h3>
+<p><strong>Syntax:</strong> <code>(set-file-owner path uid gid)</code></p>
+<p>Changes the owner and group of the file at <em>path</em>. Pass <code>-1</code> for
+<em>uid</em> or <em>gid</em> to leave that value unchanged. Typically requires
+superuser privileges.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nf">set-file-owner</span><span class="w"> </span><span class="s">&quot;/tmp/test.txt&quot;</span><span class="w"> </span><span class="mi">1000</span><span class="w"> </span><span class="mi">1000</span><span class="p">)</span>
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nf">set-file-owner</span><span class="w"> </span><span class="s">&quot;/tmp/test.txt&quot;</span><span class="w"> </span><span class="mi">-1</span><span class="w"> </span><span class="mi">100</span><span class="p">)</span><span class="w">  </span><span class="c1">; change group only</span>
+</code></pre></div>
+<hr />
+<h3 id="truncate-file"><code>truncate-file</code><a class="headerlink" href="#truncate-file" title="Permanent link">&para;</a></h3>
+<p><strong>Syntax:</strong> <code>(truncate-file path length)</code></p>
+<p>Truncates the file at <em>path</em> to exactly <em>length</em> bytes. If the file is
+shorter, it is extended with zero bytes. Raises a file error on failure.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nb">truncate-file</span><span class="w"> </span><span class="s">&quot;/tmp/test.txt&quot;</span><span class="w"> </span><span class="mi">5</span><span class="p">)</span>
+<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nf">file-info:size</span><span class="w"> </span><span class="p">(</span><span class="nf">file-info</span><span class="w"> </span><span class="s">&quot;/tmp/test.txt&quot;</span><span class="p">))</span>
+<a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a><span class="c1">;=&gt; 5</span>
+</code></pre></div>
+<hr />
+<h3 id="set-file-times"><code>set-file-times</code><a class="headerlink" href="#set-file-times" title="Permanent link">&para;</a></h3>
+<p><strong>Syntax:</strong> <code>(set-file-times path)</code> | <code>(set-file-times path atime)</code> | <code>(set-file-times path atime mtime)</code></p>
+<p>Sets the access and modification times of the file at <em>path</em>. With no
+time arguments, both timestamps are set to the current time. Special
+sentinel values:</p>
+<ul>
+<li><strong>-1</strong> -- set to the current time (equivalent to omitting the argument)</li>
+<li><strong>-2</strong> -- leave unchanged</li>
+</ul>
+<p>Any other integer is interpreted as seconds since the Unix epoch.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nf">set-file-times</span><span class="w"> </span><span class="s">&quot;/tmp/test.txt&quot;</span><span class="p">)</span><span class="w">         </span><span class="c1">; touch: set both to now</span>
+<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nf">set-file-times</span><span class="w"> </span><span class="s">&quot;/tmp/test.txt&quot;</span><span class="w"> </span><span class="mi">-1</span><span class="w"> </span><span class="mi">-2</span><span class="p">)</span><span class="w">   </span><span class="c1">; update atime only</span>
+<a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nf">set-file-times</span><span class="w"> </span><span class="s">&quot;/tmp/test.txt&quot;</span><span class="w"> </span><span class="mi">-2</span><span class="w"> </span><span class="mi">-1</span><span class="p">)</span><span class="w">   </span><span class="c1">; update mtime only</span>
+</code></pre></div>
+<hr />
+<h3 id="create-fifo"><code>create-fifo</code><a class="headerlink" href="#create-fifo" title="Permanent link">&para;</a></h3>
+<p><strong>Syntax:</strong> <code>(create-fifo path)</code> | <code>(create-fifo path mode)</code></p>
+<p>Creates a FIFO (named pipe) at <em>path</em>. The optional <em>mode</em> specifies
+permission bits; the default is <code>#o664</code>. Raises a file error on failure.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nf">create-fifo</span><span class="w"> </span><span class="s">&quot;/tmp/my-pipe&quot;</span><span class="p">)</span>
+<a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nf">create-fifo</span><span class="w"> </span><span class="s">&quot;/tmp/my-pipe2&quot;</span><span class="w"> </span><span class="mo">#o600</span><span class="p">)</span>
+<a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nf">file-info-fifo?</span><span class="w"> </span><span class="p">(</span><span class="nf">file-info</span><span class="w"> </span><span class="s">&quot;/tmp/my-pipe&quot;</span><span class="p">))</span>
+<a id="__codelineno-23-4" name="__codelineno-23-4" href="#__codelineno-23-4"></a><span class="c1">;=&gt; #t</span>
+</code></pre></div>
+<hr />
+<h2 id="process-state">Process State<a class="headerlink" href="#process-state" title="Permanent link">&para;</a></h2>
+<h3 id="pid"><code>pid</code><a class="headerlink" href="#pid" title="Permanent link">&para;</a></h3>
+<p><strong>Syntax:</strong> <code>(pid)</code></p>
+<p>Returns the process ID of the current Kaappi process as an integer.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nf">pid</span><span class="p">)</span>
+<a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a><span class="c1">;=&gt; 42359</span>
+<a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nb">&gt;</span><span class="w"> </span><span class="p">(</span><span class="nf">pid</span><span class="p">)</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
+<a id="__codelineno-24-4" name="__codelineno-24-4" href="#__codelineno-24-4"></a><span class="c1">;=&gt; #t</span>
+</code></pre></div>
+<hr />
+<h3 id="umask"><code>umask</code><a class="headerlink" href="#umask" title="Permanent link">&para;</a></h3>
+<p><strong>Syntax:</strong> <code>(umask)</code></p>
+<p>Returns the current file-creation mask as an integer.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nb">umask</span><span class="p">)</span>
+<a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a><span class="c1">;=&gt; 18   ; decimal for #o022</span>
+</code></pre></div>
+<p><strong>See also:</strong> <a href="#set-umask"><code>set-umask!</code></a></p>
+<hr />
+<h3 id="set-umask"><code>set-umask!</code><a class="headerlink" href="#set-umask" title="Permanent link">&para;</a></h3>
+<p><strong>Syntax:</strong> <code>(set-umask! mask)</code></p>
+<p>Sets the file-creation mask to <em>mask</em> (an integer in POSIX octal
+notation).</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nf">set-umask!</span><span class="w"> </span><span class="mo">#o077</span><span class="p">)</span>
+<a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nb">umask</span><span class="p">)</span>
+<a id="__codelineno-26-3" name="__codelineno-26-3" href="#__codelineno-26-3"></a><span class="c1">;=&gt; 63   ; decimal for #o077</span>
+</code></pre></div>
+<p><strong>See also:</strong> <a href="#umask"><code>umask</code></a></p>
+<hr />
+<h3 id="current-directory"><code>current-directory</code><a class="headerlink" href="#current-directory" title="Permanent link">&para;</a></h3>
+<p><strong>Syntax:</strong> <code>(current-directory)</code></p>
+<p>Returns the absolute pathname of the current working directory as a
+string.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nf">current-directory</span><span class="p">)</span>
+<a id="__codelineno-27-2" name="__codelineno-27-2" href="#__codelineno-27-2"></a><span class="c1">;=&gt; &quot;/home/user/project&quot;</span>
+<a id="__codelineno-27-3" name="__codelineno-27-3" href="#__codelineno-27-3"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nb">string?</span><span class="w"> </span><span class="p">(</span><span class="nf">current-directory</span><span class="p">))</span>
+<a id="__codelineno-27-4" name="__codelineno-27-4" href="#__codelineno-27-4"></a><span class="c1">;=&gt; #t</span>
+</code></pre></div>
+<p><strong>See also:</strong> <a href="#set-current-directory"><code>set-current-directory!</code></a></p>
+<hr />
+<h3 id="set-current-directory"><code>set-current-directory!</code><a class="headerlink" href="#set-current-directory" title="Permanent link">&para;</a></h3>
+<p><strong>Syntax:</strong> <code>(set-current-directory! path)</code></p>
+<p>Changes the current working directory to <em>path</em>. Raises a file error
+if the directory does not exist or is not accessible.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nf">set-current-directory!</span><span class="w"> </span><span class="s">&quot;/tmp&quot;</span><span class="p">)</span>
+<a id="__codelineno-28-2" name="__codelineno-28-2" href="#__codelineno-28-2"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nf">current-directory</span><span class="p">)</span>
+<a id="__codelineno-28-3" name="__codelineno-28-3" href="#__codelineno-28-3"></a><span class="c1">;=&gt; &quot;/tmp&quot;</span>
+</code></pre></div>
+<p><strong>See also:</strong> <a href="#current-directory"><code>current-directory</code></a></p>
+<hr />
+<h3 id="user-uid"><code>user-uid</code><a class="headerlink" href="#user-uid" title="Permanent link">&para;</a></h3>
+<p><strong>Syntax:</strong> <code>(user-uid)</code></p>
+<p>Returns the real user ID of the current process.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nf">user-uid</span><span class="p">)</span>
+<a id="__codelineno-29-2" name="__codelineno-29-2" href="#__codelineno-29-2"></a><span class="c1">;=&gt; 1000</span>
+</code></pre></div>
+<p><strong>See also:</strong> <a href="#user-effective-uid"><code>user-effective-uid</code></a>,
+<a href="#user-info"><code>user-info</code></a></p>
+<hr />
+<h3 id="user-gid"><code>user-gid</code><a class="headerlink" href="#user-gid" title="Permanent link">&para;</a></h3>
+<p><strong>Syntax:</strong> <code>(user-gid)</code></p>
+<p>Returns the real group ID of the current process.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nf">user-gid</span><span class="p">)</span>
+<a id="__codelineno-30-2" name="__codelineno-30-2" href="#__codelineno-30-2"></a><span class="c1">;=&gt; 1000</span>
+</code></pre></div>
+<p><strong>See also:</strong> <a href="#user-effective-gid"><code>user-effective-gid</code></a></p>
+<hr />
+<h3 id="user-effective-uid"><code>user-effective-uid</code><a class="headerlink" href="#user-effective-uid" title="Permanent link">&para;</a></h3>
+<p><strong>Syntax:</strong> <code>(user-effective-uid)</code></p>
+<p>Returns the effective user ID of the current process.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-31-1" name="__codelineno-31-1" href="#__codelineno-31-1"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nf">user-effective-uid</span><span class="p">)</span>
+<a id="__codelineno-31-2" name="__codelineno-31-2" href="#__codelineno-31-2"></a><span class="c1">;=&gt; 1000</span>
+</code></pre></div>
+<p><strong>See also:</strong> <a href="#user-uid"><code>user-uid</code></a></p>
+<hr />
+<h3 id="user-effective-gid"><code>user-effective-gid</code><a class="headerlink" href="#user-effective-gid" title="Permanent link">&para;</a></h3>
+<p><strong>Syntax:</strong> <code>(user-effective-gid)</code></p>
+<p>Returns the effective group ID of the current process.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-32-1" name="__codelineno-32-1" href="#__codelineno-32-1"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nf">user-effective-gid</span><span class="p">)</span>
+<a id="__codelineno-32-2" name="__codelineno-32-2" href="#__codelineno-32-2"></a><span class="c1">;=&gt; 1000</span>
+</code></pre></div>
+<p><strong>See also:</strong> <a href="#user-gid"><code>user-gid</code></a></p>
+<hr />
+<h3 id="user-supplementary-gids"><code>user-supplementary-gids</code><a class="headerlink" href="#user-supplementary-gids" title="Permanent link">&para;</a></h3>
+<p><strong>Syntax:</strong> <code>(user-supplementary-gids)</code></p>
+<p>Returns a list of supplementary group IDs for the current process.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-33-1" name="__codelineno-33-1" href="#__codelineno-33-1"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nf">user-supplementary-gids</span><span class="p">)</span>
+<a id="__codelineno-33-2" name="__codelineno-33-2" href="#__codelineno-33-2"></a><span class="c1">;=&gt; (1000 4 24 27 30)</span>
+<a id="__codelineno-33-3" name="__codelineno-33-3" href="#__codelineno-33-3"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nb">list?</span><span class="w"> </span><span class="p">(</span><span class="nf">user-supplementary-gids</span><span class="p">))</span>
+<a id="__codelineno-33-4" name="__codelineno-33-4" href="#__codelineno-33-4"></a><span class="c1">;=&gt; #t</span>
+</code></pre></div>
+<hr />
+<h3 id="nice"><code>nice</code><a class="headerlink" href="#nice" title="Permanent link">&para;</a></h3>
+<p><strong>Syntax:</strong> <code>(nice)</code> | <code>(nice increment)</code></p>
+<p>Adjusts the scheduling priority of the current process. With no
+argument, the priority is incremented by 1. With <em>increment</em>, the
+priority is incremented by that amount. Returns the new nice value.
+Higher values mean lower priority.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-34-1" name="__codelineno-34-1" href="#__codelineno-34-1"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nb">nice</span><span class="p">)</span><span class="w">      </span><span class="c1">; increment by 1</span>
+<a id="__codelineno-34-2" name="__codelineno-34-2" href="#__codelineno-34-2"></a><span class="c1">;=&gt; 1</span>
+<a id="__codelineno-34-3" name="__codelineno-34-3" href="#__codelineno-34-3"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nb">nice</span><span class="w"> </span><span class="mi">5</span><span class="p">)</span><span class="w">    </span><span class="c1">; increment by 5</span>
+<a id="__codelineno-34-4" name="__codelineno-34-4" href="#__codelineno-34-4"></a><span class="c1">;=&gt; 6</span>
+</code></pre></div>
+<hr />
+<h2 id="user-database">User Database<a class="headerlink" href="#user-database" title="Permanent link">&para;</a></h2>
+<h3 id="user-info"><code>user-info</code><a class="headerlink" href="#user-info" title="Permanent link">&para;</a></h3>
+<p><strong>Syntax:</strong> <code>(user-info uid-or-name)</code></p>
+<p>Returns a user-info object for the given user. Accepts either an integer
+(UID) or a string (username). Returns <code>#f</code> if the user does not exist.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-35-1" name="__codelineno-35-1" href="#__codelineno-35-1"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="nv">u</span><span class="w"> </span><span class="p">(</span><span class="nf">user-info</span><span class="w"> </span><span class="p">(</span><span class="nf">user-uid</span><span class="p">)))</span>
+<a id="__codelineno-35-2" name="__codelineno-35-2" href="#__codelineno-35-2"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nf">user-info?</span><span class="w"> </span><span class="nv">u</span><span class="p">)</span>
+<a id="__codelineno-35-3" name="__codelineno-35-3" href="#__codelineno-35-3"></a><span class="c1">;=&gt; #t</span>
+<a id="__codelineno-35-4" name="__codelineno-35-4" href="#__codelineno-35-4"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nf">user-info:name</span><span class="w"> </span><span class="nv">u</span><span class="p">)</span>
+<a id="__codelineno-35-5" name="__codelineno-35-5" href="#__codelineno-35-5"></a><span class="c1">;=&gt; &quot;alice&quot;</span>
+<a id="__codelineno-35-6" name="__codelineno-35-6" href="#__codelineno-35-6"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nf">user-info</span><span class="w"> </span><span class="s">&quot;root&quot;</span><span class="p">)</span>
+<a id="__codelineno-35-7" name="__codelineno-35-7" href="#__codelineno-35-7"></a><span class="c1">;=&gt; #&lt;user-info&gt;</span>
+</code></pre></div>
+<p><strong>See also:</strong> <a href="#user-info-pred"><code>user-info?</code></a></p>
+<hr />
+<h3 id="user-info-pred"><code>user-info?</code><a class="headerlink" href="#user-info-pred" title="Permanent link">&para;</a></h3>
+<p><strong>Syntax:</strong> <code>(user-info? obj)</code></p>
+<p>Returns <code>#t</code> if <em>obj</em> is a user-info object, <code>#f</code> otherwise.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-36-1" name="__codelineno-36-1" href="#__codelineno-36-1"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nf">user-info?</span><span class="w"> </span><span class="p">(</span><span class="nf">user-info</span><span class="w"> </span><span class="mi">0</span><span class="p">))</span>
+<a id="__codelineno-36-2" name="__codelineno-36-2" href="#__codelineno-36-2"></a><span class="c1">;=&gt; #t</span>
+<a id="__codelineno-36-3" name="__codelineno-36-3" href="#__codelineno-36-3"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nf">user-info?</span><span class="w"> </span><span class="s">&quot;not a user-info&quot;</span><span class="p">)</span>
+<a id="__codelineno-36-4" name="__codelineno-36-4" href="#__codelineno-36-4"></a><span class="c1">;=&gt; #f</span>
+</code></pre></div>
+<hr />
+<h3 id="user-info-name"><code>user-info:name</code><a class="headerlink" href="#user-info-name" title="Permanent link">&para;</a></h3>
+<p><strong>Syntax:</strong> <code>(user-info:name user-info)</code></p>
+<p>Returns the login name of the user as a string.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-37-1" name="__codelineno-37-1" href="#__codelineno-37-1"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nf">user-info:name</span><span class="w"> </span><span class="p">(</span><span class="nf">user-info</span><span class="w"> </span><span class="mi">0</span><span class="p">))</span>
+<a id="__codelineno-37-2" name="__codelineno-37-2" href="#__codelineno-37-2"></a><span class="c1">;=&gt; &quot;root&quot;</span>
+</code></pre></div>
+<hr />
+<h3 id="user-info-uid"><code>user-info:uid</code><a class="headerlink" href="#user-info-uid" title="Permanent link">&para;</a></h3>
+<p><strong>Syntax:</strong> <code>(user-info:uid user-info)</code></p>
+<p>Returns the numeric user ID.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-38-1" name="__codelineno-38-1" href="#__codelineno-38-1"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nf">user-info:uid</span><span class="w"> </span><span class="p">(</span><span class="nf">user-info</span><span class="w"> </span><span class="s">&quot;root&quot;</span><span class="p">))</span>
+<a id="__codelineno-38-2" name="__codelineno-38-2" href="#__codelineno-38-2"></a><span class="c1">;=&gt; 0</span>
+</code></pre></div>
+<hr />
+<h3 id="user-info-gid"><code>user-info:gid</code><a class="headerlink" href="#user-info-gid" title="Permanent link">&para;</a></h3>
+<p><strong>Syntax:</strong> <code>(user-info:gid user-info)</code></p>
+<p>Returns the primary group ID of the user.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-39-1" name="__codelineno-39-1" href="#__codelineno-39-1"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nf">user-info:gid</span><span class="w"> </span><span class="p">(</span><span class="nf">user-info</span><span class="w"> </span><span class="s">&quot;root&quot;</span><span class="p">))</span>
+<a id="__codelineno-39-2" name="__codelineno-39-2" href="#__codelineno-39-2"></a><span class="c1">;=&gt; 0</span>
+</code></pre></div>
+<hr />
+<h3 id="user-info-home-dir"><code>user-info:home-dir</code><a class="headerlink" href="#user-info-home-dir" title="Permanent link">&para;</a></h3>
+<p><strong>Syntax:</strong> <code>(user-info:home-dir user-info)</code></p>
+<p>Returns the home directory of the user as a string.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-40-1" name="__codelineno-40-1" href="#__codelineno-40-1"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nf">user-info:home-dir</span><span class="w"> </span><span class="p">(</span><span class="nf">user-info</span><span class="w"> </span><span class="mi">0</span><span class="p">))</span>
+<a id="__codelineno-40-2" name="__codelineno-40-2" href="#__codelineno-40-2"></a><span class="c1">;=&gt; &quot;/root&quot;</span>
+</code></pre></div>
+<hr />
+<h3 id="user-info-shell"><code>user-info:shell</code><a class="headerlink" href="#user-info-shell" title="Permanent link">&para;</a></h3>
+<p><strong>Syntax:</strong> <code>(user-info:shell user-info)</code></p>
+<p>Returns the login shell of the user as a string.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-41-1" name="__codelineno-41-1" href="#__codelineno-41-1"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nf">user-info:shell</span><span class="w"> </span><span class="p">(</span><span class="nf">user-info</span><span class="w"> </span><span class="mi">0</span><span class="p">))</span>
+<a id="__codelineno-41-2" name="__codelineno-41-2" href="#__codelineno-41-2"></a><span class="c1">;=&gt; &quot;/bin/bash&quot;</span>
+</code></pre></div>
+<hr />
+<h3 id="user-info-full-name"><code>user-info:full-name</code><a class="headerlink" href="#user-info-full-name" title="Permanent link">&para;</a></h3>
+<p><strong>Syntax:</strong> <code>(user-info:full-name user-info)</code></p>
+<p>Returns the GECOS full-name field for the user as a string.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-42-1" name="__codelineno-42-1" href="#__codelineno-42-1"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nf">user-info:full-name</span><span class="w"> </span><span class="p">(</span><span class="nf">user-info</span><span class="w"> </span><span class="p">(</span><span class="nf">user-uid</span><span class="p">)))</span>
+<a id="__codelineno-42-2" name="__codelineno-42-2" href="#__codelineno-42-2"></a><span class="c1">;=&gt; &quot;Alice Smith&quot;</span>
+</code></pre></div>
+<hr />
+<h2 id="group-database">Group Database<a class="headerlink" href="#group-database" title="Permanent link">&para;</a></h2>
+<h3 id="group-info"><code>group-info</code><a class="headerlink" href="#group-info" title="Permanent link">&para;</a></h3>
+<p><strong>Syntax:</strong> <code>(group-info gid-or-name)</code></p>
+<p>Returns a group-info object for the given group. Accepts either an
+integer (GID) or a string (group name). Returns <code>#f</code> if the group does
+not exist.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-43-1" name="__codelineno-43-1" href="#__codelineno-43-1"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="nv">g</span><span class="w"> </span><span class="p">(</span><span class="nf">group-info</span><span class="w"> </span><span class="p">(</span><span class="nf">user-gid</span><span class="p">)))</span>
+<a id="__codelineno-43-2" name="__codelineno-43-2" href="#__codelineno-43-2"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nf">group-info?</span><span class="w"> </span><span class="nv">g</span><span class="p">)</span>
+<a id="__codelineno-43-3" name="__codelineno-43-3" href="#__codelineno-43-3"></a><span class="c1">;=&gt; #t</span>
+<a id="__codelineno-43-4" name="__codelineno-43-4" href="#__codelineno-43-4"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nf">group-info:name</span><span class="w"> </span><span class="nv">g</span><span class="p">)</span>
+<a id="__codelineno-43-5" name="__codelineno-43-5" href="#__codelineno-43-5"></a><span class="c1">;=&gt; &quot;staff&quot;</span>
+</code></pre></div>
+<p><strong>See also:</strong> <a href="#group-info-pred"><code>group-info?</code></a></p>
+<hr />
+<h3 id="group-info-pred"><code>group-info?</code><a class="headerlink" href="#group-info-pred" title="Permanent link">&para;</a></h3>
+<p><strong>Syntax:</strong> <code>(group-info? obj)</code></p>
+<p>Returns <code>#t</code> if <em>obj</em> is a group-info object, <code>#f</code> otherwise.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-44-1" name="__codelineno-44-1" href="#__codelineno-44-1"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nf">group-info?</span><span class="w"> </span><span class="p">(</span><span class="nf">group-info</span><span class="w"> </span><span class="mi">0</span><span class="p">))</span>
+<a id="__codelineno-44-2" name="__codelineno-44-2" href="#__codelineno-44-2"></a><span class="c1">;=&gt; #t</span>
+<a id="__codelineno-44-3" name="__codelineno-44-3" href="#__codelineno-44-3"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nf">group-info?</span><span class="w"> </span><span class="mi">42</span><span class="p">)</span>
+<a id="__codelineno-44-4" name="__codelineno-44-4" href="#__codelineno-44-4"></a><span class="c1">;=&gt; #f</span>
+</code></pre></div>
+<hr />
+<h3 id="group-info-name"><code>group-info:name</code><a class="headerlink" href="#group-info-name" title="Permanent link">&para;</a></h3>
+<p><strong>Syntax:</strong> <code>(group-info:name group-info)</code></p>
+<p>Returns the group name as a string.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-45-1" name="__codelineno-45-1" href="#__codelineno-45-1"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nf">group-info:name</span><span class="w"> </span><span class="p">(</span><span class="nf">group-info</span><span class="w"> </span><span class="mi">0</span><span class="p">))</span>
+<a id="__codelineno-45-2" name="__codelineno-45-2" href="#__codelineno-45-2"></a><span class="c1">;=&gt; &quot;wheel&quot;</span>
+</code></pre></div>
+<hr />
+<h3 id="group-info-gid"><code>group-info:gid</code><a class="headerlink" href="#group-info-gid" title="Permanent link">&para;</a></h3>
+<p><strong>Syntax:</strong> <code>(group-info:gid group-info)</code></p>
+<p>Returns the numeric group ID.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-46-1" name="__codelineno-46-1" href="#__codelineno-46-1"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nf">group-info:gid</span><span class="w"> </span><span class="p">(</span><span class="nf">group-info</span><span class="w"> </span><span class="s">&quot;wheel&quot;</span><span class="p">))</span>
+<a id="__codelineno-46-2" name="__codelineno-46-2" href="#__codelineno-46-2"></a><span class="c1">;=&gt; 0</span>
+</code></pre></div>
+<hr />
+<h2 id="environment-variables">Environment Variables<a class="headerlink" href="#environment-variables" title="Permanent link">&para;</a></h2>
+<h3 id="set-environment-variable"><code>set-environment-variable!</code><a class="headerlink" href="#set-environment-variable" title="Permanent link">&para;</a></h3>
+<p><strong>Syntax:</strong> <code>(set-environment-variable! name value)</code></p>
+<p>Sets the environment variable <em>name</em> to <em>value</em>. Both arguments must be
+strings. Overwrites any existing value. Raises a file error on failure.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-47-1" name="__codelineno-47-1" href="#__codelineno-47-1"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nf">set-environment-variable!</span><span class="w"> </span><span class="s">&quot;MY_VAR&quot;</span><span class="w"> </span><span class="s">&quot;hello&quot;</span><span class="p">)</span>
+<a id="__codelineno-47-2" name="__codelineno-47-2" href="#__codelineno-47-2"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nf">get-environment-variable</span><span class="w"> </span><span class="s">&quot;MY_VAR&quot;</span><span class="p">)</span>
+<a id="__codelineno-47-3" name="__codelineno-47-3" href="#__codelineno-47-3"></a><span class="c1">;=&gt; &quot;hello&quot;</span>
+</code></pre></div>
+<p><strong>See also:</strong> <a href="#delete-environment-variable"><code>delete-environment-variable!</code></a>,
+<a href="../system/#get-environment-variable"><code>get-environment-variable</code></a></p>
+<hr />
+<h3 id="delete-environment-variable"><code>delete-environment-variable!</code><a class="headerlink" href="#delete-environment-variable" title="Permanent link">&para;</a></h3>
+<p><strong>Syntax:</strong> <code>(delete-environment-variable! name)</code></p>
+<p>Removes the environment variable <em>name</em> from the process environment.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-48-1" name="__codelineno-48-1" href="#__codelineno-48-1"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nf">set-environment-variable!</span><span class="w"> </span><span class="s">&quot;MY_VAR&quot;</span><span class="w"> </span><span class="s">&quot;hello&quot;</span><span class="p">)</span>
+<a id="__codelineno-48-2" name="__codelineno-48-2" href="#__codelineno-48-2"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nf">delete-environment-variable!</span><span class="w"> </span><span class="s">&quot;MY_VAR&quot;</span><span class="p">)</span>
+<a id="__codelineno-48-3" name="__codelineno-48-3" href="#__codelineno-48-3"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nf">get-environment-variable</span><span class="w"> </span><span class="s">&quot;MY_VAR&quot;</span><span class="p">)</span>
+<a id="__codelineno-48-4" name="__codelineno-48-4" href="#__codelineno-48-4"></a><span class="c1">;=&gt; #f</span>
+</code></pre></div>
+<p><strong>See also:</strong> <a href="#set-environment-variable"><code>set-environment-variable!</code></a>,
+<a href="../system/#get-environment-variable"><code>get-environment-variable</code></a></p>
+<hr />
+<h2 id="terminal_1">Terminal<a class="headerlink" href="#terminal_1" title="Permanent link">&para;</a></h2>
+<h3 id="terminal"><code>terminal?</code><a class="headerlink" href="#terminal" title="Permanent link">&para;</a></h3>
+<p><strong>Syntax:</strong> <code>(terminal? port)</code></p>
+<p>Returns <code>#t</code> if <em>port</em> is associated with a terminal device, <code>#f</code>
+otherwise. The argument must be a port object.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-49-1" name="__codelineno-49-1" href="#__codelineno-49-1"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nf">terminal?</span><span class="w"> </span><span class="p">(</span><span class="nb">current-input-port</span><span class="p">))</span>
+<a id="__codelineno-49-2" name="__codelineno-49-2" href="#__codelineno-49-2"></a><span class="c1">;=&gt; #t   ; when running interactively</span>
+<a id="__codelineno-49-3" name="__codelineno-49-3" href="#__codelineno-49-3"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nf">terminal?</span><span class="w"> </span><span class="p">(</span><span class="nb">open-input-file</span><span class="w"> </span><span class="s">&quot;/tmp/test.txt&quot;</span><span class="p">))</span>
+<a id="__codelineno-49-4" name="__codelineno-49-4" href="#__codelineno-49-4"></a><span class="c1">;=&gt; #f</span>
+</code></pre></div>
+<p><strong>See also:</strong> <a href="../ports-and-io/#current-input-port"><code>current-input-port</code></a></p>
+<hr />
+<h2 id="time">Time<a class="headerlink" href="#time" title="Permanent link">&para;</a></h2>
+<h3 id="posix-time"><code>posix-time</code><a class="headerlink" href="#posix-time" title="Permanent link">&para;</a></h3>
+<p><strong>Syntax:</strong> <code>(posix-time)</code></p>
+<p>Returns the current time as seconds since the Unix epoch
+(1970-01-01 00:00:00 UTC), using the realtime clock.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-50-1" name="__codelineno-50-1" href="#__codelineno-50-1"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nf">posix-time</span><span class="p">)</span>
+<a id="__codelineno-50-2" name="__codelineno-50-2" href="#__codelineno-50-2"></a><span class="c1">;=&gt; 1718900000</span>
+<a id="__codelineno-50-3" name="__codelineno-50-3" href="#__codelineno-50-3"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nb">&gt;</span><span class="w"> </span><span class="p">(</span><span class="nf">posix-time</span><span class="p">)</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
+<a id="__codelineno-50-4" name="__codelineno-50-4" href="#__codelineno-50-4"></a><span class="c1">;=&gt; #t</span>
+</code></pre></div>
+<p><strong>See also:</strong> <a href="#monotonic-time"><code>monotonic-time</code></a></p>
+<hr />
+<h3 id="monotonic-time"><code>monotonic-time</code><a class="headerlink" href="#monotonic-time" title="Permanent link">&para;</a></h3>
+<p><strong>Syntax:</strong> <code>(monotonic-time)</code></p>
+<p>Returns the current value of the monotonic clock in seconds. Unlike
+<code>posix-time</code>, this clock is not affected by system time changes and
+is suitable for measuring elapsed time.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-51-1" name="__codelineno-51-1" href="#__codelineno-51-1"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="nv">start</span><span class="w"> </span><span class="p">(</span><span class="nf">monotonic-time</span><span class="p">))</span>
+<a id="__codelineno-51-2" name="__codelineno-51-2" href="#__codelineno-51-2"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nb">&gt;=</span><span class="w"> </span><span class="p">(</span><span class="nb">-</span><span class="w"> </span><span class="p">(</span><span class="nf">monotonic-time</span><span class="p">)</span><span class="w"> </span><span class="nv">start</span><span class="p">)</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
+<a id="__codelineno-51-3" name="__codelineno-51-3" href="#__codelineno-51-3"></a><span class="c1">;=&gt; #t</span>
+</code></pre></div>
+<p><strong>See also:</strong> <a href="#posix-time"><code>posix-time</code></a></p>
+<hr />
+<h2 id="temporary-files">Temporary Files<a class="headerlink" href="#temporary-files" title="Permanent link">&para;</a></h2>
+<h3 id="create-temp-file"><code>create-temp-file</code><a class="headerlink" href="#create-temp-file" title="Permanent link">&para;</a></h3>
+<p><strong>Syntax:</strong> <code>(create-temp-file)</code> | <code>(create-temp-file prefix)</code></p>
+<p>Creates a new temporary file using <code>mkstemp(3)</code> and returns its pathname
+as a string. The file is created with mode <code>#o600</code> and is closed before
+returning. The optional <em>prefix</em> is a path prefix for the temp file; the
+default is the value of <code>(temp-file-prefix)</code>, which is <code>"/tmp/kaappi-"</code>.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-52-1" name="__codelineno-52-1" href="#__codelineno-52-1"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nf">create-temp-file</span><span class="p">)</span>
+<a id="__codelineno-52-2" name="__codelineno-52-2" href="#__codelineno-52-2"></a><span class="c1">;=&gt; &quot;/tmp/kaappi-a1b2c3&quot;</span>
+<a id="__codelineno-52-3" name="__codelineno-52-3" href="#__codelineno-52-3"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nf">create-temp-file</span><span class="w"> </span><span class="s">&quot;/tmp/myapp-&quot;</span><span class="p">)</span>
+<a id="__codelineno-52-4" name="__codelineno-52-4" href="#__codelineno-52-4"></a><span class="c1">;=&gt; &quot;/tmp/myapp-x9y8z7&quot;</span>
+</code></pre></div>
+<p><strong>See also:</strong> <a href="#temp-file-prefix"><code>temp-file-prefix</code></a></p>
+<hr />
+<h3 id="temp-file-prefix"><code>temp-file-prefix</code><a class="headerlink" href="#temp-file-prefix" title="Permanent link">&para;</a></h3>
+<p><strong>Syntax:</strong> <code>(temp-file-prefix)</code></p>
+<p>Returns the default prefix used by <code>create-temp-file</code>. In Kaappi this
+is always <code>"/tmp/kaappi-"</code>.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-53-1" name="__codelineno-53-1" href="#__codelineno-53-1"></a><span class="nv">kaappi&gt;</span><span class="w"> </span><span class="p">(</span><span class="nf">temp-file-prefix</span><span class="p">)</span>
+<a id="__codelineno-53-2" name="__codelineno-53-2" href="#__codelineno-53-2"></a><span class="c1">;=&gt; &quot;/tmp/kaappi-&quot;</span>
+</code></pre></div>
+<p><strong>See also:</strong> <a href="#create-temp-file"><code>create-temp-file</code></a></p>
+<hr />
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      MIT License &mdash; Built with Zig
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/kaappi/kaappi" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/orgs/kaappi/discussions" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path d="M1.75 1h8.5c.966 0 1.75.784 1.75 1.75v5.5A1.75 1.75 0 0 1 10.25 10H7.061l-2.574 2.573A1.458 1.458 0 0 1 2 11.543V10h-.25A1.75 1.75 0 0 1 0 8.25v-5.5C0 1.784.784 1 1.75 1M1.5 2.75v5.5c0 .138.112.25.25.25h1a.75.75 0 0 1 .75.75v2.19l2.72-2.72a.75.75 0 0 1 .53-.22h3.5a.25.25 0 0 0 .25-.25v-5.5a.25.25 0 0 0-.25-.25h-8.5a.25.25 0 0 0-.25.25m13 2a.25.25 0 0 0-.25-.25h-.5a.75.75 0 0 1 0-1.5h.5c.966 0 1.75.784 1.75 1.75v5.5A1.75 1.75 0 0 1 14.25 12H14v1.543a1.458 1.458 0 0 1-2.487 1.03L9.22 12.28a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l2.22 2.22v-2.19a.75.75 0 0 1 .75-.75h1a.25.25 0 0 0 .25-.25Z"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.instant", "navigation.tracking", "navigation.sections", "navigation.expand", "navigation.top", "search.suggest", "search.highlight", "content.code.copy", "toc.follow"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>
