@@ -59,7 +59,7 @@ This installs the latest release of both `kaappi` and `thottam`.
    find . -name '*.sbc' -delete
    ```
 
-2. Check the [changelog](changelog.md) for breaking changes.
+2. Check the [GitHub releases](https://github.com/kaappi/kaappi/releases) for breaking changes.
 
 3. Run your test suite:
 
@@ -85,7 +85,7 @@ When a feature is deprecated:
 
 1. It continues to work for at least one minor version
 2. Usage produces a warning message to stderr
-3. The [changelog](changelog.md) lists it under a "Deprecated" heading
+3. The [release notes](https://github.com/kaappi/kaappi/releases) list it under a "Deprecated" heading
 4. The documentation is updated to recommend the replacement
 
 No feature has been deprecated yet.
