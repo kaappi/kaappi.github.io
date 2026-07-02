@@ -4,14 +4,17 @@ MkDocs Material site for [Kaappi](https://github.com/kaappi/kaappi), an R7RS Sch
 
 Served at **https://kaappi-lang.org/**
 
-## Source repo
+## Related repos
 
-The Kaappi implementation lives at [github.com/kaappi/kaappi](https://github.com/kaappi/kaappi).
-Local path: `/Users/bmuthuka/kaappi/kaappi`.
+| Repo | Local path | What it is |
+|------|-----------|------------|
+| [kaappi](https://github.com/kaappi/kaappi) | `../kaappi/` | Core Scheme implementation (Zig). Dev docs at `docs/dev/` |
+| [kaappi-book](https://github.com/kaappi/kaappi-book) | `../kaappi-book/` | XeLaTeX book teaching Kaappi Scheme (18 chapters + appendices) |
 
 This repo is exclusively for **end-user documentation**. Developer/contributor
 docs (architecture, testing, adding-features, postmortems) live in the main
-repo under `docs/dev/` — do not add dev docs here.
+repo under `docs/dev/` — do not add dev docs here. The book (`kaappi-book`)
+covers Scheme from scratch for programmers; this site is reference and guide material.
 
 ## Structure
 
