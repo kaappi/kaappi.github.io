@@ -71,7 +71,7 @@ Full-page client-side apps built into the MkDocs site:
 After each kaappi release (cut with the `/github-release` skill in the core repo):
 
 1. Replace `docs/wasm/kaappi.wasm` with the released `kaappi.wasm`
-2. Bump the version in the `docs/download.md` H1
+2. Bump `kaappi_version` in `mkdocs.yml` (single source of truth for all version references)
 
 `docs/install.sh` and the download-table links target `releases/latest`, so
 they normally need no per-release changes.

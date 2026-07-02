@@ -1,3 +1,7 @@
+---
+render_macros: true
+---
+
 # REPL Guide
 
 Launch the interactive REPL with no arguments:
@@ -7,7 +11,7 @@ kaappi
 ```
 
 ```
-Kaappi Scheme v0.5.0
+Kaappi Scheme v{{ kaappi_version }}
 Type ,help for commands, ,quit to exit.
 
 kaappi> (+ 1 2)
@@ -317,7 +321,7 @@ GC Statistics:
 
 ```
 kaappi> ,version
-Kaappi Scheme v0.5.0
+Kaappi Scheme v{{ kaappi_version }}
 ```
 
 #### `,load <file>` — Load and run a Scheme file

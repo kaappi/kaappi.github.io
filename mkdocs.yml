@@ -130,10 +130,16 @@ markdown_extensions:
       permalink: true
   - attr_list
 
+plugins:
+  - search
+  - macros:
+      render_by_default: false
+
 extra_css:
   - stylesheets/extra.css
 
 extra:
+  kaappi_version: 0.11.1
   social:
     - icon: fontawesome/brands/github
       link: https://github.com/kaappi/kaappi

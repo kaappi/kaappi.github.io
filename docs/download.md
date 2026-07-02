@@ -1,4 +1,8 @@
-# Download Kaappi v0.11.1
+---
+render_macros: true
+---
+
+# Download Kaappi v{{ kaappi_version }}
 
 ## Recommended: install script
 

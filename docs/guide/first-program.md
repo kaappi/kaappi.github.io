@@ -1,3 +1,7 @@
+---
+render_macros: true
+---
+
 # Your First Program
 
 ## Running a file
@@ -32,7 +36,7 @@ kaappi
 ```
 
 ```
-Kaappi Scheme v0.5.0
+Kaappi Scheme v{{ kaappi_version }}
 Type ,help for commands, ,quit to exit.
 
 kaappi>
