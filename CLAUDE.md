@@ -28,7 +28,7 @@ page names). Section overview:
 | Try It (playground) | `docs/playground.md` | 1 | Stub; rendered by `overrides/playground.html` |
 | Tour | `docs/tour.md` | 1 | Stub; rendered by `overrides/tour.html` (12 lessons) |
 | Download | `docs/download.md` | 1 | Install script + binary links; **version in H1** |
-| Guide | `docs/guide/` | 19 + index | Installation through troubleshooting; incl. tutorial, library authoring, C/Zig extensions, SRFI support, editors, migrating, security, deployment |
+| Guide | `docs/guide/` | 18 + index | Installation through troubleshooting; incl. tutorial, library authoring, concurrency, C/Zig extensions, SRFI support, editors, migrating, security, deployment |
 | Procedures | `docs/procedures/` | 19 + index | Per-category API reference (numbers, lists, strings, SRFI-1/13/18/133/170, syntax forms, extensions, …) |
 | Cookbook | `docs/cookbook/` | 6 + index | Task recipes: REST API, HTML templates, JSON, CSV, testing, CLI tool |
 | Ecosystem | `docs/ecosystem/` | 19 + index | thottam (package manager) + one page per kaappi-* library |
@@ -79,11 +79,15 @@ they normally need no per-release changes.
 ## Build
 
 ```bash
-pip install mkdocs-material    # one-time setup
+pip install mkdocs-material mkdocs-macros-plugin mkdocs-redirects   # one-time setup
 mkdocs serve                   # local dev server at http://127.0.0.1:8000
 mkdocs build                   # build to site/
 mkdocs build --strict          # build with strict link checking
 ```
+
+Strict mode fails on any warning, including broken anchors (`validation:`
+in mkdocs.yml checks link anchors, not just pages). Renamed or removed
+pages must get an entry in the `redirects` plugin's `redirect_maps`.
 
 `mkdocs.yml` has `watch: overrides`, but in practice `mkdocs serve` does not
 reliably hot-reload edits to `overrides/` templates — restart the serve
@@ -93,7 +97,11 @@ process if template changes don't show up. `.claude/launch.json` defines a
 ## CI and deploy
 
 - `.github/workflows/ci.yml` — `mkdocs build --strict` on every push/PR to
-  `main`; fails on broken links.
+  `main`; fails on broken links and anchors. Also runs
+  `scripts/check_procedures_index.py`, which fails if
+  `docs/procedures/index.md` (the hand-curated per-procedure table) drifts
+  from the `### name { #anchor }` headings in the procedure subpages —
+  when adding or removing a procedure, update both.
 - `.github/workflows/pages.yml` — on push to `main` (or manual dispatch), runs
   `mkdocs gh-deploy --force`, which builds and pushes to the `gh-pages`
   branch; GitHub Pages serves it at kaappi-lang.org.

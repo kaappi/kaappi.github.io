@@ -20,5 +20,8 @@ jobs:
       - name: Install MkDocs
         run: pip install mkdocs-material mkdocs-macros-plugin mkdocs-redirects
 
+      - name: Check procedures index is in sync
+        run: python3 scripts/check_procedures_index.py
+
       - name: Build docs
         run: mkdocs build --strict

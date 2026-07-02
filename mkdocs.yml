@@ -132,6 +132,17 @@ nav:
     - Stability: stability.md
     - Glossary: glossary.md
 
+validation:
+  omitted_files: warn
+  absolute_links: warn
+  unrecognized_links: warn
+  anchors: warn
+
+# tour.md is intentionally outside nav: its nav entry links to the
+# absolute production URL so the Tour opens full-page.
+not_in_nav: |
+  tour.md
+
 markdown_extensions:
   - pymdownx.highlight:
       anchor_linenums: true
