@@ -44,7 +44,9 @@ Files in `docs/` that are not nav pages:
 - `docs/ideas.md` and `docs/errata-corrected-r7rs.pdf` — excluded from the build via `exclude_docs` in mkdocs.yml (internal notes / local R7RS spec copy).
 
 Nav gotcha: the Tour nav entry links to the absolute URL
-`https://kaappi-lang.org/tour/`, not to `tour.md`.
+`https://kaappi-lang.org/tour/`, not to `tour.md` — which is therefore
+declared in `not_in_nav` in mkdocs.yml so the omitted-page warning
+doesn't fail the strict build.
 
 ## Playground and Tour
 

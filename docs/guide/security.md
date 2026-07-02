@@ -256,3 +256,7 @@ For database credentials:
 
 See [SECURITY.md](https://github.com/kaappi/kaappi/blob/main/SECURITY.md).
 Use GitHub's private security advisory feature — do not open a public issue.
+
+---
+
+Next: [Deployment](deployment.md)

@@ -325,3 +325,7 @@ false, the empty list, and a symbol. In Scheme:
 If you hit a difference not covered here, check the
 [Troubleshooting](troubleshooting.md) page or ask on
 [GitHub Discussions](https://github.com/orgs/kaappi/discussions).
+
+---
+
+Next: [Troubleshooting](troubleshooting.md)

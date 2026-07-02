@@ -316,3 +316,7 @@ environments:
 - [ ] Reverse proxy configured with TLS
 - [ ] Process manager (systemd/Docker) restarts on crash
 - [ ] Resource limits set (`--timeout`, `--max-memory` if applicable)
+
+---
+
+Next: [Migrating from Other Schemes](migrating.md)

@@ -265,3 +265,7 @@ No cross-compilation toolchain, sysroot, or Docker needed.
 | Standard library | libc | Zig std + libc |
 | Binary size | Small | ~1-2 MB larger (Zig stdlib) |
 | Debugging | gdb/lldb | gdb/lldb + Zig stack traces |
+
+---
+
+Next: [Security](security.md)
