@@ -3,31 +3,40 @@
 Kaappi is an open-source project under the MIT license. Contributions,
 questions, and feedback are welcome.
 
-## Get help
+## Get involved
 
 **[GitHub Discussions](https://github.com/orgs/kaappi/discussions)** is the
-primary community channel. Use it for:
+starting point for everyone — whether you have a question, found a bug, want
+to propose a feature, or are interested in contributing code.
+
+Use Discussions for:
 
 - Questions about using Kaappi
+- Bug reports and reproduction cases
 - Ideas and feature suggestions
 - Show and tell — share what you've built
 - General discussion about Scheme and language implementation
+- Requesting org membership to contribute directly
 
-## Report a bug
+## Issues and pull requests
 
-Open an issue at
-[github.com/kaappi/kaappi/issues](https://github.com/kaappi/kaappi/issues).
+Issues and pull requests on Kaappi repositories are restricted to members of
+the [kaappi GitHub org](https://github.com/kaappi). This keeps the project
+focused and the signal clear as it grows.
 
-Include:
+**Want to contribute code or file issues directly?** Ask for an org invite in
+[Discussions](https://github.com/orgs/kaappi/discussions) — we're happy to
+add anyone who's genuinely interested. There is no bar beyond showing up and
+wanting to help.
 
-- Kaappi version (`kaappi --version`)
-- Operating system and architecture
-- A minimal reproducing example
-- Expected vs. actual behavior
+### Typical path for a new contributor
 
-For **ecosystem library** bugs (kaappi-json, kaappi-web, etc.), open the
-issue in that library's repo:
-`github.com/kaappi/<library-name>/issues`
+1. **Explore** — install Kaappi, try the [Playground](../playground/), read
+   the [Guide](guide/index.md)
+2. **Join the conversation** — post in Discussions (bugs, questions, ideas)
+3. **Get org access** — mention that you'd like to contribute and we'll send
+   an invite
+4. **Submit a PR** — fork, branch, test, open a pull request
 
 ## Report a security vulnerability
 
@@ -79,7 +88,7 @@ Requires Zig 0.16+.
 
 Each ecosystem library (kaappi-json, kaappi-web, etc.) is its own repo
 under the [kaappi GitHub org](https://github.com/kaappi). PRs follow the
-same fork-and-branch workflow.
+same fork-and-branch workflow (org membership required).
 
 To create a new ecosystem library, see
 [Library Authoring](guide/library-authoring.md) for the project layout and
