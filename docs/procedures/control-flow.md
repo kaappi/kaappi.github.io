@@ -498,7 +498,7 @@ in exception handlers.
 
 ```scheme
 kaappi> (guard (e (#t (read-error? e)))
-         (read (open-input-string "(unclosed")))
+         (read (open-input-string ")")))
 ;=> #t
 kaappi> (guard (e (#t (read-error? e)))
          (error "not a read error"))
