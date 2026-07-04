@@ -29,6 +29,7 @@ numbers. These procedures are available from `(scheme base)` and
 ## Basic Arithmetic
 
 ### `+` { #plus }
+<!-- index: 0+ | Sum of all arguments (0 with no args) -->
 
 **Syntax:** `(+ z1 ...)`
 
@@ -60,6 +61,7 @@ kaappi> (+ (expt 2 62) 1)
 ---
 
 ### `-` { #minus }
+<!-- index: 1+ | Negation (1 arg) or subtraction (2+ args) -->
 
 **Syntax:** `(- z)` or `(- z1 z2 ...)`
 
@@ -84,6 +86,7 @@ kaappi> (- 5.0)
 ---
 
 ### `*` { #star }
+<!-- index: 0+ | Product of all arguments (1 with no args) -->
 
 **Syntax:** `(* z1 ...)`
 
@@ -108,6 +111,7 @@ kaappi> (* 1/2 1/3)
 ---
 
 ### `/` { #slash }
+<!-- index: 1+ | Reciprocal (1 arg) or division (2+ args) -->
 
 **Syntax:** `(/ z)` or `(/ z1 z2 ...)`
 
@@ -144,6 +148,7 @@ kaappi> (inexact (/ 1 3))
 ---
 
 ### `quotient` { #quotient }
+<!-- index: 2 | Integer division truncated toward zero -->
 
 **Syntax:** `(quotient n1 n2)`
 
@@ -165,6 +170,7 @@ kaappi> (quotient 10 -3)
 ---
 
 ### `remainder` { #remainder }
+<!-- index: 2 | Remainder after truncated division -->
 
 **Syntax:** `(remainder n1 n2)`
 
@@ -186,6 +192,7 @@ kaappi> (remainder 10 -3)
 ---
 
 ### `modulo` { #modulo }
+<!-- index: 2 | Modulo (sign follows divisor) -->
 
 **Syntax:** `(modulo n1 n2)`
 
@@ -210,6 +217,7 @@ kaappi> (modulo 10 -3)
 ## Comparisons
 
 ### `=` { #num-equal }
+<!-- index: 2+ | Numeric equality -->
 
 **Syntax:** `(= z1 z2 z3 ...)`
 
@@ -233,6 +241,7 @@ kaappi> (= +nan.0 +nan.0)
 ---
 
 ### `<` { #num-lt }
+<!-- index: 2+ | Monotonically increasing -->
 
 **Syntax:** `(< x1 x2 x3 ...)`
 
@@ -254,6 +263,7 @@ kaappi> (< 1 1)
 ---
 
 ### `>` { #num-gt }
+<!-- index: 2+ | Monotonically decreasing -->
 
 **Syntax:** `(> x1 x2 x3 ...)`
 
@@ -275,6 +285,7 @@ kaappi> (> 1 1)
 ---
 
 ### `<=` { #num-le }
+<!-- index: 2+ | Monotonically non-decreasing -->
 
 **Syntax:** `(<= x1 x2 x3 ...)`
 
@@ -296,6 +307,7 @@ kaappi> (<= 2 1)
 ---
 
 ### `>=` { #num-ge }
+<!-- index: 2+ | Monotonically non-increasing -->
 
 **Syntax:** `(>= x1 x2 x3 ...)`
 
@@ -319,6 +331,7 @@ kaappi> (>= 1 2)
 ## Predicates
 
 ### `zero?` { #zero }
+<!-- index: 1 | True if argument is zero -->
 
 **Syntax:** `(zero? z)`
 
@@ -337,6 +350,7 @@ kaappi> (zero? 1)
 ---
 
 ### `positive?` { #positive }
+<!-- index: 1 | True if argument is positive -->
 
 **Syntax:** `(positive? x)`
 
@@ -360,6 +374,7 @@ kaappi> (positive? -1)
 ---
 
 ### `negative?` { #negative }
+<!-- index: 1 | True if argument is negative -->
 
 **Syntax:** `(negative? x)`
 
@@ -382,6 +397,7 @@ kaappi> (negative? 1)
 ---
 
 ### `even?` { #even }
+<!-- index: 1 | True if integer is even -->
 
 **Syntax:** `(even? n)`
 
@@ -402,6 +418,7 @@ kaappi> (even? 0)
 ---
 
 ### `odd?` { #odd }
+<!-- index: 1 | True if integer is odd -->
 
 **Syntax:** `(odd? n)`
 
@@ -420,6 +437,7 @@ kaappi> (odd? 4)
 ---
 
 ### `exact?` { #exact-pred }
+<!-- index: 1 | True if number is exact -->
 
 **Syntax:** `(exact? z)`
 
@@ -441,6 +459,7 @@ kaappi> (exact? 1/3)
 ---
 
 ### `inexact?` { #inexact-pred }
+<!-- index: 1 | True if number is inexact -->
 
 **Syntax:** `(inexact? z)`
 
@@ -459,6 +478,7 @@ kaappi> (inexact? 42)
 ---
 
 ### `exact-integer?` { #exact-integer }
+<!-- index: 1 | True if number is an exact integer -->
 
 **Syntax:** `(exact-integer? z)`
 
@@ -477,6 +497,7 @@ kaappi> (exact-integer? 1/3)
 ---
 
 ### `finite?` { #finite }
+<!-- index: 1 | True if number is finite -->
 
 **Syntax:** `(finite? z)`
 
@@ -499,6 +520,7 @@ kaappi> (finite? +nan.0)
 ---
 
 ### `infinite?` { #infinite }
+<!-- index: 1 | True if number is infinite -->
 
 **Syntax:** `(infinite? z)`
 
@@ -520,6 +542,7 @@ kaappi> (infinite? 42)
 ---
 
 ### `nan?` { #nan }
+<!-- index: 1 | True if number is NaN -->
 
 **Syntax:** `(nan? z)`
 
@@ -542,6 +565,7 @@ kaappi> (nan? 3.14)
 ## Min / Max / Abs
 
 ### `abs` { #abs }
+<!-- index: 1 | Absolute value -->
 
 **Syntax:** `(abs x)`
 
@@ -563,6 +587,7 @@ kaappi> (abs -3.5)
 ---
 
 ### `min` { #min }
+<!-- index: 1+ | Minimum of arguments -->
 
 **Syntax:** `(min x1 x2 ...)`
 
@@ -581,6 +606,7 @@ kaappi> (min 1 2.5 0.5)
 ---
 
 ### `max` { #max }
+<!-- index: 1+ | Maximum of arguments -->
 
 **Syntax:** `(max x1 x2 ...)`
 
@@ -601,6 +627,7 @@ kaappi> (max 1 2.5 0.5)
 ## GCD / LCM
 
 ### `gcd` { #gcd }
+<!-- index: 0+ | Greatest common divisor -->
 
 **Syntax:** `(gcd n1 ...)`
 
@@ -622,6 +649,7 @@ kaappi> (gcd)
 ---
 
 ### `lcm` { #lcm }
+<!-- index: 0+ | Least common multiple -->
 
 **Syntax:** `(lcm n1 ...)`
 
@@ -645,6 +673,7 @@ kaappi> (lcm)
 ## Rounding
 
 ### `floor` { #floor }
+<!-- index: 1 | Largest integer not greater than argument -->
 
 **Syntax:** `(floor x)`
 
@@ -666,6 +695,7 @@ kaappi> (floor 42)
 ---
 
 ### `ceiling` { #ceiling }
+<!-- index: 1 | Smallest integer not less than argument -->
 
 **Syntax:** `(ceiling x)`
 
@@ -687,6 +717,7 @@ kaappi> (ceiling 42)
 ---
 
 ### `truncate` { #truncate }
+<!-- index: 1 | Integer part, truncated toward zero -->
 
 **Syntax:** `(truncate x)`
 
@@ -709,6 +740,7 @@ kaappi> (truncate 42)
 ---
 
 ### `round` { #round }
+<!-- index: 1 | Round to nearest integer (banker's rounding) -->
 
 **Syntax:** `(round x)`
 
@@ -739,6 +771,7 @@ kaappi> (round -3.7)
 ## Exactness
 
 ### `exact` { #exact }
+<!-- index: 1 | Convert to exact representation -->
 
 **Syntax:** `(exact z)`
 
@@ -762,6 +795,7 @@ kaappi> (exact 42)
 ---
 
 ### `inexact` { #inexact }
+<!-- index: 1 | Convert to inexact representation -->
 
 **Syntax:** `(inexact z)`
 
@@ -783,6 +817,7 @@ kaappi> (inexact 3.14)
 ---
 
 ### `exact->inexact` { #exact-to-inexact }
+<!-- index: 1 | Alias for `inexact` -->
 
 **Syntax:** `(exact->inexact z)`
 
@@ -799,6 +834,7 @@ kaappi> (exact->inexact 1/3)
 ---
 
 ### `inexact->exact` { #inexact-to-exact }
+<!-- index: 1 | Alias for `exact` -->
 
 **Syntax:** `(inexact->exact z)`
 
@@ -817,6 +853,7 @@ kaappi> (inexact->exact 0.5)
 ## Powers and Roots
 
 ### `expt` { #expt }
+<!-- index: 2 | Raise base to a power -->
 
 **Syntax:** `(expt z1 z2)`
 
@@ -846,6 +883,7 @@ kaappi> (expt 0 0)
 ---
 
 ### `square` { #square }
+<!-- index: 1 | Square of a number -->
 
 **Syntax:** `(square z)`
 
@@ -867,6 +905,7 @@ kaappi> (square 1/3)
 ---
 
 ### `sqrt` { #sqrt }
+<!-- index: 1 | Square root (complex result for negative reals) -->
 
 **Syntax:** `(sqrt z)`
 
@@ -891,6 +930,7 @@ kaappi> (sqrt 9)
 ---
 
 ### `exact-integer-sqrt` { #exact-integer-sqrt }
+<!-- index: 1 | Integer square root, returns root and remainder via values -->
 
 **Syntax:** `(exact-integer-sqrt k)`
 
@@ -922,6 +962,7 @@ kaappi> (exact-integer-sqrt 0)
 ## Trigonometry
 
 ### `sin` { #sin }
+<!-- index: 1 | Sine (radians) -->
 
 **Syntax:** `(sin z)`
 
@@ -940,6 +981,7 @@ kaappi> (sin 1.5707963267948966)
 ---
 
 ### `cos` { #cos }
+<!-- index: 1 | Cosine (radians) -->
 
 **Syntax:** `(cos z)`
 
@@ -958,6 +1000,7 @@ kaappi> (cos 3.141592653589793)
 ---
 
 ### `tan` { #tan }
+<!-- index: 1 | Tangent (radians) -->
 
 **Syntax:** `(tan z)`
 
@@ -976,6 +1019,7 @@ kaappi> (tan 0.7853981633974483)
 ---
 
 ### `asin` { #asin }
+<!-- index: 1 | Arcsine -->
 
 **Syntax:** `(asin z)`
 
@@ -994,6 +1038,7 @@ kaappi> (asin 1)
 ---
 
 ### `acos` { #acos }
+<!-- index: 1 | Arccosine -->
 
 **Syntax:** `(acos z)`
 
@@ -1012,6 +1057,7 @@ kaappi> (acos 0)
 ---
 
 ### `atan` { #atan }
+<!-- index: 1+ | Arctangent (1 arg) or two-argument atan2 -->
 
 **Syntax:** `(atan z)` or `(atan y x)`
 
@@ -1038,6 +1084,7 @@ kaappi> (atan -1 -1)
 ## Exponentials
 
 ### `exp` { #exp }
+<!-- index: 1 | Exponential (e^x) -->
 
 **Syntax:** `(exp z)`
 
@@ -1056,6 +1103,7 @@ kaappi> (exp 1)
 ---
 
 ### `log` { #log }
+<!-- index: 1+ | Natural log (1 arg) or log base b (2 args) -->
 
 **Syntax:** `(log z)` or `(log z base)`
 
@@ -1081,6 +1129,7 @@ kaappi> (log 100 10)
 ## Conversion
 
 ### `number->string` { #number-to-string }
+<!-- index: 1 | Convert number to string representation -->
 
 **Syntax:** `(number->string z)` or `(number->string z radix)`
 
@@ -1107,6 +1156,7 @@ kaappi> (number->string +inf.0)
 ---
 
 ### `string->number` { #string-to-number }
+<!-- index: 1+ | Parse string as number (optional radix) -->
 
 **Syntax:** `(string->number string)` or `(string->number string radix)`
 
@@ -1152,6 +1202,7 @@ kaappi> (string->number "1/3")
 ## Integer Division
 
 ### `floor-quotient` { #floor-quotient }
+<!-- index: 2 | Quotient from floor division -->
 
 **Syntax:** `(floor-quotient n1 n2)`
 
@@ -1174,6 +1225,7 @@ kaappi> (floor-quotient 7 -2)
 ---
 
 ### `floor-remainder` { #floor-remainder }
+<!-- index: 2 | Remainder from floor division -->
 
 **Syntax:** `(floor-remainder n1 n2)`
 
@@ -1195,6 +1247,7 @@ kaappi> (floor-remainder 7 -2)
 ---
 
 ### `floor/` { #floor-div }
+<!-- index: 2 | Floor division returning quotient and remainder -->
 
 **Syntax:** `(floor/ n1 n2)`
 
@@ -1216,6 +1269,7 @@ kaappi> (floor/ -7 2)
 ---
 
 ### `truncate-quotient` { #truncate-quotient }
+<!-- index: 2 | Quotient from truncated division -->
 
 **Syntax:** `(truncate-quotient n1 n2)`
 
@@ -1237,6 +1291,7 @@ kaappi> (truncate-quotient 7 -2)
 ---
 
 ### `truncate-remainder` { #truncate-remainder }
+<!-- index: 2 | Remainder from truncated division -->
 
 **Syntax:** `(truncate-remainder n1 n2)`
 
@@ -1258,6 +1313,7 @@ kaappi> (truncate-remainder 7 -2)
 ---
 
 ### `truncate/` { #truncate-div }
+<!-- index: 2 | Truncated division returning quotient and remainder -->
 
 **Syntax:** `(truncate/ n1 n2)`
 
@@ -1281,6 +1337,7 @@ kaappi> (truncate/ -7 2)
 ## Rationals
 
 ### `numerator` { #numerator }
+<!-- index: 1 | Numerator of a rational (identity for integers) -->
 
 **Syntax:** `(numerator q)`
 
@@ -1304,6 +1361,7 @@ kaappi> (numerator 0.5)
 ---
 
 ### `denominator` { #denominator }
+<!-- index: 1 | Denominator of a rational (1 for integers) -->
 
 **Syntax:** `(denominator q)`
 
@@ -1325,6 +1383,7 @@ kaappi> (denominator 0.5)
 ---
 
 ### `rationalize` { #rationalize }
+<!-- index: 2 | Simplest rational within tolerance -->
 
 **Syntax:** `(rationalize x y)`
 
@@ -1349,6 +1408,7 @@ kaappi> (rationalize 0.3 1/10)
 ## Complex Numbers
 
 ### `make-rectangular` { #make-rectangular }
+<!-- index: 2 | Construct complex from real and imaginary parts -->
 
 **Syntax:** `(make-rectangular x1 x2)`
 
@@ -1370,6 +1430,7 @@ kaappi> (make-rectangular 0 1)
 ---
 
 ### `make-polar` { #make-polar }
+<!-- index: 2 | Construct complex from magnitude and angle -->
 
 **Syntax:** `(make-polar mag ang)`
 
@@ -1389,6 +1450,7 @@ kaappi> (make-polar 1 1.5707963267948966)
 ---
 
 ### `real-part` { #real-part }
+<!-- index: 1 | Real part of a complex number -->
 
 **Syntax:** `(real-part z)`
 
@@ -1410,6 +1472,7 @@ kaappi> (real-part 3.14)
 ---
 
 ### `imag-part` { #imag-part }
+<!-- index: 1 | Imaginary part of a complex number -->
 
 **Syntax:** `(imag-part z)`
 
@@ -1432,6 +1495,7 @@ kaappi> (imag-part 3.14)
 ---
 
 ### `magnitude` { #magnitude }
+<!-- index: 1 | Magnitude (absolute value) of a complex number -->
 
 **Syntax:** `(magnitude z)`
 
@@ -1454,6 +1518,7 @@ kaappi> (magnitude 3.0)
 ---
 
 ### `angle` { #angle }
+<!-- index: 1 | Angle (argument) of a complex number -->
 
 **Syntax:** `(angle z)`
 

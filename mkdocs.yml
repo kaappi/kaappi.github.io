@@ -165,8 +165,12 @@ plugins:
   - macros:
       # Off by default so pages like ecosystem/template.md, which document
       # Go-style {{.name}} syntax, aren't mangled by Jinja. Pages that use
-      # {{ kaappi_version }} opt in with `render_macros: true` frontmatter.
+      # {{ kaappi_version }} or procedures_table opt in with `render_macros: true`.
       render_by_default: false
+      # Fail the build on a macro error (e.g. procedures_table hitting a
+      # procedure heading with no `<!-- index: -->` metadata) rather than
+      # embedding the error in the page.
+      on_error_fail: true
   - redirects:
       redirect_maps:
         guide/advanced.md: guide/concurrency.md

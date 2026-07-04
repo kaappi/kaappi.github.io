@@ -1,3 +1,7 @@
+---
+render_macros: true
+---
+
 # Procedure Reference
 
 This document lists all built-in procedures organized by domain. Each procedure
@@ -9,73 +13,7 @@ examples.
 
 ## [Numbers and Arithmetic](numbers.md)
 
-| Procedure | Arity | Description |
-|-----------|-------|-------------|
-| [`+`](numbers.md#plus) | 0+ | Sum of all arguments (0 with no args) |
-| [`-`](numbers.md#minus) | 1+ | Negation (1 arg) or subtraction (2+ args) |
-| [`*`](numbers.md#star) | 0+ | Product of all arguments (1 with no args) |
-| [`/`](numbers.md#slash) | 1+ | Reciprocal (1 arg) or division (2+ args) |
-| [`quotient`](numbers.md#quotient) | 2 | Integer division truncated toward zero |
-| [`remainder`](numbers.md#remainder) | 2 | Remainder after truncated division |
-| [`modulo`](numbers.md#modulo) | 2 | Modulo (sign follows divisor) |
-| [`=`](numbers.md#num-equal) | 2+ | Numeric equality |
-| [`<`](numbers.md#num-lt) | 2+ | Monotonically increasing |
-| [`>`](numbers.md#num-gt) | 2+ | Monotonically decreasing |
-| [`<=`](numbers.md#num-le) | 2+ | Monotonically non-decreasing |
-| [`>=`](numbers.md#num-ge) | 2+ | Monotonically non-increasing |
-| [`zero?`](numbers.md#zero) | 1 | True if argument is zero |
-| [`positive?`](numbers.md#positive) | 1 | True if argument is positive |
-| [`negative?`](numbers.md#negative) | 1 | True if argument is negative |
-| [`abs`](numbers.md#abs) | 1 | Absolute value |
-| [`min`](numbers.md#min) | 1+ | Minimum of arguments |
-| [`max`](numbers.md#max) | 1+ | Maximum of arguments |
-| [`even?`](numbers.md#even) | 1 | True if integer is even |
-| [`odd?`](numbers.md#odd) | 1 | True if integer is odd |
-| [`gcd`](numbers.md#gcd) | 0+ | Greatest common divisor |
-| [`lcm`](numbers.md#lcm) | 0+ | Least common multiple |
-| [`floor`](numbers.md#floor) | 1 | Largest integer not greater than argument |
-| [`ceiling`](numbers.md#ceiling) | 1 | Smallest integer not less than argument |
-| [`truncate`](numbers.md#truncate) | 1 | Integer part, truncated toward zero |
-| [`round`](numbers.md#round) | 1 | Round to nearest integer (banker's rounding) |
-| [`exact?`](numbers.md#exact-pred) | 1 | True if number is exact |
-| [`inexact?`](numbers.md#inexact-pred) | 1 | True if number is inexact |
-| [`exact-integer?`](numbers.md#exact-integer) | 1 | True if number is an exact integer |
-| [`exact`](numbers.md#exact) | 1 | Convert to exact representation |
-| [`inexact`](numbers.md#inexact) | 1 | Convert to inexact representation |
-| [`exact->inexact`](numbers.md#exact-to-inexact) | 1 | Alias for `inexact` |
-| [`inexact->exact`](numbers.md#inexact-to-exact) | 1 | Alias for `exact` |
-| [`expt`](numbers.md#expt) | 2 | Raise base to a power |
-| [`square`](numbers.md#square) | 1 | Square of a number |
-| [`sqrt`](numbers.md#sqrt) | 1 | Square root (complex result for negative reals) |
-| [`exact-integer-sqrt`](numbers.md#exact-integer-sqrt) | 1 | Integer square root, returns root and remainder via values |
-| [`sin`](numbers.md#sin) | 1 | Sine (radians) |
-| [`cos`](numbers.md#cos) | 1 | Cosine (radians) |
-| [`tan`](numbers.md#tan) | 1 | Tangent (radians) |
-| [`asin`](numbers.md#asin) | 1 | Arcsine |
-| [`acos`](numbers.md#acos) | 1 | Arccosine |
-| [`atan`](numbers.md#atan) | 1+ | Arctangent (1 arg) or two-argument atan2 |
-| [`exp`](numbers.md#exp) | 1 | Exponential (e^x) |
-| [`log`](numbers.md#log) | 1+ | Natural log (1 arg) or log base b (2 args) |
-| [`finite?`](numbers.md#finite) | 1 | True if number is finite |
-| [`infinite?`](numbers.md#infinite) | 1 | True if number is infinite |
-| [`nan?`](numbers.md#nan) | 1 | True if number is NaN |
-| [`number->string`](numbers.md#number-to-string) | 1 | Convert number to string representation |
-| [`string->number`](numbers.md#string-to-number) | 1+ | Parse string as number (optional radix) |
-| [`floor-quotient`](numbers.md#floor-quotient) | 2 | Quotient from floor division |
-| [`floor-remainder`](numbers.md#floor-remainder) | 2 | Remainder from floor division |
-| [`floor/`](numbers.md#floor-div) | 2 | Floor division returning quotient and remainder |
-| [`truncate-quotient`](numbers.md#truncate-quotient) | 2 | Quotient from truncated division |
-| [`truncate-remainder`](numbers.md#truncate-remainder) | 2 | Remainder from truncated division |
-| [`truncate/`](numbers.md#truncate-div) | 2 | Truncated division returning quotient and remainder |
-| [`numerator`](numbers.md#numerator) | 1 | Numerator of a rational (identity for integers) |
-| [`denominator`](numbers.md#denominator) | 1 | Denominator of a rational (1 for integers) |
-| [`rationalize`](numbers.md#rationalize) | 2 | Simplest rational within tolerance |
-| [`make-rectangular`](numbers.md#make-rectangular) | 2 | Construct complex from real and imaginary parts |
-| [`make-polar`](numbers.md#make-polar) | 2 | Construct complex from magnitude and angle |
-| [`real-part`](numbers.md#real-part) | 1 | Real part of a complex number |
-| [`imag-part`](numbers.md#imag-part) | 1 | Imaginary part of a complex number |
-| [`magnitude`](numbers.md#magnitude) | 1 | Magnitude (absolute value) of a complex number |
-| [`angle`](numbers.md#angle) | 1 | Angle (argument) of a complex number |
+{{ procedures_table("numbers.md") }}
 
 ## [Pairs and Lists](pairs-and-lists.md)
 

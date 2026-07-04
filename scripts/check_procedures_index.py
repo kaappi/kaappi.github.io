@@ -26,6 +26,14 @@ from pathlib import Path
 
 PROCEDURES_DIR = Path(__file__).resolve().parent.parent / "docs" / "procedures"
 
+# Pages whose index.md table is generated at build time from inline
+# `<!-- index: arity | description -->` metadata (see main.py's procedures_table
+# macro). Their links live in the macro output, not the index.md source, so
+# they're excluded from the source-link check below — the macro fails the build
+# if a heading is missing its metadata comment. As categories migrate to
+# generation, add them here.
+GENERATED_PAGES = {"numbers.md"}
+
 PROC_HEADING_RE = re.compile(r"^### `?(.+?)`? *\{ *#([A-Za-z0-9_-]+) *\}", re.MULTILINE)
 EXPLICIT_ANCHOR_RE = re.compile(r"\{ *#([A-Za-z0-9_-]+) *\}")
 ANY_HEADING_RE = re.compile(r"^#{2,4} +(.+?)(?: *\{.*\})? *$", re.MULTILINE)
@@ -56,10 +64,11 @@ def main() -> int:
         if page.name == "index.md":
             continue
         text = page.read_text()
-        for name, anchor in PROC_HEADING_RE.findall(text):
-            procedures[(page.name, anchor)] = name
-        for name, anchor in TABLE_ROW_ANCHOR_RE.findall(text):
-            procedures[(page.name, anchor)] = name
+        if page.name not in GENERATED_PAGES:
+            for name, anchor in PROC_HEADING_RE.findall(text):
+                procedures[(page.name, anchor)] = name
+            for name, anchor in TABLE_ROW_ANCHOR_RE.findall(text):
+                procedures[(page.name, anchor)] = name
         for anchor in EXPLICIT_ANCHOR_RE.findall(text):
             all_anchors.add((page.name, anchor))
         for heading in ANY_HEADING_RE.findall(text):
@@ -87,9 +96,11 @@ def main() -> int:
         )
         return 1
 
+    generated = ", ".join(sorted(GENERATED_PAGES)) or "none"
     print(
-        f"procedures/index.md OK: {len(index_links)} index links, "
-        f"{len(procedures)} procedure entries, no drift."
+        f"procedures/index.md OK: {len(index_links)} hand-listed index links, "
+        f"{len(procedures)} procedure entries, no drift "
+        f"(generated pages, checked by the build: {generated})."
     )
     return 0
 
