@@ -102,11 +102,17 @@ process if template changes don't show up. `.claude/launch.json` defines a
 ## CI and deploy
 
 - `.github/workflows/ci.yml` — one workflow, two jobs:
-  - **build** (every push/PR to `main`): runs `scripts/check_procedures_index.py`,
-    which fails if `docs/procedures/index.md` (the hand-curated per-procedure
-    table) drifts from the `### name { #anchor }` headings or table-row anchors
-    in the procedure subpages — when adding or removing a procedure, update both;
-    then `mkdocs build --strict`, which fails on broken links and anchors.
+  - **build** (every push/PR to `main`): runs `scripts/check_procedures_index.py`
+    then `mkdocs build --strict` (fails on broken links/anchors).
+    `docs/procedures/index.md` is **generated** from the subpages — each category
+    is a `{{ procedures_table("page.md") }}` macro call (see `main.py`) that reads
+    the `### name { #anchor }` headings (and inline table-row anchors) plus their
+    `<!-- index: arity | description -->` metadata comment. To add/remove a
+    procedure, edit only the subpage (heading + metadata); the index regenerates.
+    A heading missing its metadata comment fails the build (macros
+    `on_error_fail`). Special forms use `procedures_table(page, kind="form")`
+    (2-column). The check script now guards only categories not yet generated
+    (currently none, so it's effectively a no-op — retire it if you like).
   - **deploy** (push to `main` only, `needs: build`): `mkdocs gh-deploy --force
     --strict` builds and pushes to the `gh-pages` branch, so a failing build
     never publishes. GitHub Pages serves `gh-pages` at kaappi-lang.org.
@@ -148,9 +154,12 @@ All paths are relative to this repo root (`kaappi.github.io/`):
 
 - CLI examples use `kaappi` (not `zig build run --`); assume user has installed per guide
 - REPL examples use `kaappi>` prompt and `;=>` for results
-- Procedure subpages use `###` per procedure with `{ #anchor-id }` for explicit anchors
-- Procedure anchor convention (the `{ #anchor }` ids; `scripts/check_procedures_index.py`
-  depends on them, so match these when adding a procedure):
+- Procedure subpages use `###` per procedure with `{ #anchor-id }` for explicit anchors,
+  each followed by an `<!-- index: arity | description -->` comment that feeds the
+  generated `procedures/index.md` table (see the CI section)
+- Procedure anchor convention (the `{ #anchor }` ids; the `procedures_table` macro and
+  `scripts/check_procedures_index.py`
+  depend on them, so match these when adding a procedure):
   - `?` predicate: normally removed (`pair?` → `#pair`), but `-pred` when the
     bare name is itself a procedure — `exact?` → `#exact-pred` (because `exact`
     exists), likewise `eof-object?` → `#eof-object-pred`
