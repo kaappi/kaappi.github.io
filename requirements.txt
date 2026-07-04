@@ -1,0 +1,8 @@
+# Pinned build dependencies for the Kaappi docs site.
+# Used by CI (.github/workflows/*) and local dev — keep both in sync.
+# Bump deliberately; a mkdocs-material major can break the theme overrides
+# in overrides/ without --strict catching it, so review after upgrading.
+mkdocs==1.6.1
+mkdocs-material==9.7.6
+mkdocs-macros-plugin==1.5.0
+mkdocs-redirects==1.2.3

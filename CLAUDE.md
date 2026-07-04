@@ -81,7 +81,7 @@ they normally need no per-release changes.
 ## Build
 
 ```bash
-pip install mkdocs-material mkdocs-macros-plugin mkdocs-redirects   # one-time setup
+pip install -r requirements.txt   # one-time setup (pinned versions)
 mkdocs serve                   # local dev server at http://127.0.0.1:8000
 mkdocs build                   # build to site/
 mkdocs build --strict          # build with strict link checking
