@@ -1,27 +1,54 @@
-name: CI
+name: CI & Deploy
 
 on:
   push:
     branches: [main]
   pull_request:
     branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+# Serialize deploys so two pushes can't race on the gh-pages branch.
+concurrency:
+  group: pages
+  cancel-in-progress: false
 
 jobs:
-  build-docs:
+  build:
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v4
 
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
+          cache: pip
 
-      - name: Install MkDocs
-        run: pip install mkdocs-material mkdocs-macros-plugin mkdocs-redirects
+      - name: Install dependencies
+        run: pip install -r requirements.txt
 
       - name: Check procedures index is in sync
         run: python3 scripts/check_procedures_index.py
 
       - name: Build docs
         run: mkdocs build --strict
+
+  deploy:
+    needs: build
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Deploy to GitHub Pages
+        run: mkdocs gh-deploy --force --strict
