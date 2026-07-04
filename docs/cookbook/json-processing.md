@@ -171,15 +171,19 @@ JSON `null` is represented as the symbol `'null`:
 ;=> "{\"value\":null}"
 ```
 
-## Type mapping reference
+## Checking decoded types
 
-| JSON | Scheme | Check |
-|------|--------|-------|
-| `"hello"` | `"hello"` | `string?` |
-| `42` | `42` | `integer?` |
-| `3.14` | `3.14` | `inexact?` |
-| `true` | `#t` | `boolean?` |
-| `false` | `#f` | `boolean?` |
-| `null` | `'null` | `json-null?` |
-| `[1,2,3]` | `(1 2 3)` | `list?` |
-| `{"a":1}` | `(("a" . 1))` | `pair?` with `string?` car |
+Parsed JSON decodes to ordinary Scheme values; test each with a predicate:
+
+| Scheme value | Predicate |
+|--------------|-----------|
+| `"hello"` (string) | `string?` |
+| `42` (integer) | `integer?` |
+| `3.14` (float) | `inexact?` |
+| `#t` / `#f` | `boolean?` |
+| `'null` | `json-null?` |
+| `(1 2 3)` (array) | `list?` |
+| `(("a" . 1))` (object) | `pair?` with a `string?` car |
+
+For the full JSON-to-Scheme representation table, see the
+[JSON library reference](../ecosystem/json.md#type-mapping).
