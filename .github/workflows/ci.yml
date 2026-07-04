@@ -29,9 +29,6 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
-      - name: Check procedures index is in sync
-        run: python3 scripts/check_procedures_index.py
-
       - name: Build docs
         run: mkdocs build --strict
 

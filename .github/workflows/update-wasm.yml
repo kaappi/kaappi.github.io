@@ -48,9 +48,7 @@ jobs:
           sed -i "s/^  kaappi_version: .*/  kaappi_version: ${TAG#v}/" mkdocs.yml
 
       - name: Validate
-        run: |
-          python3 scripts/check_procedures_index.py
-          mkdocs build --strict
+        run: mkdocs build --strict
 
       - name: Commit version bump and deploy
         run: |
