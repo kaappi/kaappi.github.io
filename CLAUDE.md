@@ -114,11 +114,13 @@ automatically.
 ## Styling
 
 The visual identity ("Dark Roast": coffee browns/ambers, Space Grotesk
-headings, the `⇒` motif) is defined in `overrides/home.html`;
-`docs/stylesheets/extra.css` bridges it into content pages by overriding
-Material's CSS variables. The teal/amber palette in `mkdocs.yml` is
-effectively overridden by `extra.css` — change colors there, not in
-`mkdocs.yml`.
+headings, the `⇒` motif) is expressed on the landing page in
+`overrides/home.html`. The palette itself lives in
+`docs/stylesheets/extra.css`: it defines the `--kp-*` design tokens (single
+source, consumed by the playground/tour/home templates via `var(--kp-*)`)
+and bridges the identity into content pages by overriding Material's CSS
+variables. Change brand colors in `extra.css` — the teal/amber palette in
+`mkdocs.yml` is effectively overridden there, not honored.
 
 ## Kaappi Reference Sources
 
