@@ -7,6 +7,8 @@ repo_name: kaappi/kaappi
 theme:
   name: material
   custom_dir: overrides
+  # These primary/accent colors are effectively overridden by the "Dark Roast"
+  # palette in docs/stylesheets/extra.css — change brand colors THERE, not here.
   palette:
     - scheme: default
       primary: teal
@@ -161,6 +163,9 @@ markdown_extensions:
 plugins:
   - search
   - macros:
+      # Off by default so pages like ecosystem/template.md, which document
+      # Go-style {{.name}} syntax, aren't mangled by Jinja. Pages that use
+      # {{ kaappi_version }} opt in with `render_macros: true` frontmatter.
       render_by_default: false
   - redirects:
       redirect_maps:

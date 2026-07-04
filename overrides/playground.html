@@ -415,7 +415,6 @@ async function initEditor() {
       basicSetup,
       isDark ? darkTheme : lightTheme,
       syntaxHighlighting(isDark ? darkHighlight : lightHighlight),
-      EditorView.updateListener.of(v => {}),
       EditorView.domEventHandlers({
         keydown(e) {
           if ((e.ctrlKey || e.metaKey) && e.key === "Enter") {
