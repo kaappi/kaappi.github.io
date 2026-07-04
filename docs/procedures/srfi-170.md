@@ -7,6 +7,7 @@ POSIX filesystem operations. Import with `(import (srfi 170))`.
 ## File Information
 
 ### `file-info` { #file-info }
+<!-- index: 1+ | Get file metadata (optional follow-symlinks?) -->
 
 **Syntax:** `(file-info path)` | `(file-info path follow?)`
 
@@ -31,6 +32,7 @@ kaappi> (file-info "/tmp/mylink" #f)   ; inspect the symlink itself
 ---
 
 ### `file-info?` { #file-info-pred }
+<!-- index: 1 | True if argument is a file-info object -->
 
 **Syntax:** `(file-info? obj)`
 
@@ -46,6 +48,7 @@ kaappi> (file-info? "not a file-info")
 ---
 
 ### `file-info-type` { #file-info-type }
+<!-- index: 1 | File type as symbol (regular, directory, symlink, ...) -->
 
 **Syntax:** `(file-info-type file-info)`
 
@@ -66,6 +69,7 @@ kaappi> (file-info-type (file-info "/etc/hosts"))
 ---
 
 ### `file-info-directory?` { #file-info-directory }
+<!-- index: 1 | True if file is a directory -->
 
 **Syntax:** `(file-info-directory? file-info)`
 
@@ -81,6 +85,7 @@ kaappi> (file-info-directory? (file-info "/etc/hosts"))
 ---
 
 ### `file-info-regular?` { #file-info-regular }
+<!-- index: 1 | True if file is a regular file -->
 
 **Syntax:** `(file-info-regular? file-info)`
 
@@ -96,6 +101,7 @@ kaappi> (file-info-regular? (file-info "."))
 ---
 
 ### `file-info-symlink?` { #file-info-symlink }
+<!-- index: 1 | True if file is a symlink -->
 
 **Syntax:** `(file-info-symlink? file-info)`
 
@@ -113,6 +119,7 @@ kaappi> (file-info-symlink? (file-info "/tmp/test-link"))
 ---
 
 ### `file-info-fifo?` { #file-info-fifo }
+<!-- index: 1 | True if file is a FIFO -->
 
 **Syntax:** `(file-info-fifo? file-info)`
 
@@ -127,6 +134,7 @@ kaappi> (file-info-fifo? (file-info "/tmp/test-fifo"))
 ---
 
 ### `file-info-socket?` { #file-info-socket }
+<!-- index: 1 | True if file is a socket -->
 
 **Syntax:** `(file-info-socket? file-info)`
 
@@ -135,6 +143,7 @@ Returns `#t` if the file-info describes a socket.
 ---
 
 ### `file-info-device?` { #file-info-device }
+<!-- index: 1 | True if file is a device -->
 
 **Syntax:** `(file-info-device? file-info)`
 
@@ -149,19 +158,19 @@ All accessors take a single file-info object and return an integer.
 
 | Accessor | Returns |
 |---|---|
-| `file-info:size` { #file-info-size } | File size in bytes |
-| `file-info:mtime` { #file-info-mtime } | Last modification time (seconds since epoch) |
-| `file-info:atime` { #file-info-atime } | Last access time (seconds since epoch) |
-| `file-info:ctime` { #file-info-ctime } | Last status-change time (seconds since epoch) |
-| `file-info:mode` { #file-info-mode } | POSIX permission mode (e.g. `#o755`) |
-| `file-info:device` { #file-info-device-id } | Device ID of the filesystem |
-| `file-info:inode` { #file-info-inode } | Inode number |
-| `file-info:nlinks` { #file-info-nlinks } | Number of hard links |
-| `file-info:uid` { #file-info-uid } | Owner user ID |
-| `file-info:gid` { #file-info-gid } | Owner group ID |
-| `file-info:rdev` { #file-info-rdev } | Device ID (for special files) |
-| `file-info:blksize` { #file-info-blksize } | Preferred I/O block size |
-| `file-info:blocks` { #file-info-blocks } | Number of 512-byte blocks allocated |
+| `file-info:size` { #file-info-size } | File size in bytes |  <!-- index: 1 | File size in bytes -->
+| `file-info:mtime` { #file-info-mtime } | Last modification time (seconds since epoch) |  <!-- index: 1 | Modification time -->
+| `file-info:atime` { #file-info-atime } | Last access time (seconds since epoch) |  <!-- index: 1 | Access time -->
+| `file-info:ctime` { #file-info-ctime } | Last status-change time (seconds since epoch) |  <!-- index: 1 | Status change time -->
+| `file-info:mode` { #file-info-mode } | POSIX permission mode (e.g. `#o755`) |  <!-- index: 1 | File permission mode -->
+| `file-info:device` { #file-info-device-id } | Device ID of the filesystem |  <!-- index: 1 | Device ID -->
+| `file-info:inode` { #file-info-inode } | Inode number |  <!-- index: 1 | Inode number -->
+| `file-info:nlinks` { #file-info-nlinks } | Number of hard links |  <!-- index: 1 | Number of hard links -->
+| `file-info:uid` { #file-info-uid } | Owner user ID |  <!-- index: 1 | Owner user ID -->
+| `file-info:gid` { #file-info-gid } | Owner group ID |  <!-- index: 1 | Owner group ID -->
+| `file-info:rdev` { #file-info-rdev } | Device ID (for special files) |  <!-- index: 1 | Device ID (for device files) -->
+| `file-info:blksize` { #file-info-blksize } | Preferred I/O block size |  <!-- index: 1 | Block size -->
+| `file-info:blocks` { #file-info-blocks } | Number of 512-byte blocks allocated |  <!-- index: 1 | Number of blocks -->
 
 ```scheme
 kaappi> (define fi (file-info "/etc/hosts"))
@@ -186,6 +195,7 @@ kaappi> (> (file-info:blocks fi) 0)
 ## Directory Operations
 
 ### `directory-files` { #directory-files }
+<!-- index: 1+ | List files in a directory -->
 
 **Syntax:** `(directory-files path)` | `(directory-files path dotfiles?)`
 
@@ -206,6 +216,7 @@ kaappi> (directory-files "/tmp" #t)
 ---
 
 ### `create-directory` { #create-directory }
+<!-- index: 1+ | Create a directory (optional mode) -->
 
 **Syntax:** `(create-directory path)` | `(create-directory path mode)`
 
@@ -225,6 +236,7 @@ kaappi> (file-info-directory? (file-info "/tmp/mydir"))
 ---
 
 ### `delete-directory` { #delete-directory }
+<!-- index: 1 | Delete a directory -->
 
 **Syntax:** `(delete-directory path)`
 
@@ -240,6 +252,7 @@ kaappi> (delete-directory "/tmp/mydir")
 ---
 
 ### `open-directory` { #open-directory }
+<!-- index: 1+ | Open a directory stream -->
 
 **Syntax:** `(open-directory path)` | `(open-directory path dotfiles?)`
 
@@ -262,6 +275,7 @@ kaappi> (close-directory d)
 ---
 
 ### `read-directory` { #read-directory }
+<!-- index: 1 | Read next entry from directory stream -->
 
 **Syntax:** `(read-directory dir-object)`
 
@@ -283,6 +297,7 @@ kaappi> (let loop ((entry (read-directory d)))
 ---
 
 ### `close-directory` { #close-directory }
+<!-- index: 1 | Close a directory stream -->
 
 **Syntax:** `(close-directory dir-object)`
 
@@ -301,6 +316,7 @@ kaappi> (close-directory d)
 ## File Manipulation
 
 ### `rename-file` { #rename-file }
+<!-- index: 2 | Rename a file -->
 
 **Syntax:** `(rename-file old-path new-path)`
 
@@ -314,6 +330,7 @@ kaappi> (rename-file "/tmp/old-name.txt" "/tmp/new-name.txt")
 ---
 
 ### `create-symlink` { #create-symlink }
+<!-- index: 2 | Create a symbolic link -->
 
 **Syntax:** `(create-symlink old-path new-path)`
 
@@ -332,6 +349,7 @@ kaappi> (read-symlink "/tmp/hosts-link")
 ---
 
 ### `read-symlink` { #read-symlink }
+<!-- index: 1 | Read the target of a symbolic link -->
 
 **Syntax:** `(read-symlink path)`
 
@@ -349,6 +367,7 @@ kaappi> (read-symlink "/tmp/test-link")
 ---
 
 ### `create-hard-link` { #create-hard-link }
+<!-- index: 2 | Create a hard link -->
 
 **Syntax:** `(create-hard-link old-path new-path)`
 
@@ -368,6 +387,7 @@ kaappi> (= (file-info:inode (file-info "/tmp/original.txt"))
 ---
 
 ### `real-path` { #real-path }
+<!-- index: 1 | Resolve to canonical absolute path -->
 
 **Syntax:** `(real-path path)`
 
@@ -385,6 +405,7 @@ kaappi> (char=? #\/ (string-ref (real-path ".") 0))
 ---
 
 ### `set-file-mode` { #set-file-mode }
+<!-- index: 2 | Set file permissions -->
 
 **Syntax:** `(set-file-mode path mode)`
 
@@ -398,6 +419,7 @@ kaappi> (set-file-mode "/tmp/script.sh" #o755)
 ---
 
 ### `set-file-owner` { #set-file-owner }
+<!-- index: 3 | Set file owner (uid, gid) -->
 
 **Syntax:** `(set-file-owner path uid gid)`
 
@@ -413,6 +435,7 @@ kaappi> (set-file-owner "/tmp/test.txt" -1 100)  ; change group only
 ---
 
 ### `truncate-file` { #truncate-file }
+<!-- index: 2 | Truncate file to given length -->
 
 **Syntax:** `(truncate-file path length)`
 
@@ -428,6 +451,7 @@ kaappi> (file-info:size (file-info "/tmp/test.txt"))
 ---
 
 ### `set-file-times` { #set-file-times }
+<!-- index: 1+ | Set access and modification times -->
 
 **Syntax:** `(set-file-times path)` | `(set-file-times path atime)` | `(set-file-times path atime mtime)`
 
@@ -449,6 +473,7 @@ kaappi> (set-file-times "/tmp/test.txt" -2 -1)   ; update mtime only
 ---
 
 ### `create-fifo` { #create-fifo }
+<!-- index: 1+ | Create a named pipe (optional mode) -->
 
 **Syntax:** `(create-fifo path)` | `(create-fifo path mode)`
 
@@ -467,6 +492,7 @@ kaappi> (file-info-fifo? (file-info "/tmp/my-pipe"))
 ## Process State
 
 ### `pid` { #pid }
+<!-- index: 0 | Current process ID -->
 
 **Syntax:** `(pid)`
 
@@ -482,6 +508,7 @@ kaappi> (> (pid) 0)
 ---
 
 ### `umask` { #umask }
+<!-- index: 0 | Current umask -->
 
 **Syntax:** `(umask)`
 
@@ -497,6 +524,7 @@ kaappi> (umask)
 ---
 
 ### `set-umask!` { #set-umask }
+<!-- index: 1 | Set umask -->
 
 **Syntax:** `(set-umask! mask)`
 
@@ -514,6 +542,7 @@ kaappi> (umask)
 ---
 
 ### `current-directory` { #current-directory }
+<!-- index: 0 | Current working directory -->
 
 **Syntax:** `(current-directory)`
 
@@ -532,6 +561,7 @@ kaappi> (string? (current-directory))
 ---
 
 ### `set-current-directory!` { #set-current-directory }
+<!-- index: 1 | Change working directory -->
 
 **Syntax:** `(set-current-directory! path)`
 
@@ -549,6 +579,7 @@ kaappi> (current-directory)
 ---
 
 ### `user-uid` { #user-uid }
+<!-- index: 0 | Current user ID -->
 
 **Syntax:** `(user-uid)`
 
@@ -565,6 +596,7 @@ kaappi> (user-uid)
 ---
 
 ### `user-gid` { #user-gid }
+<!-- index: 0 | Current group ID -->
 
 **Syntax:** `(user-gid)`
 
@@ -580,6 +612,7 @@ kaappi> (user-gid)
 ---
 
 ### `user-effective-uid` { #user-effective-uid }
+<!-- index: 0 | Effective user ID -->
 
 **Syntax:** `(user-effective-uid)`
 
@@ -595,6 +628,7 @@ kaappi> (user-effective-uid)
 ---
 
 ### `user-effective-gid` { #user-effective-gid }
+<!-- index: 0 | Effective group ID -->
 
 **Syntax:** `(user-effective-gid)`
 
@@ -610,6 +644,7 @@ kaappi> (user-effective-gid)
 ---
 
 ### `user-supplementary-gids` { #user-supplementary-gids }
+<!-- index: 0 | Supplementary group IDs -->
 
 **Syntax:** `(user-supplementary-gids)`
 
@@ -625,6 +660,7 @@ kaappi> (list? (user-supplementary-gids))
 ---
 
 ### `nice` { #nice }
+<!-- index: 0+ | Adjust process priority -->
 
 **Syntax:** `(nice)` | `(nice increment)`
 
@@ -645,6 +681,7 @@ kaappi> (nice 5)    ; increment by 5
 ## User Database
 
 ### `user-info` { #user-info }
+<!-- index: 1 | Get user info by UID or username -->
 
 **Syntax:** `(user-info uid-or-name)`
 
@@ -666,6 +703,7 @@ kaappi> (user-info "root")
 ---
 
 ### `user-info?` { #user-info-pred }
+<!-- index: 1 | True if argument is a user-info object -->
 
 **Syntax:** `(user-info? obj)`
 
@@ -681,6 +719,7 @@ kaappi> (user-info? "not a user-info")
 ---
 
 ### `user-info:name` { #user-info-name }
+<!-- index: 1 | User login name -->
 
 **Syntax:** `(user-info:name user-info)`
 
@@ -694,6 +733,7 @@ kaappi> (user-info:name (user-info 0))
 ---
 
 ### `user-info:uid` { #user-info-uid }
+<!-- index: 1 | User ID -->
 
 **Syntax:** `(user-info:uid user-info)`
 
@@ -707,6 +747,7 @@ kaappi> (user-info:uid (user-info "root"))
 ---
 
 ### `user-info:gid` { #user-info-gid }
+<!-- index: 1 | User group ID -->
 
 **Syntax:** `(user-info:gid user-info)`
 
@@ -720,6 +761,7 @@ kaappi> (user-info:gid (user-info "root"))
 ---
 
 ### `user-info:home-dir` { #user-info-home-dir }
+<!-- index: 1 | Home directory path -->
 
 **Syntax:** `(user-info:home-dir user-info)`
 
@@ -733,6 +775,7 @@ kaappi> (user-info:home-dir (user-info 0))
 ---
 
 ### `user-info:shell` { #user-info-shell }
+<!-- index: 1 | Login shell path -->
 
 **Syntax:** `(user-info:shell user-info)`
 
@@ -746,6 +789,7 @@ kaappi> (user-info:shell (user-info 0))
 ---
 
 ### `user-info:full-name` { #user-info-full-name }
+<!-- index: 1 | Full name (GECOS field) -->
 
 **Syntax:** `(user-info:full-name user-info)`
 
@@ -761,6 +805,7 @@ kaappi> (user-info:full-name (user-info (user-uid)))
 ## Group Database
 
 ### `group-info` { #group-info }
+<!-- index: 1 | Get group info by GID or group name -->
 
 **Syntax:** `(group-info gid-or-name)`
 
@@ -781,6 +826,7 @@ kaappi> (group-info:name g)
 ---
 
 ### `group-info?` { #group-info-pred }
+<!-- index: 1 | True if argument is a group-info object -->
 
 **Syntax:** `(group-info? obj)`
 
@@ -796,6 +842,7 @@ kaappi> (group-info? 42)
 ---
 
 ### `group-info:name` { #group-info-name }
+<!-- index: 1 | Group name -->
 
 **Syntax:** `(group-info:name group-info)`
 
@@ -809,6 +856,7 @@ kaappi> (group-info:name (group-info 0))
 ---
 
 ### `group-info:gid` { #group-info-gid }
+<!-- index: 1 | Group ID -->
 
 **Syntax:** `(group-info:gid group-info)`
 
@@ -824,6 +872,7 @@ kaappi> (group-info:gid (group-info "wheel"))
 ## Environment Variables
 
 ### `set-environment-variable!` { #set-environment-variable }
+<!-- index: 2 | Set an environment variable -->
 
 **Syntax:** `(set-environment-variable! name value)`
 
@@ -842,6 +891,7 @@ kaappi> (get-environment-variable "MY_VAR")
 ---
 
 ### `delete-environment-variable!` { #delete-environment-variable }
+<!-- index: 1 | Delete an environment variable -->
 
 **Syntax:** `(delete-environment-variable! name)`
 
@@ -862,6 +912,7 @@ kaappi> (get-environment-variable "MY_VAR")
 ## Terminal
 
 ### `terminal?` { #terminal }
+<!-- index: 1 | True if port is connected to a terminal -->
 
 **Syntax:** `(terminal? port)`
 
@@ -882,6 +933,7 @@ kaappi> (terminal? (open-input-file "/tmp/test.txt"))
 ## Time
 
 ### `posix-time` { #posix-time }
+<!-- index: 0 | Current time as seconds since epoch -->
 
 **Syntax:** `(posix-time)`
 
@@ -900,6 +952,7 @@ kaappi> (> (posix-time) 0)
 ---
 
 ### `monotonic-time` { #monotonic-time }
+<!-- index: 0 | Monotonic clock time -->
 
 **Syntax:** `(monotonic-time)`
 
@@ -920,6 +973,7 @@ kaappi> (>= (- (monotonic-time) start) 0)
 ## Temporary Files
 
 ### `create-temp-file` { #create-temp-file }
+<!-- index: 0+ | Create a temporary file (optional prefix) -->
 
 **Syntax:** `(create-temp-file)` | `(create-temp-file prefix)`
 
@@ -940,6 +994,7 @@ kaappi> (create-temp-file "/tmp/myapp-")
 ---
 
 ### `temp-file-prefix` { #temp-file-prefix }
+<!-- index: 0 | Default temporary file prefix -->
 
 **Syntax:** `(temp-file-prefix)`
 

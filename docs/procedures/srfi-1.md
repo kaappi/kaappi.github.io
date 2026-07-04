@@ -8,6 +8,7 @@ For core list procedures, see [Pairs and Lists](./pairs-and-lists.md).
 ## Constructors
 
 ### `cons*` { #cons-star }
+<!-- index: 1+ | Like `list` but last arg is the tail -->
 
 **Syntax:** `(cons* obj1 obj2 ...)`
 
@@ -29,6 +30,7 @@ kaappi> (cons* 42)
 ---
 
 ### `xcons` { #xcons }
+<!-- index: 2 | `(cons cdr car)` — reversed cons -->
 
 **Syntax:** `(xcons d a)`
 
@@ -47,6 +49,7 @@ kaappi> (xcons 2 1)
 ---
 
 ### `list-tabulate` { #list-tabulate }
+<!-- index: 2 | Build list of k elements from init procedure -->
 
 **Syntax:** `(list-tabulate n init-proc)`
 
@@ -68,6 +71,7 @@ kaappi> (list-tabulate 0 values)
 ---
 
 ### `circular-list` { #circular-list }
+<!-- index: 1+ | Build a circular list from arguments -->
 
 **Syntax:** `(circular-list obj1 obj2 ...)`
 
@@ -86,6 +90,7 @@ kaappi> (circular-list? (circular-list 'a 'b))
 ---
 
 ### `iota` { #iota }
+<!-- index: 1+ | Generate list of integers (count, optional start and step) -->
 
 **Syntax:** `(iota count)` | `(iota count start)` | `(iota count start step)`
 
@@ -111,6 +116,7 @@ kaappi> (iota 3 1.0 0.5)
 ## Predicates
 
 ### `proper-list?` { #proper-list }
+<!-- index: 1 | True if argument is a proper list -->
 
 **Syntax:** `(proper-list? obj)`
 
@@ -135,6 +141,7 @@ kaappi> (proper-list? (circular-list 1 2))
 ---
 
 ### `dotted-list?` { #dotted-list }
+<!-- index: 1 | True if argument is a dotted (improper) list -->
 
 **Syntax:** `(dotted-list? obj)`
 
@@ -158,6 +165,7 @@ kaappi> (dotted-list? 42)
 ---
 
 ### `circular-list?` { #circular-list-pred }
+<!-- index: 1 | True if argument is a circular list -->
 
 **Syntax:** `(circular-list? obj)`
 
@@ -179,6 +187,7 @@ kaappi> (circular-list? 42)
 ---
 
 ### `not-pair?` { #not-pair }
+<!-- index: 1 | True if argument is not a pair -->
 
 **Syntax:** `(not-pair? obj)`
 
@@ -199,6 +208,7 @@ kaappi> (not-pair? '(1 2))
 ---
 
 ### `null-list?` { #null-list }
+<!-- index: 1 | True if argument is the empty list (error on non-list) -->
 
 **Syntax:** `(null-list? obj)`
 
@@ -217,6 +227,7 @@ kaappi> (null-list? '(1 2))
 ---
 
 ### `list=` { #list-equal }
+<!-- index: 2+ | Compare lists element-wise with a given equality predicate -->
 
 **Syntax:** `(list= elt= list1 ...)`
 
@@ -240,6 +251,7 @@ kaappi> (list= = '(1 2 3) '(1 2 3) '(1 2 3))
 ## Selectors
 
 ### `take` { #take }
+<!-- index: 2 | First k elements -->
 
 **Syntax:** `(take list k)`
 
@@ -260,6 +272,7 @@ kaappi> (take '(a b c) 0)
 ---
 
 ### `drop` { #drop }
+<!-- index: 2 | All but first k elements -->
 
 **Syntax:** `(drop list k)`
 
@@ -280,6 +293,7 @@ kaappi> (drop '(a b c) 0)
 ---
 
 ### `take-right` { #take-right }
+<!-- index: 2 | Last k elements -->
 
 **Syntax:** `(take-right list k)`
 
@@ -298,6 +312,7 @@ kaappi> (take-right '(a b c d e) 0)
 ---
 
 ### `drop-right` { #drop-right }
+<!-- index: 2 | All but last k elements -->
 
 **Syntax:** `(drop-right list k)`
 
@@ -316,6 +331,7 @@ kaappi> (drop-right '(a b c d e) 0)
 ---
 
 ### `split-at` { #split-at }
+<!-- index: 2 | Split list at index k into two values -->
 
 **Syntax:** `(split-at list k)`
 
@@ -335,6 +351,7 @@ kaappi> (call-with-values
 ---
 
 ### `last` { #last }
+<!-- index: 1 | Last element of a non-empty list -->
 
 **Syntax:** `(last list)`
 
@@ -353,6 +370,7 @@ kaappi> (last '(x))
 ---
 
 ### `last-pair` { #last-pair }
+<!-- index: 1 | Last pair of a non-empty list -->
 
 **Syntax:** `(last-pair list)`
 
@@ -377,16 +395,16 @@ equivalent to the corresponding chain of `car`/`cdr` calls.
 
 | Procedure | Position | Equivalent |
 |-----------|----------|------------|
-| `(first pair)` { #first } | 1st | `(car pair)` |
-| `(second pair)` { #second } | 2nd | `(cadr pair)` |
-| `(third pair)` { #third } | 3rd | `(caddr pair)` |
-| `(fourth pair)` { #fourth } | 4th | `(cadddr pair)` |
-| `(fifth pair)` { #fifth } | 5th | 5th element |
-| `(sixth pair)` { #sixth } | 6th | 6th element |
-| `(seventh pair)` { #seventh } | 7th | 7th element |
-| `(eighth pair)` { #eighth } | 8th | 8th element |
-| `(ninth pair)` { #ninth } | 9th | 9th element |
-| `(tenth pair)` { #tenth } | 10th | 10th element |
+| `(first pair)` { #first } | 1st | `(car pair)` |  <!-- index: 1 | First element (same as `car`) -->
+| `(second pair)` { #second } | 2nd | `(cadr pair)` |  <!-- index: 1 | Second element -->
+| `(third pair)` { #third } | 3rd | `(caddr pair)` |  <!-- index: 1 | Third element -->
+| `(fourth pair)` { #fourth } | 4th | `(cadddr pair)` |  <!-- index: 1 | Fourth element -->
+| `(fifth pair)` { #fifth } | 5th | 5th element |  <!-- index: 1 | Fifth element -->
+| `(sixth pair)` { #sixth } | 6th | 6th element |  <!-- index: 1 | Sixth element -->
+| `(seventh pair)` { #seventh } | 7th | 7th element |  <!-- index: 1 | Seventh element -->
+| `(eighth pair)` { #eighth } | 8th | 8th element |  <!-- index: 1 | Eighth element -->
+| `(ninth pair)` { #ninth } | 9th | 9th element |  <!-- index: 1 | Ninth element -->
+| `(tenth pair)` { #tenth } | 10th | 10th element |  <!-- index: 1 | Tenth element -->
 
 All raise a type error if the list is shorter than the requested position.
 
@@ -406,6 +424,7 @@ kaappi> (tenth '(a b c d e f g h i j))
 ---
 
 ### `car+cdr` { #carcdr }
+<!-- index: 1 | Return car and cdr as multiple values -->
 
 **Syntax:** `(car+cdr pair)`
 
@@ -427,6 +446,7 @@ kaappi> (call-with-values
 ## Folding and Mapping
 
 ### `fold` { #fold }
+<!-- index: 3+ | Left fold over one or more lists -->
 
 **Syntax:** `(fold kons knil list1 list2 ...)`
 
@@ -453,6 +473,7 @@ kaappi> (fold + 0 '(1 2 3) '(10 20 30))
 ---
 
 ### `fold-right` { #fold-right }
+<!-- index: 3+ | Right fold over one or more lists -->
 
 **Syntax:** `(fold-right kons knil list1 list2 ...)`
 
@@ -477,6 +498,7 @@ kaappi> (fold-right list '() '(a b c))
 ---
 
 ### `reduce` { #reduce }
+<!-- index: 3 | Like fold with identity element -->
 
 **Syntax:** `(reduce f ridentity list)`
 
@@ -501,6 +523,7 @@ kaappi> (reduce + 0 '())
 ---
 
 ### `reduce-right` { #reduce-right }
+<!-- index: 3 | Like fold-right with identity element -->
 
 **Syntax:** `(reduce-right f ridentity list)`
 
@@ -519,6 +542,7 @@ kaappi> (reduce-right + 0 '())
 ---
 
 ### `pair-fold` { #pair-fold }
+<!-- index: 3+ | Fold over pairs (not elements) -->
 
 **Syntax:** `(pair-fold kons knil list1 list2 ...)`
 
@@ -536,6 +560,7 @@ kaappi> (pair-fold (lambda (pair acc) (+ (car pair) acc)) 0 '(1 2 3))
 ---
 
 ### `pair-fold-right` { #pair-fold-right }
+<!-- index: 3+ | Right fold over pairs -->
 
 **Syntax:** `(pair-fold-right kons knil list1 list2 ...)`
 
@@ -552,6 +577,7 @@ kaappi> (pair-fold-right (lambda (pair acc) (cons (car pair) acc)) '() '(a b c))
 ---
 
 ### `unfold` { #unfold }
+<!-- index: 4+ | Unfold a list from a seed value -->
 
 **Syntax:** `(unfold pred mapper successor seed)` | `(unfold pred mapper successor seed tail-gen)`
 
@@ -579,6 +605,7 @@ kaappi> (unfold (lambda (x) (> x 3))
 ---
 
 ### `unfold-right` { #unfold-right }
+<!-- index: 4+ | Unfold a list in reverse from a seed value -->
 
 **Syntax:** `(unfold-right pred mapper successor seed)` | `(unfold-right pred mapper successor seed tail)`
 
@@ -597,6 +624,7 @@ kaappi> (unfold-right null? car cdr '(a b c))
 ---
 
 ### `map-in-order` { #map-in-order }
+<!-- index: 2+ | Map with guaranteed left-to-right evaluation -->
 
 **Syntax:** `(map-in-order proc list1 list2 ...)`
 
@@ -614,6 +642,7 @@ kaappi> (map-in-order (lambda (x) (* x x)) '(1 2 3 4))
 ---
 
 ### `filter-map` { #filter-map }
+<!-- index: 2+ | Map then filter false values -->
 
 **Syntax:** `(filter-map proc list1 list2 ...)`
 
@@ -632,6 +661,7 @@ kaappi> (filter-map (lambda (x) (if (positive? x) x #f)) '(-1 2 -3 4 -5))
 ---
 
 ### `append-map` { #append-map }
+<!-- index: 2+ | Map then append results -->
 
 **Syntax:** `(append-map proc list1 list2 ...)`
 
@@ -651,6 +681,7 @@ kaappi> (append-map (lambda (x) (if (odd? x) (list x) '())) '(1 2 3 4 5))
 ---
 
 ### `pair-for-each` { #pair-for-each }
+<!-- index: 2+ | For-each over pairs -->
 
 **Syntax:** `(pair-for-each proc list1 list2 ...)`
 
@@ -669,6 +700,7 @@ a b c
 ## Filtering and Partitioning
 
 ### `filter` { #filter }
+<!-- index: 2 | Keep elements satisfying predicate -->
 
 **Syntax:** `(filter pred list)`
 
@@ -689,6 +721,7 @@ kaappi> (filter even? '())
 ---
 
 ### `remove` { #remove }
+<!-- index: 2 | Remove elements satisfying predicate -->
 
 **Syntax:** `(remove pred list)`
 
@@ -708,6 +741,7 @@ kaappi> (remove symbol? '(a 1 b 2 c 3))
 ---
 
 ### `partition` { #partition }
+<!-- index: 2 | Split list by predicate into two lists -->
 
 **Syntax:** `(partition pred list)`
 
@@ -732,6 +766,7 @@ kaappi> (call-with-values
 ---
 
 ### `take-while` { #take-while }
+<!-- index: 2 | Leading elements satisfying predicate -->
 
 **Syntax:** `(take-while pred list)`
 
@@ -750,6 +785,7 @@ kaappi> (take-while even? '(1 2 3))
 ---
 
 ### `drop-while` { #drop-while }
+<!-- index: 2 | Drop leading elements satisfying predicate -->
 
 **Syntax:** `(drop-while pred list)`
 
@@ -768,6 +804,7 @@ kaappi> (drop-while even? '(1 2 3))
 ---
 
 ### `span` { #span }
+<!-- index: 2 | Split list at first element not satisfying predicate -->
 
 **Syntax:** `(span pred list)`
 
@@ -788,6 +825,7 @@ kaappi> (call-with-values
 ---
 
 ### `break` { #break }
+<!-- index: 2 | Split list at first element satisfying predicate -->
 
 **Syntax:** `(break pred list)`
 
@@ -809,6 +847,7 @@ kaappi> (call-with-values
 ## Searching
 
 ### `find` { #find }
+<!-- index: 2 | First element satisfying predicate, or `#f` -->
 
 **Syntax:** `(find pred list)`
 
@@ -831,6 +870,7 @@ kaappi> (find char-alphabetic? (string->list "123abc"))
 ---
 
 ### `find-tail` { #find-tail }
+<!-- index: 2 | Tail starting at first element satisfying predicate -->
 
 **Syntax:** `(find-tail pred list)`
 
@@ -850,6 +890,7 @@ kaappi> (find-tail even? '(1 3 5))
 ---
 
 ### `any` { #any }
+<!-- index: 2+ | True if predicate holds for any element -->
 
 **Syntax:** `(any pred list1 list2 ...)`
 
@@ -872,6 +913,7 @@ kaappi> (any (lambda (x) (and (> x 3) x)) '(1 2 5 6))
 ---
 
 ### `every` { #every }
+<!-- index: 2+ | True if predicate holds for every element -->
 
 **Syntax:** `(every pred list1 list2 ...)`
 
@@ -893,6 +935,7 @@ kaappi> (every (lambda (x) (and (positive? x) x)) '(1 2 3))
 ---
 
 ### `count` { #count }
+<!-- index: 2+ | Count elements satisfying predicate -->
 
 **Syntax:** `(count pred list1 list2 ...)`
 
@@ -912,6 +955,7 @@ kaappi> (count < '(1 2 3) '(2 1 4))
 ---
 
 ### `list-index` { #list-index }
+<!-- index: 2+ | Index of first element satisfying predicate -->
 
 **Syntax:** `(list-index pred list1 list2 ...)`
 
@@ -933,6 +977,7 @@ kaappi> (list-index < '(1 5 3) '(2 1 4))
 ---
 
 ### `delete` { #delete }
+<!-- index: 2+ | Remove all occurrences equal to element -->
 
 **Syntax:** `(delete x list)` | `(delete x list =)`
 
@@ -953,6 +998,7 @@ kaappi> (delete 2 '(1 2 3 4) =)
 ---
 
 ### `delete-duplicates` { #delete-duplicates }
+<!-- index: 1+ | Remove duplicate elements -->
 
 **Syntax:** `(delete-duplicates list)` | `(delete-duplicates list =)`
 
@@ -976,6 +1022,7 @@ kaappi> (delete-duplicates '(1 1.0 2 2.0) =)
 ## Association Lists
 
 ### `alist-cons` { #alist-cons }
+<!-- index: 3 | `(cons (cons key value) alist)` -->
 
 **Syntax:** `(alist-cons key datum alist)`
 
@@ -994,6 +1041,7 @@ kaappi> (alist-cons 'a 10 '())
 ---
 
 ### `alist-copy` { #alist-copy }
+<!-- index: 1 | Shallow copy of an association list -->
 
 **Syntax:** `(alist-copy alist)`
 
@@ -1012,6 +1060,7 @@ kaappi> (alist-copy al)
 ---
 
 ### `alist-delete` { #alist-delete }
+<!-- index: 2+ | Remove entries with matching key -->
 
 **Syntax:** `(alist-delete key alist)` | `(alist-delete key alist =)`
 
@@ -1037,6 +1086,7 @@ Elements are compared using this predicate; results do not depend on the
 order of elements in the input lists.
 
 ### `lset=` { #lset-equal }
+<!-- index: 2+ | Set equality -->
 
 **Syntax:** `(lset= = list1 list2 ...)`
 
@@ -1058,6 +1108,7 @@ kaappi> (lset= = '(1 2 3) '(3 1 2) '(2 3 1))
 ---
 
 ### `lset-adjoin` { #lset-adjoin }
+<!-- index: 2+ | Add elements to a set -->
 
 **Syntax:** `(lset-adjoin = list elt ...)`
 
@@ -1076,6 +1127,7 @@ kaappi> (lset-adjoin eq? '() 'a 'b)
 ---
 
 ### `lset-union` { #lset-union }
+<!-- index: 2+ | Set union -->
 
 **Syntax:** `(lset-union = list1 list2 ...)`
 
@@ -1094,6 +1146,7 @@ kaappi> (lset-union eq? '(a b) '(a b))
 ---
 
 ### `lset-intersection` { #lset-intersection }
+<!-- index: 2+ | Set intersection -->
 
 **Syntax:** `(lset-intersection = list1 list2 ...)`
 
@@ -1112,6 +1165,7 @@ kaappi> (lset-intersection eq? '(a b c) '(b c d) '(c d e))
 ---
 
 ### `lset-difference` { #lset-difference }
+<!-- index: 2+ | Set difference -->
 
 **Syntax:** `(lset-difference = list1 list2 ...)`
 
@@ -1130,6 +1184,7 @@ kaappi> (lset-difference eq? '(a b c d) '(b) '(d))
 ---
 
 ### `lset-xor` { #lset-xor }
+<!-- index: 2+ | Set symmetric difference -->
 
 **Syntax:** `(lset-xor = list1 list2 ...)`
 
@@ -1151,6 +1206,7 @@ kaappi> (lset-xor eq? '(a b) '(b c) '(c d))
 ## Other
 
 ### `concatenate` { #concatenate }
+<!-- index: 1 | Append a list of lists -->
 
 **Syntax:** `(concatenate list-of-lists)`
 
@@ -1172,6 +1228,7 @@ kaappi> (concatenate '())
 ---
 
 ### `zip` { #zip }
+<!-- index: 1+ | Transpose lists into list of lists -->
 
 **Syntax:** `(zip list1 list2 ...)`
 
@@ -1193,6 +1250,7 @@ kaappi> (zip '(a b) '(1 2 3))
 ---
 
 ### `unzip1` { #unzip1 }
+<!-- index: 1 | Unzip list of lists (first elements) -->
 
 **Syntax:** `(unzip1 list-of-lists)`
 
@@ -1209,6 +1267,7 @@ kaappi> (unzip1 '((a b) (c d) (e f)))
 ---
 
 ### `unzip2` { #unzip2 }
+<!-- index: 1 | Unzip list of lists (first two elements as values) -->
 
 **Syntax:** `(unzip2 list-of-lists)`
 
@@ -1227,6 +1286,7 @@ kaappi> (call-with-values
 ---
 
 ### `append-reverse` { #append-reverse }
+<!-- index: 2 | `(append (reverse list1) list2)` -->
 
 **Syntax:** `(append-reverse rev-head tail)`
 
@@ -1246,6 +1306,7 @@ kaappi> (append-reverse '(a b) '())
 ---
 
 ### `length+` { #length-plus }
+<!-- index: 1 | Length or `#f` for circular lists -->
 
 **Syntax:** `(length+ list)`
 

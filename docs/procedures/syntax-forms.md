@@ -9,6 +9,7 @@ They cannot be passed as arguments or stored in variables. Available from
 ## Definitions
 
 ### `define` { #define }
+<!-- index: - | Variable and function definition -->
 
 `(define var expr)` | `(define (name params ...) body ...)`
 
@@ -38,6 +39,7 @@ kaappi> (fact 10)
 ---
 
 ### `lambda` { #lambda }
+<!-- index: - | Anonymous function -->
 
 `(lambda (params ...) body ...)`  
 `(lambda (params ... . rest) body ...)`  
@@ -67,6 +69,7 @@ kaappi> ((lambda args (length args)) 'a 'b 'c)
 ## Conditionals
 
 ### `if` { #if }
+<!-- index: - | Conditional -->
 
 `(if test consequent)` | `(if test consequent alternate)`
 
@@ -90,6 +93,7 @@ kaappi> (if 0 'yes 'no)
 ---
 
 ### `cond` { #cond }
+<!-- index: - | Multi-branch conditional -->
 
 `(cond (test expr ...) ... (else expr ...))`
 
@@ -114,6 +118,7 @@ kaappi> (cond ((assv 2 '((1 one) (2 two) (3 three)))
 ---
 
 ### `case` { #case }
+<!-- index: - | Dispatch on datum equality -->
 
 `(case key ((datum ...) expr ...) ... (else expr ...))`
 
@@ -141,6 +146,7 @@ kaappi> (case (car '(c d))
 ---
 
 ### `and` { #and }
+<!-- index: - | Short-circuit logical and -->
 
 `(and test ...)`
 
@@ -165,6 +171,7 @@ kaappi> (and (> 3 2) (< 5 10) 'yes)
 ---
 
 ### `or` { #or }
+<!-- index: - | Short-circuit logical or -->
 
 `(or test ...)`
 
@@ -188,6 +195,7 @@ kaappi> (or (memq 'b '(a b c)) 'not-found)
 ---
 
 ### `when` { #when }
+<!-- index: - | One-armed conditional with implicit begin -->
 
 `(when test expr ...)`
 
@@ -211,6 +219,7 @@ kaappi> (when #f (error "never reached"))
 ---
 
 ### `unless` { #unless }
+<!-- index: - | Negated one-armed conditional -->
 
 `(unless test expr ...)`
 
@@ -235,6 +244,7 @@ kaappi> (unless #t (error "never reached"))
 ## Binding Forms
 
 ### `let` { #let }
+<!-- index: - | Local bindings -->
 
 `(let ((var expr) ...) body ...)`  
 `(let name ((var expr) ...) body ...)`
@@ -261,6 +271,7 @@ kaappi> (let loop ((i 0) (sum 0))
 ---
 
 ### `let*` { #let-star }
+<!-- index: - | Sequential local bindings -->
 
 `(let* ((var expr) ...) body ...)`
 
@@ -283,6 +294,7 @@ kaappi> (let* ((path "/tmp")
 ---
 
 ### `letrec` { #letrec }
+<!-- index: - | Mutually recursive bindings -->
 
 `(letrec ((var expr) ...) body ...)`
 
@@ -306,6 +318,7 @@ kaappi> (letrec ((even? (lambda (n)
 ---
 
 ### `letrec*` { #letrec-star }
+<!-- index: - | Sequential mutually recursive bindings -->
 
 `(letrec* ((var expr) ...) body ...)`
 
@@ -326,6 +339,7 @@ kaappi> (letrec* ((x 1)
 ---
 
 ### `let-values` { #let-values }
+<!-- index: - | Destructure multiple values -->
 
 `(let-values (((var ...) expr) ...) body ...)`
 
@@ -349,6 +363,7 @@ kaappi> (let-values (((q r) (floor/ 17 5)))
 ---
 
 ### `let*-values` { #let-star-values }
+<!-- index: - | Sequential destructure multiple values -->
 
 `(let*-values (((var ...) expr) ...) body ...)`
 
@@ -369,6 +384,7 @@ kaappi> (let*-values (((a b) (values 1 2))
 ## Iteration
 
 ### `do` { #do }
+<!-- index: - | Iteration with step expressions -->
 
 `(do ((var init step) ...) (test expr ...) command ...)`
 
@@ -396,6 +412,7 @@ kaappi> (do ((vec (make-vector 5))
 ---
 
 ### `case-lambda` { #case-lambda }
+<!-- index: - | Arity-dispatched lambda -->
 
 `(case-lambda (formals body ...) ...)`
 
@@ -433,6 +450,7 @@ kaappi> (optarg 5 20)
 ## Sequencing and Mutation
 
 ### `quote` { #quote }
+<!-- index: - | Literal datum -->
 
 `(quote datum)` | `'datum`
 
@@ -455,6 +473,7 @@ kaappi> '#(1 2 3)
 ---
 
 ### `set!` { #set }
+<!-- index: - | Variable mutation -->
 
 `(set! var expr)`
 
@@ -480,6 +499,7 @@ kaappi> count
 ---
 
 ### `begin` { #begin }
+<!-- index: - | Sequence of expressions -->
 
 `(begin expr ...)`
 
@@ -503,6 +523,7 @@ hello world
 ---
 
 ### `quasiquote` { #quasiquote }
+<!-- index: - | Template with unquote and unquote-splicing -->
 
 `` `template `` | `(quasiquote template)`
 
@@ -529,6 +550,7 @@ kaappi> `(list ,(+ 1 2) 4)
 ## Macros
 
 ### `define-syntax` { #define-syntax }
+<!-- index: - | Define a macro -->
 
 `(define-syntax name transformer-spec)`
 
@@ -554,6 +576,7 @@ kaappi> (let ((x 1) (y 2))
 ---
 
 ### `syntax-rules` { #syntax-rules }
+<!-- index: - | Pattern-based macro transformer -->
 
 `(syntax-rules (literal ...) (pattern template) ...)`
 
@@ -588,6 +611,7 @@ kaappi> (my-and 1 2 3)
 ---
 
 ### `let-syntax` { #let-syntax }
+<!-- index: - | Local macro bindings -->
 
 `(let-syntax ((name transformer) ...) body ...)`
 
@@ -609,6 +633,7 @@ kaappi> (let-syntax ((double (syntax-rules ()
 ---
 
 ### `letrec-syntax` { #letrec-syntax }
+<!-- index: - | Mutually recursive local macro bindings -->
 
 `(letrec-syntax ((name transformer) ...) body ...)`
 
@@ -634,6 +659,7 @@ kaappi> (letrec-syntax
 ## Modules
 
 ### `define-library` { #define-library }
+<!-- index: - | Define a library -->
 
 `(define-library (lib-name ...) declaration ...)`
 
@@ -660,6 +686,7 @@ and explicit interfaces.
 ---
 
 ### `import` { #import }
+<!-- index: - | Import library bindings -->
 
 `(import import-set ...)`
 
@@ -684,6 +711,7 @@ kaappi> (import (rename (scheme base) (define def)))
 ## Exceptions and Control
 
 ### `guard` { #guard }
+<!-- index: - | Exception handling with cond clauses -->
 
 `(guard (var (test expr ...) ...) body ...)`
 
@@ -713,6 +741,7 @@ kaappi> (guard (e (#t (error-object-message e)))
 ---
 
 ### `define-record-type` { #define-record-type }
+<!-- index: - | Define a record type -->
 
 `(define-record-type name (constructor field-name ...) predicate (field-name accessor) ... (field-name accessor mutator) ...)`
 
@@ -744,6 +773,7 @@ kaappi> (point? '(3 4))
 ## Lazy Evaluation
 
 ### `delay` { #delay }
+<!-- index: - | Create a promise (lazy thunk) -->
 
 `(delay expr)`
 
@@ -767,6 +797,7 @@ kaappi> (force p)
 ---
 
 ### `delay-force` { #delay-force }
+<!-- index: - | Create an iterative promise -->
 
 `(delay-force expr)`
 
@@ -797,6 +828,7 @@ kaappi> (force-list (lazy-range 0 5))
 ---
 
 ### `parameterize` { #parameterize }
+<!-- index: - | Dynamically bind parameters -->
 
 `(parameterize ((param value) ...) body ...)`
 
@@ -827,6 +859,7 @@ kaappi> (parameterize ((current-output-port (open-output-string)))
 ---
 
 ### `cond-expand` { #cond-expand }
+<!-- index: - | Feature-based conditional expansion -->
 
 `(cond-expand (feature-requirement expr ...) ... (else expr ...))`
 

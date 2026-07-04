@@ -8,10 +8,11 @@ right after the heading:
 
 `{{ procedures_table("numbers.md") }}` in index.md then emits the
 `Procedure | Arity | Description` table for that page, so the index can't drift
-from the subpages. A heading missing its `<!-- index: -->` comment raises at
-build time (fails `mkdocs build --strict`). Compact table-row procedures (an
-inline `{ #anchor }` in a table row) carry `<!-- index: ... -->` on the same
-row after the anchor.
+from the subpages. Special forms (no arity) use `kind="form"` for a two-column
+`Form | Description` table and leave the arity field empty. A heading missing
+its `<!-- index: -->` comment raises at build time (fails the build via the
+macros plugin's on_error_fail). Compact table-row procedures (an inline
+`{ #anchor }` in a table row) carry `<!-- index: ... -->` on the same row.
 """
 
 import re
@@ -24,15 +25,22 @@ _ROW_ANCHOR_RE = re.compile(r"^\s*\|\s*`([^`]+)`.*?\{ *#([A-Za-z0-9_-]+) *\}")
 _META_RE = re.compile(r"<!-- index: (.*?) \| (.*?) -->")
 
 
-def _rows_for(page):
+def _procedures(page):
+    """Return [(name, anchor, arity, desc), ...] for a subpage, in page order."""
     lines = (PROC_DIR / page).read_text().split("\n")
-    rows = []
+    procs = []
     for i, line in enumerate(lines):
         heading = _HEADING_RE.match(line)
         row = None if heading else _ROW_ANCHOR_RE.match(line)
         if not heading and not row:
             continue
         name, anchor = (heading or row).group(1), (heading or row).group(2)
+        if row:
+            # A table row's first cell may be a signature (`(first pair)`) or a
+            # bare name (`file-info:inode`). Take the operator from a signature,
+            # otherwise the cell as-is.
+            sig = re.match(r"\(([^\s)]+)", name)
+            name = sig.group(1) if sig else name
         # Heading metadata is on one of the next few lines; row metadata is on
         # the same line (a trailing comment after the cell).
         meta = None
@@ -49,14 +57,18 @@ def _rows_for(page):
                 f"{page}: procedure `{name}` (#{anchor}) is missing its "
                 f"`<!-- index: arity | description -->` comment"
             )
-        arity, desc = meta.group(1).strip(), meta.group(2).strip()
-        rows.append(f"| [`{name}`]({page}#{anchor}) | {arity} | {desc} |")
-    return rows
+        procs.append((name, anchor, meta.group(1).strip(), meta.group(2).strip()))
+    return procs
 
 
 def define_env(env):
     @env.macro
-    def procedures_table(page):
-        rows = _rows_for(page)
-        header = "| Procedure | Arity | Description |\n|-----------|-------|-------------|"
-        return header + "\n" + "\n".join(rows)
+    def procedures_table(page, kind="proc"):
+        procs = _procedures(page)
+        if kind == "form":
+            header = "| Form | Description |\n|------|-------------|"
+            body = [f"| [`{n}`]({page}#{a}) | {d} |" for n, a, _ar, d in procs]
+        else:
+            header = "| Procedure | Arity | Description |\n|-----------|-------|-------------|"
+            body = [f"| [`{n}`]({page}#{a}) | {ar} | {d} |" for n, a, ar, d in procs]
+        return header + "\n" + "\n".join(body)

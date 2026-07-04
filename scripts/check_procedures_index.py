@@ -37,6 +37,7 @@ GENERATED_PAGES = {
     "vectors.md", "bytevectors.md", "ports-and-io.md", "control-flow.md",
     "type-checking.md", "system.md", "srfi-13.md", "srfi-133.md",
     "threads.md", "hash-tables.md", "extensions.md", "other.md",
+    "srfi-1.md", "srfi-170.md", "syntax-forms.md",
 }
 
 PROC_HEADING_RE = re.compile(r"^### `?(.+?)`? *\{ *#([A-Za-z0-9_-]+) *\}", re.MULTILINE)
