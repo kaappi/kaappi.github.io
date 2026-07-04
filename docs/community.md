@@ -31,7 +31,7 @@ wanting to help.
 
 ### Typical path for a new contributor
 
-1. **Explore** — install Kaappi, try the [Playground](../playground/), read
+1. **Explore** — install Kaappi, try the [Playground](playground.md), read
    the [Guide](guide/index.md)
 2. **Join the conversation** — post in Discussions (bugs, questions, ideas)
 3. **Get org access** — mention that you'd like to contribute and we'll send
