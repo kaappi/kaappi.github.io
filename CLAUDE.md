@@ -38,7 +38,7 @@ Files in `docs/` that are not nav pages:
 
 - `docs/install.sh` — the `curl | bash` installer served at kaappi-lang.org/install.sh; copied verbatim into the built site. Always fetches the latest GitHub release.
 - `docs/wasm/kaappi.wasm` — committed WASM binary powering playground and tour.
-- `docs/js/` — `codemirror-bundle.mjs` (prebuilt CodeMirror 6), `wasi-shim-bundle.mjs` (prebuilt @bjorn3/browser_wasi_shim), `playground-worker.js` (Web Worker that runs the WASM).
+- `docs/js/` — `codemirror-bundle.mjs` (prebuilt CodeMirror 6), `wasi-shim-bundle.mjs` (prebuilt @bjorn3/browser_wasi_shim), `playground-worker.js` (Web Worker that runs the WASM), `kp-editor.mjs` / `kp-runner.mjs` (shared editor + worker-runner factories used by both the playground and tour), and the content modules `tour-lessons.mjs` (`LESSONS`) and `playground-examples.mjs` (`EXAMPLES`).
 - `docs/stylesheets/extra.css` — design bridge into content pages (see Styling).
 - `docs/assets/` — `logo.svg`, `favicon.png`.
 - `docs/ideas.md` and `docs/errata-corrected-r7rs.pdf` — excluded from the build via `exclude_docs` in mkdocs.yml (internal notes / local R7RS spec copy).
@@ -64,16 +64,18 @@ Full-page client-side apps built into the MkDocs site:
   `wasm/kaappi.wasm`, instantiates it against `wasi-shim-bundle.mjs`, writes
   the editor content as `program.scm` in a virtual FS, and streams
   stdout/stderr back to the page.
-- The tour's 12 lessons live in the `LESSONS` array inside `overrides/tour.html`.
+- The tour's 12 lessons live in the `LESSONS` array in `docs/js/tour-lessons.mjs`
+  (dynamically imported by `overrides/tour.html`); the playground's example
+  programs are likewise in `docs/js/playground-examples.mjs`.
 - `overrides/partials/header.html` customizes Material's header (dark/light
   toggle moved to the far right).
 
 ## Release checklist
 
-After each kaappi release (cut with the `/github-release` skill in the core repo):
-
-1. Replace `docs/wasm/kaappi.wasm` with the released `kaappi.wasm`
-2. Bump `kaappi_version` in `mkdocs.yml` (single source of truth for all version references)
+After each kaappi release (cut with the `/github-release` skill in the core repo),
+the core repo's Step 11 triggers the `update-wasm` workflow in this repo. It
+downloads the released `kaappi.wasm`, verifies its SHA256, bumps `kaappi_version`
+in `mkdocs.yml`, and deploys. No manual action needed.
 
 `docs/install.sh` and the download-table links target `releases/latest`, so
 they normally need no per-release changes.
@@ -98,18 +100,21 @@ process if template changes don't show up. `.claude/launch.json` defines a
 
 ## CI and deploy
 
-- `.github/workflows/ci.yml` — `mkdocs build --strict` on every push/PR to
-  `main`; fails on broken links and anchors. Also runs
-  `scripts/check_procedures_index.py`, which fails if
-  `docs/procedures/index.md` (the hand-curated per-procedure table) drifts
-  from the `### name { #anchor }` headings in the procedure subpages —
-  when adding or removing a procedure, update both.
-- `.github/workflows/pages.yml` — on push to `main` (or manual dispatch), runs
-  `mkdocs gh-deploy --force`, which builds and pushes to the `gh-pages`
-  branch; GitHub Pages serves it at kaappi-lang.org.
+- `.github/workflows/ci.yml` — one workflow, two jobs:
+  - **build** (every push/PR to `main`): runs `scripts/check_procedures_index.py`,
+    which fails if `docs/procedures/index.md` (the hand-curated per-procedure
+    table) drifts from the `### name { #anchor }` headings or table-row anchors
+    in the procedure subpages — when adding or removing a procedure, update both;
+    then `mkdocs build --strict`, which fails on broken links and anchors.
+  - **deploy** (push to `main` only, `needs: build`): `mkdocs gh-deploy --force
+    --strict` builds and pushes to the `gh-pages` branch, so a failing build
+    never publishes. GitHub Pages serves `gh-pages` at kaappi-lang.org.
+- `.github/workflows/update-wasm.yml` — `workflow_dispatch` only; syncs the
+  playground WASM from a kaappi release (see Release checklist). Shares a
+  `pages` concurrency group with `ci.yml` so the two never race on `gh-pages`.
 
-Normal workflow: edit markdown in `docs/`, commit, push — the site deploys
-automatically.
+Normal workflow: edit markdown in `docs/`, commit, push — CI validates and,
+if the build passes, deploys automatically.
 
 ## Styling
 
