@@ -1,13 +1,20 @@
 #!/bin/bash
 # Kaappi Scheme installer
-# Usage: curl -fsSL https://kaappi.github.io/install.sh | bash
+# Usage: curl -fsSL https://kaappi-lang.org/install.sh | bash
 #
 # Installs the latest release binary to ~/.local/bin/kaappi (or INSTALL_DIR).
+#
+# Environment overrides:
+#   INSTALL_DIR       install prefix for binaries (default: ~/.local/bin)
+#   KAAPPI_VERSION    install a specific tag (e.g. v0.12.0) instead of latest
+#   KAAPPI_NO_VERIFY  set to 1 to install without checksum verification
 
 set -euo pipefail
 
 REPO="kaappi/kaappi"
 INSTALL_DIR="${INSTALL_DIR:-$HOME/.local/bin}"
+# Common curl flags: fail on HTTP error, follow redirects, HTTPS only.
+CURL=(curl -fsSL --proto '=https' --tlsv1.2)
 
 detect_platform() {
     local os arch
@@ -18,8 +25,8 @@ detect_platform() {
         Darwin) os="macos" ;;
         Linux)  os="linux" ;;
         *)
-            echo "error: unsupported OS: $os"
-            echo "Kaappi supports macOS and Linux. See https://github.com/$REPO"
+            echo "error: unsupported OS: $os" >&2
+            echo "Kaappi supports macOS and Linux. See https://github.com/$REPO" >&2
             exit 1
             ;;
     esac
@@ -29,7 +36,7 @@ detect_platform() {
         x86_64)        arch="x86_64" ;;
         riscv64)       arch="riscv64" ;;
         *)
-            echo "error: unsupported architecture: $arch"
+            echo "error: unsupported architecture: $arch" >&2
             exit 1
             ;;
     esac
@@ -38,10 +45,13 @@ detect_platform() {
 }
 
 get_latest_tag() {
-    curl -fsSL "https://api.github.com/repos/$REPO/releases/latest" \
-        | grep '"tag_name"' \
-        | head -1 \
-        | sed 's/.*"tag_name": *"\([^"]*\)".*/\1/'
+    # Follow the releases/latest redirect rather than hitting the JSON API,
+    # which is rate-limited to 60 requests/hour/IP (unauthenticated). The
+    # effective URL ends in /releases/tag/<tag>.
+    local url
+    url=$("${CURL[@]}" -I -o /dev/null -w '%{url_effective}' \
+        "https://github.com/$REPO/releases/latest")
+    printf '%s\n' "${url##*/tag/}"
 }
 
 main() {
@@ -52,12 +62,16 @@ main() {
     platform=$(detect_platform)
     echo "Platform: $platform"
 
-    echo "Fetching latest release..."
     local tag
-    tag=$(get_latest_tag)
+    if [ -n "${KAAPPI_VERSION:-}" ]; then
+        tag="$KAAPPI_VERSION"
+    else
+        echo "Fetching latest release..."
+        tag=$(get_latest_tag)
+    fi
     if [ -z "$tag" ]; then
-        echo "error: could not determine latest release"
-        echo "Check https://github.com/$REPO/releases"
+        echo "error: could not determine release to install" >&2
+        echo "Check https://github.com/$REPO/releases" >&2
         exit 1
     fi
     echo "Version: $tag"
@@ -69,12 +83,15 @@ main() {
     echo "Downloading binaries..."
     local tmpdir
     tmpdir=$(mktemp -d)
+    # Expand $tmpdir now (not at signal time): it is function-local and would
+    # be out of scope — and unbound under `set -u` — when the EXIT trap fires.
+    # shellcheck disable=SC2064
     trap "rm -rf '$tmpdir'" EXIT
 
-    curl -fsSL -o "$tmpdir/kaappi" "$base_url/$kaappi_artifact"
-    curl -fsSL -o "$tmpdir/thottam" "$base_url/$thottam_artifact"
-    curl -fsSL -o "$tmpdir/kaappi-lib.tar.gz" "$base_url/kaappi-lib.tar.gz"
-    curl -fsSL -o "$tmpdir/SHA256SUMS" "$base_url/SHA256SUMS"
+    "${CURL[@]}" -o "$tmpdir/kaappi" "$base_url/$kaappi_artifact"
+    "${CURL[@]}" -o "$tmpdir/thottam" "$base_url/$thottam_artifact"
+    "${CURL[@]}" -o "$tmpdir/kaappi-lib.tar.gz" "$base_url/kaappi-lib.tar.gz"
+    "${CURL[@]}" -o "$tmpdir/SHA256SUMS" "$base_url/SHA256SUMS"
 
     echo "Verifying checksums..."
     cd "$tmpdir"
@@ -86,8 +103,12 @@ main() {
         sha256sum -c --quiet check.txt
     elif command -v shasum >/dev/null 2>&1; then
         shasum -a 256 -c --quiet check.txt
+    elif [ "${KAAPPI_NO_VERIFY:-0}" = "1" ]; then
+        echo "warning: skipping checksum verification (KAAPPI_NO_VERIFY=1)" >&2
     else
-        echo "warning: neither sha256sum nor shasum found, skipping verification"
+        echo "error: no sha256sum or shasum found; cannot verify download" >&2
+        echo "  install one, or set KAAPPI_NO_VERIFY=1 to bypass verification" >&2
+        exit 1
     fi
 
     echo "Installing to $INSTALL_DIR/..."
@@ -98,8 +119,10 @@ main() {
 
     echo "Installing standard libraries to ~/.kaappi/lib/..."
     mkdir -p "$HOME/.kaappi/lib" "$tmpdir/libextract"
-    rm -rf "$HOME/.kaappi/lib/"*
+    # Extract first; only wipe the existing lib once extraction has succeeded,
+    # so a failed download/extract never leaves the user without a stdlib.
     tar xzf "$tmpdir/kaappi-lib.tar.gz" -C "$tmpdir/libextract"
+    rm -rf "$HOME/.kaappi/lib/"*
     cp -r "$tmpdir/libextract/lib/"* "$HOME/.kaappi/lib/"
     cp "$tmpdir/libextract/LICENSE" "$HOME/.kaappi/lib/"
 
