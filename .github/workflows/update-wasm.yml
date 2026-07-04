@@ -1,0 +1,70 @@
+name: Update playground WASM
+
+# Sync the playground/tour to a kaappi release: download the *released*
+# kaappi.wasm (verified against the release SHA256SUMS, so the browser runs the
+# same binary users install), bump kaappi_version, validate, commit, deploy.
+#
+# Run after cutting a core release:  gh workflow run update-wasm.yml -f tag=vX.Y.Z
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "kaappi release tag to sync (e.g. v0.12.0)"
+        required: true
+
+permissions:
+  contents: write
+
+# Share the deploy lock with ci.yml so the two can't race on gh-pages.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    env:
+      TAG: ${{ inputs.tag }}
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Download and verify the released WASM
+        run: |
+          gh release download "$TAG" -R kaappi/kaappi -p kaappi.wasm -p SHA256SUMS --clobber
+          # Verify against the release attestation before trusting the binary.
+          grep -E ' [*]?kaappi\.wasm$' SHA256SUMS | sha256sum -c -
+          mkdir -p docs/wasm
+          mv -f kaappi.wasm docs/wasm/kaappi.wasm
+          rm -f SHA256SUMS
+
+      - name: Bump kaappi_version
+        run: |
+          sed -i "s/^  kaappi_version: .*/  kaappi_version: ${TAG#v}/" mkdocs.yml
+
+      - name: Validate
+        run: |
+          python3 scripts/check_procedures_index.py
+          mkdocs build --strict
+
+      - name: Commit and deploy
+        run: |
+          if git diff --quiet; then
+            echo "Already synced to $TAG — nothing to do."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs/wasm/kaappi.wasm mkdocs.yml
+          git commit -m "Update playground WASM and version to ${TAG#v}"
+          git push
+          mkdocs gh-deploy --force
