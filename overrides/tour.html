@@ -753,7 +753,13 @@ const LESSONS = [
 // ---- State ----
 let currentLesson = 0;
 let editorView = null;
-const progress = JSON.parse(localStorage.getItem("kaappi-tour-progress") || "[]");
+let progress;
+try {
+  progress = JSON.parse(localStorage.getItem("kaappi-tour-progress") || "[]");
+  if (!Array.isArray(progress)) progress = [];
+} catch {
+  progress = [];  // corrupt/unavailable localStorage must not brick the tour
+}
 
 // ---- Sidebar ----
 const listEl = document.getElementById("kp-tour-lesson-list");
@@ -879,7 +885,8 @@ async function initEditor() {
       parent: document.getElementById("kp-tour-editor"),
     });
     window._kpTourEditor = editorView;
-  } catch {
+  } catch (e) {
+    console.warn("CodeMirror failed to load; using plain textarea.", e);
     const el = document.getElementById("kp-tour-editor");
     const ta = document.createElement("textarea");
     ta.id = "kp-tour-ta";
@@ -961,7 +968,7 @@ async function runCode() {
     document.getElementById("kp-tour-stdout").textContent = result.stdout;
     document.getElementById("kp-tour-stderr").textContent = result.stderr;
     const ms = Math.round(result.elapsed);
-    setStatus(result.stderr ? `Done (${ms} ms)` : `Done (${ms} ms)`, result.stderr ? "error" : "done");
+    setStatus(result.stderr ? `Done (${ms} ms) — errors` : `Done (${ms} ms)`, result.stderr ? "error" : "done");
 
     // Mark lesson complete on successful run
     if (!result.stderr && !progress.includes(currentLesson)) {

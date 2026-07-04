@@ -437,6 +437,7 @@ async function initEditor() {
     window._kpPlaygroundEditor = editorView;
   } catch (e) {
     // Fallback: plain textarea
+    console.warn("CodeMirror failed to load; using plain textarea.", e);
     const el = document.getElementById("kp-editor");
     const ta = document.createElement("textarea");
     ta.id = "kp-textarea-fallback";
