@@ -32,7 +32,9 @@
   --kp-filter:  #4FC4B2;
   --kp-ash:     #9C8A77;
   --kp-disp:    "Space Grotesk", "Inter", system-ui, sans-serif;
-  --kp-mono:    var(--md-code-font-family), "JetBrains Mono", monospace;
+  /* --md-code-font is on :root; --md-code-font-family is only on body, so
+     referencing it here resolved to invalid and dropped to a sans fallback. */
+  --kp-mono:    var(--md-code-font, "JetBrains Mono"), SFMono-Regular, Consolas, Menlo, monospace;
 }
 
 /* ---- logo: fill the header height ---- */
