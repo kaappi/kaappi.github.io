@@ -31,6 +31,7 @@ automatically when the load factor exceeds a threshold.
 ## Construction
 
 ### `make-hash-table` { #make-hash-table }
+<!-- index: 0+ | Create a new hash table -->
 
 **Syntax:** `(make-hash-table)` | `(make-hash-table equal-proc)` | `(make-hash-table equal-proc hash-proc)`
 
@@ -59,6 +60,7 @@ kaappi> (hash-table-ref ht2 "key")
 ---
 
 ### `alist->hash-table` { #alist-to-hash-table }
+<!-- index: 1 | Convert association list to hash table -->
 
 **Syntax:** `(alist->hash-table alist)` | `(alist->hash-table alist equal-proc)` | `(alist->hash-table alist equal-proc hash-proc)`
 
@@ -87,6 +89,7 @@ kaappi> (hash-table-ref (alist->hash-table '((x . 10) (x . 20))) 'x)
 ---
 
 ### `hash-table-copy` { #hash-table-copy }
+<!-- index: 1 | Shallow copy of hash table -->
 
 **Syntax:** `(hash-table-copy ht)`
 
@@ -114,6 +117,7 @@ kaappi> (hash-table-ref ht2 'a)
 ## Type Predicate
 
 ### `hash-table?` { #hash-table-pred }
+<!-- index: 1 | True if argument is a hash table -->
 
 **Syntax:** `(hash-table? obj)`
 
@@ -138,6 +142,7 @@ kaappi> (hash-table? "hello")
 ## Lookup and Mutation
 
 ### `hash-table-ref` { #hash-table-ref }
+<!-- index: 2+ | Look up key (optional default value) -->
 
 **Syntax:** `(hash-table-ref ht key)` | `(hash-table-ref ht key default)`
 
@@ -175,6 +180,7 @@ kaappi> (hash-table-ref ht 'z 0)
 ---
 
 ### `hash-table-set!` { #hash-table-set }
+<!-- index: 3 | Associate key with value -->
 
 **Syntax:** `(hash-table-set! ht key value)`
 
@@ -202,6 +208,7 @@ kaappi> (hash-table-size ht)
 ---
 
 ### `hash-table-delete!` { #hash-table-delete }
+<!-- index: 2 | Remove key -->
 
 **Syntax:** `(hash-table-delete! ht key)`
 
@@ -228,6 +235,7 @@ kaappi> (hash-table-size ht)
 ---
 
 ### `hash-table-exists?` { #hash-table-exists }
+<!-- index: 2 | True if key is present -->
 
 **Syntax:** `(hash-table-exists? ht key)`
 
@@ -251,6 +259,7 @@ kaappi> (hash-table-exists? ht 'a)
 ---
 
 ### `hash-table-update!/default` { #hash-table-update-default }
+<!-- index: 4 | Update value for key using procedure, with default -->
 
 **Syntax:** `(hash-table-update!/default ht key proc default)`
 
@@ -290,6 +299,7 @@ kaappi> (hash-table-ref counts 'cat)
 ## Size and Inspection
 
 ### `hash-table-size` { #hash-table-size }
+<!-- index: 1 | Number of key-value pairs -->
 
 **Syntax:** `(hash-table-size ht)`
 
@@ -308,6 +318,7 @@ kaappi> (hash-table-size (alist->hash-table '((a . 1) (b . 2) (c . 3))))
 ---
 
 ### `hash-table-keys` { #hash-table-keys }
+<!-- index: 1 | List of all keys -->
 
 **Syntax:** `(hash-table-keys ht)`
 
@@ -328,6 +339,7 @@ kaappi> (hash-table-keys (make-hash-table))
 ---
 
 ### `hash-table-values` { #hash-table-values }
+<!-- index: 1 | List of all values -->
 
 **Syntax:** `(hash-table-values ht)`
 
@@ -350,6 +362,7 @@ kaappi> (hash-table-values (make-hash-table))
 ## Iteration and Conversion
 
 ### `hash-table-walk` { #hash-table-walk }
+<!-- index: 2 | Call procedure on each key-value pair -->
 
 **Syntax:** `(hash-table-walk ht proc)`
 
@@ -381,6 +394,7 @@ c: 3
 ---
 
 ### `hash-table->alist` { #hash-table-to-alist }
+<!-- index: 1 | Convert to association list -->
 
 **Syntax:** `(hash-table->alist ht)`
 

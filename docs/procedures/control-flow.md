@@ -29,6 +29,7 @@ values, exceptions, and dynamic binding. Available from `(scheme base)`.
 ## Procedure Application
 
 ### `apply` { #apply }
+<!-- index: 2+ | Apply procedure to arguments -->
 
 **Syntax:** `(apply proc arg1 ... args)`
 
@@ -61,6 +62,7 @@ kaappi> (apply string #\h #\i '())
 ## Continuations
 
 ### `call-with-current-continuation` { #call-with-current-continuation }
+<!-- index: 1 | Capture the current continuation -->
 
 **Syntax:** `(call-with-current-continuation proc)`
 
@@ -93,6 +95,7 @@ kaappi> (let ((saved #f))
 ---
 
 ### `call/cc` { #callcc }
+<!-- index: 1 | Alias for `call-with-current-continuation` -->
 
 **Syntax:** `(call/cc proc)`
 
@@ -114,6 +117,7 @@ kaappi> (+ 1 (call/cc (lambda (k) (+ 2 (k 3)))))
 ---
 
 ### `call-with-escape-continuation` { #call-with-escape-continuation }
+<!-- index: 1 | Capture a one-shot escape continuation -->
 
 **Syntax:** `(call-with-escape-continuation proc)`
 
@@ -142,6 +146,7 @@ kaappi> (call-with-escape-continuation
 ---
 
 ### `call/ec` { #callec }
+<!-- index: 1 | Alias for `call-with-escape-continuation` -->
 
 **Syntax:** `(call/ec proc)`
 
@@ -183,6 +188,7 @@ kaappi> (call/ec
 ---
 
 ### `dynamic-wind` { #dynamic-wind }
+<!-- index: 3 | Install before/after thunks around a body -->
 
 **Syntax:** `(dynamic-wind before thunk after)`
 
@@ -221,6 +227,7 @@ kaappi> (let ((log '())
 ## Multiple Values
 
 ### `values` { #values }
+<!-- index: 0+ | Return multiple values -->
 
 **Syntax:** `(values obj ...)`
 
@@ -245,6 +252,7 @@ kaappi> (call-with-values (lambda () (values 1 2)) +)
 ---
 
 ### `call-with-values` { #call-with-values }
+<!-- index: 2 | Pass multiple values from producer to consumer -->
 
 **Syntax:** `(call-with-values producer consumer)`
 
@@ -269,6 +277,7 @@ kaappi> (call-with-values (lambda () 42) (lambda (x) (* x x)))
 ## Dynamic Binding
 
 ### `with-exception-handler` { #with-exception-handler }
+<!-- index: 2 | Install an exception handler -->
 
 **Syntax:** `(with-exception-handler handler thunk)`
 
@@ -306,6 +315,7 @@ kaappi> (call/cc
 ## Exceptions
 
 ### `raise` { #raise }
+<!-- index: 1 | Raise an exception -->
 
 **Syntax:** `(raise obj)`
 
@@ -331,6 +341,7 @@ kaappi> (call/cc
 ---
 
 ### `raise-continuable` { #raise-continuable }
+<!-- index: 1 | Raise a continuable exception -->
 
 **Syntax:** `(raise-continuable obj)`
 
@@ -352,6 +363,7 @@ kaappi> (with-exception-handler
 ---
 
 ### `error` { #error }
+<!-- index: 1+ | Create error object and raise it -->
 
 **Syntax:** `(error message obj ...)`
 
@@ -399,6 +411,7 @@ kaappi> (guard (e (#t (error-object-irritants e)))
 ---
 
 ### `error-object?` { #error-object-pred }
+<!-- index: 1 | True if argument is an error object -->
 
 **Syntax:** `(error-object? obj)`
 
@@ -424,6 +437,7 @@ kaappi> (error-object? 42)
 ---
 
 ### `error-object-message` { #error-object-message }
+<!-- index: 1 | Error message string -->
 
 **Syntax:** `(error-object-message error-object)`
 
@@ -442,6 +456,7 @@ kaappi> (guard (e (#t (error-object-message e)))
 ---
 
 ### `error-object-irritants` { #error-object-irritants }
+<!-- index: 1 | List of irritant values from error -->
 
 **Syntax:** `(error-object-irritants error-object)`
 
@@ -465,6 +480,7 @@ kaappi> (guard (e (#t (error-object-irritants e)))
 ---
 
 ### `file-error?` { #file-error }
+<!-- index: 1 | True if error is a file error -->
 
 **Syntax:** `(file-error? obj)`
 
@@ -488,6 +504,7 @@ kaappi> (guard (e (#t (file-error? e)))
 ---
 
 ### `read-error?` { #read-error }
+<!-- index: 1 | True if error is a read error -->
 
 **Syntax:** `(read-error? obj)`
 

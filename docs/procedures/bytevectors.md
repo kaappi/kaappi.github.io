@@ -9,6 +9,7 @@ They are used for binary data and UTF-8 encoding. Available from
 ## Construction and Access
 
 ### `bytevector?` { #bytevector-pred }
+<!-- index: 1 | True if argument is a bytevector -->
 
 **Syntax:** `(bytevector? obj)`
 
@@ -28,6 +29,7 @@ kaappi> (bytevector? "hello")
 ---
 
 ### `make-bytevector` { #make-bytevector }
+<!-- index: 1+ | Create bytevector of k bytes (optional fill) -->
 
 **Syntax:** `(make-bytevector k)` | `(make-bytevector k byte)`
 
@@ -49,6 +51,7 @@ kaappi> (make-bytevector 4)
 ---
 
 ### `bytevector` { #bytevector }
+<!-- index: 0+ | Construct bytevector from byte values -->
 
 **Syntax:** `(bytevector byte ...)`
 
@@ -71,6 +74,7 @@ kaappi> (bytevector)
 ---
 
 ### `bytevector-length` { #bytevector-length }
+<!-- index: 1 | Number of bytes -->
 
 **Syntax:** `(bytevector-length bytevector)`
 
@@ -88,6 +92,7 @@ kaappi> (bytevector-length #u8())
 ---
 
 ### `bytevector-u8-ref` { #bytevector-u8-ref }
+<!-- index: 2 | Byte at index k -->
 
 **Syntax:** `(bytevector-u8-ref bytevector k)`
 
@@ -108,6 +113,7 @@ kaappi> (bytevector-u8-ref #u8(10 20 30) 2)
 ---
 
 ### `bytevector-u8-set!` { #bytevector-u8-set }
+<!-- index: 3 | Set byte at index k -->
 
 **Syntax:** `(bytevector-u8-set! bytevector k byte)`
 
@@ -130,6 +136,7 @@ kaappi> (let ((bv (bytevector 1 2 3)))
 ## Copying
 
 ### `bytevector-copy` { #bytevector-copy }
+<!-- index: 1+ | Copy bytevector (optional start and end) -->
 
 **Syntax:** `(bytevector-copy bytevector)` | `(bytevector-copy bytevector start)` | `(bytevector-copy bytevector start end)`
 
@@ -150,6 +157,7 @@ kaappi> (bytevector-copy #u8(0 1 2 3 4) 1 4)
 ---
 
 ### `bytevector-copy!` { #bytevector-copy-mut }
+<!-- index: 3+ | Copy into bytevector at offset -->
 
 **Syntax:** `(bytevector-copy! to at from)` | `(bytevector-copy! to at from start)` | `(bytevector-copy! to at from start end)`
 
@@ -176,6 +184,7 @@ kaappi> (let ((bv (bytevector 1 2 3 4 5)))
 ---
 
 ### `bytevector-append` { #bytevector-append }
+<!-- index: 0+ | Concatenate bytevectors -->
 
 **Syntax:** `(bytevector-append bytevector ...)`
 
@@ -199,6 +208,7 @@ kaappi> (bytevector-append)
 ## UTF-8 Conversion
 
 ### `utf8->string` { #utf8-to-string }
+<!-- index: 1+ | Decode UTF-8 bytevector to string -->
 
 **Syntax:** `(utf8->string bytevector)` | `(utf8->string bytevector start)` | `(utf8->string bytevector start end)`
 
@@ -219,6 +229,7 @@ kaappi> (utf8->string #u8(72 101 108 108 111) 0 2)
 ---
 
 ### `string->utf8` { #string-to-utf8 }
+<!-- index: 1+ | Encode string to UTF-8 bytevector -->
 
 **Syntax:** `(string->utf8 string)` | `(string->utf8 string start)` | `(string->utf8 string start end)`
 
@@ -244,6 +255,7 @@ they default to `(current-input-port)` for input procedures and
 `(current-output-port)` for output procedures.
 
 ### `read-u8` { #read-u8 }
+<!-- index: 0+ | Read one byte from port -->
 
 **Syntax:** `(read-u8)` | `(read-u8 port)`
 
@@ -264,6 +276,7 @@ kaappi> (let ((p (open-input-bytevector #u8())))
 ---
 
 ### `peek-u8` { #peek-u8 }
+<!-- index: 0+ | Peek at next byte without consuming -->
 
 **Syntax:** `(peek-u8)` | `(peek-u8 port)`
 
@@ -283,6 +296,7 @@ kaappi> (let ((p (open-input-bytevector #u8(65 66))))
 ---
 
 ### `write-u8` { #write-u8 }
+<!-- index: 1+ | Write one byte to port -->
 
 **Syntax:** `(write-u8 byte)` | `(write-u8 byte port)`
 
@@ -303,6 +317,7 @@ kaappi> (let ((p (open-output-bytevector)))
 ---
 
 ### `u8-ready?` { #u8-ready }
+<!-- index: 0+ | True if a byte is available to read -->
 
 **Syntax:** `(u8-ready?)` | `(u8-ready? port)`
 
@@ -321,6 +336,7 @@ kaappi> (let ((p (open-input-bytevector #u8(1 2 3))))
 ---
 
 ### `read-bytevector` { #read-bytevector }
+<!-- index: 1+ | Read k bytes into a new bytevector -->
 
 **Syntax:** `(read-bytevector k)` | `(read-bytevector k port)`
 
@@ -344,6 +360,7 @@ kaappi> (let ((p (open-input-bytevector #u8(10 20))))
 ---
 
 ### `read-bytevector!` { #read-bytevector-mut }
+<!-- index: 1+ | Read bytes into an existing bytevector -->
 
 **Syntax:** `(read-bytevector! bytevector)` | `(read-bytevector! bytevector port)` | `(read-bytevector! bytevector port start)` | `(read-bytevector! bytevector port start end)`
 
@@ -366,6 +383,7 @@ kaappi> (let ((bv (make-bytevector 5 0))
 ---
 
 ### `write-bytevector` { #write-bytevector }
+<!-- index: 1+ | Write bytevector to port -->
 
 **Syntax:** `(write-bytevector bytevector)` | `(write-bytevector bytevector port)` | `(write-bytevector bytevector port start)` | `(write-bytevector bytevector port start end)`
 
@@ -389,6 +407,7 @@ kaappi> (let ((p (open-output-bytevector)))
 ---
 
 ### `open-input-bytevector` { #open-input-bytevector }
+<!-- index: 1 | Open bytevector as input port -->
 
 **Syntax:** `(open-input-bytevector bytevector)`
 
@@ -407,6 +426,7 @@ kaappi> (let ((p (open-input-bytevector #u8(10 20 30))))
 ---
 
 ### `open-output-bytevector` { #open-output-bytevector }
+<!-- index: 0 | Create output port backed by bytevector -->
 
 **Syntax:** `(open-output-bytevector)`
 
@@ -428,6 +448,7 @@ kaappi> (let ((p (open-output-bytevector)))
 ---
 
 ### `get-output-bytevector` { #get-output-bytevector }
+<!-- index: 1 | Get accumulated bytevector from output port -->
 
 **Syntax:** `(get-output-bytevector port)`
 

@@ -33,6 +33,7 @@ lists, vectors support efficient random access and mutation. Available from
 ## Construction
 
 ### `vector` { #vector }
+<!-- index: 0+ | Construct vector from arguments -->
 
 **Syntax:** `(vector obj ...)`
 
@@ -53,6 +54,7 @@ kaappi> (vector)
 ---
 
 ### `make-vector` { #make-vector }
+<!-- index: 1+ | Create vector of k elements (optional fill value) -->
 
 **Syntax:** `(make-vector k)` | `(make-vector k fill)`
 
@@ -75,6 +77,7 @@ kaappi> (make-vector 4 'x)
 ## Type Predicate
 
 ### `vector?` { #vector-pred }
+<!-- index: 1 | True if argument is a vector -->
 
 **Syntax:** `(vector? obj)`
 
@@ -96,6 +99,7 @@ kaappi> (vector? "hello")
 ## Access and Mutation
 
 ### `vector-length` { #vector-length }
+<!-- index: 1 | Number of elements -->
 
 **Syntax:** `(vector-length vector)`
 
@@ -115,6 +119,7 @@ kaappi> (vector-length #())
 ---
 
 ### `vector-ref` { #vector-ref }
+<!-- index: 2 | Element at index k -->
 
 **Syntax:** `(vector-ref vector k)`
 
@@ -140,6 +145,7 @@ kaappi> (vector-ref #(a b c d) 3)
 ---
 
 ### `vector-set!` { #vector-set }
+<!-- index: 3 | Set element at index k -->
 
 **Syntax:** `(vector-set! vector k obj)`
 
@@ -163,6 +169,7 @@ kaappi> (let ((v (vector 1 2 3)))
 ## Conversion
 
 ### `vector->list` { #vector-to-list }
+<!-- index: 1+ | Convert to list (optional start and end) -->
 
 **Syntax:** `(vector->list vector)` | `(vector->list vector start)` | `(vector->list vector start end)`
 
@@ -186,6 +193,7 @@ kaappi> (vector->list #())
 ---
 
 ### `list->vector` { #list-to-vector }
+<!-- index: 1 | Convert list to vector -->
 
 **Syntax:** `(list->vector list)`
 
@@ -203,6 +211,7 @@ kaappi> (list->vector '())
 ---
 
 ### `vector->string` { #vector-to-string }
+<!-- index: 1 | Convert vector of characters to string -->
 
 **Syntax:** `(vector->string vector)` | `(vector->string vector start)` | `(vector->string vector start end)`
 
@@ -225,6 +234,7 @@ kaappi> (vector->string #(#\h #\e #\l #\l #\o) 1 4)
 ## Filling and Copying
 
 ### `vector-fill!` { #vector-fill }
+<!-- index: 2 | Fill vector with a value -->
 
 **Syntax:** `(vector-fill! vector fill)` | `(vector-fill! vector fill start)` | `(vector-fill! vector fill start end)`
 
@@ -247,6 +257,7 @@ kaappi> (let ((v (vector 1 2 3 4 5)))
 ---
 
 ### `vector-copy` { #vector-copy }
+<!-- index: 1+ | Copy vector (optional start and end) -->
 
 **Syntax:** `(vector-copy vector)` | `(vector-copy vector start)` | `(vector-copy vector start end)`
 
@@ -267,6 +278,7 @@ kaappi> (vector-copy #(a b c d e) 1 4)
 ---
 
 ### `vector-copy!` { #vector-copy-mut }
+<!-- index: 3+ | Copy into vector at offset -->
 
 **Syntax:** `(vector-copy! to at from)` | `(vector-copy! to at from start)` | `(vector-copy! to at from start end)`
 
@@ -291,6 +303,7 @@ kaappi> (let ((v (vector 1 2 3 4 5)))
 ---
 
 ### `vector-append` { #vector-append }
+<!-- index: 0+ | Concatenate vectors -->
 
 **Syntax:** `(vector-append vector ...)`
 
@@ -314,6 +327,7 @@ kaappi> (vector-append)
 ## Iteration
 
 ### `vector-for-each` { #vector-for-each }
+<!-- index: 2+ | Apply procedure to each element -->
 
 **Syntax:** `(vector-for-each proc vector1 vector2 ...)`
 
@@ -341,6 +355,7 @@ kaappi> (let ((pairs '()))
 ---
 
 ### `vector-map` { #vector-map }
+<!-- index: 2+ | Map procedure over elements -->
 
 **Syntax:** `(vector-map proc vector1 vector2 ...)`
 

@@ -9,6 +9,7 @@ These procedures are available from `(scheme base)` and `(scheme char)`.
 ## Conversion
 
 ### `char->integer` { #char-to-integer }
+<!-- index: 1 | Unicode codepoint as integer -->
 
 **Syntax:** `(char->integer char)`
 
@@ -29,6 +30,7 @@ kaappi> (char->integer #\x03BB)
 ---
 
 ### `integer->char` { #integer-to-char }
+<!-- index: 1 | Character from Unicode codepoint -->
 
 **Syntax:** `(integer->char n)`
 
@@ -55,6 +57,7 @@ that the relation holds transitively across every consecutive pair. Comparison
 is by Unicode codepoint value.
 
 ### `char<?` { #char-lt }
+<!-- index: 2+ | Character less-than by codepoint -->
 
 **Syntax:** `(char<? char1 char2 ...)`
 
@@ -73,6 +76,7 @@ kaappi> (char<? #\a #\a)
 ---
 
 ### `char<=?` { #char-le }
+<!-- index: 2+ | Character less-than-or-equal -->
 
 **Syntax:** `(char<=? char1 char2 ...)`
 
@@ -91,6 +95,7 @@ kaappi> (char<=? #\b #\a)
 ---
 
 ### `char=?` { #char-eq }
+<!-- index: 2+ | Character equality -->
 
 **Syntax:** `(char=? char1 char2 ...)`
 
@@ -108,6 +113,7 @@ kaappi> (char=? #\a #\A)
 ---
 
 ### `char>=?` { #char-ge }
+<!-- index: 2+ | Character greater-than-or-equal -->
 
 **Syntax:** `(char>=? char1 char2 ...)`
 
@@ -126,6 +132,7 @@ kaappi> (char>=? #\a #\b)
 ---
 
 ### `char>?` { #char-gt }
+<!-- index: 2+ | Character greater-than -->
 
 **Syntax:** `(char>? char1 char2 ...)`
 
@@ -150,6 +157,7 @@ example, `char-alphabetic?` recognizes letters from Latin, Greek, Cyrillic,
 CJK, Hangul, Devanagari, Thai, Arabic, Hebrew, and many other scripts.
 
 ### `char-alphabetic?` { #char-alphabetic }
+<!-- index: 1 | True if Unicode alphabetic -->
 
 **Syntax:** `(char-alphabetic? char)`
 
@@ -172,6 +180,7 @@ kaappi> (char-alphabetic? #\x03BB)   ; Greek lambda
 ---
 
 ### `char-numeric?` { #char-numeric }
+<!-- index: 1 | True if Unicode numeric -->
 
 **Syntax:** `(char-numeric? char)`
 
@@ -193,6 +202,7 @@ kaappi> (char-numeric? #\x0966)   ; Devanagari digit zero
 ---
 
 ### `char-whitespace?` { #char-whitespace }
+<!-- index: 1 | True if Unicode whitespace -->
 
 **Syntax:** `(char-whitespace? char)`
 
@@ -217,6 +227,7 @@ kaappi> (char-whitespace? #\a)
 ---
 
 ### `char-upper-case?` { #char-upper-case }
+<!-- index: 1 | True if Unicode uppercase -->
 
 **Syntax:** `(char-upper-case? char)`
 
@@ -239,6 +250,7 @@ kaappi> (char-upper-case? #\x0391)   ; Greek capital Alpha
 ---
 
 ### `char-lower-case?` { #char-lower-case }
+<!-- index: 1 | True if Unicode lowercase -->
 
 **Syntax:** `(char-lower-case? char)`
 
@@ -263,6 +275,7 @@ kaappi> (char-lower-case? #\x03B1)   ; Greek small alpha
 ## Case Conversion
 
 ### `char-upcase` { #char-upcase }
+<!-- index: 1 | Convert to uppercase -->
 
 **Syntax:** `(char-upcase char)`
 
@@ -287,6 +300,7 @@ kaappi> (char-upcase #\x03B1)   ; Greek small alpha
 ---
 
 ### `char-downcase` { #char-downcase }
+<!-- index: 1 | Convert to lowercase -->
 
 **Syntax:** `(char-downcase char)`
 
@@ -307,6 +321,7 @@ kaappi> (char-downcase #\x0391)   ; Greek capital Alpha
 ---
 
 ### `char-foldcase` { #char-foldcase }
+<!-- index: 1 | Convert to foldcase (for case-insensitive comparison) -->
 
 **Syntax:** `(char-foldcase char)`
 
@@ -336,6 +351,7 @@ kaappi> (char-foldcase #\x017F)   ; Latin small long s
 ---
 
 ### `digit-value` { #digit-value }
+<!-- index: 1 | Numeric value of digit character, or `#f` -->
 
 **Syntax:** `(digit-value char)`
 
@@ -369,6 +385,7 @@ These procedures compare characters after applying Unicode case folding via
 arguments and check the relation transitively across every consecutive pair.
 
 ### `char-ci<?` { #char-ci-lt }
+<!-- index: 2+ | Case-insensitive character less-than -->
 
 **Syntax:** `(char-ci<? char1 char2 ...)`
 
@@ -386,6 +403,7 @@ kaappi> (char-ci<? #\A #\a)
 ---
 
 ### `char-ci<=?` { #char-ci-le }
+<!-- index: 2+ | Case-insensitive character less-than-or-equal -->
 
 **Syntax:** `(char-ci<=? char1 char2 ...)`
 
@@ -403,6 +421,7 @@ kaappi> (char-ci<=? #\b #\A)
 ---
 
 ### `char-ci=?` { #char-ci-eq }
+<!-- index: 2+ | Case-insensitive character equality -->
 
 **Syntax:** `(char-ci=? char1 char2 ...)`
 
@@ -422,6 +441,7 @@ kaappi> (char-ci=? #\x017F #\s)   ; long s equals s
 ---
 
 ### `char-ci>=?` { #char-ci-ge }
+<!-- index: 2+ | Case-insensitive character greater-than-or-equal -->
 
 **Syntax:** `(char-ci>=? char1 char2 ...)`
 
@@ -439,6 +459,7 @@ kaappi> (char-ci>=? #\A #\a)
 ---
 
 ### `char-ci>?` { #char-ci-gt }
+<!-- index: 2+ | Case-insensitive character greater-than -->
 
 **Syntax:** `(char-ci>? char1 char2 ...)`
 
@@ -463,6 +484,7 @@ over the UTF-8 encoding. They accept two or more string arguments and check
 the relation transitively.
 
 ### `string-ci<?` { #string-ci-lt }
+<!-- index: 2+ | Case-insensitive string less-than -->
 
 **Syntax:** `(string-ci<? string1 string2 ...)`
 
@@ -481,6 +503,7 @@ kaappi> (string-ci<? "banana" "APPLE")
 ---
 
 ### `string-ci<=?` { #string-ci-le }
+<!-- index: 2+ | Case-insensitive string less-than-or-equal -->
 
 **Syntax:** `(string-ci<=? string1 string2 ...)`
 
@@ -499,6 +522,7 @@ kaappi> (string-ci<=? "hello" "HELLO" "world")
 ---
 
 ### `string-ci=?` { #string-ci-eq }
+<!-- index: 2+ | Case-insensitive string equality -->
 
 **Syntax:** `(string-ci=? string1 string2 ...)`
 
@@ -516,6 +540,7 @@ kaappi> (string-ci=? "hello" "world")
 ---
 
 ### `string-ci>=?` { #string-ci-ge }
+<!-- index: 2+ | Case-insensitive string greater-than-or-equal -->
 
 **Syntax:** `(string-ci>=? string1 string2 ...)`
 
@@ -534,6 +559,7 @@ kaappi> (string-ci>=? "HELLO" "hello")
 ---
 
 ### `string-ci>?` { #string-ci-gt }
+<!-- index: 2+ | Case-insensitive string greater-than -->
 
 **Syntax:** `(string-ci>? string1 string2 ...)`
 
@@ -558,6 +584,7 @@ codepoint-by-codepoint. They handle Unicode special cases where a single
 codepoint may expand into multiple codepoints (e.g., German sharp s).
 
 ### `string-upcase` { #string-upcase }
+<!-- index: 1 | Convert entire string to uppercase -->
 
 **Syntax:** `(string-upcase string)`
 
@@ -584,6 +611,7 @@ kaappi> (string-upcase "Stra\x00DF;e")   ; sharp s
 ---
 
 ### `string-downcase` { #string-downcase }
+<!-- index: 1 | Convert entire string to lowercase -->
 
 **Syntax:** `(string-downcase string)`
 
@@ -611,6 +639,7 @@ kaappi> (string-downcase "\x03A3;")   ; lone capital Sigma
 ---
 
 ### `string-foldcase` { #string-foldcase }
+<!-- index: 1 | Foldcase entire string -->
 
 **Syntax:** `(string-foldcase string)`
 

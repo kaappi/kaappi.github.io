@@ -33,6 +33,7 @@ see [SRFI-13 String Library](./srfi-13.md).
 ## Construction
 
 ### `string` { #string }
+<!-- index: 0+ | Construct string from characters -->
 
 **Syntax:** `(string char ...)`
 
@@ -51,6 +52,7 @@ kaappi> (string)
 ---
 
 ### `make-string` { #make-string }
+<!-- index: 1+ | Create string of k characters (optional fill char) -->
 
 **Syntax:** `(make-string k)` | `(make-string k char)`
 
@@ -72,6 +74,7 @@ kaappi> (make-string 3 #\x)
 ## Access and Mutation
 
 ### `string-length` { #string-length }
+<!-- index: 1 | Number of codepoints in string -->
 
 **Syntax:** `(string-length string)`
 
@@ -99,6 +102,7 @@ kaappi> (string-length "")
 ---
 
 ### `string-ref` { #string-ref }
+<!-- index: 2 | Character at codepoint index k -->
 
 **Syntax:** `(string-ref string k)`
 
@@ -127,6 +131,7 @@ kaappi> (string-ref "hello" 4)
 ---
 
 ### `string-set!` { #string-set }
+<!-- index: 3 | Set character at codepoint index k -->
 
 **Syntax:** `(string-set! string k char)`
 
@@ -149,6 +154,7 @@ kaappi> (let ((s (string-copy "hello")))
 ---
 
 ### `substring` { #substring }
+<!-- index: 3 | Extract substring by codepoint indices -->
 
 **Syntax:** `(substring string start end)`
 
@@ -179,6 +185,7 @@ kaappi> (substring "abc" 0 3)
 ## Building
 
 ### `string-append` { #string-append }
+<!-- index: 0+ | Concatenate strings -->
 
 **Syntax:** `(string-append string ...)`
 
@@ -209,6 +216,7 @@ kaappi> (string-append "a" "" "b")
 ---
 
 ### `string-copy` { #string-copy }
+<!-- index: 1+ | Copy string (optional start and end) -->
 
 **Syntax:** `(string-copy string)` | `(string-copy string start)` | `(string-copy string start end)`
 
@@ -229,6 +237,7 @@ kaappi> (string-copy "hello" 1 3)
 ---
 
 ### `string-copy!` { #string-copy-bang }
+<!-- index: 3+ | Copy into mutable string at offset -->
 
 **Syntax:** `(string-copy! to at from)` | `(string-copy! to at from start)` | `(string-copy! to at from start end)`
 
@@ -254,6 +263,7 @@ kaappi> (let ((s (string-copy "abcde")))
 ---
 
 ### `string-fill!` { #string-fill }
+<!-- index: 2+ | Fill string with a character (optional start/end) -->
 
 **Syntax:** `(string-fill! string char)` | `(string-fill! string char start)` | `(string-fill! string char start end)`
 
@@ -275,6 +285,7 @@ kaappi> (let ((s (make-string 3 #\a)))
 ## Conversion
 
 ### `string->list` { #string-to-list }
+<!-- index: 1+ | Convert string to list of characters -->
 
 **Syntax:** `(string->list string)` | `(string->list string start)` | `(string->list string start end)`
 
@@ -293,6 +304,7 @@ kaappi> (string->list "")
 ---
 
 ### `list->string` { #list-to-string }
+<!-- index: 1 | Convert list of characters to string -->
 
 **Syntax:** `(list->string list)`
 
@@ -311,6 +323,7 @@ kaappi> (list->string '())
 ---
 
 ### `string->symbol` { #string-to-symbol }
+<!-- index: 1 | Intern string as a symbol -->
 
 **Syntax:** `(string->symbol string)`
 
@@ -329,6 +342,7 @@ kaappi> (symbol? (string->symbol "test"))
 ---
 
 ### `symbol->string` { #symbol-to-string }
+<!-- index: 1 | Symbol name as a string -->
 
 **Syntax:** `(symbol->string symbol)`
 
@@ -345,6 +359,7 @@ kaappi> (symbol->string 'hello)
 ---
 
 ### `string->utf8` { #string-to-utf8 }
+<!-- index: 1 | Convert string to UTF-8 bytevector -->
 
 **Syntax:** `(string->utf8 string)`
 
@@ -359,6 +374,7 @@ Returns a bytevector containing the UTF-8 encoding of *string*.
 ---
 
 ### `utf8->string` { #utf8-to-string }
+<!-- index: 1 | Convert UTF-8 bytevector to string -->
 
 **Syntax:** `(utf8->string bytevector)`
 
@@ -373,6 +389,7 @@ Decodes the UTF-8 encoded *bytevector* and returns the corresponding string.
 ---
 
 ### `string->vector` { #string-to-vector }
+<!-- index: 1+ | Convert string to vector of characters -->
 
 **Syntax:** `(string->vector string)` | `(string->vector string start)` | `(string->vector string start end)`
 
@@ -391,6 +408,7 @@ kaappi> (vector-length (string->vector "hello"))
 ---
 
 ### `string->number` { #string-to-number }
+<!-- index: 1+ | Parse string as number (optional radix) -->
 
 **Syntax:** `(string->number string)` | `(string->number string radix)`
 
@@ -417,6 +435,7 @@ kaappi> (string->number "bad")
 ---
 
 ### `number->string` { #number-to-string }
+<!-- index: 1 | Convert number to string -->
 
 **Syntax:** `(number->string z)` | `(number->string z radix)`
 
@@ -442,6 +461,7 @@ kaappi> (number->string 3.14)
 ## Iteration
 
 ### `string-for-each` { #string-for-each }
+<!-- index: 2+ | Apply procedure to each character -->
 
 **Syntax:** `(string-for-each proc string1 string2 ...)`
 
@@ -463,6 +483,7 @@ kaappi> (let ((count 0))
 ---
 
 ### `string-map` { #string-map }
+<!-- index: 2+ | Map procedure over characters -->
 
 **Syntax:** `(string-map proc string1 string2 ...)`
 
@@ -490,6 +511,7 @@ codepoint values from left to right. All comparison procedures accept two or
 more arguments and verify that the ordering holds for every consecutive pair.
 
 ### `string<?` { #string-lt }
+<!-- index: 2+ | Lexicographic less-than -->
 
 **Syntax:** `(string<? string1 string2 string3 ...)`
 
@@ -509,6 +531,7 @@ kaappi> (string<? "a" "b" "c")
 ---
 
 ### `string<=?` { #string-le }
+<!-- index: 2+ | Lexicographic less-than-or-equal -->
 
 **Syntax:** `(string<=? string1 string2 string3 ...)`
 
@@ -529,6 +552,7 @@ kaappi> (string<=? "abd" "abc")
 ---
 
 ### `string=?` { #string-eq }
+<!-- index: 2+ | String equality -->
 
 **Syntax:** `(string=? string1 string2 string3 ...)`
 
@@ -547,6 +571,7 @@ kaappi> (string=? "abc" "abd")
 ---
 
 ### `string>=?` { #string-ge }
+<!-- index: 2+ | Lexicographic greater-than-or-equal -->
 
 **Syntax:** `(string>=? string1 string2 string3 ...)`
 
@@ -567,6 +592,7 @@ kaappi> (string>=? "abc" "abd")
 ---
 
 ### `string>?` { #string-gt }
+<!-- index: 2+ | Lexicographic greater-than -->
 
 **Syntax:** `(string>? string1 string2 string3 ...)`
 

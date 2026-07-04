@@ -33,6 +33,7 @@ slow:
 ## Core Pairs
 
 ### `cons` { #cons }
+<!-- index: 2 | Construct a pair -->
 
 **Syntax:** `(cons obj1 obj2)`
 
@@ -66,6 +67,7 @@ kaappi> (cons 1 '())
 ---
 
 ### `car` { #car }
+<!-- index: 1 | First element of a pair -->
 
 **Syntax:** `(car pair)`
 
@@ -88,6 +90,7 @@ kaappi> (car '((1 2) 3))
 ---
 
 ### `cdr` { #cdr }
+<!-- index: 1 | Second element of a pair -->
 
 **Syntax:** `(cdr pair)`
 
@@ -109,6 +112,7 @@ kaappi> (cdr '(a))
 ---
 
 ### `set-car!` { #set-car }
+<!-- index: 2 | Mutate the car of a pair -->
 
 **Syntax:** `(set-car! pair obj)`
 
@@ -127,6 +131,7 @@ kaappi> p
 ---
 
 ### `set-cdr!` { #set-cdr }
+<!-- index: 2 | Mutate the cdr of a pair -->
 
 **Syntax:** `(set-cdr! pair obj)`
 
@@ -147,6 +152,7 @@ kaappi> p
 ## List Construction
 
 ### `list` { #list }
+<!-- index: 0+ | Construct a list from arguments -->
 
 **Syntax:** `(list obj ...)`
 
@@ -170,6 +176,7 @@ kaappi> (list (+ 1 2) (* 3 4))
 ---
 
 ### `make-list` { #make-list }
+<!-- index: 1+ | Create list of k elements (optional fill value) -->
 
 **Syntax:** `(make-list k)` | `(make-list k fill)`
 
@@ -189,6 +196,7 @@ kaappi> (make-list 0)
 ---
 
 ### `list-copy` { #list-copy }
+<!-- index: 1 | Shallow copy of a list -->
 
 **Syntax:** `(list-copy obj)`
 
@@ -212,6 +220,7 @@ kaappi> copy
 ---
 
 ### `append` { #append }
+<!-- index: 0+ | Append lists together -->
 
 **Syntax:** `(append list ...)`
 
@@ -246,6 +255,7 @@ kaappi> (append)
 ---
 
 ### `reverse` { #reverse }
+<!-- index: 1 | Reverse a list -->
 
 **Syntax:** `(reverse list)`
 
@@ -264,6 +274,7 @@ kaappi> (reverse '())
 ---
 
 ### `length` { #length }
+<!-- index: 1 | Length of a proper list -->
 
 **Syntax:** `(length list)`
 
@@ -295,6 +306,7 @@ Each takes exactly one pair argument and applies two accessor operations
 from right to left (innermost first).
 
 ### `caar` { #caar }
+<!-- index: 1 | `(car (car x))` -->
 
 **Syntax:** `(caar pair)`
 
@@ -308,6 +320,7 @@ kaappi> (caar '((1 2) 3))
 ---
 
 ### `cadr` { #cadr }
+<!-- index: 1 | `(car (cdr x))` -->
 
 **Syntax:** `(cadr pair)`
 
@@ -321,6 +334,7 @@ kaappi> (cadr '(1 2 3))
 ---
 
 ### `cdar` { #cdar }
+<!-- index: 1 | `(cdr (car x))` -->
 
 **Syntax:** `(cdar pair)`
 
@@ -334,6 +348,7 @@ kaappi> (cdar '((1 2) 3))
 ---
 
 ### `cddr` { #cddr }
+<!-- index: 1 | `(cdr (cdr x))` -->
 
 **Syntax:** `(cddr pair)`
 
@@ -350,6 +365,7 @@ kaappi> (cddr '(1 2 3))
 ## List Access
 
 ### `list-ref` { #list-ref }
+<!-- index: 2 | Element at index k -->
 
 **Syntax:** `(list-ref list k)`
 
@@ -379,6 +395,7 @@ kaappi> (list-ref '(a b c d) 3)
 ---
 
 ### `list-tail` { #list-tail }
+<!-- index: 2 | Sublist starting at index k -->
 
 **Syntax:** `(list-tail list k)`
 
@@ -400,6 +417,7 @@ kaappi> (list-tail '(a b c d) 4)
 ---
 
 ### `list-set!` { #list-set }
+<!-- index: 3 | Set element at index k -->
 
 **Syntax:** `(list-set! list k obj)`
 
@@ -421,6 +439,7 @@ kaappi> ls
 ## Search
 
 ### `member` { #member }
+<!-- index: 2+ | Search by `equal?` (optional comparator) -->
 
 **Syntax:** `(member obj list)` | `(member obj list compare)`
 
@@ -445,6 +464,7 @@ kaappi> (member 2 '(1 2 3) =)
 ---
 
 ### `memq` { #memq }
+<!-- index: 2 | Search by `eq?` -->
 
 **Syntax:** `(memq obj list)`
 
@@ -463,6 +483,7 @@ kaappi> (memq 'd '(a b c))
 ---
 
 ### `memv` { #memv }
+<!-- index: 2 | Search by `eqv?` -->
 
 **Syntax:** `(memv obj list)`
 
@@ -483,6 +504,7 @@ kaappi> (memv 4 '(1 2 3))
 ---
 
 ### `assoc` { #assoc }
+<!-- index: 2+ | Association list lookup by `equal?` (optional comparator) -->
 
 **Syntax:** `(assoc obj alist)` | `(assoc obj alist compare)`
 
@@ -518,6 +540,7 @@ kaappi> (assoc 2.0 '((1 a) (2 b) (3 c)) =)
 ---
 
 ### `assq` { #assq }
+<!-- index: 2 | Association list lookup by `eq?` -->
 
 **Syntax:** `(assq obj alist)`
 
@@ -536,6 +559,7 @@ kaappi> (assq 'd '((a 1) (b 2) (c 3)))
 ---
 
 ### `assv` { #assv }
+<!-- index: 2 | Association list lookup by `eqv?` -->
 
 **Syntax:** `(assv obj alist)`
 
@@ -557,6 +581,7 @@ kaappi> (assv 4 '((1 a) (2 b) (3 c)))
 ## Iteration
 
 ### `map` { #map }
+<!-- index: 2+ | Apply procedure to corresponding elements of lists -->
 
 **Syntax:** `(map proc list1 list2 ...)`
 
@@ -589,6 +614,7 @@ kaappi> (map + '(1 2 3) '(10 20))
 ---
 
 ### `for-each` { #for-each }
+<!-- index: 2+ | Like `map` but for side effects only -->
 
 **Syntax:** `(for-each proc list1 list2 ...)`
 
@@ -612,6 +638,7 @@ kaappi> (let ((sum 0))
 ---
 
 ### `apply` { #apply }
+<!-- index: 2+ | Apply procedure to a list of arguments -->
 
 **Syntax:** `(apply proc arg1 ... args)`
 

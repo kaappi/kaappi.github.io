@@ -10,6 +10,7 @@ and `(scheme load)`.
 ## Process Control
 
 ### `exit` { #exit }
+<!-- index: 0+ | Exit the process (optional status code) -->
 
 **Syntax:** `(exit)` | `(exit status)`
 
@@ -37,6 +38,7 @@ kaappi> (exit #f)      ; exits with failure status
 ---
 
 ### `emergency-exit` { #emergency-exit }
+<!-- index: 0+ | Immediate exit without cleanup -->
 
 **Syntax:** `(emergency-exit)` | `(emergency-exit status)`
 
@@ -58,6 +60,7 @@ kaappi> (emergency-exit 2)  ; immediate exit, status 2
 ## Command Line and Environment
 
 ### `command-line` { #command-line }
+<!-- index: 0 | List of command-line arguments -->
 
 **Syntax:** `(command-line)`
 
@@ -81,6 +84,7 @@ kaappi> (cdr (command-line))
 ---
 
 ### `get-environment-variable` { #get-environment-variable }
+<!-- index: 1 | Value of environment variable, or `#f` -->
 
 **Syntax:** `(get-environment-variable name)`
 
@@ -103,6 +107,7 @@ kaappi> (get-environment-variable "NONEXISTENT")
 ---
 
 ### `get-environment-variables` { #get-environment-variables }
+<!-- index: 0 | Association list of all environment variables -->
 
 **Syntax:** `(get-environment-variables)`
 
@@ -126,6 +131,7 @@ kaappi> (map car (take (get-environment-variables) 3))
 ## Time
 
 ### `current-second` { #current-second }
+<!-- index: 0 | Current TAI time as inexact real -->
 
 **Syntax:** `(current-second)`
 
@@ -154,6 +160,7 @@ kaappi> (let ((start (current-second)))
 ---
 
 ### `current-jiffy` { #current-jiffy }
+<!-- index: 0 | Current time in jiffies (high resolution) -->
 
 **Syntax:** `(current-jiffy)`
 
@@ -178,6 +185,7 @@ kaappi> (let ((start (current-jiffy)))
 ---
 
 ### `jiffies-per-second` { #jiffies-per-second }
+<!-- index: 0 | Number of jiffies per second -->
 
 **Syntax:** `(jiffies-per-second)`
 
@@ -200,6 +208,7 @@ kaappi> (exact (/ (jiffies-per-second) 1000))
 ## Feature Detection
 
 ### `features` { #features }
+<!-- index: 0 | List of implementation feature identifiers -->
 
 **Syntax:** `(features)`
 
@@ -225,6 +234,7 @@ kaappi> (memq 'windows (features))
 ## Evaluation
 
 ### `eval` { #eval }
+<!-- index: 1+ | Evaluate expression in an environment -->
 
 **Syntax:** `(eval expr environment)`
 
@@ -254,6 +264,7 @@ kaappi> (eval '(string-append "hello" " " "world")
 ---
 
 ### `environment` { #environment }
+<!-- index: 0+ | Create environment from library imports -->
 
 **Syntax:** `(environment import-set ...)`
 
@@ -277,6 +288,7 @@ kaappi> (eval '(+ 1 2) (environment '(scheme base)))
 ---
 
 ### `interaction-environment` { #interaction-environment }
+<!-- index: 0 | REPL environment with all bindings -->
 
 **Syntax:** `(interaction-environment)`
 
@@ -301,6 +313,7 @@ kaappi> y
 ## Loading
 
 ### `load` { #load }
+<!-- index: 1 | Load and evaluate a Scheme source file -->
 
 **Syntax:** `(load filename)`
 
@@ -329,6 +342,7 @@ kaappi> (square 5)
 ## Parameters
 
 ### `make-parameter` { #make-parameter }
+<!-- index: 1+ | Create a parameter object (optional converter) -->
 
 **Syntax:** `(make-parameter init)` | `(make-parameter init converter)`
 

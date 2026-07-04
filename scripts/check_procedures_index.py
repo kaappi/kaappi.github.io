@@ -32,7 +32,12 @@ PROCEDURES_DIR = Path(__file__).resolve().parent.parent / "docs" / "procedures"
 # they're excluded from the source-link check below — the macro fails the build
 # if a heading is missing its metadata comment. As categories migrate to
 # generation, add them here.
-GENERATED_PAGES = {"numbers.md"}
+GENERATED_PAGES = {
+    "numbers.md", "pairs-and-lists.md", "strings.md", "characters.md",
+    "vectors.md", "bytevectors.md", "ports-and-io.md", "control-flow.md",
+    "type-checking.md", "system.md", "srfi-13.md", "srfi-133.md",
+    "threads.md", "hash-tables.md", "extensions.md", "other.md",
+}
 
 PROC_HEADING_RE = re.compile(r"^### `?(.+?)`? *\{ *#([A-Za-z0-9_-]+) *\}", re.MULTILINE)
 EXPLICIT_ANCHOR_RE = re.compile(r"\{ *#([A-Za-z0-9_-]+) *\}")

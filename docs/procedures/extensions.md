@@ -7,6 +7,7 @@ Kaappi-specific features not part of R7RS or standard SRFIs.
 ## FFI (Foreign Function Interface)
 
 ### `ffi-open` { #ffi-open }
+<!-- index: 1 | Open a shared library by path -->
 
 **Syntax:** `(ffi-open path)`
 
@@ -26,6 +27,7 @@ kaappi> lib
 ---
 
 ### `ffi-fn` { #ffi-fn }
+<!-- index: 4 | Bind a C function: `(ffi-fn lib "name" '(param-types) 'return-type)` -->
 
 **Syntax:** `(ffi-fn lib "c-name" '(param-types ...) 'return-type)`
 
@@ -54,6 +56,7 @@ kaappi> (c-pow 2.0 10.0)
 ---
 
 ### `ffi-close` { #ffi-close }
+<!-- index: 1 | Close a shared library handle -->
 
 **Syntax:** `(ffi-close lib)`
 
@@ -73,6 +76,7 @@ kaappi> (ffi-close lib)
 ## Green Threads (Fibers)
 
 ### `spawn` { #spawn }
+<!-- index: 1 | Create and start a fiber running a thunk -->
 
 **Syntax:** `(spawn thunk)`
 
@@ -99,6 +103,7 @@ kaappi> (fiber-join f2)
 ---
 
 ### `yield` { #yield }
+<!-- index: 0 | Yield to the fiber scheduler -->
 
 **Syntax:** `(yield)`
 
@@ -124,6 +129,7 @@ kaappi> 0 1 2 3 4
 ---
 
 ### `fiber?` { #fiber-pred }
+<!-- index: 1 | True if argument is a fiber -->
 
 **Syntax:** `(fiber? obj)`
 
@@ -143,6 +149,7 @@ kaappi> (fiber? 'not-a-fiber)
 ---
 
 ### `fiber-join` { #fiber-join }
+<!-- index: 1 | Wait for fiber completion, return its result -->
 
 **Syntax:** `(fiber-join fiber)`
 
@@ -171,6 +178,7 @@ kaappi> (fiber-join f2)
 ## Channels
 
 ### `make-channel` { #make-channel }
+<!-- index: 0 | Create a new channel -->
 
 **Syntax:** `(make-channel)`
 
@@ -191,6 +199,7 @@ kaappi> ch
 ---
 
 ### `channel-send` { #channel-send }
+<!-- index: 2 | Send a value on a channel -->
 
 **Syntax:** `(channel-send channel value)`
 
@@ -212,6 +221,7 @@ kaappi> (channel-receive ch)
 ---
 
 ### `channel-receive` { #channel-receive }
+<!-- index: 1 | Receive a value from a channel -->
 
 **Syntax:** `(channel-receive channel)`
 
@@ -237,6 +247,7 @@ kaappi> (channel-receive ch)
 ---
 
 ### `channel?` { #channel-pred }
+<!-- index: 1 | True if argument is a channel -->
 
 **Syntax:** `(channel? obj)`
 

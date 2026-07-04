@@ -9,6 +9,7 @@ and binary ports backed by files, strings, or bytevectors. Available from
 ## Port Operations
 
 ### `current-input-port` { #current-input-port }
+<!-- index: 0 | Current default input port (stdin) -->
 
 **Syntax:** `(current-input-port)`
 
@@ -29,6 +30,7 @@ kaappi> (input-port? (current-input-port))
 ---
 
 ### `current-output-port` { #current-output-port }
+<!-- index: 0 | Current default output port (stdout) -->
 
 **Syntax:** `(current-output-port)`
 
@@ -50,6 +52,7 @@ kaappi> (output-port? (current-output-port))
 ---
 
 ### `current-error-port` { #current-error-port }
+<!-- index: 0 | Current default error port (stderr) -->
 
 **Syntax:** `(current-error-port)`
 
@@ -69,6 +72,7 @@ kaappi> (output-port? (current-error-port))
 ---
 
 ### `port?` { #port-pred }
+<!-- index: 1 | True if argument is a port -->
 
 **Syntax:** `(port? obj)`
 
@@ -89,6 +93,7 @@ kaappi> (port? "not-a-port")
 ---
 
 ### `input-port?` { #input-port }
+<!-- index: 1 | True if port supports input -->
 
 **Syntax:** `(input-port? obj)`
 
@@ -108,6 +113,7 @@ kaappi> (input-port? (current-output-port))
 ---
 
 ### `output-port?` { #output-port }
+<!-- index: 1 | True if port supports output -->
 
 **Syntax:** `(output-port? obj)`
 
@@ -127,6 +133,7 @@ kaappi> (output-port? (current-input-port))
 ---
 
 ### `textual-port?` { #textual-port }
+<!-- index: 1 | True if port is textual -->
 
 **Syntax:** `(textual-port? obj)`
 
@@ -147,6 +154,7 @@ kaappi> (textual-port? (open-input-string "hello"))
 ---
 
 ### `binary-port?` { #binary-port }
+<!-- index: 1 | True if port is binary -->
 
 **Syntax:** `(binary-port? obj)`
 
@@ -166,6 +174,7 @@ kaappi> (binary-port? (open-binary-input-file "/dev/null"))
 ---
 
 ### `input-port-open?` { #input-port-open }
+<!-- index: 1 | True if input port is open -->
 
 **Syntax:** `(input-port-open? port)`
 
@@ -187,6 +196,7 @@ kaappi> (let ((p (open-input-string "hello")))
 ---
 
 ### `output-port-open?` { #output-port-open }
+<!-- index: 1 | True if output port is open -->
 
 **Syntax:** `(output-port-open? port)`
 
@@ -210,6 +220,7 @@ kaappi> (let ((p (open-output-string)))
 ## File I/O
 
 ### `open-input-file` { #open-input-file }
+<!-- index: 1 | Open file for textual input -->
 
 **Syntax:** `(open-input-file filename)`
 
@@ -232,6 +243,7 @@ kaappi> (let ((p (open-input-file "data.txt")))
 ---
 
 ### `open-output-file` { #open-output-file }
+<!-- index: 1 | Open file for textual output -->
 
 **Syntax:** `(open-output-file filename)`
 
@@ -252,6 +264,7 @@ kaappi> (let ((p (open-output-file "out.txt")))
 ---
 
 ### `open-binary-input-file` { #open-binary-input-file }
+<!-- index: 1 | Open file for binary input -->
 
 **Syntax:** `(open-binary-input-file filename)`
 
@@ -273,6 +286,7 @@ kaappi> (let ((p (open-binary-input-file "image.bin")))
 ---
 
 ### `open-binary-output-file` { #open-binary-output-file }
+<!-- index: 1 | Open file for binary output -->
 
 **Syntax:** `(open-binary-output-file filename)`
 
@@ -292,6 +306,7 @@ kaappi> (let ((p (open-binary-output-file "out.bin")))
 ---
 
 ### `close-port` { #close-port }
+<!-- index: 1 | Close a port -->
 
 **Syntax:** `(close-port port)`
 
@@ -313,6 +328,7 @@ kaappi> (let ((p (open-input-string "hello")))
 ---
 
 ### `close-input-port` { #close-input-port }
+<!-- index: 1 | Close an input port -->
 
 **Syntax:** `(close-input-port port)`
 
@@ -333,6 +349,7 @@ kaappi> (let ((p (open-input-string "hello")))
 ---
 
 ### `close-output-port` { #close-output-port }
+<!-- index: 1 | Close an output port -->
 
 **Syntax:** `(close-output-port port)`
 
@@ -356,6 +373,7 @@ kaappi> (let ((p (open-output-string)))
 ---
 
 ### `file-exists?` { #file-exists }
+<!-- index: 1 | True if file exists at path -->
 
 **Syntax:** `(file-exists? filename)`
 
@@ -375,6 +393,7 @@ kaappi> (file-exists? "/nonexistent")
 ---
 
 ### `delete-file` { #delete-file }
+<!-- index: 1 | Delete a file -->
 
 **Syntax:** `(delete-file filename)`
 
@@ -397,6 +416,7 @@ kaappi> (file-exists? "/tmp/test.txt")
 ---
 
 ### `call-with-input-file` { #call-with-input-file }
+<!-- index: 2 | Open file, call proc, close file -->
 
 **Syntax:** `(call-with-input-file filename proc)`
 
@@ -419,6 +439,7 @@ kaappi> (call-with-input-file "data.txt"
 ---
 
 ### `call-with-output-file` { #call-with-output-file }
+<!-- index: 2 | Open file, call proc, close file -->
 
 **Syntax:** `(call-with-output-file filename proc)`
 
@@ -439,6 +460,7 @@ kaappi> (call-with-output-file "out.txt"
 ---
 
 ### `call-with-port` { #call-with-port }
+<!-- index: 2 | Call proc with port, close port when done -->
 
 **Syntax:** `(call-with-port port proc)`
 
@@ -462,6 +484,7 @@ kaappi> (let ((p (open-input-string "test")))
 ---
 
 ### `with-input-from-file` { #with-input-from-file }
+<!-- index: 2 | Parameterize current-input-port for proc -->
 
 **Syntax:** `(with-input-from-file filename thunk)`
 
@@ -484,6 +507,7 @@ kaappi> (with-input-from-file "data.txt"
 ---
 
 ### `with-output-to-file` { #with-output-to-file }
+<!-- index: 2 | Parameterize current-output-port for proc -->
 
 **Syntax:** `(with-output-to-file filename thunk)`
 
@@ -507,6 +531,7 @@ kaappi> (with-output-to-file "out.txt"
 ## Textual Input
 
 ### `read` { #read }
+<!-- index: 0+ | Read a Scheme datum from port -->
 
 **Syntax:** `(read)` | `(read port)`
 
@@ -530,6 +555,7 @@ kaappi> (read (open-input-string ""))
 ---
 
 ### `read-char` { #read-char }
+<!-- index: 0+ | Read one character -->
 
 **Syntax:** `(read-char)` | `(read-char port)`
 
@@ -550,6 +576,7 @@ kaappi> (read-char (open-input-string ""))
 ---
 
 ### `peek-char` { #peek-char }
+<!-- index: 0+ | Peek at next character without consuming -->
 
 **Syntax:** `(peek-char)` | `(peek-char port)`
 
@@ -572,6 +599,7 @@ kaappi> (let ((p (open-input-string "abc")))
 ---
 
 ### `read-line` { #read-line }
+<!-- index: 0+ | Read a line as a string -->
 
 **Syntax:** `(read-line)` | `(read-line port)`
 
@@ -594,6 +622,7 @@ kaappi> (let ((p (open-input-string "line1\nline2\n")))
 ---
 
 ### `read-string` { #read-string }
+<!-- index: 1+ | Read k characters as a string -->
 
 **Syntax:** `(read-string k)` | `(read-string k port)`
 
@@ -617,6 +646,7 @@ kaappi> (read-string 3 (open-input-string ""))
 ---
 
 ### `char-ready?` { #char-ready }
+<!-- index: 0+ | True if a character is available to read -->
 
 **Syntax:** `(char-ready?)` | `(char-ready? port)`
 
@@ -639,6 +669,7 @@ kaappi> (char-ready? (open-input-string ""))
 ## Textual Output
 
 ### `display` { #display }
+<!-- index: 1+ | Write value in human-readable form -->
 
 **Syntax:** `(display obj)` | `(display obj port)`
 
@@ -671,6 +702,7 @@ a
 ---
 
 ### `write` { #write }
+<!-- index: 1+ | Write value in machine-readable form (with quotes) -->
 
 **Syntax:** `(write obj)` | `(write obj port)`
 
@@ -696,6 +728,7 @@ kaappi> (write 42)
 ---
 
 ### `write-shared` { #write-shared }
+<!-- index: 1+ | Write with datum labels for shared structure -->
 
 **Syntax:** `(write-shared obj)` | `(write-shared obj port)`
 
@@ -720,6 +753,7 @@ kaappi> (let ((x (list 1 2 3)))
 ---
 
 ### `write-simple` { #write-simple }
+<!-- index: 1+ | Write without datum labels -->
 
 **Syntax:** `(write-simple obj)` | `(write-simple obj port)`
 
@@ -740,6 +774,7 @@ kaappi> (write-simple "hello")
 ---
 
 ### `write-char` { #write-char }
+<!-- index: 1+ | Write a single character -->
 
 **Syntax:** `(write-char char)` | `(write-char char port)`
 
@@ -759,6 +794,7 @@ kaappi> (write-char #\newline)
 ---
 
 ### `write-string` { #write-string }
+<!-- index: 1+ | Write a string (or substring) -->
 
 **Syntax:** `(write-string string)` | `(write-string string port)` | `(write-string string port start)` | `(write-string string port start end)`
 
@@ -781,6 +817,7 @@ hello
 ---
 
 ### `newline` { #newline }
+<!-- index: 0+ | Write a newline character -->
 
 **Syntax:** `(newline)` | `(newline port)`
 
@@ -799,6 +836,7 @@ world
 ---
 
 ### `flush-output-port` { #flush-output-port }
+<!-- index: 0+ | Flush output port buffer -->
 
 **Syntax:** `(flush-output-port)` | `(flush-output-port port)`
 
@@ -820,6 +858,7 @@ kaappi> (flush-output-port)
 ## String Ports
 
 ### `open-input-string` { #open-input-string }
+<!-- index: 1 | Open string as input port -->
 
 **Syntax:** `(open-input-string string)`
 
@@ -843,6 +882,7 @@ kaappi> (let ((p (open-input-string "abc")))
 ---
 
 ### `open-output-string` { #open-output-string }
+<!-- index: 0 | Create output port backed by string -->
 
 **Syntax:** `(open-output-string)`
 
@@ -867,6 +907,7 @@ kaappi> (let ((p (open-output-string)))
 ---
 
 ### `get-output-string` { #get-output-string }
+<!-- index: 1 | Get accumulated string from output port -->
 
 **Syntax:** `(get-output-string port)`
 
@@ -890,6 +931,7 @@ kaappi> (let ((p (open-output-string)))
 ---
 
 ### `eof-object?` { #eof-object-pred }
+<!-- index: 1 | True if argument is the EOF object -->
 
 **Syntax:** `(eof-object? obj)`
 
@@ -914,6 +956,7 @@ kaappi> (eof-object? #f)
 ---
 
 ### `eof-object` { #eof-object }
+<!-- index: 0 | Return the EOF object -->
 
 **Syntax:** `(eof-object)`
 

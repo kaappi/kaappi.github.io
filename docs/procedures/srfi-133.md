@@ -9,6 +9,7 @@ Extended vector operations beyond R7RS base. Import with
 ## Constructors
 
 ### `vector-unfold` { #vector-unfold }
+<!-- index: 2+ | Build vector from seed function -->
 
 **Syntax:** `(vector-unfold f length)` | `(vector-unfold f length seed ...)`
 
@@ -30,6 +31,7 @@ kaappi> (vector-unfold (lambda (i x) (values x (* x 2))) 5 1)
 ---
 
 ### `vector-unfold-right` { #vector-unfold-right }
+<!-- index: 2+ | Build vector in reverse from seed function -->
 
 **Syntax:** `(vector-unfold-right f length)` | `(vector-unfold-right f length seed ...)`
 
@@ -48,6 +50,7 @@ kaappi> (vector-unfold-right (lambda (i x) (values x (* x 2))) 5 1)
 ---
 
 ### `vector-concatenate` { #vector-concatenate }
+<!-- index: 1 | Concatenate a list of vectors -->
 
 **Syntax:** `(vector-concatenate list-of-vectors)`
 
@@ -69,6 +72,7 @@ kaappi> (vector-concatenate '())
 ## Predicates
 
 ### `vector-any` { #vector-any }
+<!-- index: 2+ | True if predicate holds for any element -->
 
 **Syntax:** `(vector-any pred vector1 vector2 ...)`
 
@@ -91,6 +95,7 @@ kaappi> (vector-any < #(1 2 3) #(0 3 2))
 ---
 
 ### `vector-every` { #vector-every }
+<!-- index: 2+ | True if predicate holds for every element -->
 
 **Syntax:** `(vector-every pred vector1 vector2 ...)`
 
@@ -114,6 +119,7 @@ kaappi> (vector-every < #(1 2 3) #(4 5 6))
 ---
 
 ### `vector-empty?` { #vector-empty }
+<!-- index: 1 | True if vector has zero length -->
 
 **Syntax:** `(vector-empty? vector)`
 
@@ -131,6 +137,7 @@ kaappi> (vector-empty? #(1))
 ---
 
 ### `vector=` { #vector-equal }
+<!-- index: 3 | Element-wise equality with comparator -->
 
 **Syntax:** `(vector= elt=? vector1 vector2 ...)`
 
@@ -156,6 +163,7 @@ kaappi> (vector= eq? #(a b) #(a b c))
 ## Searching
 
 ### `vector-index` { #vector-index }
+<!-- index: 2+ | Index of first element satisfying predicate -->
 
 **Syntax:** `(vector-index pred vector1 vector2 ...)`
 
@@ -178,6 +186,7 @@ kaappi> (vector-index < #(1 5 3) #(2 3 4))
 ---
 
 ### `vector-index-right` { #vector-index-right }
+<!-- index: 2+ | Index of last element satisfying predicate -->
 
 **Syntax:** `(vector-index-right pred vector1 vector2 ...)`
 
@@ -198,6 +207,7 @@ kaappi> (vector-index-right even? #(1 3 5 7))
 ---
 
 ### `vector-skip` { #vector-skip }
+<!-- index: 2+ | Index of first element NOT satisfying predicate -->
 
 **Syntax:** `(vector-skip pred vector1 vector2 ...)`
 
@@ -218,6 +228,7 @@ kaappi> (vector-skip even? #(2 4 6 8))
 ---
 
 ### `vector-skip-right` { #vector-skip-right }
+<!-- index: 2+ | Index of last element NOT satisfying predicate -->
 
 **Syntax:** `(vector-skip-right pred vector1 vector2 ...)`
 
@@ -237,6 +248,7 @@ kaappi> (vector-skip-right odd? #(1 3 5 7))
 ---
 
 ### `vector-binary-search` { #vector-binary-search }
+<!-- index: 3 | Binary search with comparator -->
 
 **Syntax:** `(vector-binary-search vector value cmp)`
 
@@ -262,6 +274,7 @@ kaappi> (vector-binary-search #(1 3 5 7 9) 4
 ## Mutation
 
 ### `vector-swap!` { #vector-swap }
+<!-- index: 3 | Swap two elements by index -->
 
 **Syntax:** `(vector-swap! vector i j)`
 
@@ -285,6 +298,7 @@ kaappi> (let ((v (vector 1 2 3)))
 ---
 
 ### `vector-reverse!` { #vector-reverse-mut }
+<!-- index: 1+ | Reverse vector in place (optional start/end) -->
 
 **Syntax:** `(vector-reverse! vector)` | `(vector-reverse! vector start)` | `(vector-reverse! vector start end)`
 
@@ -310,6 +324,7 @@ kaappi> (let ((v (vector 1 2 3 4 5)))
 ## Copying
 
 ### `vector-reverse-copy` { #vector-reverse-copy }
+<!-- index: 1+ | Reversed copy (optional start/end) -->
 
 **Syntax:** `(vector-reverse-copy vector)` | `(vector-reverse-copy vector start)` | `(vector-reverse-copy vector start end)`
 
@@ -333,6 +348,7 @@ kaappi> (vector-reverse-copy #(1 2 3 4 5) 1 4)
 ## Folding
 
 ### `vector-fold` { #vector-fold }
+<!-- index: 3+ | Left fold over vector -->
 
 **Syntax:** `(vector-fold f seed vector1 vector2 ...)`
 
@@ -353,6 +369,7 @@ kaappi> (vector-fold (lambda (i acc x) (cons x acc)) '() #(a b c))
 ---
 
 ### `vector-fold-right` { #vector-fold-right }
+<!-- index: 3+ | Right fold over vector -->
 
 **Syntax:** `(vector-fold-right f seed vector1 vector2 ...)`
 
@@ -373,6 +390,7 @@ kaappi> (vector-fold-right (lambda (i s x) (+ s x)) 0 #(1 2 3))
 ---
 
 ### `vector-cumulate` { #vector-cumulate }
+<!-- index: 3 | Cumulative fold into new vector -->
 
 **Syntax:** `(vector-cumulate f seed vector)`
 
@@ -393,6 +411,7 @@ kaappi> (vector-cumulate * 1 #(1 2 3 4))
 ---
 
 ### `vector-count` { #vector-count }
+<!-- index: 2+ | Count elements satisfying predicate -->
 
 **Syntax:** `(vector-count pred vector1 vector2 ...)`
 
@@ -412,6 +431,7 @@ kaappi> (vector-count < #(1 5 3) #(2 3 4))
 ---
 
 ### `vector-partition` { #vector-partition }
+<!-- index: 2 | Partition by predicate into two vectors -->
 
 **Syntax:** `(vector-partition pred vector)`
 
@@ -436,6 +456,7 @@ kaappi> (let-values (((yes no) (vector-partition positive? #(-1 2 -3 4))))
 ## Transformation
 
 ### `vector-map!` { #vector-map-mut }
+<!-- index: 2+ | In-place map -->
 
 **Syntax:** `(vector-map! f vector1 vector2 ...)`
 

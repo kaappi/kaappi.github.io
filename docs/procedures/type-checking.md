@@ -8,6 +8,7 @@ Available from `(scheme base)`.
 ## Equivalence Predicates
 
 ### `eq?` { #eq }
+<!-- index: 2 | Pointer identity -->
 
 **Syntax:** `(eq? obj1 obj2)`
 
@@ -36,6 +37,7 @@ kaappi> (eq? (list 1 2) (list 1 2))
 ---
 
 ### `eqv?` { #eqv }
+<!-- index: 2 | Value equivalence (numbers, chars, booleans) -->
 
 **Syntax:** `(eqv? obj1 obj2)`
 
@@ -63,6 +65,7 @@ kaappi> (eqv? '() '())
 ---
 
 ### `equal?` { #equal }
+<!-- index: 2 | Deep structural equality -->
 
 **Syntax:** `(equal? obj1 obj2)`
 
@@ -93,6 +96,7 @@ kaappi> (equal? '(1 (2 3)) '(1 (2 3)))
 ## Boolean Operations
 
 ### `not` { #not }
+<!-- index: 1 | Boolean negation -->
 
 **Syntax:** `(not obj)`
 
@@ -118,6 +122,7 @@ kaappi> (not "")
 ---
 
 ### `boolean=?` { #boolean-equal }
+<!-- index: 2+ | True if all arguments are the same boolean -->
 
 **Syntax:** `(boolean=? b1 b2 b3 ...)`
 
@@ -142,6 +147,7 @@ kaappi> (boolean=? #t #t #t)
 ---
 
 ### `symbol=?` { #symbol-equal }
+<!-- index: 2+ | True if all arguments are the same symbol -->
 
 **Syntax:** `(symbol=? s1 s2 s3 ...)`
 
@@ -165,6 +171,7 @@ kaappi> (symbol=? 'a 'a 'a)
 ## Type Predicates
 
 ### `pair?` { #pair }
+<!-- index: 1 | True if argument is a pair -->
 
 **Syntax:** `(pair? obj)`
 
@@ -188,6 +195,7 @@ kaappi> (pair? 42)
 ---
 
 ### `null?` { #null }
+<!-- index: 1 | True if argument is the empty list -->
 
 **Syntax:** `(null? obj)`
 
@@ -212,6 +220,7 @@ kaappi> (null? 0)
 ---
 
 ### `list?` { #list }
+<!-- index: 1 | True if argument is a proper list -->
 
 **Syntax:** `(list? obj)`
 
@@ -237,6 +246,7 @@ kaappi> (list? 42)
 ---
 
 ### `number?` { #number }
+<!-- index: 1 | True if argument is a number -->
 
 **Syntax:** `(number? obj)`
 
@@ -263,6 +273,7 @@ kaappi> (number? "42")
 ---
 
 ### `integer?` { #integer }
+<!-- index: 1 | True if argument is an integer -->
 
 **Syntax:** `(integer? obj)`
 
@@ -289,6 +300,7 @@ kaappi> (integer? "42")
 ---
 
 ### `real?` { #real }
+<!-- index: 1 | True if argument is a real number -->
 
 **Syntax:** `(real? obj)`
 
@@ -315,6 +327,7 @@ kaappi> (real? +inf.0)
 ---
 
 ### `complex?` { #complex }
+<!-- index: 1 | True if argument is a complex number -->
 
 **Syntax:** `(complex? obj)`
 
@@ -340,6 +353,7 @@ kaappi> (complex? "hello")
 ---
 
 ### `rational?` { #rational }
+<!-- index: 1 | True if argument is rational -->
 
 **Syntax:** `(rational? obj)`
 
@@ -367,6 +381,7 @@ kaappi> (rational? +nan.0)
 ---
 
 ### `symbol?` { #symbol }
+<!-- index: 1 | True if argument is a symbol -->
 
 **Syntax:** `(symbol? obj)`
 
@@ -389,6 +404,7 @@ kaappi> (symbol? 42)
 ---
 
 ### `string?` { #string }
+<!-- index: 1 | True if argument is a string -->
 
 **Syntax:** `(string? obj)`
 
@@ -411,6 +427,7 @@ kaappi> (string? #\a)
 ---
 
 ### `boolean?` { #boolean }
+<!-- index: 1 | True if argument is a boolean -->
 
 **Syntax:** `(boolean? obj)`
 
@@ -432,6 +449,7 @@ kaappi> (boolean? '())
 ---
 
 ### `char?` { #char }
+<!-- index: 1 | True if argument is a character -->
 
 **Syntax:** `(char? obj)`
 
@@ -454,6 +472,7 @@ kaappi> (char? 65)
 ---
 
 ### `procedure?` { #procedure }
+<!-- index: 1 | True if argument is a procedure -->
 
 **Syntax:** `(procedure? obj)`
 
@@ -478,6 +497,7 @@ kaappi> (procedure? '(1 2))
 ---
 
 ### `vector?` { #vector }
+<!-- index: 1 | True if argument is a vector -->
 
 **Syntax:** `(vector? obj)`
 
@@ -500,6 +520,7 @@ kaappi> (vector? "abc")
 ---
 
 ### `bytevector?` { #bytevector }
+<!-- index: 1 | True if argument is a bytevector -->
 
 **Syntax:** `(bytevector? obj)`
 
@@ -522,6 +543,7 @@ kaappi> (bytevector? "abc")
 ---
 
 ### `port?` { #port }
+<!-- index: 1 | True if argument is a port -->
 
 **Syntax:** `(port? obj)`
 
@@ -543,6 +565,7 @@ kaappi> (port? "not-a-port")
 ---
 
 ### `hash-table?` { #hash-table }
+<!-- index: 1 | True if argument is a hash table -->
 
 **Syntax:** `(hash-table? obj)`
 
@@ -561,6 +584,7 @@ kaappi> (hash-table? '#(1 2))
 ---
 
 ### `promise?` { #promise }
+<!-- index: 1 | True if argument is a promise -->
 
 **Syntax:** `(promise? obj)`
 
@@ -583,6 +607,7 @@ kaappi> (promise? 42)
 ---
 
 ### `error-object?` { #error-object }
+<!-- index: 1 | True if argument is an error object -->
 
 **Syntax:** `(error-object? obj)`
 

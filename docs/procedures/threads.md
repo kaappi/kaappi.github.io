@@ -16,6 +16,7 @@ lightweight green threads (fibers).
 ## Thread Operations
 
 ### `current-thread` { #current-thread }
+<!-- index: 0 | Current thread object -->
 
 **Syntax:** `(current-thread)`
 
@@ -33,6 +34,7 @@ kaappi> (thread-name (current-thread))
 ---
 
 ### `thread?` { #thread-pred }
+<!-- index: 1 | True if argument is a thread -->
 
 **Syntax:** `(thread? obj)`
 
@@ -52,6 +54,7 @@ kaappi> (thread? 'not-a-thread)
 ---
 
 ### `make-thread` { #make-thread }
+<!-- index: 1+ | Create a new thread (thunk, optional name) -->
 
 **Syntax:** `(make-thread thunk)` | `(make-thread thunk name)`
 
@@ -74,6 +77,7 @@ kaappi> (thread-name t2)
 ---
 
 ### `thread-name` { #thread-name }
+<!-- index: 1 | Thread's name -->
 
 **Syntax:** `(thread-name thread)`
 
@@ -92,6 +96,7 @@ kaappi> (thread-name (make-thread (lambda () #f)))
 ---
 
 ### `thread-specific` { #thread-specific }
+<!-- index: 1 | Thread's specific value -->
 
 **Syntax:** `(thread-specific thread)`
 
@@ -111,6 +116,7 @@ kaappi> (thread-specific (current-thread))
 ---
 
 ### `thread-specific-set!` { #thread-specific-set }
+<!-- index: 2 | Set thread's specific value -->
 
 **Syntax:** `(thread-specific-set! thread obj)`
 
@@ -128,6 +134,7 @@ kaappi> (thread-specific (current-thread))
 ---
 
 ### `thread-start!` { #thread-start }
+<!-- index: 1 | Start a thread -->
 
 **Syntax:** `(thread-start! thread)`
 
@@ -156,6 +163,7 @@ kaappi program.scm
 ---
 
 ### `thread-yield!` { #thread-yield }
+<!-- index: 0 | Yield to the scheduler -->
 
 **Syntax:** `(thread-yield!)`
 
@@ -173,6 +181,7 @@ kaappi> (thread-yield!)
 ---
 
 ### `thread-sleep!` { #thread-sleep }
+<!-- index: 1 | Sleep for a duration -->
 
 **Syntax:** `(thread-sleep! timeout)`
 
@@ -191,6 +200,7 @@ kaappi> (thread-sleep! (seconds->time (+ (time->seconds (current-time)) 1)))
 ---
 
 ### `thread-terminate!` { #thread-terminate }
+<!-- index: 1 | Terminate a thread -->
 
 **Syntax:** `(thread-terminate! thread)`
 
@@ -217,6 +227,7 @@ kaappi> (thread-terminate! t)
 ---
 
 ### `thread-join!` { #thread-join }
+<!-- index: 1+ | Wait for thread completion (optional timeout) -->
 
 **Syntax:** `(thread-join! thread)` | `(thread-join! thread timeout)` | `(thread-join! thread timeout timeout-val)`
 
@@ -251,6 +262,7 @@ kaappi> (thread-join! t2 0.1 'timed-out)
 ## Mutexes
 
 ### `mutex?` { #mutex-pred }
+<!-- index: 1 | True if argument is a mutex -->
 
 **Syntax:** `(mutex? obj)`
 
@@ -268,6 +280,7 @@ kaappi> (mutex? 'not-a-mutex)
 ---
 
 ### `make-mutex` { #make-mutex }
+<!-- index: 0+ | Create a mutex (optional name) -->
 
 **Syntax:** `(make-mutex)` | `(make-mutex name)`
 
@@ -287,6 +300,7 @@ kaappi> (mutex-state m)
 ---
 
 ### `mutex-name` { #mutex-name }
+<!-- index: 1 | Mutex name -->
 
 **Syntax:** `(mutex-name mutex)`
 
@@ -304,6 +318,7 @@ kaappi> (mutex-name (make-mutex))
 ---
 
 ### `mutex-specific` { #mutex-specific }
+<!-- index: 1 | Mutex specific value -->
 
 **Syntax:** `(mutex-specific mutex)`
 
@@ -323,6 +338,7 @@ kaappi> (mutex-specific m)
 ---
 
 ### `mutex-specific-set!` { #mutex-specific-set }
+<!-- index: 2 | Set mutex specific value -->
 
 **Syntax:** `(mutex-specific-set! mutex obj)`
 
@@ -340,6 +356,7 @@ kaappi> (mutex-specific m)
 ---
 
 ### `mutex-state` { #mutex-state }
+<!-- index: 1 | Mutex state (locked/unlocked/owner) -->
 
 **Syntax:** `(mutex-state mutex)`
 
@@ -365,6 +382,7 @@ kaappi> (mutex-state m)
 ---
 
 ### `mutex-lock!` { #mutex-lock }
+<!-- index: 1+ | Lock a mutex (optional timeout/thread) -->
 
 **Syntax:** `(mutex-lock! mutex)` | `(mutex-lock! mutex timeout)` | `(mutex-lock! mutex timeout thread)`
 
@@ -391,6 +409,7 @@ kaappi> (mutex-unlock! m)
 ---
 
 ### `mutex-unlock!` { #mutex-unlock }
+<!-- index: 1+ | Unlock a mutex (optional condition variable/timeout) -->
 
 **Syntax:** `(mutex-unlock! mutex)` | `(mutex-unlock! mutex condition-variable)` | `(mutex-unlock! mutex condition-variable timeout)`
 
@@ -419,6 +438,7 @@ kaappi> (mutex-state m)
 ## Condition Variables
 
 ### `condition-variable?` { #condition-variable-pred }
+<!-- index: 1 | True if argument is a condition variable -->
 
 **Syntax:** `(condition-variable? obj)`
 
@@ -436,6 +456,7 @@ kaappi> (condition-variable? (make-mutex))
 ---
 
 ### `make-condition-variable` { #make-condition-variable }
+<!-- index: 0+ | Create a condition variable (optional name) -->
 
 **Syntax:** `(make-condition-variable)` | `(make-condition-variable name)`
 
@@ -454,6 +475,7 @@ kaappi> cv
 ---
 
 ### `condition-variable-name` { #condition-variable-name }
+<!-- index: 1 | Condition variable name -->
 
 **Syntax:** `(condition-variable-name condition-variable)`
 
@@ -472,6 +494,7 @@ kaappi> (condition-variable-name (make-condition-variable))
 ---
 
 ### `condition-variable-specific` { #condition-variable-specific }
+<!-- index: 1 | Condition variable specific value -->
 
 **Syntax:** `(condition-variable-specific condition-variable)`
 
@@ -488,6 +511,7 @@ kaappi> (condition-variable-specific cv)
 ---
 
 ### `condition-variable-specific-set!` { #condition-variable-specific-set }
+<!-- index: 2 | Set condition variable specific value -->
 
 **Syntax:** `(condition-variable-specific-set! condition-variable obj)`
 
@@ -505,6 +529,7 @@ kaappi> (condition-variable-specific cv)
 ---
 
 ### `condition-variable-signal!` { #condition-variable-signal }
+<!-- index: 1 | Wake one waiting thread -->
 
 **Syntax:** `(condition-variable-signal! condition-variable)`
 
@@ -526,6 +551,7 @@ kaappi> (condition-variable-signal! cv)
 ---
 
 ### `condition-variable-broadcast!` { #condition-variable-broadcast }
+<!-- index: 1 | Wake all waiting threads -->
 
 **Syntax:** `(condition-variable-broadcast! condition-variable)`
 
@@ -545,6 +571,7 @@ kaappi> (condition-variable-broadcast! cv)
 ## Time
 
 ### `current-time` { #current-time }
+<!-- index: 0 | Current time as time object -->
 
 **Syntax:** `(current-time)`
 
@@ -565,6 +592,7 @@ kaappi> (time->seconds (current-time))
 ---
 
 ### `time?` { #time-pred }
+<!-- index: 1 | True if argument is a time object -->
 
 **Syntax:** `(time? obj)`
 
@@ -582,6 +610,7 @@ kaappi> (time? 42)
 ---
 
 ### `time->seconds` { #time-to-seconds }
+<!-- index: 1 | Convert time to seconds -->
 
 **Syntax:** `(time->seconds time)`
 
@@ -599,6 +628,7 @@ kaappi> (time->seconds (current-time))
 ---
 
 ### `seconds->time` { #seconds-to-time }
+<!-- index: 1 | Convert seconds to time -->
 
 **Syntax:** `(seconds->time seconds)`
 
@@ -620,6 +650,7 @@ kaappi> (time? later)
 ## Exception Predicates
 
 ### `join-timeout-exception?` { #join-timeout-exception }
+<!-- index: 1 | True if exception is a join timeout -->
 
 **Syntax:** `(join-timeout-exception? obj)`
 
@@ -640,6 +671,7 @@ kaappi> (guard (e ((join-timeout-exception? e) 'timed-out))
 ---
 
 ### `abandoned-mutex-exception?` { #abandoned-mutex-exception }
+<!-- index: 1 | True if exception is an abandoned mutex -->
 
 **Syntax:** `(abandoned-mutex-exception? obj)`
 
@@ -658,6 +690,7 @@ kaappi> (abandoned-mutex-exception? 'foo)
 ---
 
 ### `terminated-thread-exception?` { #terminated-thread-exception }
+<!-- index: 1 | True if exception is a terminated thread -->
 
 **Syntax:** `(terminated-thread-exception? obj)`
 
@@ -676,6 +709,7 @@ kaappi> (terminated-thread-exception? 'foo)
 ---
 
 ### `uncaught-exception?` { #uncaught-exception }
+<!-- index: 1 | True if exception is an uncaught exception -->
 
 **Syntax:** `(uncaught-exception? obj)`
 
@@ -699,6 +733,7 @@ kaappi> (guard (e ((uncaught-exception? e)
 ---
 
 ### `uncaught-exception-reason` { #uncaught-exception-reason }
+<!-- index: 1 | Get the reason from an uncaught exception -->
 
 **Syntax:** `(uncaught-exception-reason exception)`
 

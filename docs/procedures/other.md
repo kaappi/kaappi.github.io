@@ -7,6 +7,7 @@ Miscellaneous procedures that do not fit into the main categories.
 ## Lazy Evaluation
 
 ### `promise?` { #promise-pred }
+<!-- index: 1 | True if argument is a promise -->
 
 **Syntax:** `(promise? obj)`
 
@@ -30,6 +31,7 @@ kaappi> (promise? (lambda () 42))
 ---
 
 ### `make-promise` { #make-promise }
+<!-- index: 1 | Wrap a value as an already-forced promise -->
 
 **Syntax:** `(make-promise value)`
 
@@ -58,6 +60,7 @@ kaappi> (force (make-promise '(a b c)))
 ---
 
 ### `force` { #force }
+<!-- index: 1 | Force a promise, memoizing the result -->
 
 **Syntax:** `(force promise)`
 
@@ -91,6 +94,7 @@ kaappi> (force lazy-count)
 ## Records (Internal Primitives)
 
 ### `%make-record-type` { #make-record-type }
+<!-- index: 2 | Create a record type descriptor -->
 
 **Syntax:** `(%make-record-type name field-count)`
 
@@ -115,6 +119,7 @@ kaappi> point-type
 ---
 
 ### `%make-record` { #make-record }
+<!-- index: 1+ | Construct a record instance -->
 
 **Syntax:** `(%make-record type field-value ...)`
 
@@ -139,6 +144,7 @@ kaappi> (%record-ref p 1)
 ---
 
 ### `%record?` { #record-pred }
+<!-- index: 2 | Check if value is instance of record type -->
 
 **Syntax:** `(%record? obj type)`
 
@@ -163,6 +169,7 @@ kaappi> (%record? p vec-type)
 ---
 
 ### `%record-ref` { #record-ref }
+<!-- index: 2 | Access field by index -->
 
 **Syntax:** `(%record-ref record index)`
 
@@ -183,6 +190,7 @@ kaappi> (%record-ref p 1)
 ---
 
 ### `%record-set!` { #record-set }
+<!-- index: 3 | Mutate field by index -->
 
 **Syntax:** `(%record-set! record index value)`
 
@@ -207,6 +215,7 @@ kaappi> (%record-ref p 1)
 ## Random Numbers (SRFI-27)
 
 ### `random-integer` { #random-integer }
+<!-- index: 1 | Random integer in [0, n) -->
 
 **Syntax:** `(random-integer n)`
 
@@ -228,6 +237,7 @@ kaappi> (map (lambda (_) (random-integer 2)) '(1 2 3 4 5))
 ---
 
 ### `random-real` { #random-real }
+<!-- index: 0 | Random real in [0, 1) -->
 
 **Syntax:** `(random-real)`
 

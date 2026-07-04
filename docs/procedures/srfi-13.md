@@ -9,6 +9,7 @@ Extended string operations beyond R7RS base. Import with
 ## Searching
 
 ### `string-contains` { #string-contains }
+<!-- index: 2+ | Index of substring in string, or `#f` (optional start/end) -->
 
 **Syntax:** `(string-contains string pattern)` | `(string-contains string pattern start)` | `(string-contains string pattern start end)`
 
@@ -32,6 +33,7 @@ kaappi> (string-contains "abcabc" "bc" 3)
 ---
 
 ### `string-index` { #string-index }
+<!-- index: 2+ | Index of first char satisfying predicate/char-set (optional start/end) -->
 
 **Syntax:** `(string-index string pred/char/char-set)` | `(string-index string pred/char/char-set start)` | `(string-index string pred/char/char-set start end)`
 
@@ -55,6 +57,7 @@ kaappi> (string-index "abcde" char-numeric?)
 ---
 
 ### `string-index-right` { #string-index-right }
+<!-- index: 2+ | Index of last char satisfying predicate/char-set (optional start/end) -->
 
 **Syntax:** `(string-index-right string pred/char/char-set)` | `(string-index-right string pred/char/char-set start)` | `(string-index-right string pred/char/char-set start end)`
 
@@ -75,6 +78,7 @@ kaappi> (string-index-right "hello" char-upper-case?)
 ---
 
 ### `string-skip` { #string-skip }
+<!-- index: 2+ | Index of first char NOT satisfying predicate/char-set (optional start/end) -->
 
 **Syntax:** `(string-skip string pred/char/char-set)` | `(string-skip string pred/char/char-set start)` | `(string-skip string pred/char/char-set start end)`
 
@@ -95,6 +99,7 @@ kaappi> (string-skip "aaabcd" #\a)
 ---
 
 ### `string-skip-right` { #string-skip-right }
+<!-- index: 2+ | Index of last char NOT satisfying predicate/char-set (optional start/end) -->
 
 **Syntax:** `(string-skip-right string pred/char/char-set)` | `(string-skip-right string pred/char/char-set start)` | `(string-skip-right string pred/char/char-set start end)`
 
@@ -114,6 +119,7 @@ kaappi> (string-skip-right "aaa" #\a)
 ---
 
 ### `string-count` { #string-count }
+<!-- index: 2+ | Count chars satisfying predicate/char-set (optional start/end) -->
 
 **Syntax:** `(string-count string pred/char/char-set)` | `(string-count string pred/char/char-set start)` | `(string-count string pred/char/char-set start end)`
 
@@ -135,6 +141,7 @@ kaappi> (string-count "12345" char-numeric?)
 ---
 
 ### `string-prefix?` { #string-prefix }
+<!-- index: 2+ | True if first string is a prefix of second (optional start/end) -->
 
 **Syntax:** `(string-prefix? prefix string)` | `(string-prefix? prefix string start)` | `(string-prefix? prefix string start end)`
 
@@ -156,6 +163,7 @@ kaappi> (string-prefix? "" "anything")
 ---
 
 ### `string-suffix?` { #string-suffix }
+<!-- index: 2+ | True if first string is a suffix of second (optional start/end) -->
 
 **Syntax:** `(string-suffix? suffix string)` | `(string-suffix? suffix string start)` | `(string-suffix? suffix string start end)`
 
@@ -179,6 +187,7 @@ kaappi> (string-suffix? "" "anything")
 ## Trimming
 
 ### `string-trim` { #string-trim }
+<!-- index: 1+ | Remove leading chars matching predicate/char-set (optional start/end) -->
 
 **Syntax:** `(string-trim string)` | `(string-trim string pred/char/char-set)` | `(string-trim string pred/char/char-set start)` | `(string-trim string pred/char/char-set start end)`
 
@@ -199,6 +208,7 @@ kaappi> (string-trim "xxhello" #\x)
 ---
 
 ### `string-trim-right` { #string-trim-right }
+<!-- index: 1+ | Remove trailing chars matching predicate/char-set (optional start/end) -->
 
 **Syntax:** `(string-trim-right string)` | `(string-trim-right string pred/char/char-set)` | `(string-trim-right string pred/char/char-set start)` | `(string-trim-right string pred/char/char-set start end)`
 
@@ -218,6 +228,7 @@ kaappi> (string-trim-right "helloxx" #\x)
 ---
 
 ### `string-trim-both` { #string-trim-both }
+<!-- index: 1+ | Remove leading and trailing chars (optional start/end) -->
 
 **Syntax:** `(string-trim-both string)` | `(string-trim-both string pred/char/char-set)` | `(string-trim-both string pred/char/char-set start)` | `(string-trim-both string pred/char/char-set start end)`
 
@@ -240,6 +251,7 @@ kaappi> (string-trim-both "xxhelloxx" #\x)
 ## Splitting and Joining
 
 ### `string-split` { #string-split }
+<!-- index: 2 | Split string by delimiter into list of strings -->
 
 **Syntax:** `(string-split string delimiter)`
 
@@ -262,6 +274,7 @@ kaappi> (string-split "a::b::c" "::")
 ---
 
 ### `string-join` { #string-join }
+<!-- index: 1+ | Join list of strings with delimiter -->
 
 **Syntax:** `(string-join list)` | `(string-join list delimiter)` | `(string-join list delimiter grammar)`
 
@@ -290,6 +303,7 @@ kaappi> (string-join '("a" "b" "c") ";" 'suffix)
 ---
 
 ### `string-concatenate` { #string-concatenate }
+<!-- index: 1 | Concatenate a list of strings -->
 
 **Syntax:** `(string-concatenate list)`
 
@@ -311,6 +325,7 @@ kaappi> (string-concatenate '())
 ## Selection
 
 ### `string-take` { #string-take }
+<!-- index: 2 | First k characters -->
 
 **Syntax:** `(string-take string nchars)`
 
@@ -331,6 +346,7 @@ kaappi> (string-take "hello" 0)
 ---
 
 ### `string-drop` { #string-drop }
+<!-- index: 2 | All but first k characters -->
 
 **Syntax:** `(string-drop string nchars)`
 
@@ -350,6 +366,7 @@ kaappi> (string-drop "hello" 0)
 ---
 
 ### `string-take-right` { #string-take-right }
+<!-- index: 2 | Last k characters -->
 
 **Syntax:** `(string-take-right string nchars)`
 
@@ -368,6 +385,7 @@ kaappi> (string-take-right "hello" 0)
 ---
 
 ### `string-drop-right` { #string-drop-right }
+<!-- index: 2 | All but last k characters -->
 
 **Syntax:** `(string-drop-right string nchars)`
 
@@ -388,6 +406,7 @@ kaappi> (string-drop-right "hello" 0)
 ## Padding
 
 ### `string-pad` { #string-pad }
+<!-- index: 2+ | Pad string on the left to given length -->
 
 **Syntax:** `(string-pad string len)` | `(string-pad string len char)` | `(string-pad string len char start)` | `(string-pad string len char start end)`
 
@@ -410,6 +429,7 @@ kaappi> (string-pad "hello" 3)
 ---
 
 ### `string-pad-right` { #string-pad-right }
+<!-- index: 2+ | Pad string on the right to given length -->
 
 **Syntax:** `(string-pad-right string len)` | `(string-pad-right string len char)` | `(string-pad-right string len char start)` | `(string-pad-right string len char start end)`
 
@@ -433,6 +453,7 @@ kaappi> (string-pad-right "hello" 3)
 ## Transformation
 
 ### `string-reverse` { #string-reverse }
+<!-- index: 1+ | Reverse a string (optional start/end) -->
 
 **Syntax:** `(string-reverse string)` | `(string-reverse string start)` | `(string-reverse string start end)`
 
@@ -451,6 +472,7 @@ kaappi> (string-reverse "abcde" 1 4)
 ---
 
 ### `string-filter` { #string-filter }
+<!-- index: 2+ | Keep chars satisfying predicate/char-set (optional start/end) -->
 
 **Syntax:** `(string-filter pred/char/char-set string)` | `(string-filter pred/char/char-set string start)` | `(string-filter pred/char/char-set string start end)`
 
@@ -471,6 +493,7 @@ kaappi> (string-filter #\a "abracadabra")
 ---
 
 ### `string-delete` { #string-delete }
+<!-- index: 2+ | Remove chars satisfying predicate/char-set (optional start/end) -->
 
 **Syntax:** `(string-delete pred/char/char-set string)` | `(string-delete pred/char/char-set string start)` | `(string-delete pred/char/char-set string start end)`
 
@@ -489,6 +512,7 @@ kaappi> (string-delete #\l "hello")
 ---
 
 ### `string-replace` { #string-replace }
+<!-- index: 4 | Replace substring by codepoint indices -->
 
 **Syntax:** `(string-replace string1 string2 start end)`
 
@@ -511,6 +535,7 @@ kaappi> (string-replace "abc" "123" 1 1)
 ---
 
 ### `string-titlecase` { #string-titlecase }
+<!-- index: 1+ | Titlecase a string (optional start/end) -->
 
 **Syntax:** `(string-titlecase string)` | `(string-titlecase string start)` | `(string-titlecase string start end)`
 
@@ -534,6 +559,7 @@ kaappi> (string-titlecase "one-two-three")
 ## Predicates
 
 ### `string-every` { #string-every }
+<!-- index: 2+ | True if predicate/char-set matches every char (optional start/end) -->
 
 **Syntax:** `(string-every pred/char/char-set string)` | `(string-every pred/char/char-set string start)` | `(string-every pred/char/char-set string start end)`
 
@@ -559,6 +585,7 @@ kaappi> (string-every char-alphabetic? "")
 ---
 
 ### `string-any` { #string-any }
+<!-- index: 2+ | True if predicate/char-set matches any char (optional start/end) -->
 
 **Syntax:** `(string-any pred/char/char-set string)` | `(string-any pred/char/char-set string start)` | `(string-any pred/char/char-set string start end)`
 
@@ -584,6 +611,7 @@ kaappi> (string-any char-upper-case? "Hello")
 ## Constructors
 
 ### `string-tabulate` { #string-tabulate }
+<!-- index: 2 | Build string from index-to-char procedure -->
 
 **Syntax:** `(string-tabulate proc len)`
 
@@ -604,6 +632,7 @@ kaappi> (string-tabulate (lambda (i) #\x) 3)
 ---
 
 ### `string-unfold` { #string-unfold }
+<!-- index: 4+ | Unfold a string from a seed -->
 
 **Syntax:** `(string-unfold pred mapper successor seed)` | `(string-unfold pred mapper successor seed base)` | `(string-unfold pred mapper successor seed base make-final)`
 
@@ -629,6 +658,7 @@ kaappi> (string-unfold null? car cdr '(#\a #\b #\c))
 ---
 
 ### `string-unfold-right` { #string-unfold-right }
+<!-- index: 4+ | Unfold a string in reverse from a seed -->
 
 **Syntax:** `(string-unfold-right pred mapper successor seed)` | `(string-unfold-right pred mapper successor seed base)` | `(string-unfold-right pred mapper successor seed base make-final)`
 
