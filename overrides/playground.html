@@ -222,9 +222,9 @@
 <script>
 (async function() {
 // Clean up any state from a previous instant-navigation visit
-if (window._kpPlaygroundWorker) {
-  window._kpPlaygroundWorker.terminate();
-  window._kpPlaygroundWorker = null;
+if (window._kpPlaygroundRunner) {
+  window._kpPlaygroundRunner.terminate();
+  window._kpPlaygroundRunner = null;
 }
 if (window._kpPlaygroundEditor) {
   window._kpPlaygroundEditor.destroy();
@@ -234,122 +234,9 @@ if (window._kpPlaygroundEditor) {
 const assetRoot = new URL("{{ base_url }}", document.baseURI).href.replace(/\/$/, "");
 const { EXAMPLES } = await import(assetRoot + "/js/playground-examples.mjs");
 
-// ---- CodeMirror setup ----
-let editorView = null;
-
-async function initEditor() {
-  try {
-    const cmRoot = new URL("{{ base_url }}", document.baseURI).href.replace(/\/$/, "");
-    const { EditorView, basicSetup, EditorState, StreamLanguage, HighlightStyle, syntaxHighlighting, tags, scheme: schemeMode } =
-      await import(cmRoot + "/js/codemirror-bundle.mjs");
-
-    const darkTheme = EditorView.theme({
-      "&": { backgroundColor: "transparent" },
-      ".cm-content": { caretColor: "#F3E9DB" },
-    }, { dark: true });
-
-    const lightTheme = EditorView.theme({
-      "&": { backgroundColor: "transparent" },
-      ".cm-content": { caretColor: "#1A1410" },
-    }, { dark: false });
-
-    const darkHighlight = HighlightStyle.define([
-      { tag: [tags.keyword, tags.standard(tags.variableName)], color: "#E8B563" },
-      { tag: tags.comment, color: "#9C8A77", fontStyle: "italic" },
-      { tag: tags.string, color: "#BFD08A" },
-      { tag: tags.number, color: "#E0A867" },
-      { tag: tags.atom, color: "#E8B563" },
-      { tag: [tags.variableName, tags.definition(tags.variableName)], color: "#4FC4B2" },
-      { tag: tags.bracket, color: "#BBA890" },
-      { tag: [tags.meta, tags.operator], color: "#D08B3C" },
-    ]);
-
-    const lightHighlight = HighlightStyle.define([
-      { tag: [tags.keyword, tags.standard(tags.variableName)], color: "#9A6A1E" },
-      { tag: tags.comment, color: "#9C8A77", fontStyle: "italic" },
-      { tag: tags.string, color: "#5A7A22" },
-      { tag: tags.number, color: "#9A6A1E" },
-      { tag: tags.atom, color: "#9A6A1E" },
-      { tag: [tags.variableName, tags.definition(tags.variableName)], color: "#1E8A7A" },
-      { tag: tags.bracket, color: "#8A7A6A" },
-      { tag: [tags.meta, tags.operator], color: "#A06A20" },
-    ]);
-
-    const isDark = document.documentElement.dataset.mdColorScheme === "slate";
-
-    const extensions = [
-      basicSetup,
-      isDark ? darkTheme : lightTheme,
-      syntaxHighlighting(isDark ? darkHighlight : lightHighlight),
-      EditorView.domEventHandlers({
-        keydown(e) {
-          if ((e.ctrlKey || e.metaKey) && e.key === "Enter") {
-            e.preventDefault();
-            document.getElementById("kp-run").click();
-          }
-        }
-      }),
-    ];
-
-    extensions.push(StreamLanguage.define(schemeMode));
-
-    editorView = new EditorView({
-      state: EditorState.create({
-        doc: EXAMPLES.hello,
-        extensions,
-      }),
-      parent: document.getElementById("kp-editor"),
-    });
-    window._kpPlaygroundEditor = editorView;
-  } catch (e) {
-    // Fallback: plain textarea
-    console.warn("CodeMirror failed to load; using plain textarea.", e);
-    const el = document.getElementById("kp-editor");
-    const ta = document.createElement("textarea");
-    ta.id = "kp-textarea-fallback";
-    ta.value = EXAMPLES.hello;
-    ta.spellcheck = false;
-    Object.assign(ta.style, {
-      width: "100%", height: "100%", resize: "none",
-      background: "transparent", color: "inherit",
-      border: "none", outline: "none", padding: ".75rem",
-      fontFamily: "var(--kp-mono)", fontSize: ".85rem",
-      lineHeight: "1.5", tabSize: 2,
-    });
-    ta.addEventListener("keydown", e => {
-      if ((e.ctrlKey || e.metaKey) && e.key === "Enter") {
-        e.preventDefault();
-        document.getElementById("kp-run").click();
-      }
-    });
-    el.appendChild(ta);
-  }
-}
-
-function getEditorContent() {
-  if (editorView) return editorView.state.doc.toString();
-  const ta = document.getElementById("kp-textarea-fallback");
-  return ta ? ta.value : "";
-}
-
-function setEditorContent(code) {
-  if (editorView) {
-    editorView.dispatch({
-      changes: { from: 0, to: editorView.state.doc.length, insert: code },
-    });
-  } else {
-    const ta = document.getElementById("kp-textarea-fallback");
-    if (ta) ta.value = code;
-  }
-}
-
-// ---- Worker + execution ----
-const TIMEOUT_MS = 5000;
-const siteRoot = new URL("{{ base_url }}", document.baseURI).href.replace(/\/$/, "");
-const workerUrl = siteRoot + "/js/playground-worker.js";
-const wasmUrl = siteRoot + "/wasm/kaappi.wasm";
-var worker = new Worker(workerUrl, { type: "module" });
-window._kpPlaygroundWorker = worker;
+// ---- Editor + runner (shared modules) ----
+const { createSchemeEditor } = await import(assetRoot + "/js/kp-editor.mjs");
+const { createRunner } = await import(assetRoot + "/js/kp-runner.mjs");
 
 const statusEl = document.getElementById("kp-status");
 const stdoutEl = document.getElementById("kp-stdout");
@@ -362,8 +249,13 @@ function setStatus(text, cls) {
   statusEl.className = cls || "";
 }
 
+const runner = createRunner();
+window._kpPlaygroundRunner = runner;
+
+let editor;
+
 async function runCode() {
-  const code = getEditorContent();
+  const code = editor.getContent();
   if (!code.trim()) return;
 
   stdoutEl.textContent = "";
@@ -372,26 +264,7 @@ async function runCode() {
   runBtn.disabled = true;
 
   try {
-    const result = await new Promise((resolve, reject) => {
-      const timer = setTimeout(() => {
-        worker.terminate();
-        worker = new Worker(workerUrl, { type: "module" });
-        window._kpPlaygroundWorker = worker;
-        reject(new Error("Timed out (5 s limit)"));
-      }, TIMEOUT_MS);
-
-      worker.onmessage = ({ data }) => {
-        clearTimeout(timer);
-        resolve(data);
-      };
-      worker.onerror = (e) => {
-        clearTimeout(timer);
-        reject(new Error(e.message || "Worker error"));
-      };
-
-      worker.postMessage({ code, wasmUrl });
-    });
-
+    const result = await runner.run(code);
     stdoutEl.textContent = result.stdout;
     stderrEl.textContent = result.stderr;
     const ms = Math.round(result.elapsed);
@@ -410,7 +283,7 @@ runBtn.addEventListener("click", runCode);
 exSelect.addEventListener("change", () => {
   const key = exSelect.value;
   if (key && EXAMPLES[key]) {
-    setEditorContent(EXAMPLES[key]);
+    editor.setContent(EXAMPLES[key]);
     stdoutEl.textContent = "";
     stderrEl.textContent = "";
     setStatus("Ready");
@@ -418,7 +291,13 @@ exSelect.addEventListener("change", () => {
   exSelect.value = "";
 });
 
-initEditor();
+editor = await createSchemeEditor({
+  parent: document.getElementById("kp-editor"),
+  doc: EXAMPLES.hello,
+  isDark: document.documentElement.dataset.mdColorScheme === "slate",
+  onRun: runCode,
+});
+window._kpPlaygroundEditor = editor;
 
 })();
 </script>
