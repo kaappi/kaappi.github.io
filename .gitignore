@@ -1,2 +1,6 @@
 /site/
 __pycache__/
+# Fetched at build time from the matching kaappi release (scripts/fetch-wasm.sh);
+# not committed, so release binaries don't bloat history. Run the script once
+# before `mkdocs serve` on a fresh clone.
+/docs/wasm/kaappi.wasm

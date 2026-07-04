@@ -1,8 +1,10 @@
 name: Update playground WASM
 
-# Sync the playground/tour to a kaappi release: download the *released*
-# kaappi.wasm (verified against the release SHA256SUMS, so the browser runs the
-# same binary users install), bump kaappi_version, validate, commit, deploy.
+# Sync the playground/tour to a kaappi release: fetch the *released* kaappi.wasm
+# (verified against the release SHA256SUMS, so the browser runs the same binary
+# users install) via scripts/fetch-wasm.sh, bump kaappi_version, validate, commit
+# the bump, and deploy. The wasm itself is gitignored — served from the deploy
+# build, not committed.
 #
 # Run after cutting a core release:  gh workflow run update-wasm.yml -f tag=vX.Y.Z
 
@@ -38,14 +40,8 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
-      - name: Download and verify the released WASM
-        run: |
-          gh release download "$TAG" -R kaappi/kaappi -p kaappi.wasm -p SHA256SUMS --clobber
-          # Verify against the release attestation before trusting the binary.
-          grep -E ' [*]?kaappi\.wasm$' SHA256SUMS | sha256sum -c -
-          mkdir -p docs/wasm
-          mv -f kaappi.wasm docs/wasm/kaappi.wasm
-          rm -f SHA256SUMS
+      - name: Fetch and verify the released WASM
+        run: scripts/fetch-wasm.sh "$TAG"
 
       - name: Bump kaappi_version
         run: |
@@ -56,15 +52,17 @@ jobs:
           python3 scripts/check_procedures_index.py
           mkdocs build --strict
 
-      - name: Commit and deploy
+      - name: Commit version bump and deploy
         run: |
-          if git diff --quiet; then
-            echo "Already synced to $TAG — nothing to do."
-            exit 0
-          fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add docs/wasm/kaappi.wasm mkdocs.yml
-          git commit -m "Update playground WASM and version to ${TAG#v}"
-          git push
-          mkdocs gh-deploy --force
+          # The wasm is gitignored (fetched above), so only the version bump is
+          # committed; the fetched binary is served via gh-deploy below.
+          if git diff --quiet -- mkdocs.yml; then
+            echo "mkdocs.yml already on $TAG — no version bump to commit."
+          else
+            git add mkdocs.yml
+            git commit -m "Update playground to ${TAG#v}"
+            git push
+          fi
+          mkdocs gh-deploy --force --strict

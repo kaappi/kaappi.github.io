@@ -50,5 +50,8 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
+      - name: Fetch playground WASM
+        run: scripts/fetch-wasm.sh
+
       - name: Deploy to GitHub Pages
         run: mkdocs gh-deploy --force --strict
