@@ -191,5 +191,4 @@ watch:
 copyright: MIT License &mdash; Built with Zig
 
 exclude_docs: |
-  ideas.md
   errata-corrected-r7rs.pdf
