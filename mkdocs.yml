@@ -166,6 +166,8 @@ plugins:
       redirect_maps:
         guide/advanced.md: guide/concurrency.md
         guide/tips.md: guide/troubleshooting.md
+        downloads.md: download.md
+        libraries.md: guide/library-authoring.md
 
 extra_css:
   - stylesheets/extra.css
