@@ -11,8 +11,9 @@ carrying an inline `{ #anchor-id }` attribute.
 
 This script fails (exit 1) when the two drift apart:
 
-  1. a subpage has a `### ... { #anchor }` procedure heading the index
-     doesn't link to, or
+  1. a subpage has a procedure the index doesn't link to — either a
+     `### ... { #anchor }` heading or a table row with an inline
+     `{ #anchor }` (e.g. SRFI-1's `first`..`tenth`) — or
   2. the index links to an anchor that doesn't exist in the subpage
      (explicit `{ #anchor }` anywhere, or a heading's auto-generated slug).
 
@@ -29,6 +30,13 @@ PROC_HEADING_RE = re.compile(r"^### `?(.+?)`? *\{ *#([A-Za-z0-9_-]+) *\}", re.MU
 EXPLICIT_ANCHOR_RE = re.compile(r"\{ *#([A-Za-z0-9_-]+) *\}")
 ANY_HEADING_RE = re.compile(r"^#{2,4} +(.+?)(?: *\{.*\})? *$", re.MULTILINE)
 INDEX_LINK_RE = re.compile(r"\]\((?:\./)?([a-z0-9-]+\.md)#([A-Za-z0-9_-]+)\)")
+# Compact procedures (e.g. SRFI-1's first..tenth) are documented as table
+# rows carrying an inline { #anchor } rather than a ### heading. Match the
+# first backticked cell as the name so these are index-required too, and
+# deleting such a row from index.md is caught (not just a dangling link).
+TABLE_ROW_ANCHOR_RE = re.compile(
+    r"^\s*\|\s*`([^`]+)`.*?\{ *#([A-Za-z0-9_-]+) *\}", re.MULTILINE
+)
 
 
 def slugify(heading: str) -> str:
@@ -50,6 +58,8 @@ def main() -> int:
         text = page.read_text()
         for name, anchor in PROC_HEADING_RE.findall(text):
             procedures[(page.name, anchor)] = name
+        for name, anchor in TABLE_ROW_ANCHOR_RE.findall(text):
+            procedures[(page.name, anchor)] = name
         for anchor in EXPLICIT_ANCHOR_RE.findall(text):
             all_anchors.add((page.name, anchor))
         for heading in ANY_HEADING_RE.findall(text):
@@ -70,15 +80,16 @@ def main() -> int:
         for e in errors:
             print(f"  - {e}")
         print(
-            "\nEvery `### name { #anchor }` heading in docs/procedures/*.md "
-            "needs a matching link in index.md, and every index link needs "
-            "an existing target anchor."
+            "\nEvery procedure in docs/procedures/*.md (a `### name { #anchor }` "
+            "heading or a table row with an inline `{ #anchor }`) needs a "
+            "matching link in index.md, and every index link needs an "
+            "existing target anchor."
         )
         return 1
 
     print(
         f"procedures/index.md OK: {len(index_links)} index links, "
-        f"{len(procedures)} procedure headings, no drift."
+        f"{len(procedures)} procedure entries, no drift."
     )
     return 0
 

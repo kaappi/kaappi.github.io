@@ -141,7 +141,25 @@ All paths are relative to this repo root (`kaappi.github.io/`):
 - CLI examples use `kaappi` (not `zig build run --`); assume user has installed per guide
 - REPL examples use `kaappi>` prompt and `;=>` for results
 - Procedure subpages use `###` per procedure with `{ #anchor-id }` for explicit anchors
-- Anchor convention: `?` removed, `!` removed, `->` becomes `-to-`, `*` becomes `-star`
+- Procedure anchor convention (the `{ #anchor }` ids; `scripts/check_procedures_index.py`
+  depends on them, so match these when adding a procedure):
+  - `?` predicate: normally removed (`pair?` → `#pair`), but `-pred` when the
+    bare name is itself a procedure — `exact?` → `#exact-pred` (because `exact`
+    exists), likewise `eof-object?` → `#eof-object-pred`
+  - `!` mutator: normally removed (`set-car!` → `#set-car`), `-mut` on collision
+    (`bytevector-copy!` → `#bytevector-copy-mut`)
+  - `->` becomes `-to-` (`string->list` → `#string-to-list`)
+  - leading `%` stripped (`%make-record-type` → `#make-record-type`)
+  - bare operators are spelled out: `+`→`#plus`, `-`→`#minus`, `*`→`#star`,
+    `/`→`#slash`; numeric relationals take a `num-` prefix: `=`→`#num-equal`,
+    `<`→`#num-lt`, `>`→`#num-gt`, `<=`→`#num-le`, `>=`→`#num-ge`
+  - type-prefixed comparison predicates drop `?` and spell the operator
+    (`lt`/`le`/`gt`/`ge`/`eq`): `string<?`→`#string-lt`, `char>=?`→`#char-ge`,
+    `string=?`→`#string-eq`
+  - `/` inside a name: `floor/`→`#floor-div`, `call/cc`→`#callcc`
+  - `*` as a suffix becomes `-star` (`cons*`→`#cons-star`)
+  - genuine collisions beyond these are disambiguated case-by-case — check
+    existing pages, and the CI script is the source of truth
 - `!!! note` admonitions for edge cases (sparingly)
 - Cross-references use relative markdown links: `./page.md#anchor`
 - Landing page uses "600+" for procedure count (not an exact number that drifts)
