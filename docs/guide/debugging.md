@@ -34,7 +34,7 @@ without stopping execution.
 
 **`,type <expr>`** — show the type of a result:
 
-```
+```scheme
 kaappi> ,type (+ 1 2)
 ; integer
 kaappi> ,type "hello"
@@ -45,7 +45,7 @@ kaappi> ,type '(1 2 3)
 
 **`,describe <name>`** — show binding details including arity and source:
 
-```
+```scheme
 kaappi> ,describe map
   map
     type: procedure
@@ -60,7 +60,7 @@ kaappi> ,describe greet
 
 **`,apropos <string>`** — search bindings by substring:
 
-```
+```scheme
 kaappi> ,apropos vector
   vector-append, vector-copy, vector-fill!, vector-for-each,
   vector-length, vector-map, vector-ref, vector-set!, ...
@@ -69,7 +69,7 @@ kaappi> ,apropos vector
 
 **`,env [prefix]`** — list global bindings, optionally filtered:
 
-```
+```scheme
 kaappi> ,env string-
   string-append, string-copy, string-length, string-ref, ...
 ; 24 bindings
@@ -77,14 +77,14 @@ kaappi> ,env string-
 
 **`,expand <expr>`** — show macro expansion:
 
-```
+```scheme
 kaappi> ,expand (when #t (display "yes"))
 (if #t (begin (display "yes")))
 ```
 
 **`_` variable** — the last evaluation result, useful for incremental exploration:
 
-```
+```scheme
 kaappi> (filter odd? '(1 2 3 4 5))
 (1 3 5)
 kaappi> (length _)
@@ -98,7 +98,7 @@ frame by frame.
 
 ### Setting breakpoints
 
-```
+```scheme
 kaappi> (define (factorial n) (if (<= n 1) 1 (* n (factorial (- n 1)))))
 kaappi> ,break factorial
 Breakpoint set on factorial
@@ -116,7 +116,7 @@ Manage breakpoints with:
 When execution reaches a breakpointed function, Kaappi pauses and shows
 a `debug>` prompt:
 
-```
+```scheme
 kaappi> (factorial 5)
 Break at factorial (<repl>:1)
 debug>
@@ -142,7 +142,7 @@ debug>
 
 Break only when a condition is true:
 
-```
+```scheme
 kaappi> ,break factorial
 Breakpoint set on factorial
 kaappi> ,condition 0 (> n 10)
@@ -185,7 +185,7 @@ debug> down
 
 ### Walkthrough
 
-```
+```scheme
 kaappi> (factorial 3)
 Break at factorial (<repl>:1)
 debug> locals
@@ -209,7 +209,7 @@ debug> continue
 
 Use `,step` to single-step from the start without setting breakpoints:
 
-```
+```scheme
 kaappi> ,step (* 2 (+ 3 4))
 ```
 
@@ -217,7 +217,7 @@ kaappi> ,step (* 2 (+ 3 4))
 
 ### In the REPL
 
-```
+```scheme
 kaappi> ,profile (factorial 20)
 2432902008176640000
 ; Profile Report
@@ -245,7 +245,7 @@ Profile an entire program run. The top 20 functions by self time are shown.
 
 For a quick wall-clock measurement without the full profile breakdown:
 
-```
+```scheme
 kaappi> ,time (fib 30)
 832040
 ; 0.025 seconds
@@ -300,7 +300,7 @@ kaappi> ,time (fib 30)
 
 Use the `,dis` REPL command or the `(disassemble)` procedure:
 
-```
+```scheme
 kaappi> (define (factorial n) (if (<= n 1) 1 (* n (factorial (- n 1)))))
 kaappi> ,dis factorial
 ; Function: factorial
@@ -337,7 +337,7 @@ Shows bytecode for all top-level definitions without executing the program.
 
 ### In the REPL
 
-```
+```scheme
 kaappi> ,gc
 GC Statistics:
   Collections:       0

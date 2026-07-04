@@ -10,7 +10,7 @@ Launch the interactive REPL with no arguments:
 kaappi
 ```
 
-```
+```scheme
 Kaappi Scheme v{{ kaappi_version }}
 Type ,help for commands, ,quit to exit.
 
@@ -61,7 +61,7 @@ positioning or copy-paste behavior.
 
 Press **Tab** to complete symbol names from the global environment:
 
-```
+```scheme
 kaappi> string-<TAB>
 string-append  string-copy  string-length  string-ref  ...
 ```
@@ -71,7 +71,7 @@ definitions, and imported library exports.
 
 Comma commands are also completed:
 
-```
+```scheme
 kaappi> ,ti<TAB>
 ,time
 ```
@@ -88,7 +88,7 @@ entries are preserved across sessions.
 
 Press **Ctrl+R** to incrementally search through history, just like bash:
 
-```
+```scheme
 kaappi> <Ctrl+R>
 (reverse-i-search)'': 
 ```
@@ -111,7 +111,7 @@ Type a search query — matching history entries appear as you type:
 
 Expressions with unmatched parentheses automatically continue on the next line:
 
-```
+```scheme
 kaappi> (define (square x)
   ...    (* x x))
 kaappi> (square 7)
@@ -124,7 +124,7 @@ The prompt changes to `  ... ` while input is incomplete. Press **Ctrl+C** to ca
 
 The special variable `_` always holds the result of the last evaluation:
 
-```
+```scheme
 kaappi> (* 6 7)
 42
 kaappi> (+ _ 8)
@@ -143,7 +143,7 @@ All commands start with a comma (`,`). They are not Scheme expressions.
 
 #### `,time <expr>` — Measure execution time
 
-```
+```scheme
 kaappi> ,time (fib 30)
 832040
 ; 0.173 seconds
@@ -151,7 +151,7 @@ kaappi> ,time (fib 30)
 
 #### `,type <expr>` — Show result type
 
-```
+```scheme
 kaappi> ,type (+ 1 2)
 ; integer
 kaappi> ,type "hello"
@@ -166,7 +166,7 @@ kaappi> ,type #t
 
 #### `,expand <expr>` — Show macro expansion
 
-```
+```scheme
 kaappi> ,expand (when #t (display "yes"))
 (if #t (begin (display "yes")))
 ```
@@ -175,7 +175,7 @@ kaappi> ,expand (when #t (display "yes"))
 
 Shows per-function timing, call counts, and memory allocations:
 
-```
+```scheme
 kaappi> ,profile (fib 25)
 75025
 ; Profile Report
@@ -186,7 +186,7 @@ kaappi> ,profile (fib 25)
 
 Shows the register-based bytecode for a procedure:
 
-```
+```scheme
 kaappi> ,dis factorial
 ; Function: factorial
 ; Arity: 1, Locals: 7, Upvalues: 0
@@ -205,7 +205,7 @@ This is a shortcut for `(disassemble <expr>)`. See [Debugging](debugging.md#byte
 
 Shows the type, arity, and source location of a procedure:
 
-```
+```scheme
 kaappi> ,describe car
   car
     type: procedure
@@ -222,7 +222,7 @@ kaappi> ,describe +
 
 For user-defined procedures, it also shows the source file and line:
 
-```
+```scheme
 kaappi> (define (greet name) (string-append "Hello, " name))
 kaappi> ,describe greet
   greet
@@ -235,7 +235,7 @@ kaappi> ,describe greet
 
 Searches all global bindings for names containing the given substring:
 
-```
+```scheme
 kaappi> ,apropos vector
   vector-append
   vector-copy
@@ -257,7 +257,7 @@ kaappi> ,apropos vector
 
 Lists all global bindings, optionally filtered by prefix:
 
-```
+```scheme
 kaappi> ,env string-
   string-append
   string-copy
@@ -270,7 +270,7 @@ kaappi> ,env string-
 
 #### `,break <name>` — Set breakpoint
 
-```
+```scheme
 kaappi> ,break fib
 Breakpoint set on fib
 ```
@@ -279,27 +279,27 @@ Breakpoint set on fib
 
 Only break when the Scheme expression evaluates to a truthy value:
 
-```
+```scheme
 kaappi> ,condition 0 (> n 10)
 Condition set
 ```
 
 #### `,breakpoints` — List breakpoints
 
-```
+```scheme
 kaappi> ,breakpoints
   [0] fib if (> n 10)
 ```
 
 #### `,step <expr>` — Single-step evaluation
 
-```
+```scheme
 kaappi> ,step (+ 1 2)
 ```
 
 #### `,delete all` — Clear all breakpoints
 
-```
+```scheme
 kaappi> ,delete all
 All breakpoints deleted
 ```
@@ -308,7 +308,7 @@ All breakpoints deleted
 
 #### `,gc` — Show GC statistics
 
-```
+```scheme
 kaappi> ,gc
 GC Statistics:
   Collections:       42
@@ -319,14 +319,14 @@ GC Statistics:
 
 #### `,version` — Show Kaappi version
 
-```
+```scheme
 kaappi> ,version
 Kaappi Scheme v{{ kaappi_version }}
 ```
 
 #### `,load <file>` — Load and run a Scheme file
 
-```
+```scheme
 kaappi> ,load helpers.scm
 ```
 
@@ -335,7 +335,7 @@ available in the current REPL session.
 
 #### `,import <lib>` — Import a library
 
-```
+```scheme
 kaappi> ,import (srfi 1)
 kaappi> (iota 5)
 (0 1 2 3 4)
@@ -345,13 +345,13 @@ Import one or more libraries interactively, just like `(import ...)` at
 the top of a program. Supports all import modifiers (`only`, `except`,
 `rename`, `prefix`):
 
-```
+```scheme
 kaappi> ,import (only (srfi 1) iota fold)
 ```
 
 #### `,help` — Show all commands
 
-```
+```scheme
 kaappi> ,help
 Commands:
   ,help             Show this message
@@ -387,7 +387,7 @@ The variable _ holds the last result.
 
 ## Exiting
 
-```
+```scheme
 kaappi> ,quit
 ```
 

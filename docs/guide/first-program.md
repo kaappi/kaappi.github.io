@@ -35,7 +35,7 @@ Launch the REPL with no arguments:
 kaappi
 ```
 
-```
+```scheme
 Kaappi Scheme v{{ kaappi_version }}
 Type ,help for commands, ,quit to exit.
 
@@ -52,7 +52,7 @@ The REPL provides:
 - **Multi-line input** -- open parentheses are tracked; the prompt changes to
   `  ... ` until all parens are balanced
 
-```
+```scheme
 kaappi> (define (square x)
   ...     (* x x))
 kaappi> (square 7)
