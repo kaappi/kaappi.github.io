@@ -182,7 +182,7 @@ extra_css:
   - stylesheets/extra.css
 
 extra:
-  kaappi_version: 0.14.0
+  kaappi_version: 0.14.1
   social:
     - icon: fontawesome/brands/github
       link: https://github.com/kaappi/kaappi
