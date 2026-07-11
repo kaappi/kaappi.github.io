@@ -61,6 +61,7 @@ eval "$(thottam --completions bash)"   # or zsh / fish
 |----------|-------------|
 | `KAAPPI_HOME` | Override the default `~/.kaappi/` directory for libraries, packages, and REPL history. |
 | `KAAPPI_LIB_DIR` | Directory containing `libkaappi_rt.a` for `kaappi compile`. Overrides the default search paths. |
+| `NO_COLOR` | When set to a non-empty value, disables all REPL syntax highlighting and prompt colors. See [no-color.org](https://no-color.org/). |
 
 ## Build-Time Options
 

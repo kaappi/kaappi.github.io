@@ -42,20 +42,77 @@ The REPL uses [linenoise](https://github.com/antirez/linenoise) for line editing
 
 ## Syntax Highlighting
 
-The REPL provides real-time syntax coloring as you type:
+The REPL provides real-time syntax coloring as you type, covering all
+R7RS token types:
 
-| Element | Color |
-|---------|-------|
-| Keywords (`define`, `lambda`, `if`, `let`, ...) | Magenta |
-| Strings (`"hello"`) | Green |
-| Numbers (`42`, `-3.14`) | Yellow |
-| Comments (`;` and `#| |#`) | Gray |
-| Booleans (`#t`, `#f`) | Cyan |
-| Parentheses | Gray |
-| Quote / quasiquote / unquote | Magenta |
+| Element | Dark theme | Light theme |
+|---------|-----------|-------------|
+| Keywords (`define`, `lambda`, `if`, `let`, ...) | Bright magenta | Magenta |
+| Strings (`"hello"`) | Bright green | Green |
+| Numbers (`42`, `#xff`, `+inf.0`) | Bright yellow | Red |
+| Comments (`;`, `#| |#`, `#;`) | Gray | Gray |
+| Booleans (`#t`, `#f`, `#true`, `#false`) | Bright cyan | Cyan |
+| Character literals (`#\space`, `#\λ`) | Bright yellow | Red |
+| Parentheses and brackets | Gray | Gray |
+| Vector / bytevector (`#(`, `#u8(`) | Gray | Gray |
+| Quote / quasiquote / unquote (`'`, `` ` ``, `,`, `,@`) | Bright magenta | Magenta |
+| Directives (`#!fold-case`) | Gray | Gray |
+| Matched parenthesis | Bold bright yellow | Bold red |
+| Primary prompt | Bright green | Blue |
+| Continuation prompt | Gray | Gray |
 
 Highlighting is applied per-keystroke and does not affect cursor
 positioning or copy-paste behavior.
+
+### Theme Presets
+
+The REPL ships with two color presets optimized for terminal background
+contrast:
+
+- **`dark`** (default) — bright ANSI colors for dark terminal backgrounds
+- **`light`** — standard ANSI colors for light terminal backgrounds
+
+Select a preset in `~/.kaappi/config`:
+
+```
+repl.theme: light
+```
+
+### Customizing Colors
+
+Override individual token colors in `~/.kaappi/config`:
+
+```
+repl.theme: dark
+repl.color.keyword: bright-cyan
+repl.color.number: bright-red
+repl.color.prompt: blue
+```
+
+Available color names: `black`, `red`, `green`, `yellow`, `blue`,
+`magenta`, `cyan`, `white`, and bright variants (`bright-black`,
+`bright-red`, ..., `bright-white`). Prefix with `bold` for bold
+(`bold bright-yellow`). Use `none` to disable color for a token type.
+
+Configurable keys: `repl.color.keyword`, `repl.color.string`,
+`repl.color.number`, `repl.color.comment`, `repl.color.boolean`,
+`repl.color.paren`, `repl.color.match-paren`, `repl.color.prompt`,
+`repl.color.continuation`.
+
+### Disabling Colors
+
+Set the [`NO_COLOR`](https://no-color.org/) environment variable to
+disable all REPL coloring:
+
+```bash
+NO_COLOR=1 kaappi
+```
+
+Or disable highlighting while keeping other config:
+
+```
+repl.highlight: false
+```
 
 ## Parenthesis Matching
 
@@ -86,7 +143,8 @@ kaappi> ,ti<TAB>
 ## History
 
 History is saved automatically to `~/.kaappi/history`. Up to 1000
-entries are preserved across sessions.
+entries are preserved across sessions (configurable via
+`repl.history-length` in `~/.kaappi/config`).
 
 - **Up / Down arrows** — navigate through previous entries
 - **Ctrl+P / Ctrl+N** — same as Up / Down
@@ -125,7 +183,9 @@ kaappi> (square 7)
 49
 ```
 
-The prompt changes to `  ... ` while input is incomplete. Press **Ctrl+C** to cancel a multi-line entry.
+The prompt changes to `  ... ` while input is incomplete. The primary
+prompt can be customized via `repl.prompt` in `~/.kaappi/config`.
+Press **Ctrl+C** to cancel a multi-line entry.
 
 ## The `_` Variable
 
