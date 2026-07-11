@@ -102,6 +102,11 @@ the corresponding *expr* sequence and returns the last result. An
 `else` clause matches if no previous test succeeded. A clause of the
 form `(test => proc)` passes the test result to *proc*.
 
+A clause of the form `(test guard => receiver)` (SRFI-61) first
+evaluates *test*, then applies *guard* to the result. If *guard*
+returns true, *receiver* is called with the test result. This allows
+filtering the test value before accepting the clause.
+
 ```scheme
 kaappi> (cond ((> 3 2) 'greater)
               ((< 3 2) 'less)
@@ -111,9 +116,15 @@ kaappi> (cond ((assv 2 '((1 one) (2 two) (3 three)))
                => cadr)
               (else 'not-found))
 ;=> two
+kaappi> (cond ((assv 2 '((1 one) (2 two) (3 three)))
+               pair?
+               => cadr)
+              (else 'not-found))
+;=> two
 ```
 
-**See also:** [`if`](#if), [`case`](#case), [`guard`](#guard)
+**See also:** [`if`](#if), [`case`](#case), [`guard`](#guard),
+[SRFI-61](../guide/srfi-support.md)
 
 ---
 
@@ -494,7 +505,38 @@ kaappi> count
 ;=> 1
 ```
 
-**See also:** [`define`](#define)
+#### Generalized `set!` (SRFI-17)
+
+`(set! (accessor args ...) expr)`
+
+When the first argument to `set!` is a procedure call form, Kaappi applies the
+*setter* associated with *accessor*. This allows mutation through accessors
+without separate mutator names. Import `(srfi 17)` to use this form.
+
+Pre-defined setters:
+
+| Accessor | Equivalent to |
+|----------|---------------|
+| `car` | `set-car!` |
+| `cdr` | `set-cdr!` |
+| `vector-ref` | `vector-set!` |
+| `string-ref` | `string-set!` |
+| `hashtable-ref` | `hashtable-set!` |
+| `slot-ref` | `slot-set!` |
+
+```scheme
+kaappi> (import (srfi 17))
+kaappi> (define p (list 1 2 3))
+kaappi> (set! (car p) 10)
+kaappi> p
+;=> (10 2 3)
+kaappi> (define v (vector 'a 'b 'c))
+kaappi> (set! (vector-ref v 1) 'x)
+kaappi> v
+;=> #(a x c)
+```
+
+**See also:** [`define`](#define), [SRFI-17](../guide/srfi-support.md)
 
 ---
 

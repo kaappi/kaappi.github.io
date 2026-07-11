@@ -34,7 +34,7 @@ can represent any integer, limited only by available memory.
 
 The intermediate representation produced by the [compiler](#compiler). Kaappi
 uses a register-based bytecode format. Bytecode is executed by the
-[VM](#vm) or compiled to native code by the [JIT](#jit).
+[VM](#vm) or compiled to native code by the [LLVM native backend](#llvm-native-backend).
 
 ### Call/cc { #callcc }
 
@@ -117,12 +117,12 @@ Macro expansion that preserves lexical scoping — variables introduced by a
 macro don't accidentally capture or shadow user variables. Kaappi implements
 this via `syntax-rules` as specified in R7RS.
 
-### JIT { #jit }
+### LLVM native backend { #llvm-native-backend }
 
-**Just-in-time compiler.** Compiles hot [bytecode](#bytecode) functions to
-native machine code (ARM64 or x86_64) after 100 calls. JIT-compiled
-functions inline fixnum arithmetic, comparisons, `car`/`cdr`, `cons`, and
-function calls.
+**Ahead-of-time native compiler.** Compiles Scheme programs to native
+executables via LLVM IR using `kaappi compile`. Handles closures, tail
+calls, continuations, and the full R7RS feature set. Operations not yet
+covered fall back to the bytecode interpreter automatically.
 
 ### NaN-boxing { #nan-boxing }
 
@@ -239,8 +239,8 @@ Common in error testing (`test-error "name" thunk`), lazy evaluation, and
 
 **Virtual machine.** Kaappi's register-based bytecode interpreter. Executes
 [bytecode](#bytecode) instructions, manages the call stack, and coordinates
-with the [GC](#gc). Hot functions are compiled to native code by the
-[JIT](#jit).
+with the [GC](#gc). Programs can also be compiled to native binaries via
+the [LLVM native backend](#llvm-native-backend).
 
 ### Channel { #channel }
 

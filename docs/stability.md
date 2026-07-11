@@ -16,7 +16,7 @@ These interfaces will not break without a minor version bump (e.g., 0.5 to
 
 | Component | Guarantee |
 |-----------|-----------|
-| **R7RS procedures** | All 554 built-in procedures retain their current behavior |
+| **R7RS procedures** | All 600+ built-in procedures retain their current behavior |
 | **Library system** | `define-library`, `import`, `export` syntax and semantics |
 | **SRFI support** | All 72 currently supported SRFIs remain available |
 | **CLI interface** | `kaappi [flags] [file]` — flags may be added but not removed |
@@ -31,7 +31,7 @@ These interfaces will not break without a minor version bump (e.g., 0.5 to
 | **Build options** (`-Dmax-frames`, etc.) | Unstable | May be added or adjusted |
 | **Internal APIs** (embedding the VM) | Unstable | No stability promise for Zig-level API |
 | **Error message text** | Unstable | Wording may improve; don't parse error messages |
-| **JIT behavior** | Unstable | Compilation thresholds and optimizations may change |
+| **LLVM native backend** | Unstable | Compilation behavior and optimizations may change |
 | **Performance** | Best effort | Performance may improve or regress between versions |
 
 ## Upgrade process
@@ -98,8 +98,8 @@ All of the following must be met before a 1.0 release:
   all malformed input gracefully (no crashes on any input)
 - **Concurrency safety** — OS threads either have a proven-safe GC or
   remain clearly documented as experimental
-- **Security** — the sandbox boundary is proven, JIT memory is W^X on all
-  platforms, and the threat model is documented
+- **Security** — the sandbox boundary is proven, native-compiled code memory
+  is W^X on all platforms, and the threat model is documented
 - **CI** — formatting, multi-platform testing, and the conformance suite
   gate every PR
 - **No known memory-safety issues** in the interpreter core

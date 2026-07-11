@@ -57,6 +57,13 @@ The REPL provides real-time syntax coloring as you type:
 Highlighting is applied per-keystroke and does not affect cursor
 positioning or copy-paste behavior.
 
+## Parenthesis Matching
+
+When the cursor is adjacent to a parenthesis, the REPL highlights the
+matching opening or closing parenthesis. This makes it easy to see the
+structure of nested expressions while editing, and is independent of
+syntax coloring.
+
 ## Tab Completion
 
 Press **Tab** to complete symbol names from the global environment:
@@ -134,6 +141,31 @@ kaappi> (string-append "answer: " (number->string _))
 ```
 
 This is useful for exploratory programming — evaluate something, then use the result without re-typing or binding it.
+
+## Pretty Printing
+
+Large results are formatted with indentation and line wrapping rather
+than printed on a single long line. The REPL detects the terminal width
+and formats output accordingly:
+
+```scheme
+kaappi> '((name "Alice" age 30) (name "Bob" age 25) (name "Carol" age 28))
+;=> ((name "Alice" age 30)
+     (name "Bob" age 25)
+     (name "Carol" age 28))
+```
+
+## Multiple Values
+
+When an expression returns multiple values at the top level, all values
+are displayed:
+
+```scheme
+kaappi> (values 1 2 3)
+1
+2
+3
+```
 
 ## REPL Commands
 

@@ -359,32 +359,43 @@ kaappi> (symbol->string 'hello)
 ---
 
 ### `string->utf8` { #string-to-utf8 }
-<!-- index: 1 | Convert string to UTF-8 bytevector -->
+<!-- index: 1+ | Encode string as UTF-8 bytevector -->
 
-**Syntax:** `(string->utf8 string)`
+**Syntax:** `(string->utf8 string)` | `(string->utf8 string start)` | `(string->utf8 string start end)`
 
-Returns a bytevector containing the UTF-8 encoding of *string*.
+Returns a bytevector containing the UTF-8 encoding of *string*. The optional
+*start* and *end* arguments select a substring by codepoint index.
 
-!!! note "Bytevector support"
-    Bytevector support in Kaappi is currently limited. This procedure may raise
-    an error until full bytevector support is available.
+```scheme
+kaappi> (string->utf8 "Hello")
+;=> #u8(72 101 108 108 111)
+kaappi> (string->utf8 "abc" 1 2)
+;=> #u8(98)
+```
 
-**See also:** [`utf8->string`](#utf8-to-string)
+**See also:** [`utf8->string`](#utf8-to-string),
+[`utf8->string`](./bytevectors.md#utf8-to-string)
 
 ---
 
 ### `utf8->string` { #utf8-to-string }
-<!-- index: 1 | Convert UTF-8 bytevector to string -->
+<!-- index: 1+ | Decode UTF-8 bytevector to string -->
 
-**Syntax:** `(utf8->string bytevector)`
+**Syntax:** `(utf8->string bytevector)` | `(utf8->string bytevector start)` | `(utf8->string bytevector start end)`
 
-Decodes the UTF-8 encoded *bytevector* and returns the corresponding string.
+Decodes the UTF-8 encoded bytes in *bytevector* and returns the corresponding
+string. The optional *start* and *end* arguments select a subrange of bytes.
+It is an error if the selected bytes do not form valid UTF-8.
 
-!!! note "Bytevector support"
-    Bytevector support in Kaappi is currently limited. This procedure may raise
-    an error until full bytevector support is available.
+```scheme
+kaappi> (utf8->string #u8(72 101 108 108 111))
+;=> "Hello"
+kaappi> (utf8->string #u8(72 101 108 108 111) 0 2)
+;=> "He"
+```
 
-**See also:** [`string->utf8`](#string-to-utf8)
+**See also:** [`string->utf8`](#string-to-utf8),
+[`string->utf8`](./bytevectors.md#string-to-utf8)
 
 ---
 

@@ -247,6 +247,15 @@ Pass Scheme procedures to C functions that expect function pointers:
 (ffi-callback-release cb)  ;; free when done
 ```
 
+Errors raised inside an `ffi-callback` body are captured and re-raised
+on the Scheme side when the C call returns. This means `guard` and
+`with-exception-handler` work as expected around FFI calls that invoke
+Scheme callbacks.
+
+FFI type mismatches, arity errors, and range violations produce
+descriptive error messages that name the FFI function and expected type,
+making debugging straightforward.
+
 ## Error handling pattern
 
 C functions typically return negative values on error. Wrap them in

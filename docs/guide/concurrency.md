@@ -47,6 +47,14 @@ build (including the browser playground); use fibers there.
 (thread-join! t)  ;=> 42
 ```
 
+Both interpreted and native (compiled) procedures are accepted by
+`make-thread` and `spawn`:
+
+```scheme
+(define (compute) (* 6 7))
+(thread-join! (thread-start! (make-thread compute)))  ;=> 42
+```
+
 Values are **deep-copied** when crossing thread boundaries:
 
 - At `thread-start!`: the thunk closure is deep-copied from parent to child

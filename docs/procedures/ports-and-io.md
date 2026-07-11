@@ -13,9 +13,9 @@ and binary ports backed by files, strings, or bytevectors. Available from
 
 **Syntax:** `(current-input-port)`
 
-Returns the current default input port. This is initially the standard
-input stream. The value can be temporarily changed with
-`with-input-from-file` or `parameterize`.
+Returns the current default input port (an R7RS parameter object). This is
+initially the standard input stream. The value can be temporarily changed
+with `with-input-from-file` or `parameterize`.
 
 ```scheme
 kaappi> (port? (current-input-port))
@@ -34,9 +34,9 @@ kaappi> (input-port? (current-input-port))
 
 **Syntax:** `(current-output-port)`
 
-Returns the current default output port. This is initially the standard
-output stream. The value can be temporarily changed with
-`with-output-to-file` or `parameterize`.
+Returns the current default output port (an R7RS parameter object). This is
+initially the standard output stream. The value can be temporarily changed
+with `with-output-to-file` or `parameterize`.
 
 ```scheme
 kaappi> (port? (current-output-port))
@@ -56,9 +56,10 @@ kaappi> (output-port? (current-output-port))
 
 **Syntax:** `(current-error-port)`
 
-Returns the current default error port. This is initially the standard
-error stream. Unlike `current-output-port`, error output is typically
-unbuffered so diagnostic messages appear immediately.
+Returns the current default error port (an R7RS parameter object). This is
+initially the standard error stream. The value can be temporarily changed
+with `parameterize`. Unlike `current-output-port`, error output is
+typically unbuffered so diagnostic messages appear immediately.
 
 ```scheme
 kaappi> (port? (current-error-port))

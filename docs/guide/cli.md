@@ -59,6 +59,7 @@ eval "$(thottam --completions bash)"   # or zsh / fish
 
 | Variable | Description |
 |----------|-------------|
+| `KAAPPI_HOME` | Override the default `~/.kaappi/` directory for libraries, packages, and REPL history. |
 | `KAAPPI_LIB_DIR` | Directory containing `libkaappi_rt.a` for `kaappi compile`. Overrides the default search paths. |
 
 ## Build-Time Options

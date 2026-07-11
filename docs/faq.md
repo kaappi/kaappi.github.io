@@ -5,15 +5,15 @@
 ### What is Kaappi?
 
 Kaappi is a Scheme implementation that follows the R7RS-small standard. It is
-written in Zig and includes a register-based bytecode VM, JIT compiler (ARM64
-and x86_64), garbage collector, C FFI, package manager, and a growing ecosystem
-of libraries for web development, databases, and data processing.
+written in Zig and includes a register-based bytecode VM, LLVM native compiler,
+garbage collector, C FFI, package manager, and a growing ecosystem of libraries
+for web development, databases, and data processing.
 
 ### Why another Scheme?
 
 Most Scheme implementations focus on either standards conformance or
-performance. Kaappi aims for both — full R7RS-small with 72 SRFIs, plus JIT
-compilation to native code. It also ships as a single binary with no runtime
+performance. Kaappi aims for both — full R7RS-small with 72 SRFIs, plus native
+compilation via LLVM. It also ships as a single binary with no runtime
 dependencies, which makes deployment straightforward.
 
 ### What does the name mean?
@@ -56,25 +56,22 @@ differences:
 
 ### How fast is Kaappi?
 
-Kaappi's JIT compiler generates native code for hot functions (after 100
-calls). On numeric and list-processing benchmarks, JIT-compiled Kaappi is
-competitive with Chez Scheme, Gambit, and Larceny.
+The bytecode interpreter is competitive with Guile and Chicken on most
+workloads. For CPU-bound programs, `kaappi compile` produces native binaries
+via the LLVM backend that are competitive with Chez Scheme, Gambit, and
+Larceny on numeric and list-processing benchmarks.
 
-The interpreter (without JIT) is comparable to Guile and Chicken on most
-workloads.
+### How does native compilation work?
 
-### How does the JIT work?
+`kaappi compile program.scm -o program` compiles a Scheme source file to a
+native executable via LLVM IR. The compiler handles closures, tail calls,
+continuations, and the full R7RS feature set. Operations not yet covered by
+the native backend fall back to the bytecode interpreter automatically.
 
-The JIT monitors function call counts. After a function is called 100 times, it
-compiles the bytecode to native ARM64 or x86_64 machine code. JIT-compiled
-functions handle fixnum arithmetic, comparisons, `car`/`cdr`, `cons`, and
-function calls inline. Operations that fall outside the JIT's scope (bignums,
-complex closures) fall back to the interpreter.
+### Does native compilation work on all platforms?
 
-### Does the JIT work on all platforms?
-
-JIT is available on macOS ARM64 and Linux x86_64/ARM64. The WASM build runs
-interpreter-only (no JIT). Linux RISC-V runs interpreter-only.
+Native compilation via `kaappi compile` is available on macOS ARM64 and Linux
+x86_64/ARM64. Linux RISC-V and WebAssembly run interpreter-only.
 
 ## Ecosystem
 
@@ -158,13 +155,13 @@ platform. See [Standalone Binaries](guide/deployment.md#standalone-binaries).
 
 Yes, via WebAssembly. `zig build wasm` produces a WASM binary that runs in
 browsers and WASI runtimes. The [playground](playground.md) and
-[interactive tour](tour.md) use this. The WASM build does not include JIT,
-FFI, file I/O, or OS threads.
+[interactive tour](tour.md) use this. The WASM build does not include native
+compilation, FFI, file I/O, or OS threads.
 
 ### What platforms are supported?
 
-| Platform | JIT | Prebuilt binary |
-|----------|:---:|:---------------:|
+| Platform | Native compile | Prebuilt binary |
+|----------|:--------------:|:---------------:|
 | macOS ARM64 (Apple Silicon) | yes | yes |
 | Linux x86_64 | yes | yes |
 | Linux ARM64 | yes | yes |
