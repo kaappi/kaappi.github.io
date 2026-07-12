@@ -194,11 +194,25 @@ Without the web framework, route by matching method and path:
 
 ;; Pre-fork (N worker processes)
 (http-listen-prefork handler port 4)
+
+;; Fiber (one fiber per connection, single OS thread)
+(http-listen-fiber handler port)
 ```
 
 Threaded mode uses SRFI-18 OS threads, which are unavailable in
 `--sandbox` mode and in the WebAssembly build. Pre-fork mode uses
-`fork()` and is the recommended approach for production concurrency.
+`fork()` and is the recommended approach for production concurrency
+that needs multi-core use and per-worker crash isolation.
+
+Fiber mode sets the listen socket non-blocking and accepts in a loop,
+spawning a cheap fiber per connection instead of a thread or process —
+each connection's reads and writes suspend just that fiber (see
+[Concurrency](../guide/concurrency.md#green-threads-fibers)), so a slow
+client never stalls the others. It scales to thousands of concurrent
+connections on a single OS thread and GC heap, at the cost of the
+process isolation and multi-core parallelism `http-listen-prefork`
+gives you. Reach for it when connection count, not CPU work, is the
+bottleneck.
 
 ## URL utilities
 
@@ -270,6 +284,7 @@ Handles `+` (space) and `%XX` URL encoding.
 | `(http-listen handler port [host])` | Sequential server |
 | `(http-listen-threaded handler port [host])` | Threaded server |
 | `(http-listen-prefork handler port workers [host])` | Pre-fork server |
+| `(http-listen-fiber handler port [host])` | Fiber server (one fiber per connection) |
 
 ### URL
 

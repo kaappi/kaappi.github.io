@@ -23,6 +23,41 @@ Use fibers for concurrent I/O, event loops, and cooperative task
 scheduling. See the [Fibers reference](../procedures/extensions.md#spawn)
 for the full API.
 
+### Fiber I/O is non-blocking
+
+A blocking-looking call like `(read-line port)` only suspends the fiber
+that made it. Under the hood, Kaappi runs a per-OS-thread **I/O
+reactor**: if the read would block, the fiber parks and the reactor
+waits on the underlying file descriptors (via kqueue on macOS/BSD, epoll
+on Linux, or `poll_oneoff` under WASI), waking whichever fiber becomes
+ready. `thread-sleep!` gets the same treatment — it parks the calling
+fiber on the reactor's timer heap instead of blocking the whole thread,
+so sleeping fibers and I/O-bound fibers interleave freely:
+
+```scheme
+(import (kaappi fibers))
+
+;; Each fiber's (read-line) yields to the scheduler on EAGAIN instead
+;; of freezing every other fiber. Thousands of these coexist on one
+;; OS thread and one GC heap.
+(define (handle conn)
+  (spawn (lambda ()
+           (let loop ()
+             (let ((line (read-line conn)))
+               (unless (eof-object? line)
+                 (channel-send out (process line))
+                 (loop)))))))
+```
+
+This is what makes [`http-listen-fiber`](../ecosystem/http.md#server-modes)
+practical: it accepts connections in a non-blocking loop and spawns one
+fiber per connection, so a slow client trickling in its request never
+delays a fast one on a different connection — all on a single OS
+thread. Libraries built on `(kaappi net)`'s plain-TCP `tcp-recv`/`tcp-send`
+(`kaappi-redis`, `kaappi-email`, `kaappi-http`'s client) work unchanged
+under this model; only server accept loops need the explicit
+non-blocking treatment `http-listen-fiber` provides.
+
 ## OS threads (SRFI-18)
 
 Real OS threads via `pthread_create`. Each thread gets its own VM and GC
