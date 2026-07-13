@@ -107,6 +107,71 @@ for mutexes, condition variables, and the full threading API.
     its wakeup path; see [Standards Conformance](../conformance.md#extensions-beyond-r7rs-smalls-scope)
     for current status before relying on it for production workloads.
 
+## Multi-core parallelism with `(kaappi parallel)`
+
+Coordinating a pool of worker threads by hand means channels, a task
+protocol, and careful shutdown bookkeeping. `(kaappi parallel)` packages
+that pattern on top of cross-thread channels:
+
+```scheme
+(import (kaappi parallel))
+
+;; parallel-map manages its own pool, sized to processor-count
+(parallel-map (lambda (n) (* n n)) '(1 2 3 4 5))
+;=> (1 4 9 16 25)
+```
+
+For repeated submissions, keep a pool around instead of paying setup cost
+per call:
+
+```scheme
+(define pool (make-pool (processor-count)))
+
+(define reply (pool-submit pool (lambda () (expensive-computation))))
+;; ... do other work ...
+(task-wait reply)      ;=> the result, or re-raises the task's exception
+
+(pool-shutdown! pool)  ;; drains queued tasks, then joins every worker
+```
+
+Every task thunk and result crosses the pool boundary **by copy** -- the
+same rule as raw `thread-start!`/`thread-join!`. `pool-submit` returns a
+plain channel; `task-wait` is just `channel-receive` with exception
+re-raising, so nothing about a pool is special beyond the bookkeeping.
+
+`make-pool`'s workers are real OS threads when available. Under `--sandbox`
+and in the WebAssembly build, where thread creation is unavailable,
+`make-pool` degrades to spawning fiber workers on the calling thread's
+scheduler instead -- cooperative rather than parallel, but the same API
+keeps working unchanged. `processor-count` reflects this too: it returns
+the real core count natively, and `1` under `--sandbox` or WASM.
+
+See the [Kaappi Extensions reference](../procedures/extensions.md#parallel-pools)
+for the full API, and the cookbook recipe [Run Concurrent
+Tasks](../cookbook/concurrent-tasks.md) for a worked comparison against a
+hand-rolled fiber pool.
+
+!!! note "Use a pool only from the thread that created it"
+    A pool's `make-pool`/`pool-submit`/`task-wait`/`pool-shutdown!` calls
+    must all come from the thread that created the pool (or one that
+    received it some other way that doesn't route through a fresh
+    `thread-start!` thunk). Calling any of them from inside a thread you
+    `thread-start!` yourself currently hangs -- a closure that crosses a
+    thread boundary and then calls a separately-defined library procedure
+    is an open issue
+    ([kaappi#1520](https://github.com/kaappi/kaappi/issues/1520)), on top
+    of the wakeup-path issues noted above.
+
+!!! note "parallel-map/parallel-for-each: chunk large lists manually"
+    Both submit one task per list element, so a large list means many
+    concurrent `pool-submit`/`task-wait` round trips -- reliable in testing
+    through list sizes in the low hundreds, but the wakeup-path issues
+    above make an intermittent hang increasingly likely beyond that. For
+    larger inputs, use `make-pool`/`pool-submit`/`task-wait` directly with
+    one task per processor instead of one per element -- see the [Parallel
+    Prime Search](https://github.com/kaappi/kaappi-examples/tree/main/parallel-primes)
+    example.
+
 ## Choosing a model
 
 | | Fibers | OS threads |
@@ -117,8 +182,11 @@ for mutexes, condition variables, and the full threading API.
 | Works in WASM / playground | Yes | No |
 | Best for | Concurrent I/O, event loops | CPU-bound parallel work |
 
-For multi-process serving in production (`serve-prefork`), see
-[Deployment](deployment.md#multi-process-serving). For worked examples
+For CPU-bound parallel work, reach for `(kaappi parallel)`'s `parallel-map`/
+`make-pool` (above) rather than raw `thread-start!` — it handles the
+channel/task bookkeeping and degrades to fibers under `--sandbox` and WASM
+automatically. For multi-process serving in production (`serve-prefork`),
+see [Deployment](deployment.md#multi-process-serving). For worked examples
 of pipelines and worker pools, see the cookbook recipe
 [Run Concurrent Tasks](../cookbook/concurrent-tasks.md).
 
