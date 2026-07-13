@@ -11,6 +11,12 @@ All SRFIs are imported with `(import (srfi N))`:
 (import (srfi 69))  ; hash tables
 ```
 
+Portable code can detect whether a given SRFI is available before importing
+it with `(cond-expand ((library (srfi N)) ...) (else ...))`. See
+[Standards Conformance](../conformance.md) for how this compares to
+R7RS-small's own scope, and for the equivalent `cond-expand` identifiers
+covering fibers, the reactor, and threads.
+
 ## Built-in SRFIs
 
 These are implemented in Zig for performance and are always available.

@@ -99,6 +99,14 @@ Threads cannot share mutable heap state directly -- use return values or
 channels to communicate. See the [SRFI-18 reference](../procedures/threads.md)
 for mutexes, condition variables, and the full threading API.
 
+!!! note "Cross-thread channels"
+    A channel handed to a thread through its thunk works across the thread
+    boundary — sends and receives are deep-copied at each end, the same way
+    values already are at `thread-start!`/`thread-join!`. This is newer than
+    the rest of the threading API and still has open correctness issues in
+    its wakeup path; see [Standards Conformance](../conformance.md#extensions-beyond-r7rs-smalls-scope)
+    for current status before relying on it for production workloads.
+
 ## Choosing a model
 
 | | Fibers | OS threads |
