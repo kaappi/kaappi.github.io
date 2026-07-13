@@ -136,6 +136,7 @@ nav:
     - FAQ: faq.md
     - Community: community.md
     - Stability: stability.md
+    - Standards Conformance: conformance.md
     - Glossary: glossary.md
 
 validation:
