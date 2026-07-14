@@ -23,6 +23,25 @@ Also available on Amazon in other countries:
 [Australia](https://www.amazon.com.au/dp/B0H7PK7LB5) &middot;
 [Japan](https://www.amazon.co.jp/dp/B0H7PK7LB5)
 
+## Read online
+
+<div class="book-viewer" id="book-viewer">
+  <div class="book-viewer__toolbar">
+    <button type="button" class="book-viewer__toggle" onclick="kpToggleBookViewer()">⛶ Maximize</button>
+  </div>
+  <iframe src="../assets/kaappi-book.pdf" title="Kaappi: A Scheme Programming Language (PDF)"></iframe>
+</div>
+
+<script>
+function kpToggleBookViewer() {
+  var el = document.getElementById('book-viewer');
+  var btn = el.querySelector('.book-viewer__toggle');
+  var maximized = el.classList.toggle('book-viewer--maximized');
+  btn.textContent = maximized ? '✕ Close' : '⛶ Maximize';
+  document.body.style.overflow = maximized ? 'hidden' : '';
+}
+</script>
+
 ## Chapter outline
 
 | Part | Chapters |
