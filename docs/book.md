@@ -10,8 +10,18 @@ know Python, JavaScript, or Ruby — no prior Scheme or Lisp experience needed.
 
 | Format | Link |
 |--------|------|
-| Paperback | [Amazon KDP](https://www.amazon.com/dp/B0H7PK7LB5) |
+| Paperback (Amazon.com) | [Amazon KDP](https://www.amazon.com/dp/B0H7PK7LB5) |
 | PDF | [kaappi-book.pdf](https://github.com/kaappi/kaappi-book/releases/latest/download/kaappi-book.pdf) |
+
+Also available on Amazon in other countries:
+[UK](https://www.amazon.co.uk/dp/B0H7PK7LB5) &middot;
+[Germany](https://www.amazon.de/dp/B0H7PK7LB5) &middot;
+[France](https://www.amazon.fr/dp/B0H7PK7LB5) &middot;
+[Italy](https://www.amazon.it/dp/B0H7PK7LB5) &middot;
+[Spain](https://www.amazon.es/dp/B0H7PK7LB5) &middot;
+[Canada](https://www.amazon.ca/dp/B0H7PK7LB5) &middot;
+[Australia](https://www.amazon.com.au/dp/B0H7PK7LB5) &middot;
+[Japan](https://www.amazon.co.jp/dp/B0H7PK7LB5)
 
 ## Chapter outline
 
