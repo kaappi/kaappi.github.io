@@ -10,7 +10,7 @@ know Python, JavaScript, or Ruby — no prior Scheme or Lisp experience needed.
 
 | Format | Link |
 |--------|------|
-| Paperback (Amazon.com) | [Amazon KDP](https://www.amazon.com/dp/B0H7PK7LB5) |
+| Paperback | [Amazon US](https://www.amazon.com/dp/B0H7PK7LB5) |
 | PDF | [kaappi-book.pdf](https://github.com/kaappi/kaappi-book/releases/latest/download/kaappi-book.pdf) |
 
 Also available on Amazon in other countries:
