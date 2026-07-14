@@ -236,11 +236,12 @@ and the kernel load-balances inbound connections across them
 cores × thousands of connections. macOS does not balance `SO_REUSEPORT`
 (every connection lands on the last-bound socket), so parallel mode there
 falls back to one acceptor thread distributing accepted sockets to a pool
-of worker threads; that fallback handles one connection per worker at a
-time, so it parallelizes across cores but without the per-worker fiber
-fan-out — treat macOS parallel serving as a development convenience and
-Linux as the deployment target. Like the other servers it runs until the
-process is terminated.
+of worker threads over a shared channel — but each worker still
+fiber-multiplexes its connections, so macOS reaches the same *threads ×
+fibers* model, just with a userspace distributor instead of the kernel.
+Linux remains the faster path (zero fd passing, no distributor), but both
+scale to cores × thousands of connections. Like the other servers it runs
+until the process is terminated.
 
 ## URL utilities
 
