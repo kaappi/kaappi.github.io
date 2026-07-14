@@ -197,12 +197,26 @@ Without the web framework, route by matching method and path:
 
 ;; Fiber (one fiber per connection, single OS thread)
 (http-listen-fiber handler port)
+
+;; Parallel (N threads, each a fiber server) — defaults to processor-count
+(http-listen-parallel handler port)
+(http-listen-parallel handler port 8)          ; explicit thread count
 ```
 
-Threaded mode uses SRFI-18 OS threads, which are unavailable in
-`--sandbox` mode and in the WebAssembly build. Pre-fork mode uses
-`fork()` and is the recommended approach for production concurrency
-that needs multi-core use and per-worker crash isolation.
+The five models trade CPU parallelism, connection scale, and isolation
+differently:
+
+| Model | Concurrency | Multi-core | Isolation | Best when |
+|-------|-------------|:----------:|-----------|-----------|
+| `http-listen` | one at a time | no | — | scripts, debugging |
+| `http-listen-threaded` | OS thread per connection | yes | per-thread heap | modest connection counts, CPU-bound handlers |
+| `http-listen-prefork` | process per accept loop | yes | **per-process** (crash isolation) | production; a handler crash must not take the server down |
+| `http-listen-fiber` | fiber per connection | **no** (one core) | shared heap | thousands of idle/slow connections, I/O-bound |
+| `http-listen-parallel` | threads × fibers | yes | per-thread heap | many connections **and** multiple cores |
+
+Threaded, pre-fork, and parallel all use SRFI-18 OS threads (or `fork()`),
+which are unavailable in `--sandbox` mode and in the WebAssembly build.
+Pre-fork remains the pick when per-worker crash isolation matters.
 
 Fiber mode sets the listen socket non-blocking and accepts in a loop,
 spawning a cheap fiber per connection instead of a thread or process —
@@ -213,6 +227,20 @@ connections on a single OS thread and GC heap, at the cost of the
 process isolation and multi-core parallelism `http-listen-prefork`
 gives you. Reach for it when connection count, not CPU work, is the
 bottleneck.
+
+**Parallel mode** is fiber mode across every core: `thread-count` OS
+threads (default `(processor-count)`), each running its own fiber accept
+loop and reactor. On Linux each thread binds its own `SO_REUSEPORT` socket
+and the kernel load-balances inbound connections across them
+(measured near-uniform), so the machine serves *threads × fibers* —
+cores × thousands of connections. macOS does not balance `SO_REUSEPORT`
+(every connection lands on the last-bound socket), so parallel mode there
+falls back to one acceptor thread distributing accepted sockets to a pool
+of worker threads; that fallback handles one connection per worker at a
+time, so it parallelizes across cores but without the per-worker fiber
+fan-out — treat macOS parallel serving as a development convenience and
+Linux as the deployment target. Like the other servers it runs until the
+process is terminated.
 
 ## URL utilities
 
@@ -285,6 +313,7 @@ Handles `+` (space) and `%XX` URL encoding.
 | `(http-listen-threaded handler port [host])` | Threaded server |
 | `(http-listen-prefork handler port workers [host])` | Pre-fork server |
 | `(http-listen-fiber handler port [host])` | Fiber server (one fiber per connection) |
+| `(http-listen-parallel handler port [thread-count [host]])` | Multi-core server (N threads × fibers; `SO_REUSEPORT` on Linux) |
 
 ### URL
 
