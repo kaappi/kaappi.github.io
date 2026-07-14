@@ -265,3 +265,176 @@ kaappi> (channel? 'not-a-channel)
 **See also:** [`make-channel`](#make-channel)
 
 ---
+
+## Parallel Pools
+
+`(kaappi parallel)` — worker pools and parallel map/for-each over
+`(srfi 18)` threads (fiber workers under `--sandbox` and WASM, where real
+threads are unavailable). See the [Concurrency
+guide](../guide/concurrency.md#multi-core-parallelism-with-kaappi-parallel)
+for a walkthrough and the cross-thread-copy semantics shared with raw
+`thread-start!`/`thread-join!`.
+
+### `make-pool` { #make-pool }
+<!-- index: 1 | Create a fixed-size pool of workers draining a shared task queue -->
+
+**Syntax:** `(make-pool n)`
+
+Creates a pool of *n* workers (a positive exact integer), each pulling
+tasks from a shared queue until the pool is shut down. Workers are real
+OS threads when available, or fiber workers on the calling thread's
+scheduler under `--sandbox` and in the WebAssembly build.
+
+```scheme
+kaappi> (import (kaappi parallel))
+kaappi> (define pool (make-pool 4))
+kaappi> (pool-shutdown! pool)
+```
+
+**See also:** [`pool-submit`](#pool-submit), [`pool-shutdown!`](#pool-shutdown),
+[`processor-count`](#processor-count)
+
+---
+
+### `pool-submit` { #pool-submit }
+<!-- index: 2 | Submit a thunk to a pool, returning a reply channel -->
+
+**Syntax:** `(pool-submit pool thunk)`
+
+Submits *thunk* (a procedure of zero arguments) to *pool* and returns a
+reply channel immediately — it does not wait for the task to run. Pass the
+reply channel to `task-wait` to block for the result. Raises if *pool* has
+already been shut down. Like `thread-start!`, *thunk* and its eventual
+result cross to and from the worker **by copy**.
+
+```scheme
+kaappi> (import (kaappi parallel))
+kaappi> (define pool (make-pool 2))
+kaappi> (define reply (pool-submit pool (lambda () (* 6 7))))
+kaappi> (task-wait reply)
+;=> 42
+kaappi> (pool-shutdown! pool)
+```
+
+**See also:** [`task-wait`](#task-wait), [`make-pool`](#make-pool)
+
+---
+
+### `task-wait` { #task-wait }
+<!-- index: 1 | Block for a submitted task's result, re-raising its exception -->
+
+**Syntax:** `(task-wait reply)`
+
+Blocks on the reply channel returned by `pool-submit` until the
+corresponding task completes, then returns its result. If the task's
+thunk raised an exception, `task-wait` re-raises it in the calling
+context — the same contract as `fiber-join`/`thread-join!`.
+
+```scheme
+kaappi> (import (kaappi parallel))
+kaappi> (define pool (make-pool 2))
+kaappi> (define reply (pool-submit pool (lambda () (error "boom"))))
+kaappi> (guard (e (#t (display "task failed\n"))) (task-wait reply))
+task failed
+kaappi> (pool-shutdown! pool)
+```
+
+**See also:** [`pool-submit`](#pool-submit)
+
+---
+
+### `pool-shutdown!` { #pool-shutdown }
+<!-- index: 1 | Drain a pool's queued tasks and join every worker -->
+
+**Syntax:** `(pool-shutdown! pool)`
+
+Closes *pool*'s task queue and waits for every worker to finish. Tasks
+already submitted (including one racing this call) all run to
+completion; `pool-submit` after shutdown raises.
+
+```scheme
+kaappi> (import (kaappi parallel))
+kaappi> (define pool (make-pool 2))
+kaappi> (pool-shutdown! pool)
+kaappi> (pool-submit pool (lambda () 1))
+;=> error: send on closed channel
+```
+
+**See also:** [`make-pool`](#make-pool), [`pool-submit`](#pool-submit)
+
+---
+
+### `parallel-map` { #parallel-map }
+<!-- index: 2 | Apply a procedure to a list in parallel, preserving order -->
+
+**Syntax:** `(parallel-map proc list)`
+
+Applies *proc* to each element of *list*, one task per element, using a
+private pool sized `(processor-count)` that's torn down before returning.
+Results are returned in the original list order regardless of completion
+order. An exception from any element propagates out of `parallel-map`.
+
+```scheme
+kaappi> (import (kaappi parallel))
+kaappi> (parallel-map (lambda (n) (* n n)) '(1 2 3 4 5))
+;=> (1 4 9 16 25)
+```
+
+**See also:** [`parallel-for-each`](#parallel-for-each), [`make-pool`](#make-pool)
+
+---
+
+### `parallel-for-each` { #parallel-for-each }
+<!-- index: 2 | Apply a procedure to a list in parallel for side effects -->
+
+**Syntax:** `(parallel-for-each proc list)`
+
+Like `parallel-map`, but for side effects: applies *proc* to each element
+of *list* using a private pool, waits for every call to finish, and
+returns an unspecified value. Since each call runs on a worker with its
+own heap, communicate side effects back through a channel rather than a
+shared variable.
+
+```scheme
+kaappi> (import (kaappi parallel))
+kaappi> (define out (make-channel))
+kaappi> (parallel-for-each (lambda (n) (channel-send out (* n n))) '(1 2 3))
+kaappi> (list (channel-receive out) (channel-receive out) (channel-receive out))
+;=> (1 4 9)  ; order depends on scheduling
+```
+
+**See also:** [`parallel-map`](#parallel-map)
+
+---
+
+!!! note "Large lists: chunk manually instead"
+    `parallel-map`/`parallel-for-each` submit one task per list element, so
+    a large list means many concurrent `pool-submit`/`task-wait` round
+    trips on the shared task/reply channels. The cross-thread wakeup path
+    has open correctness issues ([kaappi#1487](https://github.com/kaappi/kaappi/issues/1487),
+    [kaappi#1489](https://github.com/kaappi/kaappi/issues/1489)) that
+    surface as an intermittent hang once concurrent submissions climb into
+    the high hundreds — reliable in testing through list sizes in the low
+    hundreds. For larger inputs, use `make-pool`/`pool-submit`/`task-wait`
+    directly with one task per processor, each covering a slice of the
+    input with an ordinary sequential loop — see the [Parallel Prime
+    Search](https://github.com/kaappi/kaappi-examples/tree/main/parallel-primes)
+    example.
+
+### `processor-count` { #processor-count }
+<!-- index: 0 | Number of available processors -->
+
+**Syntax:** `(processor-count)`
+
+Returns the number of logical processors available, or `1` under
+`--sandbox` or in the WebAssembly build — matching the worker count a pool
+degrades to in those environments.
+
+```scheme
+kaappi> (processor-count)
+;=> 8
+```
+
+**See also:** [`make-pool`](#make-pool)
+
+---

@@ -111,6 +111,48 @@ them at `fiber-join`, which avoids result-channel deadlocks:
 ;=> results from all workers (order depends on scheduling)
 ```
 
+## CPU-bound work with a real thread pool
+
+The worker pool above runs every worker on the same OS thread — fine for
+I/O-bound work, but CPU-bound computation never actually runs in parallel
+that way. `(kaappi parallel)` gives you the same pool shape backed by real
+OS threads, with the chunking and shutdown bookkeeping already handled:
+
+```scheme
+(import (scheme base) (scheme write) (kaappi parallel))
+
+(parallel-map (lambda (n) (* n n)) '(1 2 3 4 5))
+;=> (1 4 9 16 25)
+```
+
+For repeated submissions, keep a pool around rather than paying setup cost
+per call — `pool-submit` returns a channel immediately, and `task-wait`
+blocks for the result (re-raising the task's exception, same contract as
+`fiber-join`):
+
+```scheme
+(define pool (make-pool (processor-count)))
+
+(define replies (map (lambda (item) (pool-submit pool (lambda () (process item))))
+                      items))
+(define results (map task-wait replies))
+
+(pool-shutdown! pool)
+```
+
+Every task thunk and result crosses the pool boundary **by copy**, the same
+rule as `thread-start!`/`thread-join!` — workers don't share heap state with
+the caller or each other. `make-pool` degrades to fiber workers (like the
+hand-rolled pool above) under `--sandbox` and in the WebAssembly build,
+where real threads aren't available, so code written against this API keeps
+working unchanged in either environment.
+
+Submitting one task per item (as above, or via `parallel-map`) is reliable
+for up to a few hundred items; for larger inputs, chunk the work into one
+task per processor instead — see the [Parallel Pools
+reference](../procedures/extensions.md#parallel-pools) for why, and
+`pool-submit`/`task-wait`/`pool-shutdown!`/`parallel-for-each`'s full API.
+
 ## Handle fiber errors
 
 An exception inside a fiber surfaces at `fiber-join` — wrap the join,
@@ -127,14 +169,18 @@ not the spawn:
 ## When to reach for OS threads instead
 
 Fibers run in one OS thread, so they interleave but never run in
-parallel. For CPU-bound work across cores, use
-[SRFI-18 OS threads](../procedures/threads.md) — each thread gets its
-own VM and heap, and values are deep-copied across thread boundaries.
-The trade-offs are covered in the
+parallel. For CPU-bound work across cores, reach for
+`(kaappi parallel)`'s `parallel-map`/`make-pool` (above) rather than raw
+[SRFI-18 OS threads](../procedures/threads.md) — it handles the
+channel/task bookkeeping for you and degrades to fibers automatically
+under `--sandbox` and WASM. Each worker still gets its own VM and heap,
+and values are deep-copied across thread boundaries either way. The
+trade-offs are covered in the
 [Concurrency guide](../guide/concurrency.md#choosing-a-model).
 
 ## Going further
 
 - Fiber and channel API: [Kaappi Extensions reference](../procedures/extensions.md#spawn)
+- Parallel pool API: [Kaappi Extensions reference](../procedures/extensions.md#parallel-pools)
 - Concurrency models compared: [Concurrency guide](../guide/concurrency.md)
 - Multi-process serving for web apps: [Deployment](../guide/deployment.md#multi-process-serving)
