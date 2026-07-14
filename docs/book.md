@@ -1,5 +1,7 @@
 # Kaappi: A Scheme Programming Language
 
+![Kaappi: A Scheme Programming Language book cover](assets/book-cover.png){ width="220" align="right" }
+
 A book teaching the Kaappi Scheme implementation to programmers who already
 know Python, JavaScript, or Ruby — no prior Scheme or Lisp experience needed.
 18 chapters plus 7 appendices, by Baiju Muthukadan. First Edition, 2026.
