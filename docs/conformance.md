@@ -91,6 +91,28 @@ cannot express; see [KEP-0004](https://github.com/kaappi/keps/blob/main/keps/000
 for the open question on whether a companion runtime predicate is worth
 adding.
 
+## Discovering capabilities from the command line
+
+`cond-expand` answers these questions *inside* a program. `kaappi features`
+answers them at the command line — for a person, or an agent, sizing up a build
+before running anything:
+
+```console
+$ kaappi features --json
+{"version":"0.14.1", … ,"features":["r7rs","kaappi", … ,"kaappi-threads"],
+ "srfis":{"builtin":[1,9,13, … ],"portable":[0,2,4, … ]},
+ "limits":{"initial_frame_capacity":480, … }}
+```
+
+It reports the version and git build id, target triple, build mode, the same
+compiled-in subsystem identifiers as the table above (whether `--sandbox` is
+available among them), and the built-in vs portable SRFIs — all derived from the
+one table that drives `cond-expand`, so the CLI and the language can never
+disagree about what a build has. Run `kaappi features` with no `--json` for a
+human-readable table. See the
+[`kaappi features` reference](https://github.com/kaappi/kaappi/blob/main/docs/dev/features.md)
+for the full JSON shape.
+
 ## Further reading
 
 - [CONFORMANCE.md](https://github.com/kaappi/kaappi/blob/main/CONFORMANCE.md) — exact R7RS and per-SRFI coverage
