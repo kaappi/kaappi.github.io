@@ -62,6 +62,7 @@ nav:
       - REPL Guide: guide/repl.md
       - CLI Reference: guide/cli.md
       - Debugging: guide/debugging.md
+      - Diagnostic Reference: guide/diagnostics.md
       - Editor Support: guide/editors.md
     - Extending:
       - C Extensions: guide/c-extensions.md
