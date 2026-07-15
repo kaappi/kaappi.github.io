@@ -133,8 +133,8 @@ nav:
       - CLI Parsing: ecosystem/cli.md
     - Examples: ecosystem/examples.md
   - About:
-    - Book: book.md
     - FAQ: faq.md
+    - Book: book.md
     - Community: community.md
     - Stability: stability.md
     - Standards Conformance: conformance.md
