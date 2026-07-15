@@ -7,25 +7,59 @@ disassembly for seeing what the compiler produces.
 
 ## Reading error messages
 
-Errors include the source location and a clear diagnostic:
+Errors include the source location, a stable diagnostic code, and the
+offending line:
 
 ```
-program.scm:5:12: error: type error in '+': expected number, got "hello"
+program.scm:5:12: error[KP3002]: type error in 'arithmetic': expected number, got #<string>
+    (+ 1 "hello")
 ```
 
-The format is `source:line:column: category: message`. Error categories:
+The format is `source:line:column: category[KPnnnn]: message`. Error
+categories:
 
-- **read error** — malformed syntax (unclosed parentheses, bad escapes)
-- **compile error** — invalid forms or undefined variables at compile time
-- **error** — runtime type errors, arity mismatches, out-of-bounds access
+- **read error** (`KP1xxx`) — malformed syntax (unclosed parentheses, bad escapes)
+- **compile error** (`KP2xxx`) — invalid forms or undefined variables at compile time
+- **error** (`KP3xxx`) — runtime type errors, arity mismatches, out-of-bounds access
 
 When errors occur in nested calls, Kaappi prints a backtrace:
 
 ```
-error: type error in '+': expected number, got "hello"
-  called from helpers.scm:12
-  called from program.scm:5
+program.scm:1:20: error[KP3002]: type error in 'arithmetic': expected number, got #<string>
+    (define (helper x) (+ x "bad"))
+  called from program.scm:3
 ```
+
+### Diagnostic codes
+
+Every diagnostic carries a stable `KP` code (`KP1xxx` read, `KP2xxx`
+compile, `KP3xxx` runtime, `KP4xxx` lint, `KP9xxx` internal). Codes never
+change meaning between releases, so they are safe to match on in scripts and
+tooling.
+
+Look up any code — its meaning, a minimal example, and how to fix it —
+straight from the binary:
+
+```
+$ kaappi explain KP3002
+KP3002  type-error
+runtime · error
+
+type error
+
+A procedure was applied to an argument of the wrong type — for example
+'car' on a non-pair or '+' on a non-number. The message names the
+procedure, the type it expected, and the value it got.
+
+Example:
+    (car 5)
+```
+
+The [Diagnostic Reference](diagnostics.md) documents every code on one page.
+For machine-readable output, `kaappi explain <code> --json` emits a single
+JSON object, and `--diagnostics=json` makes the interpreter itself report
+errors as [LSP `Diagnostic`](https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#diagnostic)
+objects.
 
 ## REPL introspection
 
