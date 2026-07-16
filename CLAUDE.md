@@ -38,6 +38,7 @@ Files in `docs/` that are not nav pages:
 
 - `docs/install.sh` — the `curl | bash` installer served at kaappi-lang.org/install.sh; copied verbatim into the built site. Always fetches the latest GitHub release.
 - `docs/wasm/kaappi.wasm` — the WASM binary powering playground and tour. **Gitignored** (kept out of history); `scripts/fetch-wasm.sh` downloads it from the kaappi release matching `kaappi_version`, verified against the release SHA256SUMS. CI fetches it before deploy; run the script once locally before `mkdocs serve`.
+- `docs/assets/kaappi-book.pdf` — the book PDF embedded by the `/book/` viewer. **Gitignored**, same pattern: `scripts/fetch-book.sh` downloads it from the kaappi-book release matching `book_version` in mkdocs.yml, verified against that release's SHA256SUMS. After a book release, bump `book_version` and push — the deploy picks it up. (The page's download link points at `releases/latest` and needs no bump; `docs/assets/book-cover.png` stays committed.)
 - `docs/js/` — `codemirror-bundle.mjs` (prebuilt CodeMirror 6), `wasi-shim-bundle.mjs` (prebuilt @bjorn3/browser_wasi_shim), `playground-worker.js` (Web Worker that runs the WASM), `kp-editor.mjs` / `kp-runner.mjs` (shared editor + worker-runner factories used by both the playground and tour), and the content modules `tour-lessons.mjs` (`LESSONS`) and `playground-examples.mjs` (`EXAMPLES`).
 - `docs/stylesheets/extra.css` — design bridge into content pages (see Styling).
 - `docs/assets/` — `logo.svg`, `favicon.png`.
@@ -85,6 +86,7 @@ they normally need no per-release changes.
 ```bash
 pip install -r requirements.txt   # one-time setup (pinned versions)
 scripts/fetch-wasm.sh          # populate the gitignored playground WASM (once per clone / version bump)
+scripts/fetch-book.sh          # populate the gitignored embedded book PDF (same cadence)
 mkdocs serve                   # local dev server at http://127.0.0.1:8000
 mkdocs build                   # build to site/
 mkdocs build --strict          # build with strict link checking

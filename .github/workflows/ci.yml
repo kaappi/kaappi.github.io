@@ -55,5 +55,8 @@ jobs:
       - name: Fetch playground WASM
         run: scripts/fetch-wasm.sh
 
+      - name: Fetch book PDF
+        run: scripts/fetch-book.sh
+
       - name: Deploy to GitHub Pages
         run: mkdocs gh-deploy --force --strict

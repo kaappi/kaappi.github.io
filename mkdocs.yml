@@ -186,6 +186,9 @@ extra_css:
 
 extra:
   kaappi_version: 0.15.0
+  # Book edition embedded on /book/ — scripts/fetch-book.sh downloads the
+  # matching kaappi-book release at deploy time. Bump after a book release.
+  book_version: 1.1.0
   social:
     - icon: fontawesome/brands/github
       link: https://github.com/kaappi/kaappi
