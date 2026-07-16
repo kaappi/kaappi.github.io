@@ -5,6 +5,37 @@ categories: read-time (parsing), compile-time, and runtime.
 
 ---
 
+## First: `kaappi doctor`
+
+For anything that smells like a setup problem — `kaappi` not found,
+libraries that won't import, native compilation failing, FFI libraries
+not loading — start with the built-in environment check:
+
+```console
+$ kaappi doctor
+
+binary
+  PASS  version: v0.15.0
+  PASS  on-PATH: /home/user/.local/bin/kaappi (same as running binary)
+
+library
+  PASS  ~/.kaappi/lib: /home/user/.kaappi/lib
+...
+native-backend
+  PASS  c-compiler: zig: /usr/local/bin/zig (links via 'zig cc')
+  WARN  libkaappi_rt.a: not found in KAAPPI_LIB_DIR, <exe>/../lib, zig-out/lib, or /usr/local/lib
+        → run 'zig build lib' in a source checkout, or install a release build that ships libkaappi_rt.a
+...
+Summary: 15 pass, 1 warn, 0 fail — usable, but some checks need attention.
+```
+
+Six groups are checked — binary, library path, package manager, native
+backend, REPL, and FFI — each reported PASS/WARN/FAIL with a suggested
+fix for every failure. `kaappi doctor --json` emits the same report for
+tooling.
+
+---
+
 ## Read-Time Errors
 
 Read-time errors occur when the reader cannot parse your input into valid

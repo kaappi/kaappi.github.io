@@ -227,10 +227,12 @@ supports:
     (include "big-part2.scm"))
   ```
 
-- Pre-compile libraries that don't change often:
+- Keep formatting canonical with the built-in formatter (2-space R7RS
+  indentation, comment-preserving, guarded so it never changes meaning):
 
   ```bash
-  kaappi --compile lib/mylib/utils.sld
+  kaappi fmt lib/          # format in place
+  kaappi fmt --check lib/  # verify in CI without writing
   ```
 
 ---

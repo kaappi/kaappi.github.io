@@ -61,6 +61,32 @@ JSON object, and `--diagnostics=json` makes the interpreter itself report
 errors as [LSP `Diagnostic`](https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#diagnostic)
 objects.
 
+## Catching errors before running
+
+`kaappi check` reads, expands, and compiles a file without executing it,
+reporting read and compile errors plus
+[`KP4xxx` lint findings](diagnostics.md#static-analysis-kp4xxx) for
+mistakes that are guaranteed to fail at run time:
+
+```console
+$ kaappi check program.scm
+1:1: warning[KP4001]: unknown variable 'undefined-name' at top level
+2:1: error[KP4002]: 'car' expects 1 argument, but 2 were given
+3:1: error[KP4003]: 'vector-ref' expects a vector as argument 1, but a string literal was given
+check: 2 errors, 1 warning
+```
+
+The exit code is non-zero when any error is found. Findings that are
+only warnings — like KP4001, since R7RS permits top-level forward
+references — leave the exit code at 0 unless you pass `--deny-warnings`;
+`kaappi check` never rejects a program R7RS permits:
+
+```bash
+kaappi check --deny-warnings program.scm   # CI: warnings fail too
+```
+
+Like the interpreter, `check` honors `--diagnostics=json` for tooling.
+
 ## REPL introspection
 
 The REPL has several comma commands for exploring values and bindings
@@ -285,6 +311,22 @@ kaappi> ,time (fib 30)
 ; 0.025 seconds
 ```
 
+### Per-stage pipeline timings
+
+To see where startup time goes — reading, expansion, compilation, or
+execution — and whether the bytecode cache was used:
+
+```console
+$ kaappi --timings program.scm
+3
+timings: read 0.0ms | expand 0.0ms | lower 0.0ms | optimize 0.0ms | emit 0.0ms | execute 0.0ms
+cache: MISS (wrote /home/user/.kaappi/cache/7f6d8fd16240bf92.sbc)
+```
+
+Both lines go to stderr. On a second run of an unchanged program the
+compile stages disappear — the cache line reports `HIT` and only
+`execute` remains. `--timings=json` emits the same data as JSON.
+
 ## Performance tips
 
 - **Prefer vectors over lists for random access.** `vector-ref` is O(1);
@@ -327,6 +369,40 @@ kaappi> ,time (fib 30)
   (define ht (alist->hash-table '((a . 1) (b . 2) (c . 3))))
   (hash-table-ref ht 'b)  ;=> 2
   ```
+
+## Pipeline stage dumps
+
+Three read-only subcommands print a program at successive stages of the
+compile pipeline — useful for macro debugging and for seeing what the
+optimizer does:
+
+- `kaappi ast file.scm` — the datums exactly as the reader produced
+  them, before any expansion
+- `kaappi expand file.scm` — the program after full macro expansion; the
+  output is valid source and round-trips through the reader
+- `kaappi ir file.scm` — the compiler's IR tree after the optimization
+  passes (`--no-opt` shows it before them)
+
+Macro expansion makes hygiene visible — template-introduced bindings
+show up under their renamed `__hyg_...` identities:
+
+```console
+$ cat swap.scm
+(define-syntax swap!
+  (syntax-rules ()
+    ((_ a b) (let ((tmp a)) (set! a b) (set! b tmp)))))
+(define x 1)
+(define y 2)
+(swap! x y)
+
+$ kaappi expand swap.scm
+(define-syntax swap! (syntax-rules () ((_ a b) (let ((tmp a)) (set! a b) (set! b tmp)))))
+(define x 1)
+(define y 2)
+(__hyg_1_let ((__hyg_2_tmp x)) (set! x y) (set! y __hyg_2_tmp))
+```
+
+The REPL's `,expand` command does the same for a single expression.
 
 ## Bytecode inspection
 

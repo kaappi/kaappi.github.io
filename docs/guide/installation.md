@@ -57,6 +57,14 @@ echo '(+ 1 2)' | kaappi
 # Output: 3
 ```
 
+Then let Kaappi check its own installation — binary, library search
+path, package manager, native backend, REPL, and FFI, with a suggested
+fix for anything that fails:
+
+```bash
+kaappi doctor
+```
+
 Run the test suite to confirm everything works:
 
 ```bash

@@ -259,3 +259,55 @@ kaappi tests/test-parser.scm && \
 kaappi tests/test-validator.scm && \
 kaappi tests/test-handlers.scm
 ```
+
+## SRFI-64 suites and the built-in runner
+
+Everything above uses the `(kaappi test)` framework, run as ordinary
+programs. Kaappi also bundles
+[SRFI 64](https://srfi.schemers.org/srfi-64/srfi-64.html); suites
+written against `(srfi 64)` get discovery and aggregation from the
+built-in `kaappi test` runner, with no install step at all:
+
+```scheme
+;; tests/test-strings.scm
+(import (scheme base) (srfi 64))
+
+(test-begin "strings")
+(test-equal "upcase" "ABC" (string-upcase "abc"))
+(test-equal "append" "ab" (string-append "a" "b"))
+(test-end "strings")
+```
+
+```console
+$ kaappi test tests/
+kaappi test: seed 76958 (reproduce with: kaappi test --seed 76958)
+  PASS  tests/test-demo.scm  (1 tests, 0 skipped, 4ms)
+  PASS  tests/test-strings.scm  (2 tests, 0 skipped, 7ms)
+
+Summary: 3 passed, 0 failed, 0 unexpected-pass, 0 expected-fail, 0 skipped
+Files:   2 run, 0 failed, 0 errored (133ms)
+Seed:    76958  (reproduce with: kaappi test --seed 76958)
+```
+
+Each file runs in its own subprocess, so one crashing suite cannot take
+down the rest; the runner aggregates the counts and exits non-zero on
+any failure. The printed seed is fed to SRFI-27's default random source
+in every subprocess, so a failing randomized test reproduces exactly
+with `kaappi test --seed <n>`.
+
+The runner discovers files that import `(srfi 64)` under the paths you
+give it — suites written with `(kaappi test)` are not picked up; run
+those directly as shown above. Useful flags:
+
+- `--json` — one JSON object per file plus a summary line, for tooling
+- `--changed` — run only suites whose import closure changed since
+  `HEAD` (`--since <rev>` for another baseline); `--list-affected`
+  prints them without running
+- `--lib-path ./lib` — same meaning as everywhere else
+
+For SRFI-64 suites the CI step becomes a single command:
+
+```yaml
+      - name: Run tests
+        run: kaappi test tests/
+```

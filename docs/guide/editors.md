@@ -94,6 +94,39 @@ language-servers = ["kaappi-lsp"]
 command = "kaappi-lsp"
 ```
 
+## Formatting
+
+`kaappi fmt` canonically formats Scheme source: 2-space R7RS
+indentation, 80-column reflow, comments preserved. Every write is
+guarded by a reader round-trip check — the formatted output must read
+back `equal?` to the original — so it can never change a program's
+meaning:
+
+```bash
+kaappi fmt src/           # format files in place
+kaappi fmt --check src/   # list files needing formatting, exit 1 (for CI)
+```
+
+With no file arguments, `kaappi fmt` reads stdin and writes formatted
+source to stdout — the shape editor filter commands expect:
+
+- **Vim / Neovim** — `:%!kaappi fmt` filters the buffer; wire it to a
+  `BufWritePre` autocmd for format-on-save.
+- **Emacs** — `C-u M-|` (`shell-command-on-region` with replacement)
+  running `kaappi fmt`.
+- **Helix** — add a formatter to the `languages.toml` entry above:
+
+  ```toml
+  [[language]]
+  name = "scheme"
+  language-servers = ["kaappi-lsp"]
+  formatter = { command = "kaappi", args = ["fmt"] }
+  auto-format = true
+  ```
+
+- **VS Code** — use a run-on-save extension to run `kaappi fmt ${file}`
+  after saving.
+
 ---
 
 Next: [C Extensions](c-extensions.md)
