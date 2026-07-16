@@ -44,7 +44,7 @@ that unspecified territory, tracked as [Kaappi Enhancement Proposals
 |---|---|---|---|
 | Fibers + I/O reactor | [KEP-0001](https://github.com/kaappi/keps/blob/main/keps/0001-event-loop-reactor.md) | **Final** — shipped | `(cond-expand (kaappi-fibers ...))`, `(cond-expand (kaappi-reactor ...))` |
 | SRFI-18 OS threads | — (R7RS-small doesn't cover threads; SRFI-18 predates this project) | Shipped | `(cond-expand (kaappi-threads ...))`, or `(cond-expand ((library (srfi 18)) ...))` |
-| Cross-thread channels | [KEP-0002](https://github.com/kaappi/keps/blob/main/keps/0002-cross-thread-channels.md) | **Accepted** — core mechanism shipped; two known correctness issues open in the cross-thread wakeup path ([#1487](https://github.com/kaappi/kaappi/issues/1487), [#1489](https://github.com/kaappi/kaappi/issues/1489)) before this is recommended for production concurrent workloads | Not yet exposed via `cond-expand` — deliberately: see [KEP-0004](https://github.com/kaappi/keps/blob/main/keps/0004-discoverable-deviations.md), which withholds a `kaappi-shared-channels` identifier until the open issues above are resolved, the same way it withheld one earlier for an unmerged wakeup path that could crash the process |
+| Cross-thread channels | [KEP-0002](https://github.com/kaappi/keps/blob/main/keps/0002-cross-thread-channels.md) | **Accepted** — core mechanism shipped; the two wakeup-path correctness issues open at 0.14.x ([#1487](https://github.com/kaappi/kaappi/issues/1487), [#1489](https://github.com/kaappi/kaappi/issues/1489)) were fixed in v0.15.0 | Not yet exposed via `cond-expand`: [KEP-0004](https://github.com/kaappi/keps/blob/main/keps/0004-discoverable-deviations.md) gates a `kaappi-shared-channels` identifier on the wakeup path shipping with its review findings resolved — the fixes have shipped, the identifier has not yet; check `kaappi features` on your build |
 | Shared flat numeric buffers | [KEP-0003](https://github.com/kaappi/keps/blob/main/keps/0003-shared-flat-numeric-data.md) | **Draft** — unimplemented, gated behind KEP-0002 usage data | None — doesn't exist yet |
 
 See [Concurrency](guide/concurrency.md) for how to use fibers, the reactor,
@@ -84,6 +84,7 @@ bare feature identifier:
 | `kaappi-fibers` | `(kaappi fibers)` is compiled in — every target, including wasm32-wasi |
 | `kaappi-reactor` | An OS-level I/O multiplexing reactor (kqueue/epoll/`poll_oneoff`) is compiled in |
 | `kaappi-threads` | SRFI-18 OS threads are compiled in — every target except wasm32-wasi |
+| `kaappi-diagnostics` | `(kaappi diagnostics)` (stable `KP` error codes on error objects) is compiled in — every target, including wasm32-wasi |
 
 `--sandbox` mode and a WASI host's actual (as opposed to compiled-in) I/O
 capability are runtime facts that `cond-expand` — an expand-time construct —
@@ -99,7 +100,8 @@ before running anything:
 
 ```console
 $ kaappi features --json
-{"version":"0.14.1", … ,"features":["r7rs","kaappi", … ,"kaappi-threads"],
+{"version":"0.15.0", … ,"features":["r7rs","kaappi", … ,"kaappi-fibers",
+ "kaappi-reactor","kaappi-diagnostics","kaappi-threads"],
  "srfis":{"builtin":[1,9,13, … ],"portable":[0,2,4, … ]},
  "limits":{"initial_frame_capacity":480, … }}
 ```

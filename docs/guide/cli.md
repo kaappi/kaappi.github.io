@@ -1,8 +1,16 @@
 # Command-Line Reference
 
 ```
-kaappi [OPTIONS] [FILE]
+kaappi [OPTIONS] [FILE] [SCRIPT-ARGS...]
 kaappi compile FILE [-o OUTPUT]
+kaappi check FILE
+kaappi explain CODE
+kaappi features [--json]
+kaappi test [PATHS...]
+kaappi ast|expand|ir FILE
+kaappi doctor [--json]
+kaappi fmt [--check] [FILES...]
+kaappi cache status|clear
 ```
 
 ## Commands
@@ -10,6 +18,17 @@ kaappi compile FILE [-o OUTPUT]
 | Command | Description |
 |---------|-------------|
 | `kaappi compile FILE` | Compile Scheme source to a native binary via LLVM. Use `-o` to set the output path. |
+| `kaappi check FILE` | Compile-only static analysis: read, expand, and compile without executing, reporting read/compile errors plus `KP4xxx` lint findings (see the [Diagnostic Reference](diagnostics.md#static-analysis-kp4xxx)). Honors `--diagnostics=json`; `--deny-warnings` makes lint findings fail the exit code. |
+| `kaappi explain CODE` | Print a diagnostic code's registry entry — meaning, a minimal triggering example, and the fix — e.g. `kaappi explain KP3001`. `--json` emits one machine-readable object; `--all` prints every registered code. |
+| `kaappi features` | Report this build's capabilities: version and build id, target triple, build mode, compiled-in subsystems, built-in vs. portable SRFIs, and VM limits. `--json` for tooling. See [Standards Conformance](../conformance.md#discovering-capabilities-from-the-command-line). |
+| `kaappi test [PATHS...]` | Run SRFI-64 test suites (files or directories), one subprocess per file, and print an aggregate summary with a reproducible seed. `--json`, `--seed N`, `--lib-path DIR`; `--changed` / `--list-affected [--since REV]` select only suites whose import closure actually changed. |
+| `kaappi ast FILE` | Print the post-read datums — the program as the reader saw it, before macro expansion. |
+| `kaappi expand FILE` | Print the program after full macro expansion. The output round-trips: it is valid source. |
+| `kaappi ir FILE` | Print the compiler's IR tree after the optimization passes; `--no-opt` shows it before them. |
+| `kaappi doctor` | Check the installation and environment — binary, library path, package manager, native backend, REPL, FFI — reporting PASS/WARN/FAIL per check with a fix for each failure. `--json` for tooling. |
+| `kaappi fmt [FILES...]` | Format Scheme source in place: canonical 2-space R7RS indentation with 80-column reflow, preserving comments, guarded by a reader round-trip check so it can never change a program's meaning. `--check` lists files that need formatting and exits 1 without writing; with no files, formats stdin to stdout. |
+| `kaappi cache status` | Show the bytecode cache location, entries, sizes, and staleness. |
+| `kaappi cache clear` | Remove all bytecode cache entries. |
 
 ## Options
 
@@ -28,6 +47,10 @@ kaappi compile FILE [-o OUTPUT]
 | `--max-memory BYTES` | Maximum heap memory in bytes |
 | `--emit-llvm` | Emit LLVM IR text (`.ll` file) for native compilation |
 | `--profile-json FILE` | Write profiling data as JSON |
+| `--timings[=FMT]` | Report per-stage pipeline wall time (read, expand, lower, optimize, emit, execute) and a cache HIT/MISS line on stderr; `FMT` is `text` (default) or `json` |
+| `--diagnostics=FMT` | Diagnostic output format: `text` (default) or `json` — JSON Lines on stderr, shaped as LSP `Diagnostic` objects |
+| `--deny-warnings` | With `kaappi check`: treat lint warnings as errors for the exit code |
+| `--no-ir-opt` | Disable the IR optimization passes (skips the bytecode cache) |
 | `--disassemble FILE` | Show compiled bytecode without running |
 | `--gc-stats` | Print GC statistics on exit |
 | `--coverage` | Report library procedure coverage |
@@ -59,7 +82,7 @@ eval "$(thottam --completions bash)"   # or zsh / fish
 
 | Variable | Description |
 |----------|-------------|
-| `KAAPPI_HOME` | Override the default `~/.kaappi/` directory for libraries, packages, and REPL history. |
+| `KAAPPI_HOME` | Override the default `~/.kaappi/` directory for libraries, packages, the bytecode cache, and REPL history. |
 | `KAAPPI_LIB_DIR` | Directory containing `libkaappi_rt.a` for `kaappi compile`. Overrides the default search paths. |
 | `NO_COLOR` | When set to a non-empty value, disables all REPL syntax highlighting and prompt colors. See [no-color.org](https://no-color.org/). |
 
@@ -126,6 +149,24 @@ echo '(+ 1 2)' | kaappi
 
 # Profile a program
 kaappi --profile program.scm
+
+# Lint without running (KP4xxx findings; add --deny-warnings for CI)
+kaappi check program.scm
+
+# Run all SRFI-64 test suites under tests/
+kaappi test tests/
+
+# Check formatting without writing (exit 1 if anything needs reformatting)
+kaappi fmt --check src/
+
+# Look up a diagnostic code
+kaappi explain KP3001
+
+# Verify the installation and environment
+kaappi doctor
+
+# See where the pipeline spends time, and whether the bytecode cache hit
+kaappi --timings program.scm
 ```
 
 ---

@@ -407,17 +407,15 @@ kaappi> (list (channel-receive out) (channel-receive out) (channel-receive out))
 
 ---
 
-!!! note "Large lists: chunk manually instead"
+!!! note "Cheap per-element work: chunk manually instead"
     `parallel-map`/`parallel-for-each` submit one task per list element, so
-    a large list means many concurrent `pool-submit`/`task-wait` round
-    trips on the shared task/reply channels. The cross-thread wakeup path
-    has open correctness issues ([kaappi#1487](https://github.com/kaappi/kaappi/issues/1487),
-    [kaappi#1489](https://github.com/kaappi/kaappi/issues/1489)) that
-    surface as an intermittent hang once concurrent submissions climb into
-    the high hundreds — reliable in testing through list sizes in the low
-    hundreds. For larger inputs, use `make-pool`/`pool-submit`/`task-wait`
-    directly with one task per processor, each covering a slice of the
-    input with an ordinary sequential loop — see the [Parallel Prime
+    every element pays a `pool-submit`/`task-wait` round trip plus the copy
+    across the worker boundary. That is the right shape when each call does
+    real work; for very cheap per-element operations the bookkeeping
+    dominates the computation. For those, use
+    `make-pool`/`pool-submit`/`task-wait` directly with one task per
+    processor, each covering a slice of the input with an ordinary
+    sequential loop — see the [Parallel Prime
     Search](https://github.com/kaappi/kaappi-examples/tree/main/parallel-primes)
     example.
 

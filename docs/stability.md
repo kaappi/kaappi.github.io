@@ -27,7 +27,7 @@ These interfaces will not break without a minor version bump (e.g., 0.5 to
 
 | Component | Status | Impact |
 |-----------|--------|--------|
-| **Bytecode format** (`.sbc`) | Unstable | Version mismatch detected automatically — stale files are recompiled from source |
+| **Bytecode format** (`.sbc`) | Unstable | Cache entries are keyed by compiler version and build id — a new binary never reads stale bytecode; sources are recompiled automatically |
 | **Build options** (`-Dmax-frames`, etc.) | Unstable | May be added or adjusted |
 | **Internal APIs** (embedding the VM) | Unstable | No stability promise for Zig-level API |
 | **Error message text** | Unstable | Wording may improve; don't parse error messages |
@@ -52,11 +52,12 @@ This installs the latest release of both `kaappi` and `thottam`.
 
 ### After upgrading
 
-1. Delete cached bytecode — stale `.sbc` files are detected automatically,
-   but you can clean them explicitly:
+1. There is no cache to invalidate by hand — bytecode cache entries are
+   keyed by the exact binary that wrote them, so the new version recompiles
+   automatically. To reclaim the space held by the old entries:
 
    ```bash
-   find . -name '*.sbc' -delete
+   kaappi cache clear
    ```
 
 2. Check the [GitHub releases](https://github.com/kaappi/kaappi/releases) for breaking changes.

@@ -149,19 +149,28 @@ With this invocation, `(import (mylib math))` searches:
 
 ## Bytecode Caching
 
-Library files can be pre-compiled to bytecode for faster loading:
+Libraries are **not** bytecode-cached: a `.sld` file is compiled from source
+each time it is loaded. (An earlier scheme that read `.sbc` files placed next
+to libraries was removed as unsound -- if you have stray `.sbc` files sitting
+beside your `.sld` sources from following older docs, they are ignored and
+can be deleted.)
+
+Program files *are* cached automatically: running `kaappi program.scm` stores
+the compiled bytecode in a central cache at `$KAAPPI_HOME/cache` (default
+`~/.kaappi/cache`), keyed by the source content and the exact binary that
+compiled it -- so an upgraded or rebuilt `kaappi` never serves stale
+bytecode. Subsequent runs of an unchanged program skip the
+read/expand/compile pipeline entirely. Inspect or wipe the cache from the
+CLI:
 
 ```bash
-kaappi --compile mylib/math.sld
-# Output: Compiled mylib/math.sld -> mylib/math.sbc
+kaappi cache status   # cache location, entries, sizes, staleness
+kaappi cache clear    # remove all entries
 ```
 
-When Kaappi loads a library, it checks for a `.sbc` file next to the `.sld`.
-If the bytecode cache is newer than the source (based on a hash of the source
-content), the cache is used directly, skipping parsing and compilation.
-
-Caching happens automatically on first run -- explicit `--compile` is only
-needed if you want to pre-warm the cache.
+`kaappi --compile file.scm` still writes an explicit `.sbc` artifact -- an
+output you asked for by name (for example to embed with `zig build
+-Dbundle=file.sbc`), separate from the automatic cache.
 
 ---
 

@@ -102,10 +102,12 @@ for mutexes, condition variables, and the full threading API.
 !!! note "Cross-thread channels"
     A channel handed to a thread through its thunk works across the thread
     boundary — sends and receives are deep-copied at each end, the same way
-    values already are at `thread-start!`/`thread-join!`. This is newer than
-    the rest of the threading API and still has open correctness issues in
-    its wakeup path; see [Standards Conformance](../conformance.md#extensions-beyond-r7rs-smalls-scope)
-    for current status before relying on it for production workloads.
+    values already are at `thread-start!`/`thread-join!`. Reaching a channel
+    any other way (through a shared global, for example) raises a
+    descriptive error rather than corrupting memory. The wakeup-path bugs
+    in earlier builds were fixed in v0.15.0; see
+    [Standards Conformance](../conformance.md#extensions-beyond-r7rs-smalls-scope)
+    for the subsystem's KEP status.
 
 ## Multi-core parallelism with `(kaappi parallel)`
 
@@ -151,25 +153,14 @@ for the full API, and the cookbook recipe [Run Concurrent
 Tasks](../cookbook/concurrent-tasks.md) for a worked comparison against a
 hand-rolled fiber pool.
 
-!!! note "Use a pool only from the thread that created it"
-    A pool's `make-pool`/`pool-submit`/`task-wait`/`pool-shutdown!` calls
-    must all come from the thread that created the pool (or one that
-    received it some other way that doesn't route through a fresh
-    `thread-start!` thunk). Calling any of them from inside a thread you
-    `thread-start!` yourself currently hangs -- a closure that crosses a
-    thread boundary and then calls a separately-defined library procedure
-    is an open issue
-    ([kaappi#1520](https://github.com/kaappi/kaappi/issues/1520)), on top
-    of the wakeup-path issues noted above.
-
-!!! note "parallel-map/parallel-for-each: chunk large lists manually"
-    Both submit one task per list element, so a large list means many
-    concurrent `pool-submit`/`task-wait` round trips -- reliable in testing
-    through list sizes in the low hundreds, but the wakeup-path issues
-    above make an intermittent hang increasingly likely beyond that. For
-    larger inputs, use `make-pool`/`pool-submit`/`task-wait` directly with
-    one task per processor instead of one per element -- see the [Parallel
-    Prime Search](https://github.com/kaappi/kaappi-examples/tree/main/parallel-primes)
+!!! note "parallel-map/parallel-for-each: one task per element"
+    Both submit one task per list element, so every element pays a
+    `pool-submit`/`task-wait` round trip plus the copy across the worker
+    boundary. When each call does real work that's fine; for very cheap
+    per-element operations, use `make-pool`/`pool-submit`/`task-wait`
+    directly with one task per processor instead of one per element -- see
+    the [Parallel Prime
+    Search](https://github.com/kaappi/kaappi-examples/tree/main/parallel-primes)
     example.
 
 ## Choosing a model
