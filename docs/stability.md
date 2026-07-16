@@ -19,7 +19,8 @@ These interfaces will not break without a minor version bump (e.g., 0.5 to
 | **R7RS procedures** | All 600+ built-in procedures retain their current behavior |
 | **Library system** | `define-library`, `import`, `export` syntax and semantics |
 | **SRFI support** | All 72 currently supported SRFIs remain available |
-| **CLI interface** | `kaappi [flags] [file]` — flags may be added but not removed |
+| **CLI interface** | `kaappi [flags] [file]` and the subcommands (`compile`, `check`, `explain`, `features`, `test`, `ast`/`expand`/`ir`, `doctor`, `fmt`, `cache`) — flags and subcommands may be added but not removed |
+| **Diagnostic codes** | A `KP` code never changes meaning and is never reused; new codes may be added. See the [Diagnostic Reference](guide/diagnostics.md) |
 | **thottam CLI** | `install`, `remove`, `list`, `update`, `verify` commands |
 | **`kaappi.pkg` format** | Package manifest fields are additive-only |
 
@@ -30,7 +31,7 @@ These interfaces will not break without a minor version bump (e.g., 0.5 to
 | **Bytecode format** (`.sbc`) | Unstable | Cache entries are keyed by compiler version and build id — a new binary never reads stale bytecode; sources are recompiled automatically |
 | **Build options** (`-Dmax-frames`, etc.) | Unstable | May be added or adjusted |
 | **Internal APIs** (embedding the VM) | Unstable | No stability promise for Zig-level API |
-| **Error message text** | Unstable | Wording may improve; don't parse error messages |
+| **Error message text** | Unstable | Wording may improve — match the stable `KP` code instead ([`error-object-code`](procedures/extensions.md#error-object-code), `--diagnostics=json`) |
 | **LLVM native backend** | Unstable | Compilation behavior and optimizations may change |
 | **Performance** | Best effort | Performance may improve or regress between versions |
 
@@ -62,10 +63,11 @@ This installs the latest release of both `kaappi` and `thottam`.
 
 2. Check the [GitHub releases](https://github.com/kaappi/kaappi/releases) for breaking changes.
 
-3. Run your test suite:
+3. Verify the installation, then run your test suite:
 
    ```bash
-   kaappi tests/test-all.scm
+   kaappi doctor
+   kaappi tests/test-all.scm    # or: kaappi test tests/  (SRFI-64 suites)
    ```
 
 ### Pinning ecosystem packages

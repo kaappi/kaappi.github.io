@@ -284,6 +284,29 @@ int kmylib_last_error(void) { return last_err; }
         fd)))
 ```
 
+## File descriptors and fibers
+
+A C function that returns a file descriptor — the `connect` wrapper
+above, an `accept` loop, a pipe — composes with Kaappi's fiber scheduler
+through [`fd->port`](../procedures/extensions.md#fd-to-port): it wraps
+the raw fd as a binary port whose reads and writes suspend the calling
+fiber (not the OS thread) whenever they would block. No C changes are
+needed; this is how kaappi-net serves many connections from a single
+thread:
+
+```scheme
+(define conn (fd->port (connect "example.com" 80)))
+(spawn (lambda ()
+  (write-bytevector request conn)
+  (flush-output-port conn)
+  (let ((reply (read-bytevector 4096 conn)))  ; parks this fiber only
+    (close-port conn)                         ; also closes the fd
+    (process reply))))
+```
+
+The port owns the descriptor after wrapping: let `close-port` close it
+rather than closing the fd through your own C path.
+
 ---
 
 Next: [Zig Extensions](zig-extensions.md)

@@ -73,6 +73,49 @@ kaappi> (ffi-close lib)
 
 ---
 
+### `fd->port` { #fd-to-port }
+<!-- index: 1 | Wrap a raw file descriptor as a reactor-integrated binary port -->
+
+**Syntax:** `(fd->port fd)`
+
+Wraps *fd* — a raw OS file descriptor obtained through the FFI, such as
+a socket — as a bidirectional binary port. Reads and writes on the port
+go through the same non-blocking, reactor-integrated path as Kaappi's
+file ports: an operation that would block suspends the calling fiber
+instead of the OS thread, and the descriptor is switched to non-blocking
+mode the first time it is touched under the fiber scheduler. Writes are
+buffered; use `flush-output-port` to force them out.
+
+The port **takes ownership** of the descriptor: `close-port` closes the
+fd, wakes any fiber parked on it, and unregisters it from the reactor.
+Don't also close the fd through your own FFI path — the number could be
+recycled onto an unrelated port.
+
+The standard streams (fd 0, 1, 2) are rejected, since their blocking
+semantics are relied on elsewhere. Not available under `--sandbox`
+(where the whole `(kaappi ffi)` library is blocked) or on WebAssembly.
+
+This is the bridge that gives FFI socket libraries fiber-friendly I/O
+with no C changes — kaappi-net wraps every connected socket exactly
+like this:
+
+```scheme
+(define (socket-port fd) (fd->port fd))
+
+(define conn (socket-port (c-accept listener)))  ; fd from an FFI call
+(spawn (lambda ()
+  (let ((request (read-bytevector 4096 conn)))   ; parks this fiber only
+    (write-bytevector (handle request) conn)
+    (flush-output-port conn)
+    (close-port conn))))                         ; closes the fd too
+```
+
+**See also:** [`ffi-fn`](#ffi-fn), [`spawn`](#spawn),
+[`flush-output-port`](./ports-and-io.md#flush-output-port),
+[Concurrency guide](../guide/concurrency.md#fiber-io-is-non-blocking)
+
+---
+
 ## Green Threads (Fibers)
 
 ### `spawn` { #spawn }
