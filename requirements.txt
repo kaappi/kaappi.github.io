@@ -5,4 +5,6 @@
 mkdocs==1.6.1
 mkdocs-material==9.7.6
 mkdocs-macros-plugin==1.5.0
-mkdocs-redirects==1.2.3
+# Stay on 1.2.2: 1.2.3 moved to the ProperDocs org and pulls the properdocs
+# MkDocs fork as a hard dependency, which prints a switch-to-properdocs banner.
+mkdocs-redirects==1.2.2

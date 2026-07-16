@@ -10,6 +10,11 @@ on:
 permissions:
   contents: write
 
+# Silence the mkdocs-material "MkDocs 2.0" advocacy banner (stderr only, never
+# on the built site) so it doesn't clutter build logs. See material/templates.
+env:
+  NO_MKDOCS_2_WARNING: "true"
+
 # Serialize deploys so two pushes can't race on the gh-pages branch.
 concurrency:
   group: pages
