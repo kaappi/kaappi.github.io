@@ -1,7 +1,23 @@
 # Troubleshooting
 
 Common errors and how to resolve them. Errors in Kaappi fall into three
-categories: read-time (parsing), compile-time, and runtime.
+categories -- read-time (parsing), compile-time, and runtime -- and every
+diagnostic carries a stable `KP` code:
+
+```
+program.scm:1:1: error[KP3002]: type error in 'car': expected pair, got 42
+    (car 42)
+```
+
+The format is `source:line:col: category[KPnnnn]: message`. Runtime
+errors additionally echo the offending source line and, when the error
+occurred in a nested call, a backtrace of `called from` frames. In the
+interactive REPL the location prefix is `<repl>` for read and compile
+errors and omitted for runtime errors.
+
+Each section below links to the code's entry in the
+[Diagnostic Reference](diagnostics.md), and `kaappi explain <code>`
+prints the same explanation in the terminal.
 
 ---
 
@@ -39,103 +55,139 @@ tooling.
 ## Read-Time Errors
 
 Read-time errors occur when the reader cannot parse your input into valid
-Scheme data. They are reported with a source location in the format
-`<source>:<line>:<col>: read error: <error>`.
+Scheme data. They are reported as
+`<source>:<line>:<col>: read error[KP1xxx]: <message>`.
 
-### UnexpectedEof
+### Unexpected end of input (KP1001)
 
-**Message:** `read error: error.UnexpectedEof`
+**Message:** `read error[KP1001]: unexpected end of input`
 
 **Cause:** The reader reached the end of input while still inside an
 unterminated list, string, or block comment. Usually a missing closing
 parenthesis.
 
-**Example:**
+**Example** -- `program.scm`:
+
 ```scheme
-kaappi> (define (square x)
+(define (square x)
   (* x x)
-;; read error: error.UnexpectedEof
 ```
 
-**Fix:** Add the missing closing delimiter. In the REPL, count your
-parentheses -- every `(` needs a matching `)`.
+```console
+$ kaappi program.scm
+program.scm:3:1: read error[KP1001]: unexpected end of input
+```
+
+**Fix:** Add the missing closing delimiter -- every `(` needs a matching
+`)`. The interactive REPL never reports this error: while input is
+incomplete it shows the `  ... ` continuation prompt and waits for the
+rest.
+
+**Reference:** [`KP1001`](diagnostics.md#kp1001-unexpected-eof) · `kaappi explain KP1001`
 
 ---
 
-### UnterminatedString
+### Unterminated string literal (KP1006)
 
-**Message:** `read error: error.UnterminatedString`
+**Message:** `read error[KP1006]: unterminated string literal`
 
-**Cause:** A string literal is missing its closing double quote. This also
-triggers if a backslash escape appears at the very end of the string without
-a closing `"`.
+**Cause:** A string literal is missing its closing double quote. Because
+a string may legally span multiple lines, the reader only knows it is
+unterminated when the input ends -- the reported position is the end of
+the input, not the opening quote.
 
-**Example:**
+**Example** -- `program.scm`:
+
 ```scheme
-kaappi> (display "hello)
-;; read error: error.UnterminatedString
+(display "hello)
+```
+
+```console
+$ kaappi program.scm
+program.scm:2:1: read error[KP1006]: unterminated string literal
 ```
 
 **Fix:** Close the string with a matching `"`.
 
+**Reference:** [`KP1006`](diagnostics.md#kp1006-unterminated-string) · `kaappi explain KP1006`
+
 ---
 
-### InvalidEscape
+### Invalid escape sequence (KP1007)
 
-**Message:** `read error: error.InvalidEscape`
+**Message:** `read error[KP1007]: invalid escape sequence`
 
 **Cause:** A string or symbol contains an escape sequence that Kaappi does
 not recognize. Valid escapes are `\n`, `\r`, `\t`, `\a`, `\b`, `\\`, `\"`,
 `\|`, and `\x<hex>;`. Anything else (like `\q` or a `\x` without a valid
-hex scalar and semicolon) is rejected.
+hex scalar and semicolon) is rejected. The position points at the
+offending escape.
 
 **Example:**
+
 ```scheme
 kaappi> (display "hello\q")
-;; read error: error.InvalidEscape
+<repl>:1:17: read error[KP1007]: invalid escape sequence
 ```
 
 **Fix:** Use a supported escape sequence. For hex escapes, use the format
 `\x41;` (hex digits followed by a semicolon).
 
+**Reference:** [`KP1007`](diagnostics.md#kp1007-invalid-escape) · `kaappi explain KP1007`
+
 ---
 
-### DotNotInList
+### Misplaced dot (KP1008)
 
-**Message:** `read error: error.DotNotInList`
+**Message:** `read error[KP1008]: '.' outside of a list`
 
-**Cause:** The dot (`.`) used for dotted-pair notation appeared in an invalid
-position, such as more than one dot in a list or a dot outside of a list
-context.
+**Cause:** The dot (`.`) used for dotted-pair notation appeared where the
+reader does not allow one -- at the top level, or inside a vector
+literal. A second dot *inside* a list, as in `(1 . 2 . 3)`, is reported
+at the second dot as
+[`KP1002`](diagnostics.md#kp1002-unexpected-char) `unexpected character`.
 
 **Example:**
+
 ```scheme
+kaappi> #(1 . 2)
+<repl>:1:6: read error[KP1008]: '.' outside of a list
+
 kaappi> (1 . 2 . 3)
-;; read error: error.DotNotInList
+<repl>:1:8: read error[KP1002]: unexpected character
 ```
 
 **Fix:** A dotted pair has exactly one dot separating two elements:
 `(1 . 2)`. To build a longer improper list, nest the pairs:
-`(1 2 . 3)`.
+`(1 2 . 3)`. Vectors have no dotted form.
+
+**Reference:** [`KP1008`](diagnostics.md#kp1008-dot-outside-list) · `kaappi explain KP1008`
 
 ---
 
-### NestingTooDeep
+### Nesting too deep (KP1009)
 
-**Message:** `read error: error.NestingTooDeep`
+**Message:** `read error[KP1009]: nesting too deep`
 
 **Cause:** Block comments (`#| ... |#`) are nested beyond 256 levels. This
 limit prevents pathological inputs from consuming unbounded stack space.
 
-**Example:**
+**Example** -- `program.scm`:
+
 ```scheme
-kaappi> #| #| #| ... 257 levels ... |# |# |#
-;; read error: error.NestingTooDeep
+#|#|#| ... 257 levels ... |#|#|#
+```
+
+```console
+$ kaappi program.scm
+program.scm:1:513: read error[KP1009]: nesting too deep
 ```
 
 **Fix:** Reduce the nesting depth of block comments. In practice this error
 is only triggered by adversarial input -- normal code never approaches this
 limit.
+
+**Reference:** [`KP1009`](diagnostics.md#kp1009-nesting-too-deep) · `kaappi explain KP1009`
 
 ---
 
@@ -143,11 +195,11 @@ limit.
 
 Compile-time errors are reported when the compiler translates Scheme
 expressions into bytecode. They are printed as
-`compile error: error.<name>`.
+`<source>:<line>:<col>: compile error[KP2xxx]: <message>`.
 
-### InvalidSyntax
+### Invalid syntax (KP2001)
 
-**Message:** `compile error: error.InvalidSyntax`
+**Message:** `compile error[KP2001]: invalid syntax`
 
 **Cause:** A special form is malformed. Common triggers include `let` with
 no bindings or body, `lambda` with no parameter list or body, `if` with no
@@ -155,96 +207,96 @@ branches, `define` with no value, or bare `syntax-rules` outside
 `define-syntax`.
 
 **Example:**
+
 ```scheme
 kaappi> (lambda)
-;; compile error: error.InvalidSyntax
+<repl>:1:1: compile error[KP2001]: invalid syntax
 
 kaappi> (let)
-;; compile error: error.InvalidSyntax
+<repl>:1:1: compile error[KP2001]: invalid syntax
 
 kaappi> (if)
-;; compile error: error.InvalidSyntax
+<repl>:1:1: compile error[KP2001]: invalid syntax
 ```
 
 **Fix:** Supply all required sub-expressions. For example, `lambda` needs at
 least a parameter list and a body: `(lambda (x) x)`.
 
----
+**Reference:** [`KP2001`](diagnostics.md#kp2001-invalid-syntax) · `kaappi explain KP2001`
 
-### UndefinedVariable (compile-time)
+!!! note "Undefined variables are not compile-time errors"
 
-**Message:** `compile error: error.UndefinedVariable`
-
-**Cause:** The compiler detected a reference to a variable that is not
-defined in any reachable scope. This check applies at compile time for
-variables that can be statically resolved.
-
-**Example:**
-```scheme
-kaappi> (set! nonexistent 42)
-;; compile error: error.UndefinedVariable
-```
-
-**Fix:** Define the variable before referencing it, or check for typos in the
-variable name.
+    R7RS permits top-level forward references (a variable may be defined
+    by a later `define`), so an undefined variable is reported at run
+    time as [`KP3001`](#undefined-variable-kp3001). To catch likely
+    mistakes before running, use `kaappi check`, which reports unknown
+    top-level variables as
+    [`KP4001`](diagnostics.md#kp4001-unknown-toplevel-variable) warnings.
 
 ---
 
 ## Runtime Errors
 
-Runtime errors occur during execution. When an error detail message is
-available, Kaappi prints `error: <detail>`. Otherwise it falls back to
-`runtime error: error.<name>`. A stack trace follows when multiple frames
-are active.
+Runtime errors occur during execution. They are reported as
+`<source>:<line>: error[KP3xxx]: <message>` (with a column when one is
+known), followed by the offending source line. When the error occurred
+in a nested call, a backtrace of `called from` frames follows. In the
+REPL the location prefix and source echo are omitted.
 
-### TypeError
+### Type error (KP3002)
 
-**Message:** `error: type error in '<procedure>': got <value>`
+**Message:** `error[KP3002]: type error in '<procedure>': expected <type>, got <value>`
 
 **Cause:** A primitive procedure received an argument of the wrong type.
-Kaappi checks types at the point of use and reports the procedure name and
-the offending value.
+Kaappi checks types at the point of use and reports the procedure name,
+the expected type, and the offending value. Arithmetic primitives such
+as `+` and `*` report under the shared name `arithmetic`.
 
 **Example:**
+
 ```scheme
 kaappi> (+ "a" 1)
-;; error: type error in '+': got "a"
+error[KP3002]: type error in 'arithmetic': expected number, got #<string>
 
 kaappi> (car 42)
-;; error: type error in 'car': got 42
+error[KP3002]: type error in 'car': expected pair, got 42
 ```
 
 **Fix:** Pass the correct type. Use predicates like `number?`, `string?`,
 or `pair?` to validate inputs when needed.
 
+**Reference:** [`KP3002`](diagnostics.md#kp3002-type-error) · `kaappi explain KP3002`
+
 ---
 
-### ArityMismatch
+### Wrong number of arguments (KP3003)
 
-**Message:** `error: expected <n> arguments, got <m>` or
-`error: '<procedure>': expected <n> arguments, got <m>`
+**Message:** `error[KP3003]: '<procedure>': expected <n> arguments, got <m>`
 
 **Cause:** A procedure was called with the wrong number of arguments.
 For variadic procedures, the message reads
 `expected at least <n> arguments, got <m>`.
 
 **Example:**
+
 ```scheme
 kaappi> (cons 1)
-;; error: expected 2 arguments, got 1
+error[KP3003]: 'cons': expected 2 arguments, got 1
 
 kaappi> (cons 1 2 3)
-;; error: expected 2 arguments, got 3
+error[KP3003]: 'cons': expected 2 arguments, got 3
 ```
 
 **Fix:** Pass the correct number of arguments. Check the procedure's
 signature in the [Procedure Reference](../procedures/index.md).
 
+**Reference:** [`KP3003`](diagnostics.md#kp3003-arity-mismatch) · `kaappi explain KP3003`
+
 ---
 
-### NotAProcedure
+### Not a procedure (KP3005)
 
-**Message:** `error: not a procedure`
+**Message:** `error[KP3005]: not a procedure`
 
 **Cause:** The expression in the operator position of a call evaluated to
 something that is not callable (not a closure, native function, continuation,
@@ -252,75 +304,91 @@ or parameter object). A common mistake is putting a number or string where a
 function is expected.
 
 **Example:**
+
 ```scheme
 kaappi> (42 1 2)
-;; error: not a procedure
+error[KP3005]: not a procedure
 
 kaappi> ("hello" 1)
-;; error: not a procedure
+error[KP3005]: not a procedure
 ```
 
 **Fix:** Make sure the first element of the call expression is a procedure.
 Check for accidental extra parentheses: `((+ 1 2))` tries to call `3`.
 
+**Reference:** [`KP3005`](diagnostics.md#kp3005-not-a-procedure) · `kaappi explain KP3005`
+
 ---
 
-### DivisionByZero
+### Division by zero (KP3004)
 
-**Message:** `runtime error: error.DivisionByZero`
+**Message:** `error[KP3004]: division by zero`
 
 **Cause:** An arithmetic operation attempted to divide by zero. This applies
 to `/`, `quotient`, `remainder`, and `modulo`.
 
 **Example:**
+
 ```scheme
 kaappi> (/ 1 0)
-;; runtime error: error.DivisionByZero
+error[KP3004]: division by zero
 
 kaappi> (quotient 5 0)
-;; runtime error: error.DivisionByZero
+error[KP3004]: division by zero
 ```
 
 **Fix:** Guard division with a zero check:
 `(if (zero? d) (error "divisor is zero") (/ n d))`.
 
+**Reference:** [`KP3004`](diagnostics.md#kp3004-division-by-zero) · `kaappi explain KP3004`
+
 ---
 
-### IndexOutOfBounds
+### Index out of bounds (KP3006)
 
-**Message:** `error: index out of bounds in '<procedure>'`
+**Message:** `error[KP3006]: <procedure>: index <i> out of range for length <n>`
 
 **Cause:** An index argument exceeded the valid range of a vector, string,
 or bytevector. Valid indices are `0` to `(- (length obj) 1)`.
 
 **Example:**
+
 ```scheme
 kaappi> (vector-ref #(1 2 3) 5)
-;; error: index out of bounds in 'vector-ref'
+error[KP3006]: vector-ref: index 5 out of range for length 3
 
 kaappi> (string-ref "abc" 10)
-;; error: index out of bounds in 'string-ref'
+error[KP3006]: string-ref: index 10 out of range for length 3
 ```
 
 **Fix:** Check the length before indexing:
 `(when (< i (vector-length v)) (vector-ref v i))`.
 
+**Reference:** [`KP3006`](diagnostics.md#kp3006-index-out-of-bounds) · `kaappi explain KP3006`
+
 ---
 
-### StackOverflow
+### Stack overflow (KP3008)
 
-**Message:** `runtime error: error.StackOverflow`
+**Message:** `error[KP3008]: stack overflow`
 
 **Cause:** The call stack exceeded 32768 frames or exhausted available
 memory. The frame stack grows automatically (starting at 480 frames), so
 this error only occurs with extremely deep non-tail recursion. Tail calls
 do not consume stack frames.
 
-**Example:**
+**Example** -- `program.scm`:
+
 ```scheme
-kaappi> (define (forever n) (+ 1 (forever (+ n 1))))
-kaappi> (forever 0)
-;; runtime error: error.StackOverflow (at ~32768 frames)
+(define (forever n) (+ 1 (forever (+ n 1))))
+(forever 0)
+```
+
+```console
+$ kaappi program.scm
+program.scm:2: error[KP3008]: stack overflow
+    (forever 0)
+  called from program.scm:2
 ```
 
 **Fix:** Rewrite the recursion in tail position. The example above can be
@@ -334,51 +402,64 @@ Kaappi optimizes tail calls, so tail-recursive functions run in constant
 stack space. Non-tail-recursive code (e.g., `(cons x (f (cdr lst)))`)
 works fine for thousands of elements.
 
+**Reference:** [`KP3008`](diagnostics.md#kp3008-stack-overflow) · `kaappi explain KP3008`
+
 ---
 
-### UndefinedVariable (runtime)
+### Undefined variable (KP3001)
 
-**Message:** `error: undefined variable '<name>'`
+**Message:** `error[KP3001]: undefined variable '<name>'`
 
-**Cause:** A variable was referenced at runtime but no binding exists in
-the current environment or the global scope. This differs from the
-compile-time check because the variable lookup happens dynamically (e.g.,
-via `eval` or a global reference loaded at runtime).
+**Cause:** A variable was referenced but no binding exists in the current
+environment or the global scope. Usually a typo, a missing `import`, or
+a `define` that has not run yet. When a similarly named binding exists,
+the message suggests it. `set!` on an undefined variable reports the
+variant `set!: unbound variable '<name>'`.
 
 **Example:**
+
 ```scheme
-kaappi> x
-;; error: undefined variable 'x'
+kaappi> (dispaly "hi")
+error[KP3001]: undefined variable 'dispaly'. Did you mean 'display'?
 
 kaappi> (set! y 10)
-;; error: set!: unbound variable 'y'
+error[KP3001]: set!: unbound variable 'y'
 ```
 
 **Fix:** Define the variable before use: `(define x 42)`. For `set!`,
 the variable must already be defined -- use `define` for the initial
-binding.
+binding. To catch undefined top-level variables before running, use
+`kaappi check` (see the note under
+[Compile-Time Errors](#compile-time-errors)).
+
+**Reference:** [`KP3001`](diagnostics.md#kp3001-undefined-variable) · `kaappi explain KP3001`
 
 ---
 
-### OutOfMemory
+### Out of memory (KP9002)
 
-**Message:** `runtime error: error.OutOfMemory`
+**Message:** `error[KP9002]: out of memory`
 
-**Cause:** The garbage collector could not free enough memory to satisfy an
-allocation request. This can happen with very large data structures or
-long-running programs that accumulate live data.
+**Cause:** A memory allocation failed: the program (or a single data
+structure within it) is too large for the available heap, and the
+garbage collector could not free enough memory to satisfy the request.
 
 **Example:**
+
 ```scheme
-kaappi> (define (eat) (cons 1 (eat)))
-kaappi> (eat)
-;; runtime error: error.OutOfMemory
+kaappi> (make-bytevector 100000000000000)
+error[KP9002]: out of memory
 ```
+
+Runaway recursion does not trigger this error -- it exhausts the call
+stack first and reports [`KP3008`](#stack-overflow-kp3008).
 
 **Fix:** Reduce live data by releasing references to objects you no longer
 need. Restructure code to process data in a streaming fashion rather than
 building large intermediate structures. If the program is legitimately
 memory-bound, consider breaking the work into smaller batches.
+
+**Reference:** [`KP9002`](diagnostics.md#kp9002-out-of-memory) · `kaappi explain KP9002`
 
 ---
 
@@ -386,10 +467,18 @@ memory-bound, consider breaking the work into smaller batches.
 
 ### Library not found
 
-**Message:** `error: library not found: (some library)`
+**Message:** `error[KP2001]: library not found: (<name>)`
 
 **Cause:** The library is not built-in and no `.sld` file was found in
-the library search path.
+the library search path. The library name is printed with dots joining
+its parts: `(import (kaappi json))` reports `(kaappi.json)`.
+
+**Example:**
+
+```scheme
+kaappi> (import (kaappi jsonx))
+error[KP2001]: library not found: (kaappi.jsonx)
+```
 
 **Fix:** Check the library name for typos. For ecosystem libraries,
 install with `thottam install kaappi-json`. For your own libraries, pass
@@ -405,8 +494,19 @@ Libraries installed via thottam are auto-discovered from `~/.kaappi/lib/`.
 
 ### Export not found
 
-**Cause:** You imported a library but referenced a procedure that it
-does not export.
+**Message:** `error[KP2001]: import only: identifier '<name>' not found in import set`
+
+**Cause:** An `only` import filter named an identifier the library does
+not export. Referencing a procedure a library does not export *without*
+an `only` filter is not an import error -- it surfaces later as an
+undefined variable ([`KP3001`](#undefined-variable-kp3001)).
+
+**Example:**
+
+```scheme
+kaappi> (import (only (scheme base) frobnicate))
+error[KP2001]: import only: identifier 'frobnicate' not found in import set
+```
 
 **Fix:** Check the library's `define-library` form for the `export`
 clause. Use `,apropos` in the REPL to search for the procedure name.
@@ -417,10 +517,18 @@ clause. Use `,apropos` in the REPL to search for the procedure name.
 
 ### Shared library not found
 
-**Message:** `error: ffi-open: cannot open shared library`
+**Message:** `error[KP3002]: ffi-open: dlopen(...): ... (no such file)`
 
 **Cause:** The `.dylib` (macOS) or `.so` (Linux) file was not found in
-the library search path.
+the library search path. The message includes the system loader's report
+of every path it tried.
+
+**Example:**
+
+```scheme
+kaappi> (ffi-open "libmissing")
+error[KP3002]: ffi-open: dlopen(/home/user/.kaappi/lib/libmissing.so, 0x0001): tried: '/home/user/.kaappi/lib/libmissing.so' (no such file), ...
+```
 
 **Fix:** Make sure the native library is built (`make` in the library's
 directory) and either:
@@ -433,10 +541,17 @@ directory) and either:
 
 ### Symbol not found
 
-**Message:** `error: ffi-fn: symbol not found`
+**Message:** `error[KP3002]: ffi-fn: dlsym(...): symbol not found`
 
 **Cause:** The shared library was loaded but does not contain the
 requested function symbol.
+
+**Example:**
+
+```scheme
+kaappi> (ffi-fn lib "no_such_symbol" '(double) 'double)
+error[KP3002]: ffi-fn: dlsym(0x36d56d670, no_such_symbol): symbol not found
+```
 
 **Fix:** Check the function name for typos. Verify the library was
 compiled with the expected function (use `nm -gU library.dylib` on macOS
