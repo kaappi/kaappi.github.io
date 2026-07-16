@@ -178,56 +178,86 @@ kaappi> (fiber-join f2)
 ## Channels
 
 ### `make-channel` { #make-channel }
-<!-- index: 0 | Create a new channel -->
+<!-- index: 0+ | Create a channel, optionally bounded to a capacity -->
 
-**Syntax:** `(make-channel)`
+**Syntax:** `(make-channel)` | `(make-channel capacity)`
 
-Creates a new synchronous channel for inter-fiber communication.
-Channels are Go-style: a send blocks until a receiver is ready, and a
-receive blocks until a value is available. This provides a safe way to
-pass data between fibers without shared mutable state.
+Creates a new channel for passing values between fibers — and, when
+handed to an OS thread through its `thread-start!` thunk, between
+threads (see the [Concurrency
+guide](../guide/concurrency.md#os-threads-srfi-18)). Values are
+delivered first-in, first-out, without shared mutable state.
+
+With no argument the channel is unbounded: `channel-send` queues the
+value and returns immediately. With *capacity* (a non-negative exact
+integer), at most *capacity* values may be queued: a send on a full
+channel blocks until a receive frees a slot, so a bounded channel
+applies backpressure to a producer that outpaces its consumer. A
+*capacity* of `0` creates a channel that is permanently full — every
+send blocks (or times out).
 
 ```scheme
-kaappi> (define ch (make-channel))
+kaappi> (define ch (make-channel))    ; unbounded
+kaappi> (define bd (make-channel 8))  ; at most 8 queued values
 kaappi> ch
 ;=> #<channel>
 ```
 
 **See also:** [`channel-send`](#channel-send),
-[`channel-receive`](#channel-receive), [`channel?`](#channel-pred)
+[`channel-receive`](#channel-receive), [`channel-close!`](#channel-close),
+[`channel?`](#channel-pred)
 
 ---
 
 ### `channel-send` { #channel-send }
-<!-- index: 2 | Send a value on a channel -->
+<!-- index: 2+ | Send a value: `(channel-send ch value [timeout [timeout-val]])` -->
 
-**Syntax:** `(channel-send channel value)`
+**Syntax:** `(channel-send channel value)` | `(channel-send channel value timeout)` | `(channel-send channel value timeout timeout-val)`
 
-Sends *value* on *channel*. If no fiber is currently waiting to receive,
-the sending fiber blocks until a receiver is ready. This ensures
-synchronous hand-off of values between fibers.
+Sends *value* on *channel*. On an unbounded channel (the default) the
+value is queued and the send returns immediately; on a bounded channel a
+send blocks while the channel is full, resuming when a receive frees a
+slot. Returns an unspecified value.
+
+If *timeout* is given (a time object or number of seconds) and the send
+cannot complete within that time, returns *timeout-val* if supplied, or
+raises an error otherwise.
+
+Sending on a closed channel raises an error, as does sending an
+eof-object — at the receiving end it would be indistinguishable from the
+end-of-stream marker `channel-close!` produces. A send that can never
+complete raises a deadlock error instead of hanging.
 
 ```scheme
 kaappi> (define ch (make-channel))
-kaappi> (spawn (lambda () (channel-send ch 42)))
-;=> #<fiber>
+kaappi> (channel-send ch 42)            ; unbounded: returns immediately
 kaappi> (channel-receive ch)
 ;=> 42
+kaappi> (define bd (make-channel 1))
+kaappi> (channel-send bd 'a)
+kaappi> (channel-send bd 'b 0.1 'full)  ; full for 100 ms -> timeout value
+;=> full
 ```
 
 **See also:** [`channel-receive`](#channel-receive),
-[`make-channel`](#make-channel)
+[`channel-close!`](#channel-close), [`make-channel`](#make-channel)
 
 ---
 
 ### `channel-receive` { #channel-receive }
-<!-- index: 1 | Receive a value from a channel -->
+<!-- index: 1+ | Receive a value: `(channel-receive ch [timeout [timeout-val]])` -->
 
-**Syntax:** `(channel-receive channel)`
+**Syntax:** `(channel-receive channel)` | `(channel-receive channel timeout)` | `(channel-receive channel timeout timeout-val)`
 
-Receives a value from *channel*. If no value is currently available,
-the receiving fiber blocks until a sender provides one. Returns the
-sent value.
+Receives the oldest queued value from *channel*. If the channel is
+empty, the receiving fiber blocks until a sender provides a value. If
+the channel has been closed and all queued values have been received,
+returns an eof-object.
+
+If *timeout* is given (a time object or number of seconds) and no value
+arrives within that time, returns *timeout-val* if supplied, or raises
+an error otherwise. A receive that can never be satisfied raises a
+deadlock error instead of hanging.
 
 ```scheme
 kaappi> (define ch (make-channel))
@@ -239,10 +269,72 @@ kaappi> (channel-receive ch)
 ;=> hello
 kaappi> (channel-receive ch)
 ;=> world
+kaappi> (channel-receive ch 0.1 'nothing)  ; empty for 100 ms -> timeout value
+;=> nothing
 ```
 
 **See also:** [`channel-send`](#channel-send),
-[`make-channel`](#make-channel)
+[`channel-close!`](#channel-close), [`make-channel`](#make-channel)
+
+---
+
+### `channel-close!` { #channel-close }
+<!-- index: 1 | Close a channel, signalling end-of-stream to receivers -->
+
+**Syntax:** `(channel-close! channel)`
+
+Closes *channel*, signalling end-of-stream: subsequent sends raise an
+error, values already queued are still delivered, and once the channel
+is drained every `channel-receive` returns an eof-object. Receivers
+already blocked on an empty channel are woken and get the eof-object
+immediately. Closing an already-closed channel has no effect. Returns
+an unspecified value.
+
+Closing replaces ad-hoc sentinel values as the way a producer tells
+consumers no more data is coming:
+
+```scheme
+kaappi> (define ch (make-channel))
+kaappi> (spawn (lambda ()
+         (for-each (lambda (x) (channel-send ch x)) '(1 2 3))
+         (channel-close! ch)))
+;=> #<fiber>
+kaappi> (let loop ((total 0))
+         (let ((v (channel-receive ch)))
+           (if (eof-object? v) total (loop (+ total v)))))
+;=> 6
+```
+
+**See also:** [`channel-closed?`](#channel-closed),
+[`channel-send`](#channel-send), [`channel-receive`](#channel-receive)
+
+---
+
+### `channel-closed?` { #channel-closed }
+<!-- index: 1 | True if a channel has been closed -->
+
+**Syntax:** `(channel-closed? channel)`
+
+Returns `#t` if *channel* has been closed with `channel-close!`, `#f`
+otherwise. A closed channel may still hold queued values —
+`channel-closed?` answering `#t` does not mean the stream has been fully
+consumed; only a `channel-receive` returning an eof-object does.
+
+```scheme
+kaappi> (define ch (make-channel))
+kaappi> (channel-closed? ch)
+;=> #f
+kaappi> (channel-send ch 1)
+kaappi> (channel-close! ch)
+kaappi> (channel-closed? ch)
+;=> #t
+kaappi> (channel-receive ch)   ; queued value still delivered
+;=> 1
+kaappi> (eof-object? (channel-receive ch))
+;=> #t
+```
+
+**See also:** [`channel-close!`](#channel-close), [`channel?`](#channel-pred)
 
 ---
 
@@ -434,5 +526,50 @@ kaappi> (processor-count)
 ```
 
 **See also:** [`make-pool`](#make-pool)
+
+---
+
+## Diagnostics
+
+`(kaappi diagnostics)` — programmatic access to the stable `KP` codes
+that Kaappi stamps on the errors it raises. Every code is documented in
+the [Diagnostic Reference](../guide/diagnostics.md); codes never change
+meaning between releases, so they are safe to dispatch on where message
+text is not.
+
+### `error-object-code` { #error-object-code }
+<!-- index: 1 | Stable KP diagnostic code of an error object as a symbol, or `#f` -->
+
+**Syntax:** `(error-object-code obj)`
+
+Returns the stable diagnostic code stamped on *obj* as an interned
+symbol (for example `KP3004` for a division-by-zero error), or `#f` if
+there is none. Because the symbol is interned, codes compare with `eq?`.
+
+Unlike `error-object-message` and `error-object-irritants`, this is a
+total accessor that never raises: it returns `#f` both for values that
+are not error objects and for error objects carrying no code — such as
+those from `error`, since the `KP` namespace is reserved to the
+implementation. That makes it safe as the first dispatch check inside a
+`guard`, where `raise` may have delivered any value at all.
+
+```scheme
+kaappi> (import (kaappi diagnostics))
+kaappi> (guard (e (#t (error-object-code e))) (/ 1 0))
+;=> KP3004
+kaappi> (guard (e (#t (error-object-code e))) (error "boom"))
+;=> #f
+kaappi> (error-object-code 42)
+;=> #f
+kaappi> (define (safe-div a b)
+         (guard (e ((eq? (error-object-code e) 'KP3004) 'undefined))
+           (/ a b)))
+kaappi> (safe-div 1 0)
+;=> undefined
+```
+
+**See also:** [`error-object-message`](./control-flow.md#error-object-message),
+[`error-object-irritants`](./control-flow.md#error-object-irritants),
+[Diagnostic Reference](../guide/diagnostics.md)
 
 ---

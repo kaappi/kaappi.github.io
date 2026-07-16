@@ -406,6 +406,24 @@ Use R7RS `guard` for structured exception handling:
   (error "something went wrong"))
 ```
 
+To branch on *which* error occurred, dispatch on its stable diagnostic
+code with `error-object-code` from `(kaappi diagnostics)` instead of
+matching message text — wording may change between releases; codes never
+do:
+
+```scheme
+(import (kaappi diagnostics))
+
+(guard (e ((eq? (error-object-code e) 'KP3004)   ; division by zero
+           'undefined))
+  (/ 1 0))
+;=> undefined
+```
+
+`error-object-code` never raises — it returns `#f` for any value that
+carries no code — so it is safe as the first test in a `guard` clause.
+See the [reference entry](../procedures/extensions.md#error-object-code).
+
 Use `with-exception-handler` for lower-level control:
 
 ```scheme

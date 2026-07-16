@@ -71,6 +71,8 @@ all 72 supported SRFIs, built-in and portable.
 |---------|-------------|
 | `(kaappi ffi)` | Foreign function interface (ffi-open, ffi-fn, ffi-callback, ffi-close) |
 | `(kaappi fibers)` | Green threads (spawn, yield, fiber-join, channels) |
+| `(kaappi parallel)` | Worker pools and parallel map over OS threads (make-pool, pool-submit, parallel-map) |
+| `(kaappi diagnostics)` | Stable KP diagnostic codes on error objects (error-object-code) |
 
 ## Writing Your Own Library
 

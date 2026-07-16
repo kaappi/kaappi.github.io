@@ -53,27 +53,30 @@ periodically so other fibers get a turn:
 
 ## Pipeline with a channel
 
-Channels are synchronous (Go-style): `channel-send` blocks until a
-receiver is ready, `channel-receive` blocks until a value arrives. That
-makes a producer/consumer pipeline naturally self-pacing:
+A channel is a FIFO queue: `channel-receive` blocks until a value
+arrives, so a consumer naturally waits for its producer. Closing the
+channel signals end-of-stream — once the queue drains, every receive
+returns an eof-object:
 
 ```scheme
 (define ch (make-channel))
 
 (spawn (lambda ()
   (for-each (lambda (x) (channel-send ch x)) '(1 2 3))
-  (channel-send ch 'done)))
+  (channel-close! ch)))
 
 (let loop ((total 0))
   (let ((v (channel-receive ch)))
-    (if (eq? v 'done)
+    (if (eof-object? v)
         total
         (loop (+ total v)))))
 ;=> 6
 ```
 
-The `'done` sentinel tells the consumer when to stop — synchronous
-channels have no built-in close operation.
+`channel-send` on a default (unbounded) channel never blocks. To make a
+fast producer pace itself to a slow consumer, give the channel a
+capacity — `(make-channel 8)` — and sends block whenever 8 values are
+already queued.
 
 ## Worker pool
 

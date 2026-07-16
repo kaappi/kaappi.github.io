@@ -451,7 +451,8 @@ kaappi> (guard (e (#t (error-object-message e)))
 ```
 
 **See also:** [`error`](#error), [`error-object?`](#error-object-pred),
-[`error-object-irritants`](#error-object-irritants)
+[`error-object-irritants`](#error-object-irritants),
+[`error-object-code`](./extensions.md#error-object-code) (Kaappi extension)
 
 ---
 
@@ -475,7 +476,8 @@ kaappi> (guard (e (#t (error-object-irritants e)))
 ```
 
 **See also:** [`error`](#error), [`error-object?`](#error-object-pred),
-[`error-object-message`](#error-object-message)
+[`error-object-message`](#error-object-message),
+[`error-object-code`](./extensions.md#error-object-code) (Kaappi extension)
 
 ---
 

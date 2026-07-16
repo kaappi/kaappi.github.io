@@ -244,8 +244,10 @@ the [LLVM native backend](#llvm-native-backend).
 
 ### Channel { #channel }
 
-A communication primitive for [fibers](#fiber). Channels provide
-synchronized message passing between green threads.
+A communication primitive for [fibers](#fiber): first-in-first-out
+message passing between green threads — and, when handed through a
+thread thunk, between OS threads. Channels may be bounded to a capacity
+(sends then block while full) and closed to signal end-of-stream.
 
 ```scheme
 (define ch (make-channel))
