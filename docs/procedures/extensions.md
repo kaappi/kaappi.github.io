@@ -288,9 +288,25 @@ With no argument the channel is unbounded: `channel-send` queues the
 value and returns immediately. With *capacity* (a non-negative exact
 integer), at most *capacity* values may be queued: a send on a full
 channel blocks until a receive frees a slot, so a bounded channel
-applies backpressure to a producer that outpaces its consumer. A
-*capacity* of `0` creates a channel that is permanently full — every
-send blocks (or times out).
+applies backpressure to a producer that outpaces its consumer.
+
+A *capacity* of `0` creates a **rendezvous channel** (a synchronous,
+unbuffered channel, like Go's `make(chan T)`): `channel-send` completes
+only when a receiver takes the value, and `channel-receive` completes
+only when a sender provides one — whichever side arrives first waits
+for the other. A completed send therefore guarantees a receiver was
+committed to take the value, which makes rendezvous channels a
+synchronization point as well as a data conduit. Timeouts on either
+operation remain the escape hatch when no counterpart ever arrives, and
+an unpaired send or receive that can never be matched raises the usual
+deadlock error rather than hanging.
+
+```scheme
+kaappi> (define rv (make-channel 0))
+kaappi> (spawn (lambda () (channel-send rv 'x)))  ; parks until a receiver
+kaappi> (channel-receive rv)
+;=> x
+```
 
 ```scheme
 kaappi> (define ch (make-channel))    ; unbounded
@@ -313,7 +329,8 @@ kaappi> ch
 Sends *value* on *channel*. On an unbounded channel (the default) the
 value is queued and the send returns immediately; on a bounded channel a
 send blocks while the channel is full, resuming when a receive frees a
-slot. Returns an unspecified value.
+slot; on a rendezvous channel (capacity `0`) a send blocks until a
+receiver takes the value. Returns an unspecified value.
 
 If *timeout* is given (a time object or number of seconds) and the send
 cannot complete within that time, returns *timeout-val* if supplied, or
