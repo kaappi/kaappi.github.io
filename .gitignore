@@ -4,3 +4,6 @@ __pycache__/
 # not committed, so release binaries don't bloat history. Run the script once
 # before `mkdocs serve` on a fresh clone.
 /docs/wasm/kaappi.wasm
+# Same pattern for the embedded book PDF (scripts/fetch-book.sh), pinned by
+# book_version in mkdocs.yml.
+/docs/assets/kaappi-book.pdf
