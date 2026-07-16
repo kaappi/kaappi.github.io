@@ -189,6 +189,13 @@ Causes the current thread to sleep until *timeout*. The *timeout* can
 be a time object (from `seconds->time`) or a number of seconds as an
 inexact real. Other threads continue to run during the sleep.
 
+Under the fiber scheduler, `thread-sleep!` parks only the calling fiber
+on the reactor's timer — other fibers on the same OS thread keep
+running (see
+[Concurrency](../guide/concurrency.md#fiber-io-is-non-blocking)). It is
+the one SRFI-18 procedure also available on WebAssembly, where the rest
+of the OS-thread machinery is absent.
+
 ```scheme
 kaappi> (thread-sleep! 0.5)  ; sleep 500ms
 kaappi> (thread-sleep! (seconds->time (+ (time->seconds (current-time)) 1)))

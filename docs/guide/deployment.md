@@ -30,10 +30,14 @@ Or via the build system:
 zig build native -Dnative-src=app.scm
 ```
 
-Both produce a single executable with the Kaappi runtime included.
-The native backend supports tail call optimization (self-recursive
-functions run in constant stack space), variadic parameters, and
-let/let* bindings compiled natively.
+Both produce a single executable with the Kaappi runtime included,
+compiled at `-O2`. Tail calls are fully optimized — on x86_64 and
+AArch64, direct tail calls between natively compiled fixed-arity
+functions use LLVM's `musttail`, making mutual recursion (not just
+self-recursion) guaranteed constant-stack; other targets keep a
+best-effort tail-call hint. Variadic parameters and `let`/`let*`
+bindings compile natively, and forms the backend can't lower yet fall
+back to the bytecode interpreter automatically.
 
 Copy the executable to the server and run it:
 

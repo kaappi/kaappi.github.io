@@ -73,6 +73,59 @@ kaappi> (ffi-close lib)
 
 ---
 
+### `ffi-callback` { #ffi-callback }
+<!-- index: 3 | Wrap a Scheme procedure as a C function pointer -->
+
+**Syntax:** `(ffi-callback proc '(param-types ...) 'return-type)`
+
+Wraps *proc* as a C function pointer, for C APIs that take one (a
+comparator for `qsort`, an event handler, ...). Pass the returned
+callback object where the C function expects the function pointer — an
+`ffi-fn` parameter declared `pointer`. When C invokes it, *proc* is
+called with the marshaled arguments; `pointer` arguments arrive as
+numbers (raw addresses).
+
+Only a fixed set of signatures is supported: `(pointer pointer) -> int`
+(the `qsort`-comparator shape), `(pointer pointer) -> void`,
+`(pointer) -> int`, `(pointer) -> void`, `(int pointer) -> int`,
+`(int) -> void`, and `() -> void`. Anything else raises an "unsupported
+callback signature" error. At most 32 callbacks can be live at once —
+release them with `ffi-callback-release`.
+
+An error raised inside *proc* is captured and re-raised on the Scheme
+side when the enclosing C call returns, so `guard` around the FFI call
+works as expected. Unavailable under `--sandbox` and on WebAssembly.
+
+```scheme
+;; C: int apply_pp(int (*f)(void *, void *), long a, long b)
+;;    { return f((void *)a, (void *)b); }
+kaappi> (define apply-pp (ffi-fn lib "apply_pp" '(pointer long long) 'int))
+kaappi> (define cb (ffi-callback (lambda (a b) (- a b)) '(pointer pointer) 'int))
+kaappi> (apply-pp cb 10 3)
+;=> 7
+kaappi> (ffi-callback-release cb)
+```
+
+**See also:** [`ffi-callback-release`](#ffi-callback-release),
+[`ffi-fn`](#ffi-fn),
+[C Extensions guide](../guide/c-extensions.md#ffi-callbacks)
+
+---
+
+### `ffi-callback-release` { #ffi-callback-release }
+<!-- index: 1 | Release a callback's slot -->
+
+**Syntax:** `(ffi-callback-release callback)`
+
+Releases the slot held by *callback* (created with `ffi-callback`).
+Callback slots are a fixed resource — at most 32 live at once — so
+release a callback as soon as no C library holds its function pointer
+anymore. After release, C code must not invoke the pointer again.
+
+**See also:** [`ffi-callback`](#ffi-callback)
+
+---
+
 ### `fd->port` { #fd-to-port }
 <!-- index: 1 | Wrap a raw file descriptor as a reactor-integrated binary port -->
 

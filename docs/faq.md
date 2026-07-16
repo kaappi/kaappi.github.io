@@ -137,6 +137,23 @@ zig build
 Requires Zig 0.16. The build produces `zig-out/bin/kaappi` and
 `zig-out/bin/thottam`.
 
+### Is there a code formatter?
+
+Yes, built in: `kaappi fmt` applies canonical 2-space R7RS indentation
+with 80-column reflow, preserves comments, and is guarded by a reader
+round-trip check so it can never change a program's meaning. `kaappi
+fmt --check` verifies formatting in CI, and with no files it works as a
+stdin filter for editors. See
+[Editor Support](guide/editors.md#formatting).
+
+### Can I check a program without running it?
+
+`kaappi check program.scm` reads, expands, and compiles without
+executing, reporting read/compile errors plus lint findings for calls
+that are guaranteed to fail at run time (wrong arity or wrong-type
+literal on a built-in). It never rejects a program R7RS permits. See
+[Debugging](guide/debugging.md#catching-errors-before-running).
+
 ## Deployment
 
 ### Can I compile to a standalone binary?

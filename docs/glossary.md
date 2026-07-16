@@ -57,6 +57,19 @@ non-local exits (early return, loop break).
 ;=> -3
 ```
 
+### Channel { #channel }
+
+A communication primitive for [fibers](#fiber): first-in-first-out
+message passing between green threads — and, when handed through a
+thread thunk, between OS threads. Channels may be bounded to a capacity
+(sends then block while full) and closed to signal end-of-stream.
+
+```scheme
+(define ch (make-channel))
+(spawn (lambda () (channel-send ch 42)))
+(channel-receive ch)  ;=> 42
+```
+
 ### Compiler { #compiler }
 
 The stage that transforms expanded S-expressions into [bytecode](#bytecode).
@@ -69,6 +82,17 @@ The "rest of the computation" at any point in a program. When you call
 [call/cc](#callcc), the current continuation is packaged as a procedure
 that, when invoked, resumes execution from that point. Continuations are
 a fundamental concept in Scheme that enable advanced control flow.
+
+### Diagnostic code { #diagnostic-code }
+
+The stable `KP` identifier attached to every diagnostic Kaappi reports —
+`KP1xxx` read, `KP2xxx` compile, `KP3xxx` runtime, `KP4xxx` lint,
+`KP9xxx` internal. A code never changes meaning between releases, so
+tooling and `guard` clauses can dispatch on it (via
+[`error-object-code`](procedures/extensions.md#error-object-code)) where
+message text would be unstable. `kaappi explain KP3001` describes any
+code from the command line; the
+[Diagnostic Reference](guide/diagnostics.md) lists them all.
 
 ### Expander { #expander }
 
@@ -166,6 +190,16 @@ Most list operations require proper lists.
 standard that Kaappi implements. "R7RS-small" is the core language; there
 is also an R7RS-large effort (which Kaappi does not target).
 
+### Reactor { #reactor }
+
+The per-OS-thread event loop behind non-blocking I/O for
+[fibers](#fiber). When a read, write, sleep, or channel wait would
+block, the fiber parks on the reactor — kqueue on macOS/BSD, epoll on
+Linux, `poll_oneoff` under WASI — which wakes it when the file
+descriptor is ready or the timer expires. The OS thread keeps running
+other fibers meanwhile. See
+[Concurrency](guide/concurrency.md#fiber-io-is-non-blocking).
+
 ### Reader { #reader }
 
 The stage that converts source text into S-expressions (Scheme data
@@ -241,16 +275,3 @@ Common in error testing (`test-error "name" thunk`), lazy evaluation, and
 [bytecode](#bytecode) instructions, manages the call stack, and coordinates
 with the [GC](#gc). Programs can also be compiled to native binaries via
 the [LLVM native backend](#llvm-native-backend).
-
-### Channel { #channel }
-
-A communication primitive for [fibers](#fiber): first-in-first-out
-message passing between green threads — and, when handed through a
-thread thunk, between OS threads. Channels may be bounded to a capacity
-(sends then block while full) and closed to signal end-of-stream.
-
-```scheme
-(define ch (make-channel))
-(spawn (lambda () (channel-send ch 42)))
-(channel-receive ch)  ;=> 42
-```
