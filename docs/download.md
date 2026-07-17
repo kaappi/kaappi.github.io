@@ -51,7 +51,7 @@ proceed. See [Troubleshooting](guide/troubleshooting.md#windows-smartscreen-warn
 |------|-------------|
 | [kaappi-lib.tar.gz](https://github.com/kaappi/kaappi/releases/latest/download/kaappi-lib.tar.gz) | Standard libraries (SRFI, Scheme). Extract to `~/.kaappi/lib/` |
 | [kaappi.wasm](https://github.com/kaappi/kaappi/releases/latest/download/kaappi.wasm) | WebAssembly binary (wasm32-wasi) |
-| [kaappi_rt.lib](https://github.com/kaappi/kaappi/releases/latest/download/kaappi_rt.lib) | Runtime library for native compilation on Windows |
+| [libkaappi_rt-aarch64-windows.lib](https://github.com/kaappi/kaappi/releases/latest/download/libkaappi_rt-aarch64-windows.lib) | Runtime library for native compilation (`kaappi compile`) on Windows ARM64. Install it as `kaappi_rt.lib` (see below) |
 
 ### Manual install
 
@@ -79,13 +79,40 @@ Move-Item thottam-aarch64-windows.exe C:\Users\$env:USERNAME\.local\bin\thottam.
 mkdir "$env:USERPROFILE\.kaappi\lib" -Force
 tar xzf kaappi-lib.tar.gz -C "$env:USERPROFILE\.kaappi\lib"
 
-# Runtime library for native compilation (kaappi compile)
-Move-Item kaappi_rt.lib "$env:USERPROFILE\.kaappi\lib\kaappi_rt.lib"
+# Runtime library for native compilation (kaappi compile).
+# kaappi looks for it named kaappi_rt.lib, so rename it on the way in.
+Move-Item libkaappi_rt-aarch64-windows.lib "$env:USERPROFILE\.kaappi\lib\kaappi_rt.lib"
 ```
 
 !!! note
     The install script (`install.sh`) supports macOS, Linux, and FreeBSD.
     Windows users should download and install manually as shown above.
+
+---
+
+## Windows notes
+
+Kaappi runs on **Windows 11 ARM64**. There is no installer — download
+`kaappi-aarch64-windows.exe` and `thottam-aarch64-windows.exe`, place them on
+your `PATH` (see [Manual install](#manual-install) above), and run them from a
+terminal (Windows Terminal recommended). `install.sh` does not apply. A few
+behaviors differ from the macOS, Linux, and FreeBSD builds:
+
+- **REPL.** A plain prompt and line reader — debug commands, multi-line input,
+  and themes all work, but without history, completion, or line editing.
+- **Package manager.** thottam's `install`, `remove`, `update`, `list`, and
+  `verify` work for pure-Scheme packages (most of the ecosystem). Packages with
+  a native `build:` step (C FFI libraries) are refused, and git operations need
+  [Git for Windows](https://gitforwindows.org/) on your `PATH`.
+- **SRFI-170.** The POSIX-only filesystem procedures — uid/gid,
+  `user-info`/`group-info`, symlinks, hard links, FIFOs, `set-file-mode`,
+  `umask`, `truncate-file`, `set-file-times` — raise a catchable file error;
+  the names stay bound so portable code can probe them with `guard`.
+  `file-info` works. See [SRFI-170](procedures/srfi-170.md).
+- **Feature detection.** Windows builds expose the `windows` feature identifier
+  and omit `posix`, so portable code can branch with
+  `(cond-expand (windows ...) (else ...))`. See
+  [Standards Conformance](conformance.md).
 
 ---
 
