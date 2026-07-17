@@ -76,7 +76,9 @@ returns an eof-object:
 `channel-send` on a default (unbounded) channel never blocks. To make a
 fast producer pace itself to a slow consumer, give the channel a
 capacity — `(make-channel 8)` — and sends block whenever 8 values are
-already queued.
+already queued. A capacity of `0` goes all the way to a rendezvous:
+each send waits for a receiver to take the value, so producer and
+consumer proceed in lockstep.
 
 ## Worker pool
 
