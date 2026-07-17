@@ -73,6 +73,9 @@ Move-Item thottam-aarch64-windows.exe C:\Users\$env:USERNAME\.local\bin\thottam.
 # Extract standard libraries
 mkdir "$env:USERPROFILE\.kaappi\lib" -Force
 tar xzf kaappi-lib.tar.gz -C "$env:USERPROFILE\.kaappi\lib"
+
+# Runtime library for native compilation (kaappi compile)
+Move-Item kaappi_rt.lib "$env:USERPROFILE\.kaappi\lib\kaappi_rt.lib"
 ```
 
 !!! note
