@@ -26,7 +26,8 @@ detect_platform() {
         Linux)  os="linux" ;;
         *)
             echo "error: unsupported OS: $os" >&2
-            echo "Kaappi supports macOS and Linux. See https://github.com/$REPO" >&2
+            echo "This install script supports macOS and Linux." >&2
+            echo "Windows users: download from https://kaappi-lang.org/download/" >&2
             exit 1
             ;;
     esac

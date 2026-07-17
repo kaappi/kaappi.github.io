@@ -70,8 +70,9 @@ the native backend fall back to the bytecode interpreter automatically.
 
 ### Does native compilation work on all platforms?
 
-Native compilation via `kaappi compile` is available on macOS ARM64 and Linux
-x86_64/ARM64. Linux RISC-V and WebAssembly run interpreter-only.
+Native compilation via `kaappi compile` is available on macOS ARM64, Linux
+x86_64/ARM64, and Windows ARM64. Linux RISC-V and WebAssembly run
+interpreter-only.
 
 ## Ecosystem
 
@@ -165,8 +166,8 @@ zig build -Dbundle-src=app.scm
 ```
 
 The binary includes the full runtime — no Kaappi installation needed on the
-target machine. Cross-compile to Linux x86_64, ARM64, or RISC-V from any
-platform. See [Standalone Binaries](guide/deployment.md#standalone-binaries).
+target machine. Cross-compile to Linux x86_64, ARM64, RISC-V, or Windows ARM64
+from any platform. See [Standalone Binaries](guide/deployment.md#standalone-binaries).
 
 ### Does Kaappi run in the browser?
 
@@ -183,4 +184,5 @@ compilation, FFI, file I/O, or OS threads.
 | Linux x86_64 | yes | yes |
 | Linux ARM64 | yes | yes |
 | Linux RISC-V 64 | no | yes |
+| Windows ARM64 | yes | yes |
 | WebAssembly (wasm32-wasi) | no | yes |

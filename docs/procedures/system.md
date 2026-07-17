@@ -224,7 +224,7 @@ kaappi> (features)
 kaappi> (memq 'r7rs (features))
 ;=> (r7rs kaappi zig ...)
 kaappi> (memq 'windows (features))
-;=> #f
+;=> #f  ; #t on Windows builds
 ```
 
 **See also:** [`cond-expand`](./syntax-forms.md#cond-expand)

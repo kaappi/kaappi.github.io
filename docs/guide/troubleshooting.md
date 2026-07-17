@@ -519,9 +519,9 @@ clause. Use `,apropos` in the REPL to search for the procedure name.
 
 **Message:** `error[KP3002]: ffi-open: dlopen(...): ... (no such file)`
 
-**Cause:** The `.dylib` (macOS) or `.so` (Linux) file was not found in
-the library search path. The message includes the system loader's report
-of every path it tried.
+**Cause:** The `.dylib` (macOS), `.so` (Linux), or `.dll` (Windows) file
+was not found in the library search path. The message includes the system
+loader's report of every path it tried.
 
 **Example:**
 
@@ -536,6 +536,8 @@ directory) and either:
 - Install via thottam (copies to `~/.kaappi/lib/`)
 - Pass the path: `--lib-path /path/to/dir`
 - Set `DYLD_LIBRARY_PATH` (macOS) or `LD_LIBRARY_PATH` (Linux)
+- On Windows, place `.dll` files in `%USERPROFILE%\.kaappi\lib\` or add
+  the directory to `PATH`
 
 ---
 
@@ -633,6 +635,13 @@ add `zig-out/bin` to your `PATH` or copy the binary:
 
 ```bash
 cp zig-out/bin/kaappi ~/.local/bin/
+```
+
+**Fix on Windows:** Add the directory containing `kaappi.exe` to your
+`PATH` via System Settings > Environment Variables, or in PowerShell:
+
+```powershell
+$env:PATH = "C:\path\to\kaappi;$env:PATH"
 ```
 
 ---

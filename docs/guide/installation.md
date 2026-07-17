@@ -19,6 +19,7 @@ This page covers building from source.
 | Linux | x86_64 | LLVM backend |
 | Linux | aarch64 | LLVM backend |
 | Linux | riscv64 | LLVM backend |
+| Windows | aarch64 (ARM64) | LLVM backend |
 | WebAssembly | wasm32-wasi | interpreter only |
 
 ## macOS
@@ -40,6 +41,20 @@ git clone https://github.com/kaappi/kaappi
 cd kaappi
 zig build
 ```
+
+## Windows
+
+Download Zig 0.16+ from [ziglang.org/download](https://ziglang.org/download/)
+(choose the `aarch64-windows` build), extract it, and add it to your `PATH`.
+Then from PowerShell:
+
+```powershell
+git clone https://github.com/kaappi/kaappi
+cd kaappi
+zig build
+```
+
+The executables are `zig-out\bin\kaappi.exe` and `zig-out\bin\thottam.exe`.
 
 ## Install
 

@@ -36,6 +36,7 @@ the `kaappi` binary for your platform and the library archive.
 | Linux | x86_64 | [kaappi-x86_64-linux](https://github.com/kaappi/kaappi/releases/latest/download/kaappi-x86_64-linux) | [thottam-x86_64-linux](https://github.com/kaappi/kaappi/releases/latest/download/thottam-x86_64-linux) |
 | Linux | ARM64 | [kaappi-aarch64-linux](https://github.com/kaappi/kaappi/releases/latest/download/kaappi-aarch64-linux) | [thottam-aarch64-linux](https://github.com/kaappi/kaappi/releases/latest/download/thottam-aarch64-linux) |
 | Linux | RISC-V 64 | [kaappi-riscv64-linux](https://github.com/kaappi/kaappi/releases/latest/download/kaappi-riscv64-linux) | [thottam-riscv64-linux](https://github.com/kaappi/kaappi/releases/latest/download/thottam-riscv64-linux) |
+| Windows | ARM64 | [kaappi-aarch64-windows.exe](https://github.com/kaappi/kaappi/releases/latest/download/kaappi-aarch64-windows.exe) | [thottam-aarch64-windows.exe](https://github.com/kaappi/kaappi/releases/latest/download/thottam-aarch64-windows.exe) |
 
 macOS binaries are Developer ID signed and Apple notarized.
 
@@ -45,10 +46,13 @@ macOS binaries are Developer ID signed and Apple notarized.
 |------|-------------|
 | [kaappi-lib.tar.gz](https://github.com/kaappi/kaappi/releases/latest/download/kaappi-lib.tar.gz) | Standard libraries (SRFI, Scheme). Extract to `~/.kaappi/lib/` |
 | [kaappi.wasm](https://github.com/kaappi/kaappi/releases/latest/download/kaappi.wasm) | WebAssembly binary (wasm32-wasi) |
+| [kaappi_rt.lib](https://github.com/kaappi/kaappi/releases/latest/download/kaappi_rt.lib) | Runtime library for native compilation on Windows |
 
 ### Manual install
 
-After downloading, make the binaries executable and place them in your `PATH`:
+After downloading, place the binaries in your `PATH`.
+
+**macOS / Linux:**
 
 ```bash
 chmod +x kaappi-* thottam-*
@@ -59,6 +63,21 @@ mv thottam-*-$(uname -s | tr A-Z a-z) ~/.local/bin/thottam
 mkdir -p ~/.kaappi/lib
 tar xzf kaappi-lib.tar.gz -C ~/.kaappi/lib
 ```
+
+**Windows (PowerShell):**
+
+```powershell
+Move-Item kaappi-aarch64-windows.exe C:\Users\$env:USERNAME\.local\bin\kaappi.exe
+Move-Item thottam-aarch64-windows.exe C:\Users\$env:USERNAME\.local\bin\thottam.exe
+
+# Extract standard libraries
+mkdir "$env:USERPROFILE\.kaappi\lib" -Force
+tar xzf kaappi-lib.tar.gz -C "$env:USERPROFILE\.kaappi\lib"
+```
+
+!!! note
+    The install script (`install.sh`) supports macOS and Linux only. Windows
+    users should download and install manually as shown above.
 
 ---
 
