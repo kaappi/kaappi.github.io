@@ -38,7 +38,10 @@ the `kaappi` binary for your platform and the library archive.
 | Linux | RISC-V 64 | [kaappi-riscv64-linux](https://github.com/kaappi/kaappi/releases/latest/download/kaappi-riscv64-linux) | [thottam-riscv64-linux](https://github.com/kaappi/kaappi/releases/latest/download/thottam-riscv64-linux) |
 | Windows | ARM64 | [kaappi-aarch64-windows.exe](https://github.com/kaappi/kaappi/releases/latest/download/kaappi-aarch64-windows.exe) | [thottam-aarch64-windows.exe](https://github.com/kaappi/kaappi/releases/latest/download/thottam-aarch64-windows.exe) |
 
-macOS binaries are Developer ID signed and Apple notarized.
+macOS binaries are Developer ID signed and Apple notarized. Windows
+binaries are not code-signed — SmartScreen may show a "Windows protected
+your PC" warning on first run. Click **More info** → **Run anyway** to
+proceed. See [Troubleshooting](guide/troubleshooting.md#windows-smartscreen-warning).
 
 ### Other assets
 

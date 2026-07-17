@@ -665,6 +665,27 @@ xattr -d com.apple.quarantine zig-out/bin/kaappi
 
 ---
 
+### Windows SmartScreen warning
+
+**Message:** *"Windows protected your PC — Microsoft Defender SmartScreen
+prevented an unrecognized app from starting."*
+
+**Cause:** The Windows binaries are not code-signed. SmartScreen flags
+unsigned executables downloaded from the internet.
+
+**Fix:** Click **More info** → **Run anyway**. This is a one-time prompt
+per binary — subsequent runs will not show the warning. Alternatively,
+unblock the file from PowerShell before running it:
+
+```powershell
+Unblock-File .\kaappi-aarch64-windows.exe
+```
+
+Or right-click the `.exe` in File Explorer → Properties → check
+**Unblock** → OK.
+
+---
+
 ## Native Compilation Issues
 
 If a native-compiled binary behaves differently from the interpreter,
