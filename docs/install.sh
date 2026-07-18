@@ -25,9 +25,10 @@ detect_platform() {
         Darwin)  os="macos" ;;
         Linux)   os="linux" ;;
         FreeBSD) os="freebsd" ;;
+        OpenBSD) os="openbsd" ;;
         *)
             echo "error: unsupported OS: $os" >&2
-            echo "This install script supports macOS, Linux, and FreeBSD." >&2
+            echo "This install script supports macOS, Linux, FreeBSD, and OpenBSD." >&2
             echo "Windows users: download from https://kaappi-lang.org/download/" >&2
             exit 1
             ;;
@@ -35,7 +36,7 @@ detect_platform() {
 
     case "$arch" in
         arm64|aarch64) arch="aarch64" ;;
-        # FreeBSD reports x86_64 as amd64 (uname -m).
+        # FreeBSD and OpenBSD report x86_64 as amd64 (uname -m).
         x86_64|amd64)  arch="x86_64" ;;
         riscv64)       arch="riscv64" ;;
         *)
