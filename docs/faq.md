@@ -71,8 +71,11 @@ the native backend fall back to the bytecode interpreter automatically.
 ### Does native compilation work on all platforms?
 
 Native compilation via `kaappi compile` is available on macOS ARM64, Linux
-x86_64/ARM64, and Windows ARM64. Linux RISC-V and WebAssembly run
-interpreter-only.
+x86_64/ARM64, FreeBSD, OpenBSD, NetBSD, and Windows. On Windows x86_64 the
+stock Zig toolchain serves as the C compiler; on Windows ARM64 the stock
+Zig 0.16.0 toolchain has an upstream code-generation bug, so the link step
+needs a Zig development build until 0.17 ships. Linux RISC-V and WebAssembly
+run interpreter-only.
 
 ## Ecosystem
 
@@ -166,8 +169,9 @@ zig build -Dbundle-src=app.scm
 ```
 
 The binary includes the full runtime — no Kaappi installation needed on the
-target machine. Cross-compile to Linux x86_64, ARM64, RISC-V, or Windows ARM64
-from any platform. See [Standalone Binaries](guide/deployment.md#standalone-binaries).
+target machine. Cross-compile to Linux x86_64/ARM64/RISC-V, Windows (ARM64
+and x86_64), FreeBSD, OpenBSD, or NetBSD from any platform. See
+[Standalone Binaries](guide/deployment.md#standalone-binaries).
 
 ### Does Kaappi run in the browser?
 
@@ -185,4 +189,8 @@ compilation, FFI, file I/O, or OS threads.
 | Linux ARM64 | yes | yes |
 | Linux RISC-V 64 | no | yes |
 | Windows ARM64 | yes | yes |
+| Windows x86_64 | yes | from the next release |
+| FreeBSD x86_64 / ARM64 | yes | yes |
+| OpenBSD x86_64 / ARM64 | yes | yes |
+| NetBSD x86_64 / ARM64 | yes | yes |
 | WebAssembly (wasm32-wasi) | no | yes |
