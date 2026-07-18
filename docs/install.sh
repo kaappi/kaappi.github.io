@@ -16,6 +16,24 @@ INSTALL_DIR="${INSTALL_DIR:-$HOME/.local/bin}"
 # Common curl flags: fail on HTTP error, follow redirects, HTTPS only.
 CURL=(curl -fsSL --proto '=https' --tlsv1.2)
 
+# Download URL ($1) to file ($2). Prefers curl (macOS/Linux), then wget, then
+# the BSD base tools: fetch (FreeBSD) and ftp (OpenBSD) both fetch HTTPS from
+# the base system, where curl is not installed. All URLs are https://.
+download() {
+    if command -v curl >/dev/null 2>&1; then
+        "${CURL[@]}" -o "$2" "$1"
+    elif command -v wget >/dev/null 2>&1; then
+        wget -q --https-only -O "$2" "$1"
+    elif command -v fetch >/dev/null 2>&1; then
+        fetch -qo "$2" "$1"
+    elif command -v ftp >/dev/null 2>&1; then
+        ftp -o "$2" "$1"
+    else
+        echo "error: need curl, wget, fetch, or ftp to download files" >&2
+        return 1
+    fi
+}
+
 detect_platform() {
     local os arch
     os=$(uname -s)
@@ -25,9 +43,10 @@ detect_platform() {
         Darwin)  os="macos" ;;
         Linux)   os="linux" ;;
         FreeBSD) os="freebsd" ;;
+        OpenBSD) os="openbsd" ;;
         *)
             echo "error: unsupported OS: $os" >&2
-            echo "This install script supports macOS, Linux, and FreeBSD." >&2
+            echo "This install script supports macOS, Linux, FreeBSD, and OpenBSD." >&2
             echo "Windows users: download from https://kaappi-lang.org/download/" >&2
             exit 1
             ;;
@@ -35,7 +54,7 @@ detect_platform() {
 
     case "$arch" in
         arm64|aarch64) arch="aarch64" ;;
-        # FreeBSD reports x86_64 as amd64 (uname -m).
+        # FreeBSD and OpenBSD report x86_64 as amd64 (uname -m).
         x86_64|amd64)  arch="x86_64" ;;
         riscv64)       arch="riscv64" ;;
         *)
@@ -48,13 +67,23 @@ detect_platform() {
 }
 
 get_latest_tag() {
-    # Follow the releases/latest redirect rather than hitting the JSON API,
-    # which is rate-limited to 60 requests/hour/IP (unauthenticated). The
-    # effective URL ends in /releases/tag/<tag>.
-    local url
-    url=$("${CURL[@]}" -I -o /dev/null -w '%{url_effective}' \
-        "https://github.com/$REPO/releases/latest")
-    printf '%s\n' "${url##*/tag/}"
+    if command -v curl >/dev/null 2>&1; then
+        # Follow the releases/latest redirect rather than hitting the JSON API,
+        # which is rate-limited to 60 requests/hour/IP (unauthenticated). The
+        # effective URL ends in /releases/tag/<tag>. curl-only: the redirect
+        # trick relies on -w '%{url_effective}'.
+        local url
+        url=$("${CURL[@]}" -I -o /dev/null -w '%{url_effective}' \
+            "https://github.com/$REPO/releases/latest")
+        printf '%s\n' "${url##*/tag/}"
+    else
+        # No curl (e.g. stock OpenBSD): download and parse the JSON API instead.
+        local tmp
+        tmp=$(mktemp)
+        download "https://api.github.com/repos/$REPO/releases/latest" "$tmp" || { rm -f "$tmp"; return 1; }
+        grep '"tag_name"' "$tmp" | head -1 | sed 's/.*"tag_name": *"\([^"]*\)".*/\1/'
+        rm -f "$tmp"
+    fi
 }
 
 main() {
@@ -91,10 +120,10 @@ main() {
     # shellcheck disable=SC2064
     trap "rm -rf '$tmpdir'" EXIT
 
-    "${CURL[@]}" -o "$tmpdir/kaappi" "$base_url/$kaappi_artifact"
-    "${CURL[@]}" -o "$tmpdir/thottam" "$base_url/$thottam_artifact"
-    "${CURL[@]}" -o "$tmpdir/kaappi-lib.tar.gz" "$base_url/kaappi-lib.tar.gz"
-    "${CURL[@]}" -o "$tmpdir/SHA256SUMS" "$base_url/SHA256SUMS"
+    download "$base_url/$kaappi_artifact" "$tmpdir/kaappi"
+    download "$base_url/$thottam_artifact" "$tmpdir/thottam"
+    download "$base_url/kaappi-lib.tar.gz" "$tmpdir/kaappi-lib.tar.gz"
+    download "$base_url/SHA256SUMS" "$tmpdir/SHA256SUMS"
 
     echo "Verifying checksums..."
     cd "$tmpdir"
@@ -106,10 +135,17 @@ main() {
         sha256sum -c --quiet check.txt
     elif command -v shasum >/dev/null 2>&1; then
         shasum -a 256 -c --quiet check.txt
+    elif command -v sha256 >/dev/null 2>&1; then
+        # OpenBSD/FreeBSD base: sha256 has no coreutils-style -c, so recompute
+        # each file's hash and confirm it appears in SHA256SUMS.
+        for f in kaappi thottam kaappi-lib.tar.gz; do
+            grep -q "$(sha256 -q "$f")" SHA256SUMS \
+                || { echo "error: checksum verification failed for $f" >&2; exit 1; }
+        done
     elif [ "${KAAPPI_NO_VERIFY:-0}" = "1" ]; then
         echo "warning: skipping checksum verification (KAAPPI_NO_VERIFY=1)" >&2
     else
-        echo "error: no sha256sum or shasum found; cannot verify download" >&2
+        echo "error: no sha256sum, shasum, or sha256 found; cannot verify download" >&2
         echo "  install one, or set KAAPPI_NO_VERIFY=1 to bypass verification" >&2
         exit 1
     fi

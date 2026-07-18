@@ -39,6 +39,8 @@ the `kaappi` binary for your platform and the library archive.
 | Windows | ARM64 | [kaappi-aarch64-windows.exe](https://github.com/kaappi/kaappi/releases/latest/download/kaappi-aarch64-windows.exe) | [thottam-aarch64-windows.exe](https://github.com/kaappi/kaappi/releases/latest/download/thottam-aarch64-windows.exe) |
 | FreeBSD | x86_64 | [kaappi-x86_64-freebsd](https://github.com/kaappi/kaappi/releases/latest/download/kaappi-x86_64-freebsd) | [thottam-x86_64-freebsd](https://github.com/kaappi/kaappi/releases/latest/download/thottam-x86_64-freebsd) |
 | FreeBSD | ARM64 | [kaappi-aarch64-freebsd](https://github.com/kaappi/kaappi/releases/latest/download/kaappi-aarch64-freebsd) | [thottam-aarch64-freebsd](https://github.com/kaappi/kaappi/releases/latest/download/thottam-aarch64-freebsd) |
+| OpenBSD | x86_64 | [kaappi-x86_64-openbsd](https://github.com/kaappi/kaappi/releases/latest/download/kaappi-x86_64-openbsd) | [thottam-x86_64-openbsd](https://github.com/kaappi/kaappi/releases/latest/download/thottam-x86_64-openbsd) |
+| OpenBSD | ARM64 | [kaappi-aarch64-openbsd](https://github.com/kaappi/kaappi/releases/latest/download/kaappi-aarch64-openbsd) | [thottam-aarch64-openbsd](https://github.com/kaappi/kaappi/releases/latest/download/thottam-aarch64-openbsd) |
 
 macOS binaries are Developer ID signed and Apple notarized. Windows
 binaries are not code-signed — SmartScreen may show a "Windows protected
@@ -85,8 +87,8 @@ Move-Item libkaappi_rt-aarch64-windows.lib "$env:USERPROFILE\.kaappi\lib\kaappi_
 ```
 
 !!! note
-    The install script (`install.sh`) supports macOS, Linux, and FreeBSD.
-    Windows users should download and install manually as shown above.
+    The install script (`install.sh`) supports macOS, Linux, FreeBSD, and
+    OpenBSD. Windows users should download and install manually as shown above.
 
 ---
 
