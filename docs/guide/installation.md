@@ -20,6 +20,9 @@ This page covers building from source.
 | Linux | aarch64 | LLVM backend |
 | Linux | riscv64 | LLVM backend |
 | Windows | aarch64 (ARM64) | LLVM backend |
+| FreeBSD | x86_64, aarch64 | LLVM backend (base `cc` suffices) |
+| OpenBSD | x86_64, aarch64 | LLVM backend (base `cc` suffices) |
+| NetBSD | x86_64, aarch64 | LLVM backend (needs `clang` from pkgsrc) |
 | WebAssembly | wasm32-wasi | interpreter only |
 
 ## macOS
@@ -55,6 +58,25 @@ zig build
 ```
 
 The executables are `zig-out\bin\kaappi.exe` and `zig-out\bin\thottam.exe`.
+
+## FreeBSD, OpenBSD, NetBSD
+
+The [install script](../download.md) and the prebuilt release binaries work
+from the base system alone. To build from source instead, install Zig 0.16+
+from your ports/packages collection (or
+[ziglang.org/download](https://ziglang.org/download/)), then:
+
+```bash
+git clone https://github.com/kaappi/kaappi
+cd kaappi
+zig build
+```
+
+The `kaappi compile` native backend links with the base system `cc` on
+FreeBSD and OpenBSD. NetBSD's base `cc` is GCC, which cannot consume the
+LLVM IR the backend emits — install clang first (`pkgin install clang`);
+everything else (interpreter, REPL, thottam, FFI) needs only the base
+system.
 
 ## Install
 

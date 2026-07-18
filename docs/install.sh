@@ -17,8 +17,9 @@ INSTALL_DIR="${INSTALL_DIR:-$HOME/.local/bin}"
 CURL=(curl -fsSL --proto '=https' --tlsv1.2)
 
 # Download URL ($1) to file ($2). Prefers curl (macOS/Linux), then wget, then
-# the BSD base tools: fetch (FreeBSD) and ftp (OpenBSD) both fetch HTTPS from
-# the base system, where curl is not installed. All URLs are https://.
+# the BSD base tools: fetch (FreeBSD) and ftp (OpenBSD, NetBSD) all fetch
+# HTTPS from the base system, where curl is not installed. All URLs are
+# https://.
 download() {
     if command -v curl >/dev/null 2>&1; then
         "${CURL[@]}" -o "$2" "$1"
@@ -44,9 +45,15 @@ detect_platform() {
         Linux)   os="linux" ;;
         FreeBSD) os="freebsd" ;;
         OpenBSD) os="openbsd" ;;
+        NetBSD)
+            os="netbsd"
+            # NetBSD's uname -m reports the kernel port (evbarm, amd64),
+            # not the CPU; -p gives the machine arch (aarch64, x86_64).
+            arch=$(uname -p)
+            ;;
         *)
             echo "error: unsupported OS: $os" >&2
-            echo "This install script supports macOS, Linux, FreeBSD, and OpenBSD." >&2
+            echo "This install script supports macOS, Linux, FreeBSD, OpenBSD, and NetBSD." >&2
             echo "Windows users: download from https://kaappi-lang.org/download/" >&2
             exit 1
             ;;
@@ -136,7 +143,7 @@ main() {
     elif command -v shasum >/dev/null 2>&1; then
         shasum -a 256 -c --quiet check.txt
     elif command -v sha256 >/dev/null 2>&1; then
-        # OpenBSD/FreeBSD base: sha256 has no coreutils-style -c, so recompute
+        # OpenBSD/FreeBSD/NetBSD base: sha256 has no coreutils-style -c, so recompute
         # each file's hash and confirm it appears in SHA256SUMS.
         for f in kaappi thottam kaappi-lib.tar.gz; do
             grep -q "$(sha256 -q "$f")" SHA256SUMS \
