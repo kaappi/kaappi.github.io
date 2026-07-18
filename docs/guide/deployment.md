@@ -62,6 +62,9 @@ zig build -Dbundle-src=app.scm -Dtarget=riscv64-linux
 
 # Windows ARM64
 zig build -Dbundle-src=app.scm -Dtarget=aarch64-windows
+
+# Windows x86_64
+zig build -Dbundle-src=app.scm -Dtarget=x86_64-windows
 ```
 
 No cross-compiler installation needed — Zig handles cross-compilation

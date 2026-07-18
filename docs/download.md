@@ -97,11 +97,15 @@ Move-Item libkaappi_rt-aarch64-windows.lib "$env:USERPROFILE\.kaappi\lib\kaappi_
 
 ## Windows notes
 
-Kaappi runs on **Windows 11 ARM64**. There is no installer — download
-`kaappi-aarch64-windows.exe` and `thottam-aarch64-windows.exe`, place them on
-your `PATH` (see [Manual install](#manual-install) above), and run them from a
-terminal (Windows Terminal recommended). `install.sh` does not apply. A few
-behaviors differ from the macOS, Linux, and FreeBSD builds:
+Kaappi runs on **Windows 11**, on ARM64 and x86_64. There is no installer —
+download `kaappi-aarch64-windows.exe` and `thottam-aarch64-windows.exe`, place
+them on your `PATH` (see [Manual install](#manual-install) above), and run
+them from a terminal (Windows Terminal recommended). `install.sh` does not
+apply. Prebuilt binaries currently cover ARM64; x86_64 binaries ship starting
+with the next release — until then, x64 users can
+[build from source](guide/installation.md#windows) with the stock Zig
+toolchain. Both architectures run the same code, so everything below applies
+to both. A few behaviors differ from the macOS, Linux, and BSD builds:
 
 - **REPL.** A plain prompt and line reader — debug commands, multi-line input,
   and themes all work, but without history, completion, or line editing.

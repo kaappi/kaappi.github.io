@@ -1,8 +1,9 @@
 # thottam — Package Manager
 
 **thottam** installs, updates, and removes Kaappi ecosystem libraries. It is a
-compiled Zig binary that ships alongside `kaappi` in release artifacts for all
-platforms (macOS, Linux x86_64, Linux aarch64, Linux riscv64, Windows aarch64).
+compiled Zig binary that ships alongside `kaappi` in release artifacts for
+every platform on the [downloads page](../download.md) — macOS, Linux
+(x86_64, aarch64, riscv64), Windows, FreeBSD, OpenBSD, and NetBSD.
 
 ## Getting thottam
 

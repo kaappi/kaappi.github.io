@@ -19,7 +19,7 @@ This page covers building from source.
 | Linux | x86_64 | LLVM backend |
 | Linux | aarch64 | LLVM backend |
 | Linux | riscv64 | LLVM backend |
-| Windows | aarch64 (ARM64) | LLVM backend |
+| Windows | aarch64 (ARM64), x86_64 | LLVM backend |
 | FreeBSD | x86_64, aarch64 | LLVM backend (base `cc` suffices) |
 | OpenBSD | x86_64, aarch64 | LLVM backend (base `cc` suffices) |
 | NetBSD | x86_64, aarch64 | LLVM backend (needs `clang` from pkgsrc) |
@@ -47,9 +47,9 @@ zig build
 
 ## Windows
 
-Download Zig 0.16+ from [ziglang.org/download](https://ziglang.org/download/)
-(choose the `aarch64-windows` build), extract it, and add it to your `PATH`.
-Then from PowerShell:
+**On x86_64:** download Zig 0.16+ from
+[ziglang.org/download](https://ziglang.org/download/) (the `x86_64-windows`
+build), extract it, and add it to your `PATH`. Then from PowerShell:
 
 ```powershell
 git clone https://github.com/kaappi/kaappi
@@ -58,6 +58,20 @@ zig build
 ```
 
 The executables are `zig-out\bin\kaappi.exe` and `zig-out\bin\thottam.exe`.
+
+**On ARM64:** building natively does not work yet — the Zig 0.16.0
+`aarch64-windows` toolchain itself crashes compiling any project (an upstream
+code-generation bug, fixed in Zig's development builds; native builds unblock
+when Zig 0.17 ships). Use the [prebuilt binaries](../download.md) instead, or
+cross-compile from macOS or Linux:
+
+```bash
+zig build -Dtarget=aarch64-windows
+```
+
+If you need to build on the ARM64 machine itself, an `x86_64-windows` Zig
+works under Windows 11's built-in x64 emulation: it produces x64 binaries,
+which run on the same machine through that emulation layer.
 
 ## FreeBSD, OpenBSD, NetBSD
 
