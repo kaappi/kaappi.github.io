@@ -28,8 +28,8 @@ page names). Section overview:
 | Try It (playground) | `docs/playground.md` | 1 | Stub; rendered by `overrides/playground.html` |
 | Tour | `docs/tour.md` | 1 | Stub; rendered by `overrides/tour.html` (12 lessons) |
 | Download | `docs/download.md` | 1 | Install script + binary links; **version in H1** |
-| Guide | `docs/guide/` | 18 + index | Installation through troubleshooting; incl. tutorial, library authoring, concurrency, C/Zig extensions, SRFI support, editors, migrating, security, deployment |
-| Procedures | `docs/procedures/` | 19 + index | Per-category API reference (numbers, lists, strings, SRFI-1/13/18/133/170, syntax forms, extensions, …) |
+| Guide | `docs/guide/` | 19 + index | Installation through troubleshooting; incl. tutorial, library authoring, concurrency, C/Zig extensions, SRFI support, editors, migrating, security, deployment |
+| Procedures | `docs/procedures/` | 20 + index | Per-category API reference (numbers, lists, strings, SRFI-1/13/18/133/170/254, syntax forms, extensions, …) |
 | Cookbook | `docs/cookbook/` | 10 + index | Task recipes: REST API, HTTP client, HTML templates, JSON, CSV, SQLite, config files, concurrency, testing, CLI tool |
 | Ecosystem | `docs/ecosystem/` | 19 + index | thottam (package manager) + one page per kaappi-* library |
 | Top-level | `docs/*.md` | 4 | glossary, stability, community, faq |
@@ -140,7 +140,7 @@ When writing about Kaappi features, verify against these sources (not from memor
 All paths are relative to this repo root (`kaappi.github.io/`):
 
 - **Kaappi source code**: `../kaappi/` — the Zig implementation
-  - `../kaappi/src/` — core runtime, compiler, VM, GC, primitives (~48k lines)
+  - `../kaappi/src/` — core runtime, compiler, VM, GC, primitives (~100k lines)
   - `../kaappi/lib/` — portable Scheme SRFI libraries (.sld files)
   - `../kaappi/docs/dev/` — architecture, IR, LLVM backend docs
   - `../kaappi/CONFORMANCE.md` — R7RS compliance details
