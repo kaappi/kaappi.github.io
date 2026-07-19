@@ -86,3 +86,7 @@ examples.
 ## [SRFI-170 Filesystem](srfi-170.md)
 
 {{ procedures_table("srfi-170.md") }}
+
+## [SRFI-254 Ephemerons and Guardians](srfi-254.md)
+
+{{ procedures_table("srfi-254.md") }}

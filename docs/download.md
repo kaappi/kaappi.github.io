@@ -36,6 +36,9 @@ the `kaappi` binary for your platform and the library archive.
 | Linux | x86_64 | [kaappi-x86_64-linux](https://github.com/kaappi/kaappi/releases/latest/download/kaappi-x86_64-linux) | [thottam-x86_64-linux](https://github.com/kaappi/kaappi/releases/latest/download/thottam-x86_64-linux) |
 | Linux | ARM64 | [kaappi-aarch64-linux](https://github.com/kaappi/kaappi/releases/latest/download/kaappi-aarch64-linux) | [thottam-aarch64-linux](https://github.com/kaappi/kaappi/releases/latest/download/thottam-aarch64-linux) |
 | Linux | RISC-V 64 | [kaappi-riscv64-linux](https://github.com/kaappi/kaappi/releases/latest/download/kaappi-riscv64-linux) | [thottam-riscv64-linux](https://github.com/kaappi/kaappi/releases/latest/download/thottam-riscv64-linux) |
+| Linux | s390x (IBM Z) | [kaappi-s390x-linux](https://github.com/kaappi/kaappi/releases/latest/download/kaappi-s390x-linux) | [thottam-s390x-linux](https://github.com/kaappi/kaappi/releases/latest/download/thottam-s390x-linux) |
+| Linux | ppc64le (POWER) | [kaappi-powerpc64le-linux](https://github.com/kaappi/kaappi/releases/latest/download/kaappi-powerpc64le-linux) | [thottam-powerpc64le-linux](https://github.com/kaappi/kaappi/releases/latest/download/thottam-powerpc64le-linux) |
+| Windows | x86_64 (x64) | [kaappi-x86_64-windows.exe](https://github.com/kaappi/kaappi/releases/latest/download/kaappi-x86_64-windows.exe) | [thottam-x86_64-windows.exe](https://github.com/kaappi/kaappi/releases/latest/download/thottam-x86_64-windows.exe) |
 | Windows | ARM64 | [kaappi-aarch64-windows.exe](https://github.com/kaappi/kaappi/releases/latest/download/kaappi-aarch64-windows.exe) | [thottam-aarch64-windows.exe](https://github.com/kaappi/kaappi/releases/latest/download/thottam-aarch64-windows.exe) |
 | FreeBSD | x86_64 | [kaappi-x86_64-freebsd](https://github.com/kaappi/kaappi/releases/latest/download/kaappi-x86_64-freebsd) | [thottam-x86_64-freebsd](https://github.com/kaappi/kaappi/releases/latest/download/thottam-x86_64-freebsd) |
 | FreeBSD | ARM64 | [kaappi-aarch64-freebsd](https://github.com/kaappi/kaappi/releases/latest/download/kaappi-aarch64-freebsd) | [thottam-aarch64-freebsd](https://github.com/kaappi/kaappi/releases/latest/download/thottam-aarch64-freebsd) |
@@ -49,13 +52,19 @@ binaries are not code-signed — SmartScreen may show a "Windows protected
 your PC" warning on first run. Click **More info** → **Run anyway** to
 proceed. See [Troubleshooting](guide/troubleshooting.md#windows-smartscreen-warning).
 
+The RISC-V, s390x, and ppc64le builds run the bytecode interpreter;
+`kaappi compile` (the LLVM native backend) is available on aarch64 and
+x86_64 only, and on other architectures exits with a clear error rather
+than attempt it.
+
 ### Other assets
 
 | File | Description |
 |------|-------------|
 | [kaappi-lib.tar.gz](https://github.com/kaappi/kaappi/releases/latest/download/kaappi-lib.tar.gz) | Standard libraries (SRFI, Scheme). Extract to `~/.kaappi/lib/` |
 | [kaappi.wasm](https://github.com/kaappi/kaappi/releases/latest/download/kaappi.wasm) | WebAssembly binary (wasm32-wasi) |
-| [libkaappi_rt-aarch64-windows.lib](https://github.com/kaappi/kaappi/releases/latest/download/libkaappi_rt-aarch64-windows.lib) | Runtime library for native compilation (`kaappi compile`) on Windows ARM64. Install it as `kaappi_rt.lib` (see below) |
+| [libkaappi_rt-x86_64-windows.lib](https://github.com/kaappi/kaappi/releases/latest/download/libkaappi_rt-x86_64-windows.lib) | Runtime library for native compilation (`kaappi compile`) on Windows x64. Install it as `kaappi_rt.lib` (see below) |
+| [libkaappi_rt-aarch64-windows.lib](https://github.com/kaappi/kaappi/releases/latest/download/libkaappi_rt-aarch64-windows.lib) | Same, for Windows ARM64 |
 
 ### Manual install
 
@@ -76,8 +85,9 @@ tar xzf kaappi-lib.tar.gz -C ~/.kaappi/lib
 **Windows (PowerShell):**
 
 ```powershell
-Move-Item kaappi-aarch64-windows.exe C:\Users\$env:USERNAME\.local\bin\kaappi.exe
-Move-Item thottam-aarch64-windows.exe C:\Users\$env:USERNAME\.local\bin\thottam.exe
+# x64 shown; on ARM64 substitute aarch64 for x86_64 throughout.
+Move-Item kaappi-x86_64-windows.exe C:\Users\$env:USERNAME\.local\bin\kaappi.exe
+Move-Item thottam-x86_64-windows.exe C:\Users\$env:USERNAME\.local\bin\thottam.exe
 
 # Extract standard libraries
 mkdir "$env:USERPROFILE\.kaappi\lib" -Force
@@ -85,7 +95,7 @@ tar xzf kaappi-lib.tar.gz -C "$env:USERPROFILE\.kaappi\lib"
 
 # Runtime library for native compilation (kaappi compile).
 # kaappi looks for it named kaappi_rt.lib, so rename it on the way in.
-Move-Item libkaappi_rt-aarch64-windows.lib "$env:USERPROFILE\.kaappi\lib\kaappi_rt.lib"
+Move-Item libkaappi_rt-x86_64-windows.lib "$env:USERPROFILE\.kaappi\lib\kaappi_rt.lib"
 ```
 
 !!! note
@@ -97,15 +107,13 @@ Move-Item libkaappi_rt-aarch64-windows.lib "$env:USERPROFILE\.kaappi\lib\kaappi_
 
 ## Windows notes
 
-Kaappi runs on **Windows 11**, on ARM64 and x86_64. There is no installer —
-download `kaappi-aarch64-windows.exe` and `thottam-aarch64-windows.exe`, place
-them on your `PATH` (see [Manual install](#manual-install) above), and run
-them from a terminal (Windows Terminal recommended). `install.sh` does not
-apply. Prebuilt binaries currently cover ARM64; x86_64 binaries ship starting
-with the next release — until then, x64 users can
-[build from source](guide/installation.md#windows) with the stock Zig
-toolchain. Both architectures run the same code, so everything below applies
-to both. A few behaviors differ from the macOS, Linux, and BSD builds:
+Kaappi runs on **Windows 11**, on x86_64 and ARM64, with prebuilt binaries
+for both. There is no installer — download the `kaappi` and `thottam`
+executables for your architecture, place them on your `PATH` (see
+[Manual install](#manual-install) above), and run them from a terminal
+(Windows Terminal recommended). `install.sh` does not apply. Both
+architectures run the same code, so everything below applies to both. A
+few behaviors differ from the macOS, Linux, and BSD builds:
 
 - **REPL.** A plain prompt and line reader — debug commands, multi-line input,
   and themes all work, but without history, completion, or line editing.

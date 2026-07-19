@@ -1,7 +1,7 @@
 # User Guide
 
 Kaappi is a Scheme you can install in one command and start using immediately.
-It implements the full R7RS-small standard with 72 SRFIs, C FFI, and a
+It implements the full R7RS-small standard with 78 SRFIs, C FFI, and a
 package manager — everything you need to write real programs.
 
 ## Getting started

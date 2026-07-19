@@ -215,9 +215,9 @@ history, tab completion, and [comma commands](guide/repl.md).
 ### SRFI { #srfi }
 
 **Scheme Requests for Implementation.** Community-authored library
-specifications with reference implementations. Kaappi supports 72 SRFIs
-(8 built-in, 64 portable). See [SRFI Support](guide/srfi-support.md) for
-the full list.
+specifications with reference implementations. Kaappi supports 78 SRFIs
+(9 built-in, 68 portable, plus the SRFI 261 naming convention). See
+[SRFI Support](guide/srfi-support.md) for the full list.
 
 Example: SRFI-1 provides extended list operations (`fold`, `filter`,
 `partition`, etc.).

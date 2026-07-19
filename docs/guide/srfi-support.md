@@ -1,8 +1,10 @@
 # SRFI Support
 
-Kaappi supports 72 SRFIs (Scheme Requests for Implementation). Eight are
-built into the runtime as native Zig code. The remaining 64 are portable
-R7RS libraries loaded on demand from `.sld` files.
+Kaappi supports 78 SRFIs (Scheme Requests for Implementation). Nine are
+built into the runtime as native Zig code, and 68 are portable R7RS
+libraries loaded on demand from `.sld` files. The 78th, SRFI 261, is a
+[naming convention](#srfi-261) honored by the import resolver with no
+library file at all.
 
 All SRFIs are imported with `(import (srfi N))`:
 
@@ -12,10 +14,20 @@ All SRFIs are imported with `(import (srfi N))`:
 ```
 
 Portable code can detect whether a given SRFI is available before importing
-it with `(cond-expand ((library (srfi N)) ...) (else ...))`. See
-[Standards Conformance](../conformance.md) for how this compares to
-R7RS-small's own scope, and for the equivalent `cond-expand` identifiers
-covering fibers, the reactor, and threads.
+it with `(cond-expand ((library (srfi N)) ...) (else ...))`, or with the
+equivalent `srfi-<n>` feature identifier:
+
+```scheme
+(cond-expand
+  (srfi-250 (import (srfi 250)))  ; insertion-ordered hash tables
+  (else     (import (srfi 69))))  ; fall back to plain hash tables
+```
+
+Both spellings answer through the same check, so they always agree with
+what `(import (srfi N))` would do — including under `--sandbox` and on
+WASM builds. See [Standards Conformance](../conformance.md) for how this
+compares to R7RS-small's own scope, and for the equivalent `cond-expand`
+identifiers covering fibers, the reactor, and threads.
 
 ## Built-in SRFIs
 
@@ -31,6 +43,7 @@ These are implemented in Zig for performance and are always available.
 | 69 | Hash tables | [Reference](../procedures/hash-tables.md) |
 | 133 | Vector library (vector-map, vector-fold, ...) | [Reference](../procedures/srfi-133.md) |
 | 170 | POSIX API (file-info, directories, symlinks, env, ...) | [Reference](../procedures/srfi-170.md) |
+| 254 | Ephemerons and guardians (GC-integrated weak references and finalization) | [Reference](../procedures/srfi-254.md) |
 
 ## Portable SRFIs
 
@@ -102,6 +115,26 @@ These are loaded from `.sld` files when first imported. Sorted by SRFI number.
 | 232 | Flexible curried procedures |
 | 233 | `INI` file parser |
 | 235 | Combinators |
+| 250 | Insertion-ordered hash tables |
+| 263 | Prototype object system (also `(srfi 263 syntax)`) |
+| 267 | Raw strings — the `#"X"..."X"` literal syntax is built into the reader; the library adds port procedures |
+| 271 | Random ports from OS entropy (also deterministic `(srfi 271 determinized)`) |
+
+## SRFI 261 — portable SRFI library references { #srfi-261 }
+
+SRFI 261 is a naming convention, not a library file: `(srfi srfi-<n>)` and
+`(srfi <mnemonic>-<n>)` resolve to `(srfi <n>)`.
+
+```scheme
+(import (srfi srfi-1))      ; same as (import (srfi 1))
+(import (srfi lists-1))     ; mnemonic form
+(import (srfi vectors-133)) ; same as (import (srfi 133))
+```
+
+The trailing number alone is authoritative, and a literal registry or file
+name wins when one exists. There is no `(srfi 261)` file to import — the
+convention is honored by the import resolver itself, and the `srfi-261`
+feature identifier reports true.
 
 ---
 

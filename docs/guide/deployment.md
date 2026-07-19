@@ -31,13 +31,17 @@ zig build native -Dnative-src=app.scm
 ```
 
 Both produce a single executable with the Kaappi runtime included,
-compiled at `-O2`. Tail calls are fully optimized — on x86_64 and
-AArch64, direct tail calls between natively compiled fixed-arity
-functions use LLVM's `musttail`, making mutual recursion (not just
-self-recursion) guaranteed constant-stack; other targets keep a
-best-effort tail-call hint. Variadic parameters and `let`/`let*`
-bindings compile natively, and forms the backend can't lower yet fall
-back to the bytecode interpreter automatically.
+compiled at `-O2`. The native backend targets aarch64 and x86_64 across
+macOS, Linux, Windows, FreeBSD, OpenBSD, and NetBSD. On interpreter-tier
+architectures (RISC-V, s390x, ppc64le) `kaappi compile` exits with a
+clear error naming the architecture, and `kaappi doctor` reports the
+native backend as a single warning — use bytecode bundling there
+instead. Tail calls are fully optimized — direct tail calls between
+natively compiled fixed-arity functions use LLVM's `musttail`, making
+mutual recursion (not just self-recursion) guaranteed constant-stack.
+Variadic parameters and `let`/`let*` bindings compile natively, and
+forms the backend can't lower yet fall back to the bytecode interpreter
+automatically.
 
 Copy the executable to the server and run it:
 
@@ -59,6 +63,12 @@ zig build -Dbundle-src=app.scm -Dtarget=aarch64-linux
 
 # Linux RISC-V
 zig build -Dbundle-src=app.scm -Dtarget=riscv64-linux
+
+# Linux s390x (IBM Z)
+zig build -Dbundle-src=app.scm -Dtarget=s390x-linux
+
+# Linux ppc64le (POWER)
+zig build -Dbundle-src=app.scm -Dtarget=powerpc64le-linux
 
 # Windows ARM64
 zig build -Dbundle-src=app.scm -Dtarget=aarch64-windows

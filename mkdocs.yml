@@ -93,6 +93,7 @@ nav:
       - SRFI-18 Threads: procedures/threads.md
       - SRFI-69 Hash Tables: procedures/hash-tables.md
       - SRFI-170 Filesystem: procedures/srfi-170.md
+      - SRFI-254 Ephemerons and Guardians: procedures/srfi-254.md
     - Extensions:
       - Kaappi Extensions: procedures/extensions.md
       - Other Primitives: procedures/other.md

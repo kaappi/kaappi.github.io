@@ -237,7 +237,7 @@ also offers `call/ec` for cheap escape-only continuations:
 ### What works unchanged
 
 - Most R7RS code
-- SRFI imports (Kaappi supports 72 SRFIs, Chicken supports many of the same)
+- SRFI imports (Kaappi supports 78 SRFIs, Chicken supports many of the same)
 - `define-record-type` (SRFI-9)
 - Standard list, string, vector operations
 

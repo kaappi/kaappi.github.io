@@ -3,6 +3,11 @@
 Hash tables provide efficient key-value storage with average O(1) lookup.
 Import with `(import (srfi 69))`.
 
+SRFI-69 tables iterate in no particular order. When iteration, folding,
+or conversion must follow first-insertion order, use the portable
+SRFI 250 (insertion-ordered hash tables) instead —
+`(import (srfi 250))`; see [SRFI Support](../guide/srfi-support.md).
+
 ## Performance characteristics
 
 | Operation | Average | Worst case |

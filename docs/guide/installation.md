@@ -18,12 +18,21 @@ This page covers building from source.
 | macOS | aarch64 (Apple Silicon) | LLVM backend |
 | Linux | x86_64 | LLVM backend |
 | Linux | aarch64 | LLVM backend |
-| Linux | riscv64 | LLVM backend |
+| Linux | riscv64 | interpreter only |
+| Linux | s390x | interpreter only |
+| Linux | ppc64le | interpreter only |
 | Windows | aarch64 (ARM64), x86_64 | LLVM backend |
 | FreeBSD | x86_64, aarch64 | LLVM backend (base `cc` suffices) |
 | OpenBSD | x86_64, aarch64 | LLVM backend (base `cc` suffices) |
 | NetBSD | x86_64, aarch64 | LLVM backend (needs `clang` from pkgsrc) |
 | WebAssembly | wasm32-wasi | interpreter only |
+
+The interpreter (with the full REPL, fibers, threads, and FFI) runs on
+every platform in the table. "Interpreter only" means the `kaappi compile`
+LLVM native backend is unavailable there — it targets aarch64 and x86_64;
+on other architectures it exits with a clear error. The s390x and ppc64le
+binaries are produced by cross-compiling (`zig build -Dtarget=s390x-linux`
+or `-Dtarget=powerpc64le-linux`) from a supported host.
 
 ## macOS
 

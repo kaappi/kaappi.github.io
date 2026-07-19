@@ -18,7 +18,7 @@ These interfaces will not break without a minor version bump (e.g., 0.5 to
 |-----------|-----------|
 | **R7RS procedures** | All 600+ built-in procedures retain their current behavior |
 | **Library system** | `define-library`, `import`, `export` syntax and semantics |
-| **SRFI support** | All 72 currently supported SRFIs remain available |
+| **SRFI support** | All 78 currently supported SRFIs remain available |
 | **CLI interface** | `kaappi [flags] [file]` and the subcommands (`compile`, `check`, `explain`, `features`, `test`, `ast`/`expand`/`ir`, `doctor`, `fmt`, `cache`) — flags and subcommands may be added but not removed |
 | **Diagnostic codes** | A `KP` code never changes meaning and is never reused; new codes may be added. See the [Diagnostic Reference](guide/diagnostics.md) |
 | **thottam CLI** | `install`, `remove`, `list`, `update`, `verify` commands |

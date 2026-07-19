@@ -64,6 +64,9 @@ detect_platform() {
         # FreeBSD and OpenBSD report x86_64 as amd64 (uname -m).
         x86_64|amd64)  arch="x86_64" ;;
         riscv64)       arch="riscv64" ;;
+        s390x)         arch="s390x" ;;
+        # Linux reports ppc64le; release artifact names spell it out.
+        ppc64le)       arch="powerpc64le" ;;
         *)
             echo "error: unsupported architecture: $arch" >&2
             exit 1

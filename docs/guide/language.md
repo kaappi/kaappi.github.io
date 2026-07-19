@@ -41,6 +41,22 @@ Strings are UTF-8 encoded and indexed by codepoint position.
 (string-ref "lambda: λ" 8)   ;=> #\λ
 ```
 
+Raw string literals (`#"X"..."X"`, SRFI 267) interpret no escape
+sequences — backslashes and newlines are taken verbatim. The `X` is a
+per-literal delimiter, possibly empty, chosen so the content can contain
+double quotes:
+
+```scheme
+#""C:\Users\me""            ;=> "C:\\Users\\me" — backslashes stay literal
+(string-length #""x\ny"")   ;=> 4 — backslash + n, not a newline
+#"end"he said "hi""end"     ;=> "he said \"hi\""
+```
+
+The syntax is built into the reader, so no import is needed;
+`(import (srfi 267))` adds port procedures such as `read-raw-string`,
+`write-raw-string`, and `generate-delimiter`. See
+[SRFI Support](srfi-support.md).
+
 ## Lists
 
 See [Pairs and Lists](../procedures/pairs-and-lists.md),

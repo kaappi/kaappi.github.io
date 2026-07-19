@@ -12,7 +12,7 @@ for web development, databases, and data processing.
 ### Why another Scheme?
 
 Most Scheme implementations focus on either standards conformance or
-performance. Kaappi aims for both — full R7RS-small with 72 SRFIs, plus native
+performance. Kaappi aims for both — full R7RS-small with 78 SRFIs, plus native
 compilation via LLVM. It also ships as a single binary with no runtime
 dependencies, which makes deployment straightforward.
 
@@ -35,8 +35,9 @@ forms, and procedures. It passes the R7RS test suite.
 
 ### Which SRFIs are supported?
 
-72 SRFIs total: 8 built-in (compiled into the interpreter) and 64 portable
-(pure Scheme, installed via the install script). See
+78 SRFIs total: 9 built-in (compiled into the interpreter), 68 portable
+(pure Scheme, installed via the install script), plus SRFI 261 — a naming
+convention honored by the import resolver rather than a library. See
 [SRFI Support](guide/srfi-support.md) for the complete list.
 
 ### Can I run code written for other Schemes?
@@ -74,8 +75,10 @@ Native compilation via `kaappi compile` is available on macOS ARM64, Linux
 x86_64/ARM64, FreeBSD, OpenBSD, NetBSD, and Windows. On Windows x86_64 the
 stock Zig toolchain serves as the C compiler; on Windows ARM64 the stock
 Zig 0.16.0 toolchain has an upstream code-generation bug, so the link step
-needs a Zig development build until 0.17 ships. Linux RISC-V and WebAssembly
-run interpreter-only.
+needs a Zig development build until 0.17 ships. Linux RISC-V, s390x,
+ppc64le, and WebAssembly run interpreter-only — on those architectures
+`kaappi compile` exits with a clear error pointing at the interpreter
+instead of attempting native output.
 
 ## Ecosystem
 
@@ -169,9 +172,9 @@ zig build -Dbundle-src=app.scm
 ```
 
 The binary includes the full runtime — no Kaappi installation needed on the
-target machine. Cross-compile to Linux x86_64/ARM64/RISC-V, Windows (ARM64
-and x86_64), FreeBSD, OpenBSD, or NetBSD from any platform. See
-[Standalone Binaries](guide/deployment.md#standalone-binaries).
+target machine. Cross-compile to Linux x86_64/ARM64/RISC-V/s390x/ppc64le,
+Windows (x86_64 and ARM64), FreeBSD, OpenBSD, or NetBSD from any platform.
+See [Standalone Binaries](guide/deployment.md#standalone-binaries).
 
 ### Does Kaappi run in the browser?
 
@@ -188,8 +191,10 @@ compilation, FFI, file I/O, or OS threads.
 | Linux x86_64 | yes | yes |
 | Linux ARM64 | yes | yes |
 | Linux RISC-V 64 | no | yes |
+| Linux s390x | no | yes |
+| Linux ppc64le | no | yes |
 | Windows ARM64 | yes | yes |
-| Windows x86_64 | yes | from the next release |
+| Windows x86_64 | yes | yes |
 | FreeBSD x86_64 / ARM64 | yes | yes |
 | OpenBSD x86_64 / ARM64 | yes | yes |
 | NetBSD x86_64 / ARM64 | yes | yes |

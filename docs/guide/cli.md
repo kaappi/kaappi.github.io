@@ -40,7 +40,7 @@ kaappi cache status|clear
 | `--version` | Show version string |
 | `--compile FILE` | Compile to bytecode (.sbc) without running |
 | `-o FILE` | Output path for `--compile`, `--emit-llvm`, or `compile` |
-| `--lib-path DIR` | Add a directory to the library search path (repeatable, up to 16) |
+| `--lib-path DIR` | Add a directory to the library search path (repeatable) |
 | `--profile` | Profile execution (per-function timing, call counts, allocations) |
 | `--sandbox` | Sandbox mode — blocks FFI, file I/O, `eval`, `load`, env access, threads |
 | `--timeout MS` | Execution timeout in milliseconds |

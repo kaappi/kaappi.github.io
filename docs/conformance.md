@@ -31,7 +31,7 @@ them.
 | `syntax-case` | Not implemented — R7RS-small itself deliberately standardizes only `syntax-rules`; `syntax-case` is R6RS/implementation-specific territory (Chez, Racket), not a Kaappi omission against the spec it targets. |
 | `call/cc` across REPL top-level forms | A continuation captured in one top-level REPL expression can't re-enter a *later* one. Shared behavior with Guile, Chibi, Chicken, Chez, and Racket — not a Kaappi-specific limitation. |
 | Fiber parking inside native higher-order procedures | Callbacks driven by `map`, `for-each`, `vector-map`, `dynamic-wind`, and `force` can park a fiber (e.g. on an empty channel) and resume later. Other higher-order procedures — SRFI-1's `fold`/`filter`/`find`, `sort`, `hash-table-walk`, `eval`, and others — are native drivers whose call state can't be suspended; a fiber that blocks inside one of those needs restructuring into a plain Scheme loop. See [Concurrency](guide/concurrency.md#green-threads-fibers). |
-| SRFI coverage | 72 SRFIs supported; a handful of optional or non-mutating-only procedures aren't implemented (linear-update list variants, `string-xcopy!`, and similar). See [SRFI Support](guide/srfi-support.md) and CONFORMANCE.md for the exact list. |
+| SRFI coverage | 78 SRFIs supported; a handful of optional or non-mutating-only procedures aren't implemented (linear-update list variants, `string-xcopy!`, and similar). See [SRFI Support](guide/srfi-support.md) and CONFORMANCE.md for the exact list. |
 
 ## Extensions beyond R7RS-small's scope
 
@@ -79,12 +79,24 @@ bare feature identifier:
   (else (define (spawn thunk) (thunk))))  ; synchronous fallback
 ```
 
+SRFI availability has the same two spellings: `((library (srfi <n>)) ...)`
+probes the import, and the shorthand `srfi-<n>` identifiers — e.g.
+`(cond-expand (srfi-1 ...))` — answer through the same check, so both
+always agree with what `(import (srfi <n>))` would do, including under
+`--sandbox` and on WASM builds. They work in expression- and
+`define-library`-level `cond-expand` alike. Like `(library ...)`
+requirements, `srfi-<n>` is a derived probe resolved on demand rather
+than a bare feature identifier, so it does not appear in `(features)`.
+
 | Identifier | True when |
 |---|---|
 | `kaappi-fibers` | `(kaappi fibers)` is compiled in — every target, including wasm32-wasi |
 | `kaappi-reactor` | An OS-level I/O multiplexing reactor (kqueue/epoll/`poll_oneoff`) is compiled in |
 | `kaappi-threads` | SRFI-18 OS threads are compiled in — every target except wasm32-wasi |
 | `kaappi-diagnostics` | `(kaappi diagnostics)` (stable `KP` error codes on error objects) is compiled in — every target, including wasm32-wasi |
+| `posix` | The build targets a POSIX-flavored platform — every target except Windows, including wasm32-wasi |
+| `windows` | The build targets Windows — present in place of `posix`, so portable code can branch with `(cond-expand (windows ...) (else ...))` |
+| `srfi-<n>` | SRFI *n* is importable on this build — the derived probe described above, equivalent to `((library (srfi <n>)) ...)` |
 
 `--sandbox` mode and a WASI host's actual (as opposed to compiled-in) I/O
 capability are runtime facts that `cond-expand` — an expand-time construct —
