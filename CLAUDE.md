@@ -31,7 +31,7 @@ page names). Section overview:
 | Guide | `docs/guide/` | 19 + index | Installation through troubleshooting; incl. tutorial, library authoring, concurrency, C/Zig extensions, SRFI support, editors, migrating, security, deployment |
 | Procedures | `docs/procedures/` | 20 + index | Per-category API reference (numbers, lists, strings, SRFI-1/13/18/133/170/254, syntax forms, extensions, …) |
 | Cookbook | `docs/cookbook/` | 10 + index | Task recipes: REST API, HTTP client, HTML templates, JSON, CSV, SQLite, config files, concurrency, testing, CLI tool |
-| Ecosystem | `docs/ecosystem/` | 19 + index | thottam (package manager) + one page per kaappi-* library |
+| Ecosystem | `docs/ecosystem/` | 21 + index | thottam (package manager) + one page per kaappi-* library |
 | Top-level | `docs/*.md` | 4 | glossary, stability, community, faq |
 
 Files in `docs/` that are not nav pages:

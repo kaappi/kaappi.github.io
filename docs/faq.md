@@ -24,7 +24,9 @@ something energizing from simple ingredients.
 
 ### What license is Kaappi under?
 
-MIT. All ecosystem libraries are also MIT licensed.
+MIT. Ecosystem libraries are MIT too, with one exception:
+[kaappi-mpl](ecosystem/mpl.md) is Apache-2.0, inherited from the upstream
+mpl project it ports.
 
 ## Standards and Compatibility
 

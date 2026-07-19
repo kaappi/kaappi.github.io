@@ -127,6 +127,9 @@ nav:
       - PostgreSQL: ecosystem/pg.md
       - SQLite: ecosystem/sqlite.md
       - Redis: ecosystem/redis.md
+    - Math:
+      - Math & Statistics: ecosystem/math.md
+      - Symbolic Math (MPL): ecosystem/mpl.md
     - Developer Tools:
       - Testing: ecosystem/test.md
       - BDD Testing: ecosystem/bdd.md

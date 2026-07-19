@@ -29,6 +29,13 @@ Kaappi has a growing ecosystem of libraries. All are installed with **thottam**,
 | [kaappi-sqlite](sqlite.md) | SQLite client with cursors |
 | [kaappi-redis](redis.md) | Redis client (strings, lists, hashes, pub/sub) |
 
+## Math
+
+| Package | Description |
+|---------|-------------|
+| [kaappi-math](math.md) | Scalar helpers, vector operations, statistics (Zig FFI extension) |
+| [kaappi-mpl](mpl.md) | Symbolic math / computer algebra: simplify, expand, differentiate |
+
 ## Developer Tools
 
 | Package | Description |
@@ -71,9 +78,10 @@ kaappi-redis ──→ kaappi-net
 kaappi-pg (standalone, links libpq)
 kaappi-sqlite (standalone, links libsqlite3)
 kaappi-crypto (standalone, links OpenSSL)
+kaappi-math (standalone, Zig-compiled shared library)
 
-kaappi-toml, kaappi-yaml, kaappi-csv, kaappi-template,
-kaappi-test, kaappi-bdd, kaappi-log, kaappi-cli (pure Scheme, no dependencies)
+kaappi-toml, kaappi-yaml, kaappi-csv, kaappi-template, kaappi-test,
+kaappi-bdd, kaappi-log, kaappi-cli, kaappi-mpl (pure Scheme, no dependencies)
 ```
 
 When you install a package, thottam automatically installs its dependencies.
