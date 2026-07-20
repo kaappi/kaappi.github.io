@@ -31,7 +31,7 @@ them.
 | `syntax-case` | Not implemented — R7RS-small itself deliberately standardizes only `syntax-rules`; `syntax-case` is R6RS/implementation-specific territory (Chez, Racket), not a Kaappi omission against the spec it targets. |
 | `call/cc` across REPL top-level forms | A continuation captured in one top-level REPL expression can't re-enter a *later* one. Shared behavior with Guile, Chibi, Chicken, Chez, and Racket — not a Kaappi-specific limitation. |
 | Fiber parking inside native higher-order procedures | Callbacks driven by `map`, `for-each`, `vector-map`, `dynamic-wind`, and `force` can park a fiber (e.g. on an empty channel) and resume later. Other higher-order procedures — SRFI-1's `fold`/`filter`/`find`, `sort`, `hash-table-walk`, `eval`, and others — are native drivers whose call state can't be suspended; a fiber that blocks inside one of those needs restructuring into a plain Scheme loop. See [Concurrency](guide/concurrency.md#green-threads-fibers). |
-| SRFI coverage | 78 SRFIs supported; a handful of optional or non-mutating-only procedures aren't implemented (linear-update list variants, `string-xcopy!`, and similar). See [SRFI Support](guide/srfi-support.md) and CONFORMANCE.md for the exact list. |
+| SRFI coverage | 85 SRFIs supported; a handful of optional or non-mutating-only procedures aren't implemented (linear-update list variants, `string-xcopy!`, and similar). See [SRFI Support](guide/srfi-support.md) and CONFORMANCE.md for the exact list. |
 
 ## Extensions beyond R7RS-small's scope
 

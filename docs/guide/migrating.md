@@ -69,7 +69,9 @@ hash tables:
 
 ### Pattern matching
 
-Racket's `match` is not available. Use `cond` with predicates:
+Racket's `match` uses a different syntax. Kaappi provides `match` via
+SRFI 257, which supports non-linear patterns, backtracking, and
+user-extensible pattern forms:
 
 ```scheme
 ;; Racket
@@ -78,13 +80,16 @@ Racket's `match` is not available. Use `cond` with predicates:
   [(? number?) (* x 2)]
   [_ 0])
 
-;; Kaappi
-(cond
-  ((and (list? x) (= (length x) 2))
-   (+ (car x) (cadr x)))
-  ((number? x) (* x 2))
-  (else 0))
+;; Kaappi (SRFI 257)
+(import (srfi 257))
+(match x
+  ((a b) (+ a b))
+  ((? number?) (* x 2))
+  (_ 0))
 ```
+
+The `(srfi 257 rx)` sublibrary adds regexp match patterns, and
+`(srfi 257 misc)` adds catamorphism and `syntax-rules`-style matchers.
 
 ### Sequences and for loops
 
@@ -237,7 +242,7 @@ also offers `call/ec` for cheap escape-only continuations:
 ### What works unchanged
 
 - Most R7RS code
-- SRFI imports (Kaappi supports 78 SRFIs, Chicken supports many of the same)
+- SRFI imports (Kaappi supports 85 SRFIs, Chicken supports many of the same)
 - `define-record-type` (SRFI-9)
 - Standard list, string, vector operations
 

@@ -1,7 +1,7 @@
 # User Guide
 
 Kaappi is a Scheme you can install in one command and start using immediately.
-It implements the full R7RS-small standard with 78 SRFIs, C FFI, and a
+It implements the full R7RS-small standard with 85 SRFIs, C FFI, and a
 package manager — everything you need to write real programs.
 
 ## Getting started
@@ -18,7 +18,7 @@ Prefer the browser? Try the [interactive tour](../tour.md) or the
 - [Language Reference](language.md) — syntax lookup for every form and feature
 - [Libraries](libraries.md) — importing libraries and what's available
 - [Library Authoring](library-authoring.md) — creating your own libraries with `define-library`
-- [SRFI Support](srfi-support.md) — all 72 supported SRFIs at a glance
+- [SRFI Support](srfi-support.md) — all 85 supported SRFIs at a glance
 - [Concurrency](concurrency.md) — green threads (fibers) and OS threads (SRFI-18)
 
 ## Tooling

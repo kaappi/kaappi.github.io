@@ -1,8 +1,8 @@
 # SRFI Support
 
-Kaappi supports 78 SRFIs (Scheme Requests for Implementation). Nine are
-built into the runtime as native Zig code, and 68 are portable R7RS
-libraries loaded on demand from `.sld` files. The 78th, SRFI 261, is a
+Kaappi supports 85 SRFIs (Scheme Requests for Implementation). Eleven are
+built into the runtime as native Zig code, and 73 are portable R7RS
+libraries loaded on demand from `.sld` files. SRFI 261 is a
 [naming convention](#srfi-261) honored by the import resolver with no
 library file at all.
 
@@ -44,6 +44,8 @@ These are implemented in Zig for performance and are always available.
 | 133 | Vector library (vector-map, vector-fold, ...) | [Reference](../procedures/srfi-133.md) |
 | 170 | POSIX API (file-info, directories, symlinks, env, ...) | [Reference](../procedures/srfi-170.md) |
 | 254 | Ephemerons and guardians (GC-integrated weak references and finalization) | [Reference](../procedures/srfi-254.md) |
+| 258 | Uninterned symbols (`string->uninterned-symbol`, `symbol-interned?`, `generate-uninterned-symbol`) | |
+| 260 | Generated symbols (`generate-symbol` — fresh, readable, unique symbols) | |
 
 ## Portable SRFIs
 
@@ -112,11 +114,16 @@ These are loaded from `.sld` files when first imported. Sorted by SRFI number.
 | 219 | Define higher-order lambda |
 | 222 | Compound objects |
 | 227 | Optional arguments |
+| 229 | Tagged procedures |
 | 232 | Flexible curried procedures |
 | 233 | `INI` file parser |
 | 235 | Combinators |
+| 248 | Minimal delimited continuations (`with-unwind-handler`, extended `guard`) |
 | 250 | Insertion-ordered hash tables |
+| 257 | Pattern matcher with backtracking (also `(srfi 257 misc)`, `(srfi 257 box)`, `(srfi 257 rx)`) |
+| 259 | Tagged procedures with type safety (`define-procedure-tag`) |
 | 263 | Prototype object system (also `(srfi 263 syntax)`) |
+| 264 | String syntax for Scheme regular expressions (SSRE ↔ SRE translation) |
 | 267 | Raw strings — the `#"X"..."X"` literal syntax is built into the reader; the library adds port procedures |
 | 271 | Random ports from OS entropy (also deterministic `(srfi 271 determinized)`) |
 
