@@ -39,8 +39,12 @@ library
 ...
 native-backend
   PASS  c-compiler: zig: /usr/local/bin/zig (links via 'zig cc')
-  WARN  libkaappi_rt.a: not found in KAAPPI_LIB_DIR, <exe>/../lib, zig-out/lib, or /usr/local/lib
-        → run 'zig build lib' in a source checkout, or install a release build that ships libkaappi_rt.a
+  PASS  libkaappi_rt.a: found in /home/user/.local/lib
+  PASS  smoke-link: zig linked a test program against libkaappi_rt.a in /home/user/.local/lib
+...
+package-manager
+  WARN  lockfile: 1 of 3 locked package(s) missing from ~/.kaappi/src (first: kaappi-json)
+        → run 'thottam update' to restore missing package sources
 ...
 Summary: 15 pass, 1 warn, 0 fail — usable, but some checks need attention.
 ```
