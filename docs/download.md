@@ -63,12 +63,21 @@ than attempt it.
 |------|-------------|
 | [kaappi-lib.tar.gz](https://github.com/kaappi/kaappi/releases/latest/download/kaappi-lib.tar.gz) | Standard libraries (SRFI, Scheme). Extract to `~/.kaappi/lib/` |
 | [kaappi.wasm](https://github.com/kaappi/kaappi/releases/latest/download/kaappi.wasm) | WebAssembly binary (wasm32-wasi) |
-| [libkaappi_rt-x86_64-windows.lib](https://github.com/kaappi/kaappi/releases/latest/download/libkaappi_rt-x86_64-windows.lib) | Runtime library for native compilation (`kaappi compile`) on Windows x64. Install it as `kaappi_rt.lib` (see below) |
+| `libkaappi_rt-<platform>.a` | Runtime library for native compilation (`kaappi compile`) on macOS, Linux, and the BSDs — one per aarch64/x86_64 target. The install script fetches it for you; manual installs need it too (see below) |
+| [libkaappi_rt-x86_64-windows.lib](https://github.com/kaappi/kaappi/releases/latest/download/libkaappi_rt-x86_64-windows.lib) | Same, for Windows x64. Install it as `kaappi_rt.lib` (see below) |
 | [libkaappi_rt-aarch64-windows.lib](https://github.com/kaappi/kaappi/releases/latest/download/libkaappi_rt-aarch64-windows.lib) | Same, for Windows ARM64 |
 
 ### Manual install
 
 After downloading, place the binaries in your `PATH`.
+
+The runtime library goes in the `lib` directory *beside* the one holding the
+binaries — `~/.local/bin/kaappi` pairs with `~/.local/lib/`. That is where
+`kaappi compile` looks (it searches `KAAPPI_LIB_DIR`, then `<exe>/../lib`,
+then `zig-out/lib`, then `/usr/local/lib`), so it is **not** `~/.kaappi/lib/`,
+which holds Scheme libraries only. Put the binaries somewhere else and either
+keep the same `bin`/`lib` pairing or point `KAAPPI_LIB_DIR` at the directory
+you chose.
 
 **macOS / Linux:**
 
@@ -80,6 +89,11 @@ mv thottam-*-$(uname -s | tr A-Z a-z) ~/.local/bin/thottam
 # Extract standard libraries
 mkdir -p ~/.kaappi/lib
 tar xzf kaappi-lib.tar.gz -C ~/.kaappi/lib
+
+# Runtime library for native compilation (kaappi compile).
+# aarch64-macos shown; substitute your platform.
+mkdir -p ~/.local/lib
+mv libkaappi_rt-aarch64-macos.a ~/.local/lib/libkaappi_rt.a
 ```
 
 **Windows (PowerShell):**
@@ -93,9 +107,12 @@ Move-Item thottam-x86_64-windows.exe C:\Users\$env:USERNAME\.local\bin\thottam.e
 mkdir "$env:USERPROFILE\.kaappi\lib" -Force
 tar xzf kaappi-lib.tar.gz -C "$env:USERPROFILE\.kaappi\lib"
 
-# Runtime library for native compilation (kaappi compile).
-# kaappi looks for it named kaappi_rt.lib, so rename it on the way in.
-Move-Item libkaappi_rt-x86_64-windows.lib "$env:USERPROFILE\.kaappi\lib\kaappi_rt.lib"
+# Runtime library for native compilation (kaappi compile). It belongs in the
+# lib directory beside the binaries' bin directory — not in .kaappi\lib, which
+# kaappi compile does not search. kaappi looks for it named kaappi_rt.lib, so
+# rename it on the way in.
+mkdir "C:\Users\$env:USERNAME\.local\lib" -Force
+Move-Item libkaappi_rt-x86_64-windows.lib "C:\Users\$env:USERNAME\.local\lib\kaappi_rt.lib"
 ```
 
 !!! note
