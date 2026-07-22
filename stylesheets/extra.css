@@ -1,0 +1,184 @@
+/* Kaappi design bridge — landing page identity into content pages */
+
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap');
+
+/* ---- palette overrides (both schemes) ---- */
+:root,
+[data-md-color-scheme="default"] {
+  --md-primary-fg-color: #1A1410;
+  --md-primary-bg-color: #F3E9DB;
+  --md-accent-fg-color: #D08B3C;
+  --md-typeset-a-color: #B07530;
+}
+
+[data-md-color-scheme="slate"] {
+  --md-primary-fg-color: #1A1410;
+  --md-primary-bg-color: #F3E9DB;
+  --md-accent-fg-color: #E8B563;
+  --md-typeset-a-color: #D08B3C;
+}
+
+/* ---- Dark Roast design tokens ---- */
+/* Single source for the --kp-* custom properties used by the playground,
+   tour, and home templates (overrides/). extra.css is loaded on every page,
+   so the templates reference these without redeclaring them. */
+:root {
+  --kp-roast:   #1A1410;
+  --kp-roast-2: #241B14;
+  --kp-roast-3: #34281D;
+  --kp-crema:   #F3E9DB;
+  --kp-brass:   #D08B3C;
+  --kp-brass-2: #E8B563;
+  --kp-filter:  #4FC4B2;
+  --kp-ash:     #9C8A77;
+  --kp-disp:    "Space Grotesk", "Inter", system-ui, sans-serif;
+  /* --md-code-font is on :root; --md-code-font-family is only on body, so
+     referencing it here resolved to invalid and dropped to a sans fallback. */
+  --kp-mono:    var(--md-code-font, "JetBrains Mono"), SFMono-Regular, Consolas, Menlo, monospace;
+}
+
+/* ---- logo: fill the header height ---- */
+.md-header__button.md-logo img,
+.md-header__button.md-logo svg {
+  height: 2.5rem;
+  width: auto;
+}
+
+/* ---- header: dark roast on every page ---- */
+.md-header {
+  background-color: #1A1410;
+  color: #F3E9DB;
+}
+
+.md-header__title {
+  color: #F3E9DB;
+}
+
+.md-tabs {
+  background-color: #1A1410;
+  color: #F3E9DB;
+}
+
+.md-tabs__link {
+  color: rgba(243, 233, 219, 0.7);
+}
+
+.md-tabs__link--active,
+.md-tabs__link:hover {
+  color: #F3E9DB;
+}
+
+/* ---- typography: Space Grotesk for headings ---- */
+.md-typeset h1,
+.md-typeset h2,
+.md-typeset h3 {
+  font-family: "Space Grotesk", "Inter", system-ui, sans-serif;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+.md-typeset h1 {
+  letter-spacing: -0.03em;
+}
+
+/* ---- nav section labels ---- */
+.md-nav__item--section > .md-nav__link {
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 0.65rem;
+  letter-spacing: 0.05em;
+  opacity: 0.7;
+  margin-top: 0.6em;
+}
+
+/* ---- code: inline keeps warm light tint ---- */
+[data-md-color-scheme="default"] .md-typeset code {
+  background-color: #F8F3ED;
+}
+
+/* ---- code blocks: dark roast with readable syntax tokens ---- */
+[data-md-color-scheme="default"] .md-typeset pre > code {
+  background-color: #1E1812;
+  color: #F3E9DB;
+  --md-code-hl-comment-color: #9C8A77;
+  --md-code-hl-keyword-color: #E8B563;
+  --md-code-hl-string-color: #BFD08A;
+  --md-code-hl-number-color: #E0A867;
+  --md-code-hl-function-color: #4FC4B2;
+  --md-code-hl-variable-color: #BBA890;
+  --md-code-hl-operator-color: #F3E9DB;
+  --md-code-hl-punctuation-color: #BBA890;
+  --md-code-hl-constant-color: #E8B563;
+  --md-code-hl-special-color: #D08B3C;
+  --md-code-hl-generic-color: #9C8A77;
+}
+
+[data-md-color-scheme="slate"] .md-typeset pre > code {
+  background-color: #1E1812;
+  --md-code-hl-comment-color: #9C8A77;
+}
+
+/* ---- active nav item uses brass ---- */
+.md-nav__link--active {
+  color: #D08B3C !important;
+}
+
+/* ---- search highlight ---- */
+.md-search-result mark {
+  background-color: rgba(208, 139, 60, 0.25);
+}
+
+/* ---- inline PDF viewer (book page) ---- */
+.book-viewer {
+  margin: 1.5em 0;
+  border: 1px solid var(--md-default-fg-color--lightest);
+  border-radius: 0.2rem;
+  overflow: hidden;
+}
+
+.book-viewer__toolbar {
+  display: flex;
+  justify-content: flex-end;
+  padding: 0.4em 0.6em;
+  background: var(--md-code-bg-color);
+  border-bottom: 1px solid var(--md-default-fg-color--lightest);
+}
+
+.book-viewer__toggle {
+  cursor: pointer;
+  border: 1px solid var(--md-default-fg-color--lighter);
+  background: var(--md-default-bg-color);
+  color: var(--md-default-fg-color);
+  border-radius: 0.2rem;
+  padding: 0.3em 0.8em;
+  font-size: 0.75rem;
+  font-family: inherit;
+}
+
+.book-viewer__toggle:hover {
+  border-color: var(--md-accent-fg-color);
+  color: var(--md-accent-fg-color);
+}
+
+.book-viewer iframe {
+  display: block;
+  width: 100%;
+  height: 600px;
+  border: 0;
+}
+
+.book-viewer--maximized {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  margin: 0;
+  border-radius: 0;
+  display: flex;
+  flex-direction: column;
+  background: var(--md-default-bg-color);
+}
+
+.book-viewer--maximized iframe {
+  flex: 1;
+  height: auto;
+}
