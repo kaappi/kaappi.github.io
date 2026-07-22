@@ -7,3 +7,7 @@ __pycache__/
 # Same pattern for the embedded book PDF (scripts/fetch-book.sh), pinned by
 # book_version in mkdocs.yml.
 /docs/assets/kaappi-book.pdf
+# Claude Code local artifacts (shared config such as .claude/launch.json stays
+# tracked). Previously only excluded via this clone's .git/info/exclude.
+.claude/worktrees/
+.claude/settings.local.json
