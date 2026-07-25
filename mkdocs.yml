@@ -198,6 +198,8 @@ extra:
       link: https://github.com/kaappi/kaappi
     - icon: octicons/comment-discussion-16
       link: https://github.com/orgs/kaappi/discussions
+    - icon: fontawesome/brands/youtube
+      link: https://www.youtube.com/@KaappiScheme
 
 watch:
   - overrides
