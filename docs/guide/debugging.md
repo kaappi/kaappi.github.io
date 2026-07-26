@@ -109,12 +109,12 @@ kaappi> ,type '(1 2 3)
 kaappi> ,describe map
   map
     type: procedure
-    arity: 2+
+    arity: 2, locals: 9
 kaappi> (define (greet name) (string-append "hello " name))
 kaappi> ,describe greet
   greet
     type: procedure
-    arity: 1, locals: 0
+    arity: 1, locals: 4
     source: <repl>:1
 ```
 
@@ -122,24 +122,35 @@ kaappi> ,describe greet
 
 ```scheme
 kaappi> ,apropos vector
-  vector-append, vector-copy, vector-fill!, vector-for-each,
-  vector-length, vector-map, vector-ref, vector-set!, ...
-; 18 matches
+  vector-every
+  vector-length
+  make-vector
+  vector-ref
+  ...
+; 59 matches
 ```
 
 **`,env [prefix]`** — list global bindings, optionally filtered:
 
 ```scheme
 kaappi> ,env string-
-  string-append, string-copy, string-length, string-ref, ...
-; 24 bindings
+  string->number
+  string-copy
+  string-concatenate
+  ...
+; 55 bindings
 ```
 
-**`,expand <expr>`** — show macro expansion:
+**`,expand <expr>`** — show macro expansion (user-defined macros;
+template-introduced identifiers appear with their `__hyg_...` hygiene
+renames):
 
 ```scheme
-kaappi> ,expand (when #t (display "yes"))
-(if #t (begin (display "yes")))
+kaappi> (define-syntax my-when
+  ...     (syntax-rules ()
+  ...       ((_ test body ...) (if test (begin body ...)))))
+kaappi> ,expand (my-when #t (display "yes"))
+(__hyg_1_if #t (begin (display "yes")))
 ```
 
 **`_` variable** — the last evaluation result, useful for incremental exploration:
@@ -221,7 +232,7 @@ debug> watch n
 Watching n
 debug> continue
 Watch: n = 2
-Break at factorial
+Break at factorial (<repl>:1)
 ```
 
 Use `unwatch n` to remove the watch.
@@ -234,7 +245,7 @@ Use `up` and `down` to inspect locals at different stack levels:
 debug> backtrace
 > [2] factorial
   [1] factorial
-  [0] <top-level>
+  [0] <lambda>
 debug> up
 [1] factorial
 debug> locals
@@ -255,8 +266,9 @@ Break at factorial (<repl>:1)
 debug> locals
   n = 2
 debug> backtrace
-> [1] factorial
-  [0] factorial
+> [2] factorial
+  [1] factorial
+  [0] <lambda>
 debug> continue
 Break at factorial (<repl>:1)
 debug> locals
@@ -280,10 +292,11 @@ kaappi> ,step (* 2 (+ 3 4))
 ```scheme
 kaappi> ,profile (factorial 20)
 2432902008176640000
-; Profile Report
-;   Self ms  Total ms    Calls  Alloc KB  Function
-;      0.1       0.1       20        -    factorial (<repl>:1)
-;      0.0       0.0       19        -    * (built-in)
+
+Profile (219 instructions, 39 calls):
+  Self ms  Total ms    Calls  Alloc KB  Function
+      0.0       0.2       20        -    factorial (<repl>:1)
+      0.0       0.0       19       <1    * (built-in)
 ```
 
 Columns:
@@ -414,20 +427,20 @@ Use the `,dis` REPL command or the `(disassemble)` procedure:
 kaappi> (define (factorial n) (if (<= n 1) 1 (* n (factorial (- n 1)))))
 kaappi> ,dis factorial
 ; Function: factorial
-; Source: <repl>
+; Source: <repl>:1
 ; Arity: 1, Locals: 7, Upvalues: 0
 ; Constants: <=, 1, *, factorial, -
 ;
   0000  move            r2, r0
-  0003  load_const      r3, 1
-  0007  call_global     r1, <=, 2
-  0012  jump_false      r1, -> 0023
-  0016  load_const      r1, 1
-  0020  jump            -> 0050
-  0023  get_global      r1, *
+  0005  load_const      r3, 1
+  0010  call_global     r1, <=, 2
+  0016  jump_false      r1, -> 0029
+  0021  load_const      r1, 1
+  0026  jump            -> 0065
+  0029  get_global      r1, *
   ...
-  0047  tail_call       r1, 2
-  0050  return          r1
+  0061  tail_call       r1, 2
+  0065  return          r1
 ```
 
 `,dis <expr>` evaluates the expression, then disassembles the resulting
@@ -475,9 +488,9 @@ Use R7RS `guard` for structured exception handling:
 
 ```scheme
 (guard (e
-        ((string? (condition/message e))
+        ((string? (error-object-message e))
          (display "caught: ")
-         (display (condition/message e))
+         (display (error-object-message e))
          (newline)))
   (error "something went wrong"))
 ```
@@ -500,13 +513,16 @@ do:
 carries no code — so it is safe as the first test in a `guard` clause.
 See the [reference entry](../procedures/extensions.md#error-object-code).
 
-Use `with-exception-handler` for lower-level control:
+Use `with-exception-handler` for lower-level control. The handler's
+return value only replaces the raised value for continuable exceptions
+(`raise-continuable`) — with plain `raise` or `error`, a returning
+handler signals a secondary "handler returned" error:
 
 ```scheme
 (with-exception-handler
-  (lambda (e) (display "error!\n"))
-  (lambda () (/ 1 0))
-  'replace)
+  (lambda (e) (display "recovering\n") 'fallback)
+  (lambda () (raise-continuable "boom")))
+;=> fallback
 ```
 
 Use `call/ec` (escape continuations) for non-local exits:
