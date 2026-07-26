@@ -23,7 +23,7 @@ use `inexact` when you need a float.
 (/ 1 3)                ;=> 1/3
 (inexact (/ 1 3))      ;=> 0.3333333333333333
 (+ 1/3 1/6)            ;=> 1/2
-(sqrt -1)              ;=> 0+1i
+(sqrt -1)              ;=> +i
 (make-rectangular 3 4) ;=> 3+4i
 ```
 
@@ -75,7 +75,9 @@ See [Pairs and Lists](../procedures/pairs-and-lists.md),
 ## Vectors
 
 ```scheme
-(define v #(10 20 30))
+;; literal vectors like #(10 20 30) are immutable — build with
+;; vector (or vector-copy a literal) when you need vector-set!
+(define v (vector 10 20 30))
 (vector-ref v 1)        ;=> 20
 (vector-set! v 0 99)
 (vector-map + #(1 2 3) #(10 20 30))  ;=> #(11 22 33)
@@ -193,9 +195,15 @@ overflow:
 ;; prints: Caught: something went wrong
 
 (with-exception-handler
-  (lambda (e) (display "Error!\n"))
-  (lambda () (raise "boom")))
+  (lambda (e) (display "Error!\n") 'recovered)
+  (lambda () (raise-continuable "boom")))
+;=> recovered — after printing "Error!"
 ```
+
+With plain `raise` the exception is non-continuable: if the handler
+returns, a secondary "handler returned" error is signaled. Use
+`raise-continuable` when the handler is meant to supply a replacement
+value, and `guard` (above) to catch-and-handle plain `raise`.
 
 ## Continuations
 

@@ -258,9 +258,17 @@ kaappi> ,type #t
 
 #### `,expand <expr>` — Show macro expansion
 
+Works on user-defined macros. Built-in forms like `when` are compiled
+directly rather than defined as macros, so `,expand (when ...)` reports
+`not a macro: when`. Identifiers that a macro template introduces are
+shown with their hygiene-renaming prefix (`__hyg_...`):
+
 ```scheme
-kaappi> ,expand (when #t (display "yes"))
-(if #t (begin (display "yes")))
+kaappi> (define-syntax my-when
+  ...     (syntax-rules ()
+  ...       ((_ test body ...) (if test (begin body ...)))))
+kaappi> ,expand (my-when #t (display "yes"))
+(__hyg_1_if #t (begin (display "yes")))
 ```
 
 #### `,profile <expr>` — Detailed profiling
@@ -270,8 +278,12 @@ Shows per-function timing, call counts, and memory allocations:
 ```scheme
 kaappi> ,profile (fib 25)
 75025
-; Profile Report
-; ...
+
+Profile (2549242 instructions, 364177 calls):
+  Self ms  Total ms    Calls  Alloc KB  Function
+      27.3     591.5   242785        -    fib (<repl>:1)
+       2.6       2.6   121392        -    + (built-in)
+  ...
 ```
 
 #### `,dis <expr>` — Disassemble a procedure
@@ -281,11 +293,12 @@ Shows the register-based bytecode for a procedure:
 ```scheme
 kaappi> ,dis factorial
 ; Function: factorial
+; Source: <repl>:1
 ; Arity: 1, Locals: 7, Upvalues: 0
 ; Constants: <=, 1, *, factorial, -
 ;
   0000  move            r2, r0
-  0003  load_const      r3, 1
+  0005  load_const      r3, 1
   ...
 ```
 
@@ -305,7 +318,7 @@ kaappi> ,describe car
 kaappi> ,describe map
   map
     type: procedure
-    arity: 2+
+    arity: 2, locals: 9
 kaappi> ,describe +
   +
     type: procedure
@@ -319,7 +332,7 @@ kaappi> (define (greet name) (string-append "Hello, " name))
 kaappi> ,describe greet
   greet
     type: procedure
-    arity: 1, locals: 0
+    arity: 1, locals: 4
     source: <repl>:1
 ```
 
@@ -329,20 +342,18 @@ Searches all global bindings for names containing the given substring:
 
 ```scheme
 kaappi> ,apropos vector
-  vector-append
-  vector-copy
-  vector-fill!
-  vector-for-each
+  vector-every
   vector-length
-  vector-map
-  vector-ref
-  vector-set!
-  vector?
-  list->vector
-  vector->list
   make-vector
+  vector-ref
+  vector-fill!
+  vector-skip
+  vector-reverse!
+  vector-fold-right
+  read-bytevector!
+  vector->string
   ...
-; 18 matches
+; 59 matches
 ```
 
 #### `,env [prefix]` — List bindings
@@ -351,11 +362,13 @@ Lists all global bindings, optionally filtered by prefix:
 
 ```scheme
 kaappi> ,env string-
-  string-append
+  string->number
   string-copy
-  string-length
+  string-concatenate
+  string-suffix?
+  string->list
   ...
-; 24 bindings
+; 55 bindings
 ```
 
 ### Debugging
