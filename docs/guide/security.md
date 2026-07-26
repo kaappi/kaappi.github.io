@@ -164,8 +164,9 @@ semantic validation (e.g., non-negative values), add your own checks:
 ;; ... use lib ...
 (ffi-close lib)
 
-;; For callbacks:
-(define cb (ffi-callback my-proc '(int) 'int))
+;; For callbacks (here a qsort-style comparator — see
+;; C Extensions for the supported callback signatures):
+(define cb (ffi-callback my-compare '(pointer pointer) 'int))
 ;; ... pass cb to C ...
 (ffi-callback-release cb)
 ```

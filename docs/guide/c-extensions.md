@@ -208,9 +208,18 @@ source: https://github.com/yourname/kaappi-mylib
 ## Step 6: Test
 
 ```bash
-make                                         # build the shared library
-kaappi --lib-path ./lib tests/test-mylib.scm # run tests
+make                                     # build the shared library
+cp libkaappi_mylib.dylib ~/.kaappi/lib/  # where ffi-open resolves bare names
+kaappi --lib-path ./lib tests/test-mylib.scm
 ```
+
+`--lib-path` affects only `.sld` resolution — `ffi-open` finds bare
+library names via `~/.kaappi/lib/`, exactly where `thottam install`
+puts them, so copying the fresh build there mirrors the installed
+layout. The signed macOS release binary runs with the hardened runtime,
+which ignores `DYLD_LIBRARY_PATH` and refuses bare relative `dlopen`;
+an absolute path in `ffi-open` also works. On Linux (and with unsigned
+source builds), `LD_LIBRARY_PATH=.` is an alternative.
 
 A simple test file:
 

@@ -538,8 +538,11 @@ error[KP3002]: ffi-open: dlopen(/home/user/.kaappi/lib/libmissing.so, 0x0001): t
 directory) and either:
 
 - Install via thottam (copies to `~/.kaappi/lib/`)
-- Pass the path: `--lib-path /path/to/dir`
-- Set `DYLD_LIBRARY_PATH` (macOS) or `LD_LIBRARY_PATH` (Linux)
+- Copy the built library into `~/.kaappi/lib/` yourself — `ffi-open`
+  resolves bare names there (`--lib-path` affects only `.sld` lookup)
+- Load by absolute path: `(ffi-open "/path/to/libfoo.dylib")`
+- On Linux, `LD_LIBRARY_PATH` also works; the signed macOS release
+  binary's hardened runtime ignores `DYLD_LIBRARY_PATH`
 - On Windows, place `.dll` files in `%USERPROFILE%\.kaappi\lib\` or add
   the directory to `PATH`
 

@@ -113,8 +113,10 @@ RUN apt-get update && apt-get install -y curl
 RUN curl -fsSL https://kaappi-lang.org/install.sh | bash
 
 FROM ubuntu:24.04
-COPY --from=builder /usr/local/bin/kaappi /usr/local/bin/kaappi
-COPY --from=builder /usr/local/bin/thottam /usr/local/bin/thottam
+# install.sh puts binaries in ~/.local/bin and libraries in ~/.kaappi
+COPY --from=builder /root/.local/bin/kaappi /usr/local/bin/kaappi
+COPY --from=builder /root/.local/bin/thottam /usr/local/bin/thottam
+COPY --from=builder /root/.kaappi /root/.kaappi
 
 WORKDIR /app
 COPY . .
@@ -151,7 +153,7 @@ RUN apt-get update && apt-get install -y \
     libsqlite3-0 \
     && rm -rf /var/lib/apt/lists/*
 
-COPY --from=builder /usr/local/bin/kaappi /usr/local/bin/kaappi
+COPY --from=builder /root/.local/bin/kaappi /usr/local/bin/kaappi
 COPY --from=builder /root/.kaappi /root/.kaappi
 
 WORKDIR /app
