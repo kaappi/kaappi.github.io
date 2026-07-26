@@ -76,7 +76,15 @@ Full-page client-side apps built into the MkDocs site:
 After each kaappi release (cut with the `/github-release` skill in the core repo),
 the core repo's Step 11 triggers the `update-wasm` workflow in this repo. It
 downloads the released `kaappi.wasm`, verifies its SHA256, bumps `kaappi_version`
-in `mkdocs.yml`, and deploys. No manual action needed.
+in `mkdocs.yml`, and deploys.
+
+One manual check remains: if the release changed SRFI coverage, bump
+`srfi_count` / `srfi_builtin` / `srfi_portable` under `extra:` in
+`mkdocs.yml` — every SRFI count on the site renders from these variables
+(markdown via `{{ srfi_count }}` with `render_macros: true`, home.html via
+`config.extra`). Get the importable counts from `kaappi features --json`;
+`srfi_count` additionally counts the SRFI 261 naming convention, which has
+no library file.
 
 `docs/install.sh` and the download-table links target `releases/latest`, so
 they normally need no per-release changes.
