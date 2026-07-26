@@ -112,7 +112,7 @@ JSON objects are alists. Use `assoc` to look up keys:
 
 ;; Top-level key
 (cdr (assoc "user" data))
-;=> (("id" . 1) ("tags" . ("admin" "active")))
+;=> (("id" . 1) ("tags" "admin" "active"))
 
 ;; Nested key
 (cdr (assoc "id" (cdr (assoc "user" data))))

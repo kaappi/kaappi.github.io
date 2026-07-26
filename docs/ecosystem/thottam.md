@@ -61,10 +61,10 @@ kaappi app.scm
 ```bash
 $ thottam list
 Installed packages:
-  kaappi-net
-  kaappi-http (depends: kaappi-net)
-  kaappi-json
-  kaappi-web (depends: kaappi-http kaappi-json)
+  kaappi-net  bc70053ec53b
+  kaappi-http  15579307a39e (depends: kaappi-net)
+  kaappi-json  e4b829590c6f
+  kaappi-web  99c16661a7b1 (depends: kaappi-http kaappi-json)
 ```
 
 ## Update packages

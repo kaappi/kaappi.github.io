@@ -17,7 +17,7 @@ Requires OpenSSL (`brew install openssl` / `apt install libssl-dev`).
 ;=> "2cf24dba5fb0a30e26e83b2ac5b9e29e1b161e5c1fa7425e73043362938b9824"
 
 (hmac-sha256 "secret-key" "message to sign")
-;=> "97d2a569059bbcd8ead4444ff99071f4c01d005bcefe0d3567e1be628e5fdcd9"
+;=> "5e2a3d8758df91e8fb93c09d4141c12ccc1f986cc67edccad3ebc5463c9bb136"
 ```
 
 ## Hash functions
@@ -66,7 +66,7 @@ authenticity of a message using a secret key:
 
 ```scheme
 (hmac-sha256 "secret-key" "message to sign")
-;=> "97d2a569059bbcd8ead4444ff99071f4c01d005bcefe0d3567e1be628e5fdcd9"
+;=> "5e2a3d8758df91e8fb93c09d4141c12ccc1f986cc67edccad3ebc5463c9bb136"
 
 (hmac-sha512 "key" "message")
 ;=> "..."

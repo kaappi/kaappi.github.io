@@ -58,7 +58,7 @@ app:
 "))
 
 (yaml-ref config "app")
-;=> (("name" . "My Service") ("version" . "1.2.0") ("features" . ("auth" "logging")))
+;=> (("name" . "My Service") ("version" . "1.2.0") ("features" "auth" "logging"))
 
 (yaml-ref* config "app" "name")      ;=> "My Service"
 (yaml-ref* config "app" "features")  ;=> ("auth" "logging")

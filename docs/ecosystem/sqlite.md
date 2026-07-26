@@ -61,11 +61,11 @@ For most use cases, `sqlite-query` and `sqlite-exec` are all you need:
 ;=> 1
 
 (sqlite-exec db "DELETE FROM users WHERE age < ?" 25)
-;=> 3
+;=> 1
 
 ;; Last inserted row ID
 (sqlite-last-insert-id db)
-;=> 4
+;=> 3
 ```
 
 ### Parameterized queries
@@ -197,7 +197,7 @@ is re-raised.
 
 ```scheme
 (vector-ref (car (sqlite-query db "SELECT count(*) FROM users")) 0)
-;=> 42
+;=> 2
 ```
 
 ### Check if a row exists

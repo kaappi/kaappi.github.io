@@ -66,12 +66,12 @@ For most use cases, `pg-query` and `pg-exec` are all you need:
 
 ```scheme
 ;; SELECT — returns list of row vectors
-(pg-query conn "SELECT * FROM users WHERE age > $1" 25)
+(pg-query conn "SELECT name, age FROM users WHERE age > $1" 25)
 ;=> (#("Alice" 30) #("Bob" 35))
 
 ;; INSERT/UPDATE/DELETE — returns number of affected rows
 (pg-exec conn "DELETE FROM sessions WHERE expired < now()")
-;=> 42
+;=> 0
 
 (pg-exec conn "INSERT INTO users (name, age) VALUES ($1, $2)" "Carol" 28)
 ;=> 1
@@ -181,17 +181,20 @@ Results are automatically converted from PostgreSQL text format:
 ### Count rows
 
 ```scheme
-(vector-ref (car (pg-query conn "SELECT count(*) FROM users")) 0)
-;=> 42
+(vector-ref (car (pg-query conn
+  "SELECT count(*) FROM users WHERE name = $1" "Alice")) 0)
+;=> 1
 ```
 
 ### Insert and return the new row
 
 ```scheme
+(pg-exec conn "CREATE TABLE IF NOT EXISTS invitees
+  (id SERIAL PRIMARY KEY, name TEXT, email TEXT)")
 (car (pg-query conn
-  "INSERT INTO users (name, email) VALUES ($1, $2) RETURNING id, name, email"
-  "Alice" "alice@example.com"))
-;=> #(1 "Alice" "alice@example.com")
+  "INSERT INTO invitees (name, email) VALUES ($1, $2) RETURNING id, name, email"
+  "Alice" "alice@example.org"))
+;=> #(1 "Alice" "alice@example.org")
 ```
 
 ### Batch inserts in a transaction

@@ -49,7 +49,10 @@ When the first row contains column names, use `'headers #t` to get rows as
 alists:
 
 ```scheme
-(csv-read-string "name,age\nAlice,30\nBob,25" 'headers #t)
+(define records
+  (csv-read-string "name,age\nAlice,30\nBob,25" 'headers #t))
+
+records
 ;=> ((("name" . "Alice") ("age" . "30"))
 ;    (("name" . "Bob") ("age" . "25")))
 
