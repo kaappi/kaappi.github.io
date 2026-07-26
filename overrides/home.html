@@ -376,7 +376,7 @@
       </p>
 
       <div class="kp-eval kp-reveal kp-d4" role="img"
-           aria-label="Map square over a list, returns (1 4 9 16 25). 85 SRFIs included.">
+           aria-label="Map square over a list, returns (1 4 9 16 25). {{ config.extra.srfi_count }} SRFIs included.">
         <div class="kp-eval-src">
           <span class="kp-cell-label">you write</span>
           <span class="kp-eval-code">(<span class="kp-fn">map</span> (<span class="kp-kw">lambda</span> (x) (* x x))
@@ -402,7 +402,7 @@
 
       <div class="kp-facts kp-reveal kp-d5">
         <span><b>600+</b> procedures</span>
-        <span><b>85</b> SRFIs</span>
+        <span><b>{{ config.extra.srfi_count }}</b> SRFIs</span>
         <span>first-class <b>call/cc</b></span>
         <span>C <b>FFI</b></span>
         <span>OS <b>threads</b></span>
@@ -436,8 +436,8 @@
       </div>
       <div class="kp-card">
         <div class="kp-card-tag">batteries</div>
-        <h3>85 SRFIs</h3>
-        <p>Lists, strings, hash tables, vectors, threads, formatting, char-sets — 11 built in, 73 portable.</p>
+        <h3>{{ config.extra.srfi_count }} SRFIs</h3>
+        <p>Lists, strings, hash tables, vectors, threads, formatting, char-sets — {{ config.extra.srfi_builtin }} built in, {{ config.extra.srfi_portable }} portable.</p>
       </div>
       <div class="kp-card">
         <div class="kp-card-tag">interop</div>
@@ -560,7 +560,7 @@
       <a href="guide/srfi-support/" class="kp-doc">
         <div class="kp-doc-idx">srfi/</div>
         <h3>SRFI Support</h3>
-        <p>All 85 SRFIs, the standard libraries, and how to write your own.</p>
+        <p>All {{ config.extra.srfi_count }} SRFIs, the standard libraries, and how to write your own.</p>
         <span class="kp-doc-go">Browse &rarr;</span>
       </a>
       <a href="ecosystem/" class="kp-doc">

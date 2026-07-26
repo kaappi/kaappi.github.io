@@ -1,8 +1,12 @@
+---
+render_macros: true
+---
+
 # SRFI Support
 
-Kaappi supports 85 SRFIs (Scheme Requests for Implementation). Eleven are
-built into the runtime as native Zig code, and 73 are portable R7RS
-libraries loaded on demand from `.sld` files. SRFI 261 is a
+Kaappi supports {{ srfi_count }} SRFIs (Scheme Requests for Implementation).
+Of these, {{ srfi_builtin }} are built into the runtime as native Zig code and
+{{ srfi_portable }} are portable R7RS libraries loaded on demand from `.sld` files. SRFI 261 is a
 [naming convention](#srfi-261) honored by the import resolver with no
 library file at all.
 

@@ -1,3 +1,7 @@
+---
+render_macros: true
+---
+
 # FAQ
 
 ## General
@@ -12,7 +16,7 @@ for web development, databases, and data processing.
 ### Why another Scheme?
 
 Most Scheme implementations focus on either standards conformance or
-performance. Kaappi aims for both — full R7RS-small with 85 SRFIs, plus native
+performance. Kaappi aims for both — full R7RS-small with {{ srfi_count }} SRFIs, plus native
 compilation via LLVM. It also ships as a single binary with no runtime
 dependencies, which makes deployment straightforward.
 
@@ -37,7 +41,7 @@ forms, and procedures. It passes the R7RS test suite.
 
 ### Which SRFIs are supported?
 
-85 SRFIs total: 11 built-in (compiled into the interpreter), 73 portable
+{{ srfi_count }} SRFIs total: {{ srfi_builtin }} built-in (compiled into the interpreter), {{ srfi_portable }} portable
 (pure Scheme, installed via the install script), plus SRFI 261 — a naming
 convention honored by the import resolver rather than a library. See
 [SRFI Support](guide/srfi-support.md) for the complete list.
