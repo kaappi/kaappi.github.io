@@ -77,15 +77,52 @@ user-extensible pattern forms:
 ;; Racket
 (match x
   [(list a b) (+ a b)]
-  [(? number?) (* x 2)]
+  [(? number? n) (* n 2)]
   [_ 0])
 
 ;; Kaappi (SRFI 257)
 (import (srfi 257))
 (match x
-  ((a b) (+ a b))
-  ((? number?) (* x 2))
+  (`(,a ,b) (+ a b))
+  ((~number? n) (* n 2))
   (_ 0))
+```
+
+The big difference: SRFI 257 writes list patterns with **quasiquote**.
+Inside a backquoted pattern, symbols and numbers are literals compared
+with `equal?`, and `,var` binds a variable. Repeating a variable makes
+the pattern non-linear: it matches only if the repeated positions hold
+equal values. A bare variable (or `_`) as the whole pattern matches
+anything:
+
+```scheme
+(define (simplify e)
+  (match e
+    (`(+ 0 ,x) x)        ; + and 0 are literals; ,x binds
+    (`(- ,a ,a) 0)       ; repeated ,a: both operands must be equal
+    (w w)))              ; bare variable matches anything
+
+(simplify '(+ 0 (* y 2)))  ;=> (* y 2)
+(simplify '(- q q))        ;=> 0
+(simplify '(- q r))        ;=> (- q r)
+```
+
+Racket's `(? pred)` guards become `~`-prefixed predicate patterns —
+common type predicates such as `~number?` and `~string?` are
+predefined, and `define-match-pattern` adds new ones. Standing alone, a
+predicate pattern is written `(~number? n)`, as above; inside a
+quasiquote pattern it goes in an unquote:
+
+```scheme
+;; Racket
+(match p
+  [(list (? number? x) (? number? y)) (+ x y)]
+  [_ 'not-two-numbers])
+
+;; Kaappi (SRFI 257)
+(match p
+  (`(,(~number? x) ,(~number? y)) (+ x y))
+  (_ 'not-two-numbers))
 ```
 
 The `(srfi 257 rx)` sublibrary adds regexp match patterns, and
@@ -242,7 +279,7 @@ also offers `call/ec` for cheap escape-only continuations:
 ### What works unchanged
 
 - Most R7RS code
-- SRFI imports (Kaappi supports 85 SRFIs, Chicken supports many of the same)
+- SRFI imports (Chicken provides many of the same [SRFIs that Kaappi supports](srfi-support.md))
 - `define-record-type` (SRFI-9)
 - Standard list, string, vector operations
 
