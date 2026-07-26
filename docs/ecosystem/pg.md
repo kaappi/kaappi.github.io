@@ -35,7 +35,7 @@ Connection strings use [libpq format](https://www.postgresql.org/docs/current/li
 
 ```scheme
 (pg-connect "host=localhost port=5432 dbname=myapp user=me password=secret")
-(pg-connect "dbname=myapp")
+(define conn (pg-connect "dbname=myapp"))   ;; used by the examples below
 ```
 
 ### Auto-closing connection
@@ -45,6 +45,19 @@ Connection strings use [libpq format](https://www.postgresql.org/docs/current/li
   (lambda (conn)
     (pg-query conn "SELECT count(*) FROM users")))
 ;; connection is closed automatically
+```
+
+### Closed connections
+
+Closing is idempotent, and using a closed connection raises an error
+rather than touching the server:
+
+```scheme
+(define tmp (pg-connect "dbname=myapp"))
+(pg-close tmp)
+(pg-connected? tmp)        ;=> #f
+(pg-close tmp)             ;; closing again is a no-op
+(pg-query tmp "SELECT 1")  ;=> error: pg: connection is closed
 ```
 
 ## Convenience functions
