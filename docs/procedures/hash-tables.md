@@ -147,18 +147,21 @@ kaappi> (hash-table? "hello")
 ## Lookup and Mutation
 
 ### `hash-table-ref` { #hash-table-ref }
-<!-- index: 2+ | Look up key (optional default value) -->
+<!-- index: 2+ | Look up key (optional failure thunk) -->
 
-**Syntax:** `(hash-table-ref ht key)` | `(hash-table-ref ht key default)`
+**Syntax:** `(hash-table-ref ht key)` | `(hash-table-ref ht key failure-thunk)`
 
 Returns the value associated with *key* in hash table *ht*. O(1) average.
 
-If *key* is not found and a *default* is provided, returns *default* (if it
-is a thunk, it is called and the result is returned). If *key* is not found
-and no default is provided, an error is raised. Keys are compared using the
-hash table's equality predicate (`equal?` by default).
+If *key* is not found and a *failure-thunk* is provided, the thunk is
+called with no arguments and its result is returned. If *key* is not
+found and no thunk is provided, an error is raised. Keys are compared
+using the hash table's equality predicate (`equal?` by default).
 
-**Errors:** Raises an error if *key* is not found and no default is provided.
+**Errors:** Raises an error if *key* is not found and no failure thunk
+is provided. The optional third argument is a thunk that is called on a
+miss — for a plain default value, use
+[`hash-table-ref/default`](#hash-table-ref-default).
 
 ```scheme
 kaappi> (define ht (alist->hash-table '((a . 1) (b . 2) (c . 3))))
@@ -166,9 +169,9 @@ kaappi> (hash-table-ref ht 'a)
 ;=> 1
 kaappi> (hash-table-ref ht 'b)
 ;=> 2
-kaappi> (hash-table-ref ht 'z #f)
+kaappi> (hash-table-ref ht 'z (lambda () #f))
 ;=> #f
-kaappi> (hash-table-ref ht 'z 0)
+kaappi> (hash-table-ref/default ht 'z 0)
 ;=> 0
 ```
 
@@ -176,11 +179,32 @@ kaappi> (hash-table-ref ht 'z 0)
 
 ```scheme
 (define (get-config key)
-  (hash-table-ref config-ht key #f))
+  (hash-table-ref/default config-ht key #f))
 ```
 
 **See also:** [`hash-table-exists?`](#hash-table-exists),
 [`hash-table-set!`](#hash-table-set)
+
+---
+
+### `hash-table-ref/default` { #hash-table-ref-default }
+<!-- index: 3 | Look up key, returning default on a miss -->
+
+**Syntax:** `(hash-table-ref/default ht key default)`
+
+Like [`hash-table-ref`](#hash-table-ref), but *default* is a plain
+value (not a thunk) returned when *key* is not present.
+
+```scheme
+kaappi> (define ht (alist->hash-table '((a . 1) (b . 2))))
+kaappi> (hash-table-ref/default ht 'a 0)
+;=> 1
+kaappi> (hash-table-ref/default ht 'z 0)
+;=> 0
+```
+
+**See also:** [`hash-table-ref`](#hash-table-ref),
+[`hash-table-update!/default`](#hash-table-update-default)
 
 ---
 
@@ -280,15 +304,16 @@ but may be implemented more efficiently.
 
 ```scheme
 kaappi> (define ht (make-hash-table))
-kaappi> (hash-table-update!/default ht 'count add1 0)
+kaappi> (hash-table-update!/default ht 'count (lambda (n) (+ n 1)) 0)
 kaappi> (hash-table-ref ht 'count)
 ;=> 1
-kaappi> (hash-table-update!/default ht 'count add1 0)
+kaappi> (hash-table-update!/default ht 'count (lambda (n) (+ n 1)) 0)
 kaappi> (hash-table-ref ht 'count)
 ;=> 2
 kaappi> (define counts (make-hash-table))
 kaappi> (for-each (lambda (word)
-                    (hash-table-update!/default counts word add1 0))
+                    (hash-table-update!/default counts word
+                                                (lambda (n) (+ n 1)) 0))
                   '(the cat sat on the mat))
 kaappi> (hash-table-ref counts 'the)
 ;=> 2
@@ -332,8 +357,8 @@ unspecified.
 
 ```scheme
 kaappi> (define ht (alist->hash-table '((a . 1) (b . 2) (c . 3))))
-kaappi> (sort (hash-table-keys ht) symbol<?)
-;=> (a b c)
+kaappi> (hash-table-keys ht)
+;=> (b a c)
 kaappi> (hash-table-keys (make-hash-table))
 ;=> ()
 ```
@@ -353,8 +378,8 @@ unspecified but corresponds to the order of `hash-table-keys`.
 
 ```scheme
 kaappi> (define ht (alist->hash-table '((a . 1) (b . 2) (c . 3))))
-kaappi> (sort (hash-table-values ht) <)
-;=> (1 2 3)
+kaappi> (hash-table-values ht)
+;=> (2 1 3)
 kaappi> (hash-table-values (make-hash-table))
 ;=> ()
 ```
@@ -383,9 +408,9 @@ kaappi> sum
 ;=> 6
 kaappi> (hash-table-walk ht
          (lambda (k v) (display k) (display ": ") (display v) (newline)))
+c: 3
 a: 1
 b: 2
-c: 3
 ```
 
 !!! note
@@ -411,9 +436,8 @@ elements is unspecified.
 kaappi> (define ht (make-hash-table))
 kaappi> (hash-table-set! ht 'x 10)
 kaappi> (hash-table-set! ht 'y 20)
-kaappi> (sort (hash-table->alist ht)
-              (lambda (a b) (symbol<? (car a) (car b))))
-;=> ((x . 10) (y . 20))
+kaappi> (hash-table->alist ht)
+;=> ((y . 20) (x . 10))
 kaappi> (hash-table->alist (make-hash-table))
 ;=> ()
 ```
@@ -433,7 +457,7 @@ tables always use `equal?`.
 
 ```scheme
 kaappi> (hash-table-equivalence-function (make-hash-table))
-;=> #<procedure equal?>
+;=> #<builtin equal?>
 ```
 
 ## hash-table-hash-function
@@ -444,5 +468,5 @@ Returns the hash function used by the hash table.
 
 ```scheme
 kaappi> (hash-table-hash-function (make-hash-table))
-;=> #<procedure hash>
+;=> #<builtin hash>
 ```

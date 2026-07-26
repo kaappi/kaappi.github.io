@@ -24,9 +24,9 @@ Returns the thread object representing the currently executing thread.
 
 ```scheme
 kaappi> (current-thread)
-;=> #<thread main>
-kaappi> (thread-name (current-thread))
-;=> main
+;=> #<fiber 0 running>
+kaappi> (thread-name (make-thread (lambda () #f) "worker"))
+;=> "worker"
 ```
 
 **See also:** [`thread?`](#thread-pred), [`make-thread`](#make-thread)
@@ -66,7 +66,7 @@ state; call `thread-start!` to begin execution.
 ```scheme
 kaappi> (define t (make-thread (lambda () (+ 1 2))))
 kaappi> t
-;=> #<thread>
+;=> #<fiber 1 created>
 kaappi> (define t2 (make-thread (lambda () 'done) "worker"))
 kaappi> (thread-name t2)
 ;=> "worker"
@@ -81,14 +81,12 @@ kaappi> (thread-name t2)
 
 **Syntax:** `(thread-name thread)`
 
-Returns the name associated with *thread*, or `#f` if no name was given
-at creation time.
+Returns the name associated with *thread*. For a thread created without
+a name, the result is unspecified.
 
 ```scheme
 kaappi> (thread-name (make-thread (lambda () #f) "my-thread"))
 ;=> "my-thread"
-kaappi> (thread-name (make-thread (lambda () #f)))
-;=> #f
 ```
 
 **See also:** [`make-thread`](#make-thread)
@@ -104,8 +102,6 @@ Returns the thread-specific value associated with *thread*. Each thread
 has a single slot for storing an arbitrary value, initially `#f`.
 
 ```scheme
-kaappi> (thread-specific (current-thread))
-;=> #f
 kaappi> (thread-specific-set! (current-thread) '(my data))
 kaappi> (thread-specific (current-thread))
 ;=> (my data)
@@ -148,7 +144,7 @@ mutations in the child are not visible to the parent.
 ```scheme
 kaappi> (define t (make-thread (lambda () (display "hello\n"))))
 kaappi> (thread-start! t)
-;=> #<thread>
+;=> #<fiber 1 running>
 hello
 kaappi> (thread-join! t)
 ```
@@ -219,7 +215,7 @@ does not get a chance to release resources or unlock mutexes.
 ```scheme
 kaappi> (define t (make-thread (lambda () (thread-sleep! 100))))
 kaappi> (thread-start! t)
-;=> #<thread>
+;=> #<fiber 1 running>
 kaappi> (thread-terminate! t)
 ```
 
@@ -250,12 +246,12 @@ has not terminated by then, a `join-timeout-exception` is raised -- unless
 ```scheme
 kaappi> (define t (make-thread (lambda () (* 6 7))))
 kaappi> (thread-start! t)
-;=> #<thread>
+;=> #<fiber 1 running>
 kaappi> (thread-join! t)
 ;=> 42
 kaappi> (define t2 (make-thread (lambda () (thread-sleep! 10))))
 kaappi> (thread-start! t2)
-;=> #<thread>
+;=> #<fiber 2 running>
 kaappi> (thread-join! t2 0.1 'timed-out)
 ;=> timed-out
 ```
@@ -316,8 +312,6 @@ Returns the name associated with *mutex*, or `#f` if no name was given.
 ```scheme
 kaappi> (mutex-name (make-mutex "lock-1"))
 ;=> "lock-1"
-kaappi> (mutex-name (make-mutex))
-;=> #f
 ```
 
 **See also:** [`make-mutex`](#make-mutex)
@@ -329,12 +323,11 @@ kaappi> (mutex-name (make-mutex))
 
 **Syntax:** `(mutex-specific mutex)`
 
-Returns the mutex-specific value associated with *mutex*, initially `#f`.
+Returns the mutex-specific value associated with *mutex*. Before the
+first `mutex-specific-set!` the result is unspecified.
 
 ```scheme
 kaappi> (define m (make-mutex))
-kaappi> (mutex-specific m)
-;=> #f
 kaappi> (mutex-specific-set! m 'data)
 kaappi> (mutex-specific m)
 ;=> data
@@ -381,7 +374,7 @@ kaappi> (mutex-state m)
 kaappi> (mutex-lock! m)
 ;=> #t
 kaappi> (mutex-state m)
-;=> #<thread main>
+;=> #<fiber 0 completed>
 ```
 
 **See also:** [`mutex-lock!`](#mutex-lock), [`mutex-unlock!`](#mutex-unlock)
@@ -406,7 +399,7 @@ kaappi> (define m (make-mutex))
 kaappi> (mutex-lock! m)
 ;=> #t
 kaappi> (mutex-state m)
-;=> #<thread main>
+;=> #<fiber 0 completed>
 kaappi> (mutex-unlock! m)
 ;=> #t
 ```
@@ -486,14 +479,12 @@ kaappi> cv
 
 **Syntax:** `(condition-variable-name condition-variable)`
 
-Returns the name associated with *condition-variable*, or `#f` if no
-name was given.
+Returns the name associated with *condition-variable*. For a condition
+variable created without a name, the result is unspecified.
 
 ```scheme
 kaappi> (condition-variable-name (make-condition-variable "cv-1"))
 ;=> "cv-1"
-kaappi> (condition-variable-name (make-condition-variable))
-;=> #f
 ```
 
 **See also:** [`make-condition-variable`](#make-condition-variable)
@@ -505,12 +496,14 @@ kaappi> (condition-variable-name (make-condition-variable))
 
 **Syntax:** `(condition-variable-specific condition-variable)`
 
-Returns the condition-variable-specific value, initially `#f`.
+Returns the condition-variable-specific value. Before the first
+`condition-variable-specific-set!` the result is unspecified.
 
 ```scheme
 kaappi> (define cv (make-condition-variable))
+kaappi> (condition-variable-specific-set! cv 'meta)
 kaappi> (condition-variable-specific cv)
-;=> #f
+;=> meta
 ```
 
 **See also:** [`condition-variable-specific-set!`](#condition-variable-specific-set)
@@ -667,7 +660,7 @@ Returns `#t` if *obj* is a join-timeout exception, which is raised by
 ```scheme
 kaappi> (define t (make-thread (lambda () (thread-sleep! 100))))
 kaappi> (thread-start! t)
-;=> #<thread>
+;=> #<fiber 1 running>
 kaappi> (guard (e ((join-timeout-exception? e) 'timed-out))
          (thread-join! t (seconds->time (+ (time->seconds (current-time)) 0.1))))
 ;=> timed-out
@@ -727,7 +720,7 @@ original exception raised by a thread that terminated abnormally. Use
 ```scheme
 kaappi> (define t (make-thread (lambda () (error "oops"))))
 kaappi> (thread-start! t)
-;=> #<thread>
+;=> #<fiber 1 running>
 kaappi> (guard (e ((uncaught-exception? e)
                    (error-object-message (uncaught-exception-reason e))))
          (thread-join! t))
@@ -751,7 +744,7 @@ tested by `uncaught-exception?`).
 ```scheme
 kaappi> (define t (make-thread (lambda () (error "something broke" 42))))
 kaappi> (thread-start! t)
-;=> #<thread>
+;=> #<fiber 1 running>
 kaappi> (guard (e ((uncaught-exception? e)
                    (let ((reason (uncaught-exception-reason e)))
                      (list (error-object-message reason)

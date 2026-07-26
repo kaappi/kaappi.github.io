@@ -352,14 +352,15 @@ kaappi> (vector-reverse-copy #(1 2 3 4 5) 1 4)
 
 **Syntax:** `(vector-fold f seed vector1 vector2 ...)`
 
-Left fold over one or more vectors. *f* is called as `(f index state elt ...)`
-where *index* is the current position and *state* is the accumulated value.
-Returns the final accumulated value.
+Left fold over one or more vectors. *f* is called as `(f state elt ...)`
+where *state* is the accumulated value (there is no index argument —
+that is SRFI 43's protocol, not SRFI 133's). Returns the final
+accumulated value.
 
 ```scheme
-kaappi> (vector-fold (lambda (i sum x) (+ sum x)) 0 #(1 2 3 4 5))
+kaappi> (vector-fold (lambda (sum x) (+ sum x)) 0 #(1 2 3 4 5))
 ;=> 15
-kaappi> (vector-fold (lambda (i acc x) (cons x acc)) '() #(a b c))
+kaappi> (vector-fold (lambda (acc x) (cons x acc)) '() #(a b c))
 ;=> (c b a)
 ```
 
@@ -375,12 +376,12 @@ kaappi> (vector-fold (lambda (i acc x) (cons x acc)) '() #(a b c))
 
 Right fold over one or more vectors. Like [`vector-fold`](#vector-fold), but
 processes elements from right to left. *f* is called as
-`(f index state elt ...)`.
+`(f state elt ...)`.
 
 ```scheme
-kaappi> (vector-fold-right (lambda (i acc x) (cons x acc)) '() #(a b c))
+kaappi> (vector-fold-right (lambda (acc x) (cons x acc)) '() #(a b c))
 ;=> (a b c)
-kaappi> (vector-fold-right (lambda (i s x) (+ s x)) 0 #(1 2 3))
+kaappi> (vector-fold-right (lambda (s x) (+ s x)) 0 #(1 2 3))
 ;=> 6
 ```
 
@@ -431,21 +432,23 @@ kaappi> (vector-count < #(1 5 3) #(2 3 4))
 ---
 
 ### `vector-partition` { #vector-partition }
-<!-- index: 2 | Partition by predicate into two vectors -->
+<!-- index: 2 | Stable partition; returns vector and boundary index -->
 
 **Syntax:** `(vector-partition pred vector)`
 
-Partitions the elements of *vector* by *pred*, returning two values: a vector
-of elements for which *pred* returned true, and a vector of elements for which
-*pred* returned false. The relative order of elements is preserved.
+Partitions the elements of *vector* by *pred*, returning two values: a
+new vector with every element for which *pred* returned true first,
+followed by the elements for which it returned false (relative order
+preserved within each group), and the number of satisfying elements —
+the boundary index between the two groups.
 
 ```scheme
-kaappi> (let-values (((yes no) (vector-partition even? #(1 2 3 4 5 6))))
-         (list yes no))
-;=> (#(2 4 6) #(1 3 5))
-kaappi> (let-values (((yes no) (vector-partition positive? #(-1 2 -3 4))))
-         (list yes no))
-;=> (#(2 4) #(-1 -3))
+kaappi> (let-values (((v k) (vector-partition even? #(1 2 3 4 5 6))))
+         (list v k))
+;=> (#(2 4 6 1 3 5) 3)
+kaappi> (let-values (((v k) (vector-partition positive? #(-1 2 -3 4))))
+         (list v k))
+;=> (#(2 4 -1 -3) 2)
 ```
 
 **See also:** [`partition`](./srfi-1.md#partition),

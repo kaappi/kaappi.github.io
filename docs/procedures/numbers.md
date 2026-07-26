@@ -910,7 +910,7 @@ kaappi> (square 1/3)
 **Syntax:** `(sqrt z)`
 
 Returns the principal square root of `z`. For negative real numbers,
-the result is a complex number: `(sqrt -1)` returns `0+1i`. For exact
+the result is a complex number: `(sqrt -1)` returns `+i`. For exact
 integers that are perfect squares, the result is an exact integer.
 Otherwise the result is a flonum. Also handles complex arguments.
 
@@ -920,7 +920,7 @@ kaappi> (sqrt 4)
 kaappi> (sqrt 2.0)
 ;=> 1.4142135623730951
 kaappi> (sqrt -1)
-;=> 0+1i
+;=> +i
 kaappi> (sqrt 9)
 ;=> 3
 ```
@@ -1011,7 +1011,7 @@ flonum.
 kaappi> (tan 0)
 ;=> 0.0
 kaappi> (tan 0.7853981633974483)
-;=> 1.0
+;=> 0.9999999999999999
 ```
 
 **See also:** [`sin`](./numbers.md#sin), [`cos`](./numbers.md#cos), [`atan`](./numbers.md#atan)
@@ -1422,7 +1422,7 @@ kaappi> (make-rectangular 3 4)
 kaappi> (make-rectangular 1 0)
 ;=> 1
 kaappi> (make-rectangular 0 1)
-;=> 0+1i
+;=> +i
 ```
 
 **See also:** [`make-polar`](./numbers.md#make-polar), [`real-part`](./numbers.md#real-part), [`imag-part`](./numbers.md#imag-part)
@@ -1442,7 +1442,7 @@ If the imaginary part is zero, returns a real number.
 kaappi> (make-polar 1 0)
 ;=> 1.0
 kaappi> (make-polar 1 1.5707963267948966)
-;=> 0+1i
+;=> 6.123233995736766e-17+1.0i
 ```
 
 **See also:** [`make-rectangular`](./numbers.md#make-rectangular), [`magnitude`](./numbers.md#magnitude), [`angle`](./numbers.md#angle)

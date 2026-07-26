@@ -195,9 +195,9 @@ to seconds. Available from `(scheme time)`.
 
 ```scheme
 kaappi> (jiffies-per-second)
-;=> 1000000000
-kaappi> (exact (/ (jiffies-per-second) 1000))
 ;=> 1000000
+kaappi> (exact (/ (jiffies-per-second) 1000))
+;=> 1000
 ```
 
 **See also:** [`current-jiffy`](#current-jiffy),
@@ -219,10 +219,10 @@ the machine architecture.
 
 ```scheme
 kaappi> (features)
-;=> (r7rs kaappi zig ieee-float full-numeric-tower posix
-     macosx x86-64 little-endian)
+;=> (r7rs kaappi ieee-float exact-closed exact-complex kaappi-fibers
+;    kaappi-reactor kaappi-diagnostics posix kaappi-threads)
 kaappi> (memq 'r7rs (features))
-;=> (r7rs kaappi zig ...)
+;=> (r7rs kaappi ieee-float ...)
 kaappi> (memq 'windows (features))
 ;=> #f  ; #t on Windows builds
 ```

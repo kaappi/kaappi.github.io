@@ -103,7 +103,7 @@ Creates a record type descriptor with the given *name* (a symbol) and
 used by the `define-record-type` macro; users rarely call it directly.
 
 ```scheme
-kaappi> (define point-type (%make-record-type 'point 2))
+kaappi> (define point-type (%make-record-type "point" 2))
 kaappi> point-type
 ;=> #<record-type point>
 ```
@@ -128,13 +128,13 @@ descriptor from `%make-record-type`). The number of *field-value*
 arguments must match the field count of the type.
 
 ```scheme
-kaappi> (define point-type (%make-record-type 'point 2))
+kaappi> (define point-type (%make-record-type "point" 2))
 kaappi> (define p (%make-record point-type 3 4))
 kaappi> p
-;=> #<record point>
-kaappi> (%record-ref p 0)
+;=> #<point 3 4>
+kaappi> (%record-ref p 0 point-type)
 ;=> 3
-kaappi> (%record-ref p 1)
+kaappi> (%record-ref p 1 point-type)
 ;=> 4
 ```
 
@@ -152,13 +152,13 @@ Returns `#t` if *obj* is a record instance of the given *type*, `#f`
 otherwise. The *type* must be a record type descriptor.
 
 ```scheme
-kaappi> (define point-type (%make-record-type 'point 2))
+kaappi> (define point-type (%make-record-type "point" 2))
 kaappi> (define p (%make-record point-type 3 4))
 kaappi> (%record? p point-type)
 ;=> #t
 kaappi> (%record? 42 point-type)
 ;=> #f
-kaappi> (define vec-type (%make-record-type 'vec 2))
+kaappi> (define vec-type (%make-record-type "vec" 2))
 kaappi> (%record? p vec-type)
 ;=> #f
 ```
@@ -171,17 +171,19 @@ kaappi> (%record? p vec-type)
 ### `%record-ref` { #record-ref }
 <!-- index: 2 | Access field by index -->
 
-**Syntax:** `(%record-ref record index)`
+**Syntax:** `(%record-ref record index type)`
 
 Returns the value of the field at *index* (zero-based) in *record*.
-It is an error if *index* is out of range.
+The *type* argument is the record's type descriptor — the access is
+type-checked against it. It is an error if *index* is out of range or
+*record* is not an instance of *type*.
 
 ```scheme
-kaappi> (define point-type (%make-record-type 'point 2))
+kaappi> (define point-type (%make-record-type "point" 2))
 kaappi> (define p (%make-record point-type 10 20))
-kaappi> (%record-ref p 0)
+kaappi> (%record-ref p 0 point-type)
 ;=> 10
-kaappi> (%record-ref p 1)
+kaappi> (%record-ref p 1 point-type)
 ;=> 20
 ```
 
@@ -192,19 +194,21 @@ kaappi> (%record-ref p 1)
 ### `%record-set!` { #record-set }
 <!-- index: 3 | Mutate field by index -->
 
-**Syntax:** `(%record-set! record index value)`
+**Syntax:** `(%record-set! record index value type)`
 
-Sets the field at *index* (zero-based) in *record* to *value*.
-It is an error if *index* is out of range.
+Sets the field at *index* (zero-based) in *record* to *value*. The
+*type* argument is the record's type descriptor — the mutation is
+type-checked against it. It is an error if *index* is out of range or
+*record* is not an instance of *type*.
 
 ```scheme
-kaappi> (define point-type (%make-record-type 'point 2))
+kaappi> (define point-type (%make-record-type "point" 2))
 kaappi> (define p (%make-record point-type 0 0))
-kaappi> (%record-set! p 0 42)
-kaappi> (%record-set! p 1 99)
-kaappi> (%record-ref p 0)
+kaappi> (%record-set! p 0 42 point-type)
+kaappi> (%record-set! p 1 99 point-type)
+kaappi> (%record-ref p 0 point-type)
 ;=> 42
-kaappi> (%record-ref p 1)
+kaappi> (%record-ref p 1 point-type)
 ;=> 99
 ```
 

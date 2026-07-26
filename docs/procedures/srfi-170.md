@@ -18,12 +18,13 @@ does not exist or cannot be accessed.
 
 ```scheme
 kaappi> (file-info ".")
-;=> #<file-info>
+;=> #<file-info directory size=96 mode=40755>
 kaappi> (define fi (file-info "/tmp"))
 kaappi> (file-info-directory? fi)
 ;=> #t
+kaappi> (create-symlink "/etc/hosts" "/tmp/mylink")
 kaappi> (file-info "/tmp/mylink" #f)   ; inspect the symlink itself
-;=> #<file-info>
+;=> #<file-info symlink size=10 mode=120755>
 ```
 
 **See also:** [`file-info?`](#file-info-pred),
@@ -262,7 +263,9 @@ during traversal; the default is `#f`. The entries `.` and `..` are
 always skipped.
 
 ```scheme
-kaappi> (define d (open-directory "."))
+kaappi> (create-directory "demo-dir")
+kaappi> (call-with-output-file "demo-dir/README.md" (lambda (p) (write 'hi p)))
+kaappi> (define d (open-directory "demo-dir"))
 kaappi> (read-directory d)
 ;=> "README.md"
 kaappi> (close-directory d)
@@ -324,6 +327,8 @@ Renames the file from *old-path* to *new-path*. This is an atomic
 operation on the same filesystem. Raises a file error on failure.
 
 ```scheme
+kaappi> (call-with-output-file "/tmp/old-name.txt"
+          (lambda (p) (write 'data p)))
 kaappi> (rename-file "/tmp/old-name.txt" "/tmp/new-name.txt")
 ```
 
@@ -357,8 +362,8 @@ Returns the target of the symbolic link at *path* as a string. Raises
 a file error if *path* is not a symbolic link.
 
 ```scheme
-kaappi> (create-symlink "/etc/hosts" "/tmp/test-link")
-kaappi> (read-symlink "/tmp/test-link")
+kaappi> (create-symlink "/etc/hosts" "/tmp/link-to-hosts")
+kaappi> (read-symlink "/tmp/link-to-hosts")
 ;=> "/etc/hosts"
 ```
 
@@ -376,6 +381,8 @@ Creates a hard link at *new-path* referring to the same inode as
 file error on failure.
 
 ```scheme
+kaappi> (call-with-output-file "/tmp/original.txt"
+          (lambda (p) (write 'data p)))
 kaappi> (create-hard-link "/tmp/original.txt" "/tmp/linked.txt")
 kaappi> (= (file-info:inode (file-info "/tmp/original.txt"))
            (file-info:inode (file-info "/tmp/linked.txt")))
@@ -412,8 +419,10 @@ kaappi> (char=? #\/ (string-ref (real-path ".") 0))
 Sets the POSIX permission bits of the file at *path* to *mode*.
 
 ```scheme
-kaappi> (set-file-mode "/tmp/test.txt" #o644)
+kaappi> (call-with-output-file "/tmp/script.sh"
+          (lambda (p) (write-string "#!/bin/sh\n" p)))
 kaappi> (set-file-mode "/tmp/script.sh" #o755)
+kaappi> (set-file-mode "/tmp/test.txt" #o644)
 ```
 
 ---
@@ -937,13 +946,14 @@ kaappi> (terminal? (open-input-file "/tmp/test.txt"))
 
 **Syntax:** `(posix-time)`
 
-Returns the current time as seconds since the Unix epoch
-(1970-01-01 00:00:00 UTC), using the realtime clock.
+Returns the current time as a SRFI-18 time object holding seconds since
+the Unix epoch (1970-01-01 00:00:00 UTC), using the realtime clock.
+Convert it to a number with `time->seconds`.
 
 ```scheme
 kaappi> (posix-time)
-;=> 1718900000
-kaappi> (> (posix-time) 0)
+;=> #<time time-utc 1718900000.123456000>
+kaappi> (> (time->seconds (posix-time)) 0)
 ;=> #t
 ```
 
@@ -956,13 +966,14 @@ kaappi> (> (posix-time) 0)
 
 **Syntax:** `(monotonic-time)`
 
-Returns the current value of the monotonic clock in seconds. Unlike
-`posix-time`, this clock is not affected by system time changes and
-is suitable for measuring elapsed time.
+Returns the current value of the monotonic clock as a SRFI-18 time
+object (convert with `time->seconds`). Unlike `posix-time`, this clock
+is not affected by system time changes and is suitable for measuring
+elapsed time.
 
 ```scheme
-kaappi> (define start (monotonic-time))
-kaappi> (>= (- (monotonic-time) start) 0)
+kaappi> (define start (time->seconds (monotonic-time)))
+kaappi> (>= (- (time->seconds (monotonic-time)) start) 0)
 ;=> #t
 ```
 

@@ -41,7 +41,7 @@ an error if *n* is not an exact integer in the range 0 to `#x10FFFF`.
 kaappi> (integer->char 97)
 ;=> #\a
 kaappi> (integer->char 955)
-;=> #\x03BB
+;=> #\λ
 kaappi> (integer->char 32)
 ;=> #\space
 ```
@@ -292,7 +292,7 @@ kaappi> (char-upcase #\A)
 kaappi> (char-upcase #\1)
 ;=> #\1
 kaappi> (char-upcase #\x03B1)   ; Greek small alpha
-;=> #\x0391                     ; Greek capital Alpha
+;=> #\Α                         ; Greek capital Alpha
 ```
 
 **See also:** [`char-downcase`](#char-downcase), [`char-foldcase`](#char-foldcase), [`string-upcase`](#string-upcase)
@@ -313,7 +313,7 @@ kaappi> (char-downcase #\A)
 kaappi> (char-downcase #\a)
 ;=> #\a
 kaappi> (char-downcase #\x0391)   ; Greek capital Alpha
-;=> #\x03B1                       ; Greek small alpha
+;=> #\α                           ; Greek small alpha
 ```
 
 **See also:** [`char-upcase`](#char-upcase), [`char-foldcase`](#char-foldcase), [`string-downcase`](#string-downcase)
@@ -626,7 +626,7 @@ of the regular small sigma (U+03C3). Also handles Turkish dotted capital I
 kaappi> (string-downcase "HELLO")
 ;=> "hello"
 kaappi> (string-downcase "\x03A3;")   ; lone capital Sigma
-;=> "\x03C3;"                          ; small sigma
+;=> "σ"                                ; small sigma
 ```
 
 !!! note "Greek final sigma"

@@ -116,6 +116,7 @@ kaappi> (cond ((assv 2 '((1 one) (2 two) (3 three)))
                => cadr)
               (else 'not-found))
 ;=> two
+kaappi> (import (srfi 61))   ; the three-part guard clause below is SRFI 61
 kaappi> (cond ((assv 2 '((1 one) (2 two) (3 three)))
                pair?
                => cadr)

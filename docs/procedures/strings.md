@@ -251,7 +251,7 @@ string) are handled correctly. Returns void.
 kaappi> (let ((s (string-copy "abcde")))
          (string-copy! s 1 "xy")
          s)
-;=> "axyде"
+;=> "axyde"
 kaappi> (let ((s (string-copy "abcde")))
          (string-copy! s 0 "hello" 1 3)
          s)

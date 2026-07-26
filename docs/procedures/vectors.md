@@ -369,7 +369,7 @@ kaappi> (vector-map + #(1 2 3) #(10 20 30))
 ;=> #(11 22 33)
 kaappi> (vector-map (lambda (x) (* x x)) #(1 2 3 4))
 ;=> #(1 4 9 16)
-kaappi> (vector-map car #(#(a b) #(c d) #(e f)))
+kaappi> (vector-map car #((a b) (c d) (e f)))
 ;=> #(a c e)
 ```
 

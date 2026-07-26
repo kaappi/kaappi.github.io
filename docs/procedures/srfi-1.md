@@ -1136,7 +1136,7 @@ in the result. With zero list arguments, returns `()`.
 
 ```scheme
 kaappi> (lset-union eq? '(a b) '(b c) '(c d))
-;=> (d a b c)
+;=> (d c a b)
 kaappi> (lset-union eq? '(a b) '(a b))
 ;=> (a b)
 ```

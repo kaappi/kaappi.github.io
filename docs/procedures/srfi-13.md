@@ -482,7 +482,7 @@ operation to a substring.
 
 ```scheme
 kaappi> (string-filter char-alphabetic? "h3l1o w0rld")
-;=> "hlorld"
+;=> "hlowrld"
 kaappi> (string-filter #\a "abracadabra")
 ;=> "aaaaa"
 ```

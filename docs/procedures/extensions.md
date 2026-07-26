@@ -17,9 +17,9 @@ The handle is used with `ffi-fn` to bind C functions and must be closed
 with `ffi-close` when no longer needed.
 
 ```scheme
-kaappi> (define lib (ffi-open "libm.so"))
+kaappi> (define lib (ffi-open "libm.dylib"))  ; macOS — "libm.so.6" on Linux
 kaappi> lib
-;=> #<ffi-lib libm.so>
+;=> #<ffi-library "libm.dylib">
 ```
 
 **See also:** [`ffi-fn`](#ffi-fn), [`ffi-close`](#ffi-close)
@@ -38,7 +38,7 @@ Parameter and return types are specified as symbols: `int`, `long`,
 `int16`, `int32`, `int64`, `uint16`, `uint32`, `uint64`, `size_t`, `char`.
 
 ```scheme
-kaappi> (define lib (ffi-open "libm.so"))
+kaappi> (define lib (ffi-open "libm.dylib"))  ; macOS — "libm.so.6" on Linux
 kaappi> (define c-sqrt (ffi-fn lib "sqrt" '(double) 'double))
 kaappi> (c-sqrt 16.0)
 ;=> 4.0
@@ -65,7 +65,7 @@ resources. Any procedures previously bound with `ffi-fn` from this
 library become invalid and must not be called after closing.
 
 ```scheme
-kaappi> (define lib (ffi-open "libm.so"))
+kaappi> (define lib (ffi-open "libm.dylib"))  ; macOS — "libm.so.6" on Linux
 kaappi> (ffi-close lib)
 ```
 
@@ -97,13 +97,13 @@ side when the enclosing C call returns, so `guard` around the FFI call
 works as expected. Unavailable under `--sandbox` and on WebAssembly.
 
 ```scheme
-;; C: int apply_pp(int (*f)(void *, void *), long a, long b)
-;;    { return f((void *)a, (void *)b); }
-kaappi> (define apply-pp (ffi-fn lib "apply_pp" '(pointer long long) 'int))
-kaappi> (define cb (ffi-callback (lambda (a b) (- a b)) '(pointer pointer) 'int))
-kaappi> (apply-pp cb 10 3)
-;=> 7
-kaappi> (ffi-callback-release cb)
+;; C (in your own shared library):
+;;   int apply_pp(int (*f)(void *, void *), long a, long b)
+;;   { return f((void *)a, (void *)b); }
+(define apply-pp (ffi-fn mylib "apply_pp" '(pointer long long) 'int))
+(define cb (ffi-callback (lambda (a b) (- a b)) '(pointer pointer) 'int))
+(apply-pp cb 10 3)          ;; returns 7
+(ffi-callback-release cb)
 ```
 
 **See also:** [`ffi-callback-release`](#ffi-callback-release),
@@ -235,7 +235,7 @@ Returns `#t` if *obj* is a fiber, `#f` otherwise.
 kaappi> (fiber? (spawn (lambda () 42)))
 ;=> #t
 kaappi> (fiber? (current-thread))
-;=> #f
+;=> #t
 kaappi> (fiber? 'not-a-fiber)
 ;=> #f
 ```
@@ -596,16 +596,25 @@ kaappi> (parallel-map (lambda (n) (* n n)) '(1 2 3 4 5))
 
 Like `parallel-map`, but for side effects: applies *proc* to each element
 of *list* using a private pool, waits for every call to finish, and
-returns an unspecified value. Since each call runs on a worker with its
-own heap, communicate side effects back through a channel rather than a
-shared variable.
+returns an unspecified value. Each call runs on a worker with its own
+heap, and a channel captured by *proc*'s closure does **not** cross the
+worker boundary (it raises "channel belongs to another thread"). Use
+`parallel-for-each` for effects that stand alone on each worker —
+writing files, network requests, logging — and reach for
+[`parallel-map`](#parallel-map) or
+[`pool-submit`](#pool-submit)/[`task-wait`](#task-wait) when you need
+values back.
 
 ```scheme
 kaappi> (import (kaappi parallel))
-kaappi> (define out (make-channel))
-kaappi> (parallel-for-each (lambda (n) (channel-send out (* n n))) '(1 2 3))
-kaappi> (list (channel-receive out) (channel-receive out) (channel-receive out))
-;=> (1 4 9)  ; order depends on scheduling
+kaappi> (parallel-for-each
+          (lambda (n)
+            (call-with-output-file
+                (string-append "out-" (number->string n) ".txt")
+              (lambda (p) (write (* n n) p))))
+          '(1 2 3))
+kaappi> (call-with-input-file "out-2.txt" read)
+;=> 4
 ```
 
 **See also:** [`parallel-map`](#parallel-map)
