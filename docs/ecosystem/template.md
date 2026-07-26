@@ -171,11 +171,17 @@ The `html-escape` function is available independently:
 <body><nav>{{.nav}}</nav>{{.body}}</body></html>")
 
 (define (render-page title body-html)
-  (template-render-html layout
-    `(("title" . ,title)
+  (template-render layout
+    `(("title" . ,(html-escape title))
       ("nav" . "<a href='/'>Home</a>")
       ("body" . ,body-html))))
 ```
+
+The layout is rendered with `template-render` (no auto-escaping) because
+`nav` and `body-html` are markup that must land verbatim; plain data
+values like the title are escaped explicitly with `html-escape`. Render
+the body fragments themselves with `template-render-html` so their data
+stays auto-escaped.
 
 ### Conditional CSS classes
 

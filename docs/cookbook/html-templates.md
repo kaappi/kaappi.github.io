@@ -100,10 +100,17 @@ Build a reusable layout by composing templates:
 </html>")
 
 (define (render-page title body-html)
-  (template-render-html layout
-    `(("title" . ,title)
+  (template-render layout
+    `(("title" . ,(html-escape title))
       ("body"  . ,body-html))))
 ```
+
+The layout is rendered with `template-render` — no auto-escaping — because
+`body-html` is already-rendered HTML that must be inserted verbatim
+(`template-render-html` would escape it into visible `&lt;h1&gt;` text).
+Data values that pass through the layout raw, like the title, are escaped
+explicitly with `html-escape`. The page bodies themselves are rendered
+with `template-render-html`, so their data stays auto-escaped.
 
 Then each page renders its body and wraps it in the layout:
 
@@ -128,7 +135,7 @@ Then each page renders its body and wraps it in the layout:
 A complete app with SQLite storage, listing, and adding contacts:
 
 ```scheme
-(import (scheme base) (kaappi web) (kaappi template) (kaappi sqlite))
+(import (scheme base) (kaappi web) (kaappi http) (kaappi template) (kaappi sqlite))
 
 ;; --- Templates ---
 
@@ -163,8 +170,8 @@ A complete app with SQLite storage, listing, and adding contacts:
 </form>")
 
 (define (render title body-html)
-  (template-render-html layout
-    `(("title" . ,title) ("body" . ,body-html))))
+  (template-render layout
+    `(("title" . ,(html-escape title)) ("body" . ,body-html))))
 
 ;; --- Database ---
 

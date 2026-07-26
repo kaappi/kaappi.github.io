@@ -166,8 +166,8 @@ JSON `null` is represented as the symbol `'null`:
 (json-null? 'null)   ;=> #t
 (json-null? "hello") ;=> #f
 
-;; Emit null in output
-(json-write-string `(("value" . ,(json-null))))
+;; Emit null in output — json-null is the constant 'null
+(json-write-string `(("value" . ,json-null)))
 ;=> "{\"value\":null}"
 ```
 

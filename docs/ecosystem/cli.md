@@ -194,22 +194,6 @@ Commands:
   status                    Show deploy status
 ```
 
-### Subcommand help
-
-Each subcommand has its own help:
-
-```
-$ kaappi deploy.scm push --help
-push — Push to production
-
-Usage: push [options]
-
-Options:
-  -t, --target <value>      Deploy target (default: production)
-  -f, --force               Skip confirmation
-  -h, --help                Show this help
-```
-
 ## Argument parsing details
 
 ### Option syntax

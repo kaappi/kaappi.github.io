@@ -284,7 +284,7 @@ kaappi app.scm
 # Create a book
 curl -s -X POST -H "Content-Type: application/json" \
      -d '{"title":"SICP","author":"Abelson & Sussman","year":1996}' \
-     http://localhost:8080/books | kaappi -e '(import (kaappi json)) (display (json-read))'
+     http://localhost:8080/books
 
 # List all books
 curl -s http://localhost:8080/books

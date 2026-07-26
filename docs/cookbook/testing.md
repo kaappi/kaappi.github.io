@@ -29,8 +29,8 @@ kaappi tests/test-math.scm
 
 ```
 math
-  ok: addition
-  ok: multiplication
+    ok: addition
+    ok: multiplication
 
 2 tests: 2 passed
 ```
@@ -100,11 +100,11 @@ Output:
 ```
 parser
   numbers
-    ok: integer
-    ok: float
+      ok: integer
+      ok: float
   strings
-    ok: simple
-    ok: escaped
+      ok: simple
+      ok: escaped
 
 4 tests: 4 passed
 ```
@@ -279,7 +279,7 @@ built-in `kaappi test` runner, with no install step at all:
 ```
 
 ```console
-$ kaappi test tests/
+$ kaappi test tests
 kaappi test: seed 76958 (reproduce with: kaappi test --seed 76958)
   PASS  tests/test-demo.scm  (1 tests, 0 skipped, 4ms)
   PASS  tests/test-strings.scm  (2 tests, 0 skipped, 7ms)
@@ -309,5 +309,5 @@ For SRFI-64 suites the CI step becomes a single command:
 
 ```yaml
       - name: Run tests
-        run: kaappi test tests/
+        run: kaappi test tests
 ```

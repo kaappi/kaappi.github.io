@@ -156,7 +156,7 @@ JSON `null` is the symbol `'null`:
 (json-read-string "null")
 ;=> null
 
-(json-null)
+json-null
 ;=> null
 
 (json-null? 'null)   ;=> #t
@@ -167,7 +167,7 @@ JSON `null` is the symbol `'null`:
 Emit null in output:
 
 ```scheme
-(json-write-string `(("value" . ,(json-null))))
+(json-write-string `(("value" . ,json-null)))
 ;=> "{\"value\":null}"
 ```
 
@@ -249,5 +249,5 @@ Full JSON spec compliance (RFC 8259):
 | `(json-read-string str)` | Parse JSON from string |
 | `(json-write val [port])` | Write JSON to port (default: stdout) |
 | `(json-write-string val)` | Write JSON to string |
-| `(json-null)` | The null value (`'null` symbol) |
+| `json-null` | The null value constant (`'null` symbol) |
 | `(json-null? val)` | Test for null |
