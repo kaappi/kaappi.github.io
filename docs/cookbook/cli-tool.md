@@ -157,15 +157,17 @@ $ kaappi tasks.scm list --all
 [x] #1 Fix login bug (high)
 [ ] #2 Write docs (med)
 
-$ kaappi tasks.scm --help
-tasks — A task manager
+$ kaappi tasks.scm add --help
+tasks add — Add a new task
 
-Usage: tasks <command>
+Usage: tasks add [options] <title>
 
-Commands:
-  add                       Add a new task
-  list                      List all tasks
-  done                      Mark a task as completed
+Options:
+  -p, --priority <value>    Priority (low/med/high) (default: med)
+  -h, --help                Show this help
+
+Arguments:
+  <title>                   Task title
 ```
 
 ## Type coercion
