@@ -575,9 +575,9 @@ Not errors, but behavior that often surprises newcomers.
   may not be `eq?`:
 
   ```scheme
-  (eq? 42 42)           ;=> #t (fixnums are immediate)
-  (eq? 3.14 3.14)       ;=> #f (flonums are heap-allocated)
-  (= 3.14 3.14)         ;=> #t (use = for numbers)
+  (eq? 42 42)                      ;=> #t (fixnums are immediate)
+  (eq? (expt 2 100) (expt 2 100))  ;=> #f (bignums are heap-allocated)
+  (= (expt 2 100) (expt 2 100))    ;=> #t (use = for numbers)
   ```
 
 - **`set!` changes the binding, not the value.** If you pass a variable to

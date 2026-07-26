@@ -26,8 +26,9 @@ Multiple imports can be combined:
 ## Import Modifiers
 
 ```scheme
-;; Import only specific names
-(import (only (scheme base) map filter))
+;; Import only specific names — the names must be exports of that
+;; library ((scheme base) has map but not filter, which is SRFI-1)
+(import (only (scheme base) map for-each))
 
 ;; Import everything except certain names
 (import (except (scheme base) error))
