@@ -1,0 +1,67 @@
+name: Docs sample sweep
+
+# Executes every code sample on the site against the latest released
+# kaappi binary (scripts/sweep/). Catches doc drift after releases and
+# sample regressions after edits. Non-blocking: independent of the
+# build/deploy workflow.
+
+on:
+  schedule:
+    - cron: "47 5 * * 6"   # weekly, Saturday 05:47 UTC
+  workflow_dispatch:
+
+jobs:
+  sweep:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    services:
+      redis:
+        image: redis:7
+        ports:
+          - 6379:6379
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_DB: myapp
+          POSTGRES_USER: runner
+          POSTGRES_HOST_AUTH_METHOD: trust
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U runner"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 20
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: System dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libssl-dev libpq-dev libsqlite3-dev \
+            pkg-config postgresql-client
+
+      - name: Install Kaappi (latest release)
+        run: |
+          curl -fsSL https://kaappi-lang.org/install.sh | bash
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+
+      - name: Install ecosystem packages
+        # kaappi-math needs the zig toolchain and is skipped; its page is
+        # auto-skipped by the sweep's import probe. A failed install only
+        # skips that library's page, so keep going.
+        run: |
+          for p in kaappi-net kaappi-http kaappi-json kaappi-csv kaappi-toml \
+                   kaappi-yaml kaappi-log kaappi-template kaappi-test \
+                   kaappi-bdd kaappi-cli kaappi-sqlite kaappi-web \
+                   kaappi-email kaappi-mpl kaappi-crypto kaappi-redis \
+                   kaappi-pg; do
+            thottam install "$p" \
+              || echo "::warning::thottam install $p failed — its page will be skipped"
+          done
+
+      - name: Run the sweep
+        env:
+          SWEEP_PG_USE_EXISTING: "1"
+          TERM: xterm-256color
+        run: bash scripts/sweep/run.sh

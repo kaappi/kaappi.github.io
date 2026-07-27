@@ -127,6 +127,13 @@ process if template changes don't show up. `.claude/launch.json` defines a
 - `.github/workflows/update-wasm.yml` — `workflow_dispatch` only; syncs the
   playground WASM from a kaappi release (see Release checklist). Shares a
   `pages` concurrency group with `ci.yml` so the two never race on `gh-pages`.
+- `.github/workflows/docs-samples.yml` — weekly (+ manual) **sample sweep**:
+  runs every code sample on the site against the latest released kaappi
+  binary via `scripts/sweep/` (live redis/postgres services included) and
+  fails on any drifted `;=>` claim. Non-blocking — independent of deploy.
+  When editing samples, run the matching section locally first:
+  `scripts/sweep/run.sh guide` (see `scripts/sweep/README.md`; local runs
+  want `KAAPPI_WS=~/kaappi` for workspace-only libraries).
 
 Normal workflow: edit markdown in `docs/`, commit, push — CI validates and,
 if the build passes, deploys automatically.

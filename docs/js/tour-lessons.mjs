@@ -129,6 +129,8 @@ export const LESSONS = [
 (define (apply-twice f x)
   (f (f x)))
 
+(define (add1 n) (+ n 1))
+
 (display (apply-twice square 3))   ; (3^2)^2 = 81
 (newline)
 (display (apply-twice add1 10))    ; 10 + 1 + 1 = 12
