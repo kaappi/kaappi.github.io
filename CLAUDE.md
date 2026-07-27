@@ -57,10 +57,11 @@ Full-page client-side apps built into the MkDocs site:
   stubs; their `template:` key selects the matching template in `overrides/`,
   which contains all markup, CSS, and JS.
 - Code editing uses CodeMirror 6 with Scheme highlighting (Kaappi palette) via
-  the committed bundle `docs/js/codemirror-bundle.mjs`. If regenerating the
-  bundle: pin `codemirror@6.0.1` (plain `@6` resolves to CM5) and don't use
-  `?bundle` on esm.sh imports — it creates duplicate module instances that
-  break `@lezer/highlight` tag matching.
+  the committed bundle `docs/js/codemirror-bundle.mjs`. Regenerate it and
+  `wasi-shim-bundle.mjs` with `scripts/build-bundles.sh` (npm + esbuild; it
+  self-verifies the export surface and runs `kaappi.wasm` through the fresh
+  shim). Keep `codemirror` pinned at 6.0.1, and load the playground in a
+  browser before committing regenerated bundles.
 - Execution is fully client-side: `playground-worker.js` fetches
   `wasm/kaappi.wasm`, instantiates it against `wasi-shim-bundle.mjs`, writes
   the editor content as `program.scm` in a virtual FS, and streams
