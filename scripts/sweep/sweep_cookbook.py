@@ -195,9 +195,10 @@ cumulative("fibers-run", "concurrent-tasks.md", [0, 1, 2, 3, 4],
          "  (if (null? l) (write (length r))\n"
          "      (sortl (cdr l) (cons (car l) r)))) (newline)", "8"),
     ])
-# NOTE: (kaappi parallel) is missing from the v0.21.0 install because the
-# release tarball omits lib/kaappi/ (core-repo packaging bug, chip filed);
-# verify the samples against the core repo's lib tree when reachable.
+# NOTE: (kaappi parallel) is missing from the v0.21.0 install because that
+# release's tarball omits lib/kaappi/ (fixed on core main by kaappi#1759;
+# core_lib_args probes the install first, so the next release activates
+# this check on CI). Meanwhile, verify against the core repo's lib tree.
 _PAR = core_lib_args()
 if _PAR is None:
     print("parallel-run: SKIPPED ((kaappi parallel) not resolvable here)")

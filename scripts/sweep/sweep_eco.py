@@ -28,7 +28,7 @@ EXTRA_ARGS = {
 PAGE_LIB = {
     "cli.md": "kaappi cli", "yaml.md": "kaappi yaml",
     "log.md": "kaappi log", "test.md": "kaappi test",
-    "bdd.md": "kaappi bdd", "email.md": "kaappi email mime",
+    "bdd.md": "kaappi bdd", "email.md": "kaappi email",
     "mpl.md": "mpl all", "crypto.md": "kaappi crypto",
     "math.md": "kaappi math", "redis.md": "kaappi redis",
     "pg.md": "kaappi pg", "json.md": "kaappi json",
@@ -37,7 +37,12 @@ PAGE_LIB = {
     "http.md": "kaappi http", "web.md": "kaappi web",
     "net.md": "kaappi net",
 }
-PRELUDE = {"email.md": "(import (kaappi email mime))",
+# email.md gates on the full (kaappi email) import — unloadable before
+# kaappi-email@794d762 fixed smtp.sld. Its smtp-*/send-email samples stay
+# skipped by the network regex: the transport layer calls kaappi-net's
+# tcp-send/tcp-recv with the wrong arity (bug reported upstream), so only
+# message construction is live-verifiable today.
+PRELUDE = {"email.md": "(import (kaappi email) (kaappi email mime))",
            "http.md": "(import (kaappi http))",
            "redis.md": "(import (kaappi redis))",
            "sqlite.md": "(import (kaappi sqlite))",

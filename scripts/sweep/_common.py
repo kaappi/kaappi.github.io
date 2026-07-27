@@ -72,8 +72,10 @@ def importable(libname, extra_args=()):
 
 
 def core_lib_args():
-    """(kaappi parallel) ships in the core repo's lib/ tree but is missing
-    from release tarballs (packaging bug); resolve it when possible."""
+    """(kaappi parallel) ships in the core repo's lib/ tree but was missing
+    from release tarballs up to v0.21.0 (fixed on core main by kaappi#1759).
+    Probe the install first so this self-activates once a fixed release
+    ships; fall back to the workspace core repo meanwhile."""
     if importable("kaappi parallel"):
         return []
     if WS:
@@ -85,9 +87,10 @@ def core_lib_args():
 
 
 def have_ffi():
-    """The released Linux binaries currently lack dynamic loading, which
-    disables the whole C-FFI ecosystem there (core-repo issue). Detect it
-    once so FFI-dependent checks skip instead of failing."""
+    """Released Linux binaries up to v0.21.0 lack dynamic loading, which
+    disables the whole C-FFI ecosystem there (fixed on core main by
+    kaappi#1783; the next release activates these checks). Detect it once
+    so FFI-dependent checks skip instead of failing."""
     r = subprocess.run(
         ["kaappi", "/dev/stdin"],
         input=f'(import (kaappi ffi))\n(ffi-open "{LIBM}")\n',
