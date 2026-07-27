@@ -3,7 +3,7 @@
 piped REPL session with block-boundary sentinels."""
 import re, subprocess, sys, shutil, pathlib
 sys.path.insert(0, str(pathlib.Path(__file__).parent))
-from _common import work, platformize, core_lib_args
+from _common import work, platformize, core_lib_args, HAVE_FFI
 
 DOCS = pathlib.Path(sys.argv[1])            # docs/procedures
 ONLY = set(sys.argv[2].split(",")) if len(sys.argv) > 2 else None
@@ -196,6 +196,8 @@ for page in pages:
     for bi, block in enumerate(blocks):
         marker = f"<<B{bi}>>"
         text = "\n".join(block)
+        if not HAVE_FFI and re.search(r"ffi-open|ffi-fn|ffi-callback", text):
+            continue          # no dynamic loading in this build
         if PARALLEL_ARGS is None and re.search(
                 r"kaappi parallel|parallel-map|parallel-for-each|make-pool",
                 text):

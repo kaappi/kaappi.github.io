@@ -7,7 +7,7 @@ is compile-checked with `kaappi check`.
 """
 import re, subprocess, sys, os, shutil, time, socket, pathlib, urllib.request
 sys.path.insert(0, str(pathlib.Path(__file__).parent))
-from _common import WS, work, platformize, lib_args, core_lib_args
+from _common import WS, HAVE_FFI, work, platformize, lib_args, core_lib_args
 
 DOCS = pathlib.Path(sys.argv[1])          # docs/cookbook dir
 WS_PATH = pathlib.Path(WS) if WS else None
@@ -157,7 +157,7 @@ cumulative("json-run", "json-processing.md", [0, 1, 2, 3, 4, 5, 8, 9],
 jb = blocks_of("json-processing.md")
 (ROOT / "json-check").mkdir(exist_ok=True)
 (ROOT / "json-check" / "net.scm").write_text(jb[6] + "\n" + jb[7])
-static_check("json-check-net", ROOT / "json-check", "net.scm")
+HAVE_FFI and static_check("json-check-net", ROOT / "json-check", "net.scm")
 
 # ---------- csv-processing.md ----------
 DATA_CSV = "name,age,city\nAlice,30,Berlin\nBob,25,Tokyo\n"
@@ -180,7 +180,7 @@ cumulative("config-run", "config-files.md", list(range(7)),
     extra_expect=[("(display port) (newline)", "8080")])
 
 # ---------- sqlite-storage.md ----------
-cumulative("sqlite-run", "sqlite-storage.md", list(range(8)),
+HAVE_FFI and cumulative("sqlite-run", "sqlite-storage.md", list(range(8)),
     prelude=W,
     libs=([WS_PATH / "kaappi-test" / "lib"]
           if WS_PATH and (WS_PATH / "kaappi-test" / "lib").exists() else []),
@@ -216,7 +216,7 @@ cumulative("fiber-error", "concurrent-tasks.md", [7],
 hb = blocks_of("http-client.md")
 (ROOT / "http-check").mkdir(exist_ok=True)
 (ROOT / "http-check" / "all.scm").write_text("\n".join(hb))
-static_check("http-check-all", ROOT / "http-check", "all.scm")
+HAVE_FFI and static_check("http-check-all", ROOT / "http-check", "all.scm")
 # pure block: query-string builder actually runs offline
 cumulative("http-query-run", "http-client.md", [7],
     prelude=W,

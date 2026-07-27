@@ -84,6 +84,23 @@ def core_lib_args():
     return None      # unavailable — callers skip parallel content
 
 
+def have_ffi():
+    """The released Linux binaries currently lack dynamic loading, which
+    disables the whole C-FFI ecosystem there (core-repo issue). Detect it
+    once so FFI-dependent checks skip instead of failing."""
+    r = subprocess.run(
+        ["kaappi", "/dev/stdin"],
+        input=f'(import (kaappi ffi))\n(ffi-open "{LIBM}")\n',
+        capture_output=True, text=True, timeout=60)
+    return r.returncode == 0
+
+
+HAVE_FFI = have_ffi()
+if not HAVE_FFI:
+    print("NOTE: this kaappi build has no dynamic loading — "
+          "FFI-dependent checks are skipped", file=sys.stderr)
+
+
 def port_open(port, host="127.0.0.1"):
     try:
         with socket.create_connection((host, port), 0.5):

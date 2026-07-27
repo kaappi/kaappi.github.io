@@ -3,7 +3,7 @@
 rest-api.md — the cookbook pages that need transcripts, argv, or a live server."""
 import re, subprocess, sys, os, shutil, time, socket, shlex, pathlib, urllib.request
 sys.path.insert(0, str(pathlib.Path(__file__).parent))
-from _common import WS, work, lib_args, platformize
+from _common import WS, HAVE_FFI, work, lib_args, platformize
 
 DOCS = pathlib.Path(sys.argv[1])
 WS_PATH = pathlib.Path(WS) if WS else pathlib.Path("/nonexistent")
@@ -155,7 +155,7 @@ run("test-errors", L + ["t7.scm"], wd,
 # b8 setup/teardown with sqlite
 (wd / "t8.scm").write_text("(import (scheme base) (kaappi test) (kaappi sqlite))\n"
                            + tb[8] + "(test-exit)\n")
-run("test-sqlite", L + ["t8.scm"], wd,
+HAVE_FFI and run("test-sqlite", L + ["t8.scm"], wd,
     contains=["ok: insert returns 1", "ok: query returns row", "2 tests: 2 passed"])
 
 # b9 verbose-off
@@ -214,7 +214,7 @@ coercion("format-unset", '(option "-f" "--format" "Output format")', [], "#f\n")
 hb = scheme("html-templates.md")
 twd = ROOT / "templates"; twd.mkdir()
 (twd / "app1.scm").write_text(hb[0])
-probe("tpl-minimal-server", twd, "app1.scm",
+HAVE_FFI and probe("tpl-minimal-server", twd, "app1.scm",
       [("GET", "/", None, ["Welcome to Kaappi!", "<h1>Home</h1>"])])
 
 # layout + page-template composition, incl. auto-escape proof
@@ -224,12 +224,12 @@ probe("tpl-minimal-server", twd, "app1.scm",
     "  '((\"contacts\" . ())))))\n(newline)\n"
     '(display (render-page "X" (template-render-html contact-list-template\n'
     "  '((\"contacts\" . (((\"name\" . \"A&B\") (\"email\" . \"e@x\"))))))))\n(newline)\n")
-run("tpl-layout", ["layout.scm"], twd,
+HAVE_FFI and run("tpl-layout", ["layout.scm"], twd,
     contains=["<title>X — My App</title>", "No contacts yet.", "<td>A&amp;B</td>"])
 
 # full contact-book app over HTTP (sqlite-backed)
 (twd / "app2.scm").write_text(hb[3])
-probe("tpl-contact-app", twd, "app2.scm", [
+HAVE_FFI and probe("tpl-contact-app", twd, "app2.scm", [
     ("GET", "/", None, ["Contact Book"]),
     ("GET", "/contacts", None, ["No contacts yet."]),
     ("POST", "/contacts", "name=Alice&email=alice%40example.org", ["Alice"]),
@@ -244,7 +244,7 @@ pre = hb[4].splitlines()
     pre[0] + "\n"
     "(define data '((\"count\" . 1) (\"contacts\" . (((\"name\" . \"N\") (\"email\" . \"E\"))))))\n"
     "(display " + pre[3].strip() + ")\n(newline)\n")
-run("tpl-preparse", ["preparse.scm"], twd, contains=["Contacts (1)", "<td>N</td>"])
+HAVE_FFI and run("tpl-preparse", ["preparse.scm"], twd, contains=["Contacts (1)", "<td>N</td>"])
 
 # ================= rest-api.md =================
 rb = scheme("rest-api.md")
@@ -274,7 +274,9 @@ r = subprocess.run(["kaappi", "check",
                     "--lib-path", "stub",
                     *lib_args("kaappi-log"),
                     "app.scm"], cwd=rwd, capture_output=True, text=True, timeout=120)
-if r.returncode == 0:
+if not HAVE_FFI:
+    print("rest-api-check: SKIPPED (no dynamic loading)")
+elif r.returncode == 0:
     PASSES.append("rest-api-check")
 else:
     FAILURES.append(f"rest-api-check: exit {r.returncode}\n{r.stdout}{r.stderr}")

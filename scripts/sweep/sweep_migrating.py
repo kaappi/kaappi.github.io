@@ -3,7 +3,7 @@
 installed kaappi binary, asserting outputs (incl. the page's ;=> claims)."""
 import re, subprocess, sys, pathlib
 sys.path.insert(0, str(pathlib.Path(__file__).parent))
-from _common import work, platformize
+from _common import work, platformize, HAVE_FFI
 
 PAGE = pathlib.Path(sys.argv[1])
 SCRATCH = work("migrating")
@@ -105,6 +105,9 @@ src = PRELUDE + kaappi_part(blocks[9]) + \
     "(define p (make-point 1 2))\n(write (list (point? p) (point-x p) (point-y p))) (newline)\n"
 run("b9-records", src, "(#t 1 2)\n")
 
+if not HAVE_FFI:
+    print("b10/b11 (FFI): SKIPPED — no dynamic loading in this build")
+HAVE = HAVE_FFI
 # -- b10: Guile-comparison FFI block (contains its own ;=> claim)
 body = kaappi_part(blocks[10])
 lines, src, exp = body.splitlines(), PRELUDE, ""
@@ -114,11 +117,11 @@ for l in lines:
         w, e = wr(code.strip(), res.strip()); src += w; exp += e
     else:
         src += l + "\n"
-run("b10-ffi", src, exp)
+HAVE and run("b10-ffi", src, exp)
 
 # -- b11: Chicken-comparison FFI block (no claim; add one)
 src = PRELUDE + kaappi_part(blocks[11]) + "(write (c-sqrt 2.0)) (newline)\n"
-run("b11-ffi2", src, "1.4142135623730951\n")
+HAVE and run("b11-ffi2", src, "1.4142135623730951\n")
 
 # -- b12: call/ec with trailing ;=> -3 claim
 body = blocks[12]

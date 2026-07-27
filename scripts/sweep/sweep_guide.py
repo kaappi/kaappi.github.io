@@ -2,8 +2,8 @@
 """Verify guide-page samples: REPL-transcript replay + cumulative file runs."""
 import re, subprocess, sys, os, shutil, pathlib
 sys.path.insert(0, str(pathlib.Path(__file__).parent))
-from _common import (WS, LIBM, DYLIB_EXT, work, platformize, lib_args,
-                     core_lib_args)
+from _common import (WS, LIBM, DYLIB_EXT, HAVE_FFI, work, platformize,
+                     lib_args, core_lib_args)
 VER = subprocess.run(['kaappi', '--version'], capture_output=True,
                      text=True).stdout.strip()
 
@@ -255,7 +255,7 @@ if ONLY is None or "libauth" in ONLY:
         else f"libauth-fmt-check: exit {r.returncode}\n{r.stdout}{r.stderr}")
 
 # ================= c-extensions.md =================
-if ONLY is None or "cext" in ONLY:
+if (ONLY is None or "cext" in ONLY) and HAVE_FFI:
     text = (DOCS / "c-extensions.md").read_text()
     wd = ROOT / "cext" / "kaappi-mylib"
     (wd / "csrc").mkdir(parents=True, exist_ok=True)
@@ -279,8 +279,8 @@ if ONLY is None or "cext" in ONLY:
     else:
         PASSES.append("cext-make")
         # per the fixed Step 6: bare-name ffi-open resolves via ~/.kaappi/lib
-        home_lib = pathlib.Path.home() / ".kaappi" / "lib" / "libkaappi_mylib.dylib"
-        shutil.copy(wd / "libkaappi_mylib.dylib", home_lib)
+        home_lib = pathlib.Path.home() / ".kaappi" / "lib" / f"libkaappi_mylib.{DYLIB_EXT}"
+        shutil.copy(wd / f"libkaappi_mylib.{DYLIB_EXT}", home_lib)
         try:
             r = subprocess.run(["kaappi", "--lib-path", "./lib",
                                 "tests/test-mylib.scm"],
@@ -307,7 +307,7 @@ if ONLY is None or "security" in ONLY:
     wd = ROOT / "security"
     wd.mkdir(exist_ok=True)
     # runnable claims: validation, XSS escaping, FFI type-safety
-    run_file("security-run",
+    HAVE_FFI and run_file("security-run",
         "(import (scheme base) (scheme write) (kaappi template) (kaappi ffi))\n"
         '(define (validate-email s) (and (string? s) (> (string-length s) 0) (string-contains s "@")))\n'
         "(define (validate-positive-integer s) (let ((n (string->number s))) (and n (exact-integer? n) (positive? n))))\n"
@@ -340,7 +340,9 @@ if ONLY is None or "security" in ONLY:
     (wd / "frags.scm").write_text(frag + "\n")
     r = subprocess.run(["kaappi", "check", "frags.scm"], cwd=wd,
                       capture_output=True, text=True, timeout=60)
-    if r.returncode == 0:
+    if not HAVE_FFI:
+        print("security-frag-check: SKIPPED (no dynamic loading)")
+    elif r.returncode == 0:
         PASSES.append("security-frag-check")
     else:
         FAILURES.append(f"security-frag-check: exit {r.returncode}\n{r.stdout}{r.stderr}")
@@ -497,11 +499,11 @@ if ONLY is None or "troubleshooting" in ONLY:
          ["error[KP2001]: library not found: (kaappi.jsonx)"]),
         ("exportnotfound", "(import (only (scheme base) frobnicate))\n",
          ["error[KP2001]: import only: identifier 'frobnicate' not found in import set"]),
-        ("ffiopen", '(import (kaappi ffi))\n(ffi-open "libmissing")\n',
+        *([] if not HAVE_FFI else [("ffiopen", '(import (kaappi ffi))\n(ffi-open "libmissing")\n',
          ["ffi-open: dlopen", "libmissing"]),
         ("ffisym", '(import (kaappi ffi))\n(define lib (ffi-open "libm.dylib"))\n'
                     "(ffi-fn lib \"no_such_symbol\" '(double) 'double)\n",
-         ["ffi-fn: dlsym", "no_such_symbol", "symbol not found"]),
+         ["ffi-fn: dlsym", "no_such_symbol", "symbol not found"])]),
     ]
     for name, src, frags in ERR_CASES:
         f = wd / f"{name}.scm"
@@ -559,7 +561,9 @@ if ONLY is None or "diagnostics" in ONLY:
         if example is None or code in SKIP_RUN:
             continue
         f = wd / f"{code}.scm"
-        f.write_text(example)
+        # unique content per run: a cached .sbc would skip read/expand and
+        # mask read- and expand-stage diagnostics (notably KP2003)
+        f.write_text(f";; sweep-{os.getpid()}-{id(example)}\n" + example)
         if code.startswith("KP4"):
             args = ["check", str(f)]
         elif code == "KP3009":
