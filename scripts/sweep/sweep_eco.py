@@ -38,10 +38,11 @@ PAGE_LIB = {
     "net.md": "kaappi net",
 }
 # email.md gates on the full (kaappi email) import — unloadable before
-# kaappi-email@794d762 fixed smtp.sld. Its smtp-*/send-email samples stay
-# skipped by the network regex: the transport layer calls kaappi-net's
-# tcp-send/tcp-recv with the wrong arity (bug reported upstream), so only
-# message construction is live-verifiable today.
+# kaappi-email@794d762 fixed smtp.sld (and non-functional before
+# kaappi-email#3 fixed the transport arity). The gmail/SES send-email
+# samples stay skipped as external-service examples, but the
+# "Local / development" localhost block runs for real against
+# scripts/sweep/smtp_sink.py — see the email.md special case below.
 PRELUDE = {"email.md": "(import (kaappi email) (kaappi email mime))",
            "http.md": "(import (kaappi http))",
            "redis.md": "(import (kaappi redis))",
@@ -319,6 +320,43 @@ for page in pages:
             except OSError:
                 pass
         pathlib.Path("/tmp/test.txt").write_text("x\n")
+    if page == "email.md":
+        # The "Local / development" block is written for a MailHog-style
+        # local sink, so run it for real against ours and assert the
+        # message arrived. Port 1025 is the docs' literal, so if something
+        # already listens there (a real mailcatcher), leave it alone.
+        sink_block = next((b for b in blocks
+                           if '"localhost" 1025' in "\n".join(b)), None)
+        if sink_block is not None:
+            if port_open(1025):
+                print("email.md: NOTE port 1025 busy, live send-email check skipped")
+            else:
+                capture = wd / "smtp-capture.txt"
+                sink = subprocess.Popen(
+                    [sys.executable,
+                     str(pathlib.Path(__file__).parent / "smtp_sink.py"),
+                     "1025", str(capture)],
+                    stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+                try:
+                    for _ in range(50):
+                        if port_open(1025):
+                            break
+                        _t.sleep(0.1)
+                    (wd / "send-local.scm").write_text(
+                        "(import (kaappi email))\n" + "\n".join(sink_block) + "\n")
+                    r = subprocess.run(
+                        ["kaappi"] + EXTRA_ARGS.get(page, []) +
+                        [str(wd / "send-local.scm")],
+                        cwd=wd, capture_output=True, text=True, timeout=60)
+                    if (r.returncode == 0 and capture.exists()
+                            and "Testing email locally" in capture.read_text()):
+                        PASSES.append("email.md live send-email (1 check)")
+                    else:
+                        FAILURES.append(
+                            f"email.md live send-email: rc={r.returncode}\n"
+                            f"{r.stdout}{r.stderr}")
+                finally:
+                    sink.terminate()
     stdin_lines, expect, err_expect = [], [], []
     if page in PRELUDE:
         stdin_lines.append(PRELUDE[page])
