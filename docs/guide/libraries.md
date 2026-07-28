@@ -66,10 +66,10 @@ naming convention), and four Kaappi extension libraries.
 | `(scheme time)` | 3 | `current-second`, jiffies |
 | `(scheme write)` | 7 | `write`, `display`, `write-shared` |
 
-### SRFI Libraries (85)
+### SRFI Libraries ({{ srfi_count }}) { #srfi-libraries }
 
 See the [SRFI Support](srfi-support.md) page for the complete list of
-all 85 supported SRFIs, built-in and portable.
+all {{ srfi_count }} supported SRFIs, built-in and portable.
 
 ### Kaappi Extension Libraries
 

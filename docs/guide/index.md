@@ -22,7 +22,7 @@ Prefer the browser? Try the [interactive tour](../tour.md) or the
 - [Language Reference](language.md) — syntax lookup for every form and feature
 - [Libraries](libraries.md) — importing libraries and what's available
 - [Library Authoring](library-authoring.md) — creating your own libraries with `define-library`
-- [SRFI Support](srfi-support.md) — all 85 supported SRFIs at a glance
+- [SRFI Support](srfi-support.md) — all {{ srfi_count }} supported SRFIs at a glance
 - [Concurrency](concurrency.md) — green threads (fibers) and OS threads (SRFI-18)
 
 ## Tooling

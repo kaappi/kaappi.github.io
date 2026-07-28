@@ -198,8 +198,12 @@ extra:
   # srfi_builtin + srfi_portable importable libraries (verify against
   # `kaappi features --json` after each kaappi release) + the SRFI 261
   # naming convention, which is honored by the import resolver but has
-  # no library file. Markdown pages use {{ srfi_count }} (needs
-  # `render_macros: true` frontmatter); overrides/ templates use
+  # no library file. Bump gotcha: features --json only counts top-level
+  # lib/srfi/N.sld files, so sub-library-only SRFIs (importable only as
+  # e.g. `(srfi 160 u8)`; post-v0.21.0 main has 160, 211, 226) are
+  # omitted there — count them into srfi_count by hand, and give them
+  # rows in guide/srfi-support.md. Markdown pages use {{ srfi_count }}
+  # (needs `render_macros: true` frontmatter); overrides/ templates use
   # {{ config.extra.srfi_count }}.
   srfi_count: 85
   srfi_builtin: 11
