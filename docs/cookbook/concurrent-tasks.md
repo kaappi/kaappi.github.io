@@ -152,10 +152,10 @@ hand-rolled pool above) under `--sandbox` and in the WebAssembly build,
 where real threads aren't available, so code written against this API keeps
 working unchanged in either environment.
 
-Submitting one task per item (as above, or via `parallel-map`) is reliable
-for up to a few hundred items; for larger inputs, chunk the work into one
-task per processor instead — see the [Parallel Pools
-reference](../procedures/extensions.md#parallel-pools) for why, and
+Submitting one task per item (as above, or via `parallel-map`) works at any
+scale; for very large inputs, chunking the work into one task per processor
+instead reduces per-task submission overhead — see the [Parallel Pools
+reference](../procedures/extensions.md#parallel-pools) for
 `pool-submit`/`task-wait`/`pool-shutdown!`/`parallel-for-each`'s full API.
 
 ## Handle fiber errors
