@@ -44,8 +44,8 @@ Multiple imports can be combined:
 ## Available Libraries
 
 Kaappi includes all 14 R7RS standard libraries, {{ srfi_count }} SRFIs
-({{ srfi_builtin }} built-in, {{ srfi_portable }} portable, plus the SRFI 261
-naming convention), and four Kaappi extension libraries.
+({{ srfi_builtin }} built-in, {{ srfi_portable }} portable, three sub-library-only, plus the
+SRFI 261 naming convention), and four Kaappi extension libraries.
 
 ### Standard R7RS Libraries (14)
 

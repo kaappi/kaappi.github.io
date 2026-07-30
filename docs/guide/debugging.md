@@ -127,7 +127,7 @@ kaappi> ,apropos vector
   make-vector
   vector-ref
   ...
-; 59 matches
+; 65 matches
 ```
 
 **`,env [prefix]`** — list global bindings, optionally filtered:

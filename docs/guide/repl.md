@@ -353,7 +353,7 @@ kaappi> ,apropos vector
   read-bytevector!
   vector->string
   ...
-; 59 matches
+; 65 matches
 ```
 
 #### `,env [prefix]` — List bindings

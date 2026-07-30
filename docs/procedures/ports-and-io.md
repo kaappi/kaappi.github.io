@@ -975,3 +975,106 @@ kaappi> (eof-object? (eof-object))
 ```
 
 **See also:** [`eof-object?`](#eof-object-pred), [`read`](#read)
+
+---
+
+## Port Positioning
+
+[SRFI 192](../guide/srfi-support.md) procedures, built into the runtime.
+Positions are exact integer **byte** offsets for every kind of port — on a
+textual port holding multibyte characters, the position after reading one
+two-byte character advances by two, not one.
+
+### `port-position` { #port-position }
+<!-- index: 1 | Current byte offset of a port -->
+
+**Syntax:** `(port-position port)`
+
+Returns the current position of *port* as an exact integer byte offset from
+the start of the stream. For a file port the offset reported is the logical
+one — corrected for whatever the port's own buffers have read ahead or not
+yet flushed — rather than the raw OS file offset.
+
+```scheme
+kaappi> (define p (open-input-string "hello world"))
+kaappi> (port-position p)
+;=> 0
+kaappi> (read-char p)
+;=> #\h
+kaappi> (port-position p)
+;=> 1
+```
+
+Byte offsets, not character counts:
+
+```scheme
+kaappi> (define m (open-input-string "héllo"))
+kaappi> (read-char m)
+;=> #\h
+kaappi> (read-char m)
+;=> #\é
+kaappi> (port-position m)
+;=> 3
+```
+
+**See also:** [`set-port-position!`](#set-port-position),
+[`port-has-port-position?`](#port-has-port-position)
+
+---
+
+### `set-port-position!` { #set-port-position }
+<!-- index: 2 | Move a port to a byte offset -->
+
+**Syntax:** `(set-port-position! port pos)`
+
+Moves *port* to byte offset *pos*, so the next read or write starts there.
+Raises an error if the port does not support repositioning — test with
+[`port-has-set-port-position!?`](#port-has-set-port-position) first when
+the port's origin is not known.
+
+```scheme
+kaappi> (define p (open-input-string "hello world"))
+kaappi> (set-port-position! p 6)
+kaappi> (read-line p)
+;=> "world"
+```
+
+**See also:** [`port-position`](#port-position),
+[`port-has-set-port-position!?`](#port-has-set-port-position)
+
+---
+
+### `port-has-port-position?` { #port-has-port-position }
+<!-- index: 1 | Test whether a port can report its position -->
+
+**Syntax:** `(port-has-port-position? port)`
+
+Returns `#t` if [`port-position`](#port-position) can be called on *port*.
+
+```scheme
+kaappi> (port-has-port-position? (open-input-string "abc"))
+;=> #t
+```
+
+**See also:** [`port-position`](#port-position),
+[`port-has-set-port-position!?`](#port-has-set-port-position)
+
+---
+
+### `port-has-set-port-position!?` { #port-has-set-port-position }
+<!-- index: 1 | Test whether a port can be repositioned -->
+
+**Syntax:** `(port-has-set-port-position!? port)`
+
+Returns `#t` if [`set-port-position!`](#set-port-position) can be called on
+*port*. A port may be able to report its position without being able to
+change it, so this is a separate question from
+[`port-has-port-position?`](#port-has-port-position).
+
+```scheme
+kaappi> (port-has-set-port-position!? (open-input-string "abc"))
+;=> #t
+```
+
+**See also:** [`set-port-position!`](#set-port-position),
+[`port-has-port-position?`](#port-has-port-position)

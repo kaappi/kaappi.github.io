@@ -629,7 +629,7 @@ if ONLY is None or "repl" in ONLY:
         ('(define (greet name) (string-append "Hello, " name))', []),
         (",describe greet", ["greet", "type: procedure",
                              "arity: 1, locals: 4", "source: <repl>:1"]),
-        (",apropos vector", ["vector-every", "make-vector", "; 59 matches"]),
+        (",apropos vector", ["vector-every", "make-vector", "; 65 matches"]),
         (",env string-", ["string->number", "string-copy", "; 55 bindings"]),
         (",gc", ["GC Statistics:", "Collections:"]),
         (",version", [VER]),

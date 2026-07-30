@@ -743,7 +743,16 @@ kaappi> (import (scheme base))
 kaappi> (import (scheme write))
 kaappi> (import (only (srfi 1) fold filter))
 kaappi> (import (prefix (srfi 69) ht:))
+kaappi> (import (rename (scheme base) (vector-map vmap)))
+```
+
+`rename` applies to procedures and macros. A special form is not a
+first-class binding, so renaming one is rejected at the `import` rather
+than producing a name that resolves to nothing:
+
+```scheme
 kaappi> (import (rename (scheme base) (define def)))
+;=> error[KP2001]: import rename: cannot rename special form 'define' -- special forms are not first-class bindings and cannot be rebound under a new name
 ```
 
 **See also:** [`define-library`](#define-library),

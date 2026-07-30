@@ -42,8 +42,9 @@ forms, and procedures. It passes the R7RS test suite.
 ### Which SRFIs are supported?
 
 {{ srfi_count }} SRFIs total: {{ srfi_builtin }} built-in (compiled into the interpreter), {{ srfi_portable }} portable
-(pure Scheme, installed via the install script), plus SRFI 261 — a naming
-convention honored by the import resolver rather than a library. See
+(pure Scheme, installed via the install script), three that ship as
+sub-libraries only (160, 211, 226), and SRFI 261 — a naming convention
+honored by the import resolver rather than a library. See
 [SRFI Support](guide/srfi-support.md) for the complete list.
 
 ### Can I run code written for other Schemes?
