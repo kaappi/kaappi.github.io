@@ -192,7 +192,7 @@ extra:
   kaappi_version: 0.22.0
   # Book edition embedded on /book/ — scripts/fetch-book.sh downloads the
   # matching kaappi-book release at deploy time. Bump after a book release.
-  book_version: 1.1.0
+  book_version: 1.2.0
   # SRFI counts shown across the site (faq, glossary, guide index,
   # srfi-support, libraries, conformance, landing page). srfi_count =
   # srfi_builtin + srfi_portable importable libraries (verify against
