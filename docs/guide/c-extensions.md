@@ -140,12 +140,12 @@ each C function to a Scheme procedure:
 ```scheme
 (define-library (kaappi mylib ffi)
   (import (scheme base) (kaappi ffi))
-  (export %distance %strlen %add)
+  (export %distance %length %add)
   (begin
     (define %lib (ffi-open "libkaappi_mylib"))
 
     (define %distance (ffi-fn %lib "kmylib_distance" '(double double) 'double))
-    (define %strlen   (ffi-fn %lib "kmylib_length"   '(string) 'int))
+    (define %length   (ffi-fn %lib "kmylib_length"   '(string) 'int))
     (define %add      (ffi-fn %lib "kmylib_add"      '(int int) 'int))))
 ```
 
@@ -166,7 +166,7 @@ This layer adds error handling, validation, and Scheme-idiomatic names:
   (export distance string-byte-length add)
   (begin
     (define (distance x y) (%distance (exact->inexact x) (exact->inexact y)))
-    (define (string-byte-length s) (%strlen s))
+    (define (string-byte-length s) (%length s))
     (define (add a b) (%add a b))))
 ```
 
