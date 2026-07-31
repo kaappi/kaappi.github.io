@@ -1,5 +1,14 @@
 {% extends "main.html" %}
 
+{% block extrahead %}
+  {{ super() }}
+  {# EB Garamond is the book's own text face. Loaded on the landing page only,
+     for the single line quoted off the back cover in the book band. #}
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@500&display=swap">
+{% endblock %}
+
 {% block tabs %}{{ super() }}{% endblock %}
 
 {% block content %}
@@ -276,6 +285,157 @@
     color: var(--kp-crema); background: transparent; overflow-x: auto; white-space: pre;
   }
 
+  /* ================= THE BOOK (full-bleed espresso band) ================= */
+  /* The band drops to #180E09 — the cover's own background, darker than the
+     page's --kp-roast — so the render's faded edges dissolve into it and the
+     book reads as a lit object sitting in the page. Fixed dark in both
+     schemes, like the hero and the code panels. */
+  .kp-book {
+    --kp-espresso: #180E09;
+    margin: 3.5rem -.8rem 0;
+    padding: 4.5rem 1.5rem 3.5rem;
+    background: var(--kp-espresso);
+  }
+  /* the band stays espresso in the light scheme too, so it keeps the bright
+     brass kicker rather than the darkened one meant for light backgrounds */
+  .kp-book .kp-kicker { color: var(--kp-brass); }
+  .kp-book-inner {
+    max-width: 1080px; margin: 0 auto;
+    display: grid;
+    grid-template-columns: minmax(230px, 40%) 1fr;
+    gap: clamp(1.5rem, 4vw, 3.5rem);
+    align-items: center;
+  }
+
+  /* ---- the object ---- */
+  /* .kp-book-obj is an <a>, so these need to outrank Material's
+     `.md-typeset a` (0,1,1) — hence the .kp-book prefix throughout. */
+  .kp-book .kp-book-obj {
+    position: relative;
+    justify-self: center;
+    /* the render carries ~17% transparent margin on each side for its
+       falloff, so the book itself reads about two thirds of this width; the
+       negative block margin claws back some of the empty top and bottom */
+    width: 100%; max-width: 450px; margin: -1.75rem 0;
+    transition: transform .45s cubic-bezier(.2,.7,.2,1);
+  }
+  .kp-book .kp-book-obj::before {           /* the reading lamp it sits under */
+    content: "";
+    position: absolute; left: 50%; top: 44%;
+    width: 165%; aspect-ratio: 1;
+    transform: translate(-50%, -50%);
+    background: radial-gradient(closest-side, rgba(208,139,60,.15), transparent 72%);
+    opacity: .8;
+    transition: opacity .45s ease;
+  }
+  .kp-book .kp-book-obj img { position: relative; display: block; width: 100%; height: auto; }
+  /* picking it up: the book lifts and the lamp warms */
+  .kp-book .kp-book-obj:hover,
+  .kp-book .kp-book-obj:focus-visible { transform: translateY(-9px); }
+  .kp-book .kp-book-obj:hover::before,
+  .kp-book .kp-book-obj:focus-visible::before { opacity: 1; }
+
+  /* ---- the copy: the hook is set in the book's own text face ---- */
+  .kp-book .kp-book-hook {
+    font-family: "EB Garamond", Georgia, "Times New Roman", serif;
+    font-weight: 500;
+    font-size: clamp(1.7rem, 4.1vw, 2.75rem);
+    line-height: 1.14;
+    color: var(--kp-crema);
+    margin: .55rem 0 1rem;
+    text-wrap: balance;
+  }
+  .kp-book .kp-book-blurb {
+    font-family: var(--kp-disp);
+    font-size: 1rem; line-height: 1.62;
+    color: var(--kp-ash);
+    max-width: 34em;
+    margin: 0 0 1.9rem;
+  }
+  .kp-book .kp-book-blurb strong { color: var(--kp-crema); font-weight: 500; }
+  .kp-book .kp-ctas { justify-content: flex-start; margin-bottom: 1.3rem; }
+  .kp-book .kp-facts { justify-content: flex-start; }
+  .kp-book .kp-facts span:first-child { padding-left: 0; }
+
+  /* ---- the reading path: segment widths are the chapter counts, so the
+         rail is a scale drawing of the book's four parts ---- */
+  .kp-book .kp-parts {
+    max-width: 1080px;
+    margin: 3.4rem auto 0;
+    display: grid;
+    grid-template-columns: 3fr 7fr 5fr 3fr;
+    border-top: 1px solid var(--kp-roast-3);
+  }
+  .kp-book .kp-part {
+    position: relative;
+    padding: .95rem 1rem 0 0;
+    /* one tick per chapter, hanging off the rail — since the segments are
+       already sized by chapter count, every tick comes out the same width */
+    background:
+      repeating-linear-gradient(90deg, var(--kp-roast-3) 0 1px, transparent 1px calc(100% / var(--ch)))
+      0 0 / 100% 7px no-repeat;
+  }
+  .kp-book .kp-part + .kp-part { padding-left: 1rem; }
+  /* a longer mark where one part ends and the next begins */
+  .kp-book .kp-part + .kp-part::before {
+    content: "";
+    position: absolute; left: 0; top: 0;
+    width: 1px; height: 19px; background: var(--kp-brass); opacity: .6;
+  }
+  .kp-book-no {
+    font-family: var(--kp-mono); font-size: .7rem; letter-spacing: .18em;
+    color: var(--kp-brass);
+  }
+  .kp-book-part-name {
+    font-family: var(--kp-disp); font-weight: 600; font-size: .95rem;
+    color: var(--kp-crema); margin-top: .2rem;
+  }
+  .kp-book .kp-part p {
+    font-family: var(--kp-disp); font-size: .78rem; line-height: 1.5;
+    color: var(--kp-ash); margin: .3rem 0 0;
+  }
+  .kp-book-ch {
+    display: block; font-family: var(--kp-mono); font-size: .7rem;
+    color: var(--kp-brass-2); margin-top: .45rem;
+  }
+
+  @media (max-width: 1000px) {
+    /* Below this the narrowest segment can't hold its own name, so the rail
+       stops being a scale drawing and becomes a plain list. Equal columns
+       with per-chapter ticks would state something false about the book, so
+       the ticks and part markers go with it — the counts still carry it. */
+    .kp-book .kp-parts {
+      grid-template-columns: 1fr 1fr;
+      gap: 0 1.6rem;
+      border-top: 0;
+    }
+    .kp-book .kp-part,
+    .kp-book .kp-part + .kp-part {
+      padding: .95rem 0 1.3rem;
+      background: none;
+      border-top: 1px solid var(--kp-roast-3);
+    }
+    .kp-book .kp-part + .kp-part::before { display: none; }
+  }
+  @media (max-width: 900px) {
+    .kp-book-inner { grid-template-columns: 1fr; gap: 2.2rem; }
+    .kp-book .kp-book-obj { max-width: 300px; }
+    .kp-book-copy { text-align: center; }
+    .kp-book .kp-book-blurb { margin-left: auto; margin-right: auto; }
+    .kp-book .kp-ctas, .kp-book .kp-facts { justify-content: center; }
+    .kp-book .kp-facts span:first-child { padding-left: .9em; }
+  }
+  @media (max-width: 720px) {
+    .kp-book { padding: 3.2rem 1.2rem 2.6rem; }
+  }
+  @media (max-width: 620px) {
+    /* the blurb runs to six or seven lines here — too long to centre */
+    .kp-book .kp-book-blurb { text-align: left; }
+  }
+  @media (max-width: 460px) {
+    .kp-book .kp-parts { grid-template-columns: 1fr; }
+  }
+
   /* ================= DOC CARDS ================= */
   .kp-docs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
   .kp-watch { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
@@ -350,6 +510,11 @@
     @keyframes kpRise { to { opacity: 1; transform: none; } }
     @keyframes kpFade { to { opacity: 1; } }
     @keyframes kpPour { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: none; } }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .kp-book .kp-book-obj, .kp-book .kp-book-obj::before { transition: none; }
+    .kp-book .kp-book-obj:hover,
+    .kp-book .kp-book-obj:focus-visible { transform: none; }
   }
 </style>
 
@@ -490,6 +655,64 @@
       (* x x))
     (<span class="kp-kw">define</span> (<span class="kp-fn">cube</span> x)
       (* x x x))))</pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================= THE BOOK ========================= -->
+  <section class="kp-book">
+    <div class="kp-book-inner">
+      <a href="book/" class="kp-book-obj">
+        <img src="assets/book-3d.webp" width="1000" height="1522"
+             alt="Kaappi: A Scheme Programming Language — the paperback, seen at an angle">
+      </a>
+      <div class="kp-book-copy">
+        <div class="kp-kicker">The slow brew</div>
+        <h2 class="kp-book-hook">Scheme will change how you think about code.</h2>
+        <p class="kp-book-blurb">
+          Written for programmers who already know <strong>Python, JavaScript
+          or Ruby</strong> and nothing about Lisp. It starts at the REPL
+          prompt and builds one runnable example at a time, with exercises at
+          the end of every chapter.
+        </p>
+        <div class="kp-ctas">
+          <a href="book/" class="kp-btn kp-btn--primary">Read it free</a>
+          <a href="book/#get-the-book" class="kp-btn kp-btn--ghost">Get the paperback</a>
+        </div>
+        <div class="kp-facts">
+          <span>first edition, <b>2026</b></span>
+          <span><b>{{ config.extra.book_pages }}</b> pages</span>
+          <span>paperback in <b>9</b> countries</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Segment widths are the chapter counts (3 · 7 · 5 · 3 of 18), so the
+         rail is a scale drawing of the book: Part II carries most of it. -->
+    <div class="kp-parts">
+      <div class="kp-part" style="--ch:3">
+        <div class="kp-book-no">PART I</div>
+        <div class="kp-book-part-name">Getting Started</div>
+        <p>Install it, meet the REPL, run your first program.</p>
+        <span class="kp-book-ch">3 chapters</span>
+      </div>
+      <div class="kp-part" style="--ch:7">
+        <div class="kp-book-no">PART II</div>
+        <div class="kp-book-part-name">The Language</div>
+        <p>Data types, lists, control flow, functions, bindings, higher-order functions, I/O.</p>
+        <span class="kp-book-ch">7 chapters</span>
+      </div>
+      <div class="kp-part" style="--ch:5">
+        <div class="kp-book-no">PART III</div>
+        <div class="kp-book-part-name">Going Further</div>
+        <p>Macros, libraries, records, error handling, continuations.</p>
+        <span class="kp-book-ch">5 chapters</span>
+      </div>
+      <div class="kp-part" style="--ch:3">
+        <div class="kp-book-no">PART IV</div>
+        <div class="kp-book-part-name">Beyond R7RS</div>
+        <p>The SRFI library, the C FFI, concurrency.</p>
+        <span class="kp-book-ch">3 chapters</span>
       </div>
     </div>
   </section>

@@ -193,6 +193,10 @@ extra:
   # Book edition embedded on /book/ — scripts/fetch-book.sh downloads the
   # matching kaappi-book release at deploy time. Bump after a book release.
   book_version: 1.2.0
+  # Interior page count, shown in the landing page's book band. Matches
+  # \PageCount in kaappi-book/cover.tex — bump both together, since the
+  # spine width (and so the 3D render) is derived from it.
+  book_pages: 337
   # SRFI counts shown across the site (faq, glossary, guide index,
   # srfi-support, libraries, conformance, landing page). srfi_count =
   # srfi_builtin + srfi_portable importable libraries (verify against
