@@ -18,6 +18,11 @@ Use Discussions for:
 - General discussion about Scheme and language implementation
 - Requesting org membership to contribute directly
 
+There is also a subreddit,
+[r/KaappiScheme](https://www.reddit.com/r/KaappiScheme/), for news, questions,
+and show-and-tell on Reddit. Bug reports and feature proposals are best posted
+in Discussions, where the maintainers track them.
+
 ## Issues and pull requests
 
 Issues and pull requests on Kaappi repositories are restricted to members of

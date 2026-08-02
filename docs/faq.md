@@ -138,7 +138,8 @@ for details.
 ### Where is the community?
 
 [GitHub Discussions](https://github.com/orgs/kaappi/discussions) is the primary
-community channel for questions, ideas, and show-and-tell.
+community channel for questions, ideas, and show-and-tell. There is also a
+subreddit at [r/KaappiScheme](https://www.reddit.com/r/KaappiScheme/).
 
 ### How do I build from source?
 
