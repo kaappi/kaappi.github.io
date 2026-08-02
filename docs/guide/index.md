@@ -17,6 +17,10 @@ package manager — everything you need to write real programs.
 Prefer the browser? Try the [interactive tour](../tour.md) or the
 [playground](../playground.md) — no install needed.
 
+Prefer video? The [@KaappiScheme](https://www.youtube.com/@KaappiScheme)
+screencasts cover the language, the ecosystem, and the tooling in three
+short seasons.
+
 ## Language
 
 - [Language Reference](language.md) — syntax lookup for every form and feature

@@ -139,7 +139,9 @@ for details.
 
 [GitHub Discussions](https://github.com/orgs/kaappi/discussions) is the primary
 community channel for questions, ideas, and show-and-tell. There is also a
-subreddit at [r/KaappiScheme](https://www.reddit.com/r/KaappiScheme/).
+subreddit at [r/KaappiScheme](https://www.reddit.com/r/KaappiScheme/) and
+screencasts on YouTube at
+[@KaappiScheme](https://www.youtube.com/@KaappiScheme).
 
 ### How do I build from source?
 

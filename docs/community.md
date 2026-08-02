@@ -23,6 +23,10 @@ There is also a subreddit,
 and show-and-tell on Reddit. Bug reports and feature proposals are best posted
 in Discussions, where the maintainers track them.
 
+Screencasts live on YouTube at
+[@KaappiScheme](https://www.youtube.com/@KaappiScheme) — three short seasons
+taking you from your first REPL session to shipping a web app.
+
 ## Issues and pull requests
 
 Issues and pull requests on Kaappi repositories are restricted to members of

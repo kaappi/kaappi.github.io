@@ -3,7 +3,8 @@
 A hands-on introduction to Scheme for programmers coming from Python,
 JavaScript, or similar languages. Open a REPL with `kaappi` and follow
 along. For a browser-based version with guided exercises, see the
-[interactive tour](../tour.md).
+[interactive tour](../tour.md); the same ground is covered on video in
+[Season 1 of the screencasts](https://www.youtube.com/playlist?list=PLKDinJBAWkig).
 
 ```bash
 kaappi
