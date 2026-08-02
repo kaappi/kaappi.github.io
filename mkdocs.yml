@@ -54,6 +54,7 @@ nav:
       - Scheme Tutorial: guide/tutorial.md
     - Language:
       - Language Reference: guide/language.md
+      - Cheatsheet: cheatsheet.md
       - Libraries: guide/libraries.md
       - Library Authoring: guide/library-authoring.md
       - SRFI Support: guide/srfi-support.md
