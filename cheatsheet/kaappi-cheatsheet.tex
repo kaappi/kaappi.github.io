@@ -1,0 +1,571 @@
+% kaappi-cheatsheet.tex — two-page A4 quick reference for Kaappi Scheme.
+%
+% Build with `make -C cheatsheet` (latexmk + XeLaTeX). Fonts resolve
+% relative to this directory: Space Grotesk + JetBrains Mono from fonts/,
+% Source Sans 3 from the sibling checkout ../../kaappi-book/fonts/.
+% The version stamp comes from kaappi_version in ../mkdocs.yml via the
+% Makefile's -usepretex; \KpVersion falls back to "dev" below.
+%
+% DELIBERATE OMISSIONS — space policy, don't "fix" by adding back:
+% SRFI procedure detail (1/13/18/64/133/170/254 — the site covers them;
+% SRFI 69 hash tables get one compact section as the sole exception),
+% cxr accessors beyond one row, write-shared/write-simple, char-ready?/
+% u8-ready?, input-port-open?/output-port-open?, open-binary-* variants,
+% emergency-exit, scheme-report-environment/null-environment/
+% interaction-environment, delay-force/make-promise, include-ci, the
+% debugger command table, REPL config keys, and the library search order.
+%
+% The crema page background is intentional brand identity, not an
+% oversight — do not remove it to "save ink"; content contrast is
+% calibrated against it (brassink/filterink derivatives for small text).
+
+\providecommand{\KpVersion}{dev}
+\documentclass[8pt]{extarticle}
+
+\usepackage[a4paper, left=10mm, right=10mm, top=14mm, bottom=11mm, footskip=5mm]{geometry}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usetikzlibrary{calc}
+\usepackage{multicol}
+\usepackage{listings}
+\usepackage{tcolorbox}
+\usepackage{fancyhdr}
+\usepackage{needspace}
+\usepackage{fontspec}
+
+% ---------------------------------------------------------------- colors --
+% Dark Roast tokens, verbatim from docs/stylesheets/extra.css.
+\definecolor{roast}{HTML}{1A1410}
+\definecolor{roasttwo}{HTML}{241B14}
+\definecolor{roastthree}{HTML}{34281D}
+\definecolor{crema}{HTML}{F3E9DB}
+\definecolor{brass}{HTML}{D08B3C}
+\definecolor{brasstwo}{HTML}{E8B563}
+\definecolor{filter}{HTML}{4FC4B2}
+\definecolor{ash}{HTML}{9C8A77}
+% Print-ink derivatives: raw brass/filter on crema are ~2.5:1 / ~1.9:1
+% contrast — fine for the masthead, unreadable at 7pt. brassink is the
+% site's own light-scheme link color.
+\definecolor{brassink}{HTML}{B07530}
+\definecolor{filterink}{HTML}{2E8677}
+\colorlet{ashink}{ash!62!roast}
+\colorlet{cremadim}{crema!72!ash}
+\colorlet{codebg}{roast!6!crema}
+\colorlet{stripbg}{roast!9!crema}
+
+\pagecolor{crema}
+\color{roast}
+
+% ----------------------------------------------------------------- fonts --
+% Body: Source Sans 3, reused from the book's bundled fonts (sibling repo).
+\setmainfont{SourceSans3}[
+    Path = ../../kaappi-book/fonts/,
+    UprightFont = *-Regular,
+    BoldFont = *-Bold,
+    ItalicFont = *-Italic,
+    BoldItalicFont = *-BoldItalic,
+    Extension = .ttf,
+    Ligatures = {Common, TeX},
+]
+\setsansfont{SourceSans3}[
+    Path = ../../kaappi-book/fonts/,
+    UprightFont = *-Regular,
+    BoldFont = *-Bold,
+    ItalicFont = *-Italic,
+    BoldItalicFont = *-BoldItalic,
+    Extension = .ttf,
+    Ligatures = {Common, TeX},
+]
+% Code: JetBrains Mono (the site's code font). -calt/-liga: no arrow or
+% <= ligatures — a reference sheet must show the characters you type.
+\setmonofont{JetBrainsMono}[
+    Path = fonts/,
+    UprightFont = *-Regular,
+    BoldFont = *-Bold,
+    Extension = .ttf,
+    Scale = 0.88,
+    RawFeature = {-calt;-liga},
+]
+% Display: Space Grotesk (the site's heading font). Medium as upright.
+\newfontfamily\displayfont{SpaceGrotesk}[
+    Path = fonts/,
+    UprightFont = *-Medium,
+    BoldFont = *-Bold,
+    Extension = .ttf,
+]
+
+% ---------------------------------------------------------------- layout --
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0pt}
+\setlength{\columnsep}{4mm}
+\setlength{\columnseprule}{0.3pt}
+\def\columnseprulecolor{\color{ash!45!crema}}
+\raggedbottom
+\raggedcolumns
+\setlength{\emergencystretch}{1.5em}
+\tolerance=2000
+
+% ---------------------------------------------------------------- macros --
+% Type scale.
+\newcommand{\cf}{\ttfamily\fontsize{7.8}{9.4}\selectfont}   % code
+\newcommand{\df}{\rmfamily\fontsize{7.4}{9.4}\selectfont}   % descriptions
+\newcommand{\footfont}{\fontsize{6.4}{6.4}\selectfont\color{ashink}}
+
+% \entry{signature}{description} — one reference row, hanging indent.
+% \interlinepenalty forbids column breaks inside a row, so a wrapped
+% description can never strand its continuation atop the next column.
+\newcommand{\entry}[2]{\par\begingroup\raggedright
+  \interlinepenalty=10000
+  \hangindent=7pt\hangafter=1
+  {\cf\color{roast}#1}\hspace{0.55em plus 0.25em}{\df\color{roastthree}#2}\par
+  \endgroup}
+
+% \exline{expr}{result} — a verified one-line example with its result.
+% The result is boxed so it never breaks mid-value; it wraps whole.
+\newcommand{\exline}[2]{\par\begingroup\raggedright
+  \interlinepenalty=10000
+  \hangindent=7pt\hangafter=1
+  {\cf\color{roast}#1}\hspace{0.55em plus 0.25em}{\cf\color{filterink}\mbox{;=> #2}}\par
+  \endgroup}
+
+% Section bar: dark band with brass arrow, Space Grotesk uppercase.
+\newcommand{\sect}[1]{\par\Needspace{9\baselineskip}\vspace{4.8pt}%
+  {\setlength{\fboxsep}{0pt}\noindent\colorbox{roast}{\parbox[c][11pt][c]{\linewidth}{%
+    \hspace{3.5pt}{\color{brasstwo}\fontsize{7}{7}\selectfont$\Rightarrow$}\hspace{3.5pt}%
+    {\displayfont\bfseries\fontsize{7.2}{7.2}\selectfont\color{crema}%
+     \addfontfeature{LetterSpace=9.0}\MakeUppercase{#1}}}}}%
+  \par\vspace{3pt}}
+
+% Run-in sub-heading (used in the tooling strip).
+\newcommand{\stitle}[1]{\par\noindent
+  {\displayfont\bfseries\fontsize{7.6}{8.4}\selectfont\color{roast}%
+   {\color{brassink}$\Rightarrow$}\enspace\addfontfeature{LetterSpace=7.0}\MakeUppercase{#1}}%
+  \par\vspace{2.2pt}}
+
+% Library tag for non-(scheme base) entries: [char], [file], ...
+\newcommand{\libtag}[1]{{\df\color{ashink}[#1]}}
+
+% Free-standing note line.
+\newcommand{\note}[1]{\par\begingroup\raggedright
+  \interlinepenalty=10000
+  {\df\color{roastthree}#1}\par\endgroup}
+
+% ------------------------------------------------------------- masthead --
+\newcommand{\mastheadband}{%
+\begin{tikzpicture}[remember picture, overlay]
+  \fill[roast] (current page.north west) rectangle ([yshift=-18mm]current page.north east);
+  \fill[roastthree] ([yshift=-18mm]current page.north west) rectangle ([yshift=-18.35mm]current page.north east);
+  \fill[brass] ([yshift=-18.35mm]current page.north west) rectangle ([yshift=-19mm]current page.north east);
+  \node[anchor=west, inner sep=0] at ([xshift=10mm, yshift=-9.2mm]current page.north west)
+    {{\displayfont\bfseries\fontsize{20}{20}\selectfont\color{crema}Kaappi}%
+     \hspace{2.6mm}{\fontsize{14}{14}\selectfont\color{brass}$\Rightarrow$}%
+     \hspace{2.6mm}{\displayfont\fontsize{9}{9}\selectfont\color{cremadim}R7RS-small Scheme\,·\,Cheatsheet}};
+  \node[anchor=east, inner sep=0] at ([xshift=-10mm, yshift=-9.2mm]current page.north east)
+    {{\displayfont\fontsize{8.6}{8.6}\selectfont\color{crema}v\KpVersion}%
+     \hspace{1.8mm}{\displayfont\fontsize{8.6}{8.6}\selectfont\color{cremadim}·}%
+     \hspace{1.8mm}{\displayfont\fontsize{8.6}{8.6}\selectfont\color{cremadim}kaappi-lang.org}};
+\end{tikzpicture}}
+
+\newcommand{\mastheadbandtwo}{%
+\begin{tikzpicture}[remember picture, overlay]
+  \fill[roast] (current page.north west) rectangle ([yshift=-10mm]current page.north east);
+  \fill[brass] ([yshift=-10mm]current page.north west) rectangle ([yshift=-10.65mm]current page.north east);
+  \node[anchor=west, inner sep=0] at ([xshift=10mm, yshift=-5.2mm]current page.north west)
+    {{\displayfont\bfseries\fontsize{11.5}{11.5}\selectfont\color{crema}Kaappi}%
+     \hspace{2mm}{\fontsize{9}{9}\selectfont\color{brass}$\Rightarrow$}%
+     \hspace{2mm}{\displayfont\fontsize{8.2}{8.2}\selectfont\color{cremadim}Standard procedures}};
+  \node[anchor=east, inner sep=0] at ([xshift=-10mm, yshift=-5.2mm]current page.north east)
+    {{\displayfont\fontsize{7.6}{7.6}\selectfont\color{cremadim}(scheme base) unless tagged — Kaappi needs no imports; write them for portability}};
+\end{tikzpicture}}
+
+% ---------------------------------------------------------------- footer --
+\pagestyle{fancy}
+\fancyhf{}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0.5pt}
+\makeatletter
+\def\footrule{{\color{brass}\vskip-\footruleskip\vskip-\footrulewidth
+  \hrule\@width\headwidth\@height\footrulewidth\vskip\footruleskip}}
+\makeatother
+\fancyfoot[L]{\footfont Kaappi v\KpVersion\ · R7RS-small Scheme}
+\fancyfoot[C]{\footfont kaappi-lang.org}
+\fancyfoot[R]{\footfont MIT License · \thepage/2}
+
+% -------------------------------------------------------------- listings --
+\lstdefinelanguage{Scheme}{
+    morekeywords={
+        define, lambda, if, cond, case, else, and, or,
+        when, unless, begin, set!, quote, quasiquote,
+        unquote, unquote-splicing,
+        let, let*, letrec, letrec*, let-values, let*-values,
+        define-values, do, case-lambda,
+        define-syntax, syntax-rules, let-syntax, letrec-syntax,
+        define-library, import, export, include,
+        define-record-type, guard,
+        delay, delay-force, parameterize,
+        cond-expand, only, except, rename, prefix,
+    },
+    sensitive=true,
+    morecomment=[l]{;},
+    morecomment=[s]{\#|}{|\#},
+    morestring=[b]{"},
+    alsoother={\#},
+    % Hyphen/star/bang are identifier chars in Scheme — without this,
+    % `when` inside `my-when` (etc.) gets keyword-bolded.
+    alsoletter={-*!},
+}
+\lstdefinestyle{kp}{
+    language=Scheme,
+    basicstyle=\ttfamily\fontsize{7.8}{9.4}\selectfont\color{roast},
+    keywordstyle=\bfseries\color{roast},
+    commentstyle=\color{filterink},
+    stringstyle=\color{brassink},
+    backgroundcolor=\color{codebg},
+    frame=leftline,
+    framerule=1.1pt,
+    rulecolor=\color{brass},
+    xleftmargin=6pt,
+    framexleftmargin=3.5pt,
+    aboveskip=3.6pt,
+    belowskip=2.6pt,
+    columns=fullflexible,
+    keepspaces=true,
+    showstringspaces=false,
+    breaklines=false,
+    numbers=none,
+}
+\lstset{style=kp}
+
+\begin{document}
+
+% ============================================================== PAGE 1 ==
+\mastheadband
+\vspace*{8.5mm}
+
+\begin{multicols}{3}
+
+\sect{Literals \& lexical}
+\entry{\#t \#f}{booleans (also {\cf \#true \#false}); only {\cf \#f} is false}
+\entry{\#\textbackslash a \#\textbackslash space \#\textbackslash x41}{characters — {\cf \#\textbackslash x41} is {\cf \#\textbackslash A}}
+\entry{"a\textbackslash n b"}{string; escapes {\cf \textbackslash n \textbackslash t \textbackslash " \textbackslash\textbackslash\ \textbackslash x41;}}
+\entry{\#""C:\textbackslash path""}{raw string — no escapes (SRFI 267)}
+\entry{42\ \ -7\ \ 1/3\ \ 6.02e23}{exact ints and rationals, floats}
+\entry{\#x1F \#b1010 \#o17}{hex, binary, octal}
+\entry{\#e1.5 \#i1/3}{force exact / inexact}
+\entry{'foo\ \ |two words|}{symbols; {\cf |...|} allows any chars}
+\entry{\#(1 2 3)}{vector literal — immutable}
+\entry{\#u8(1 2 255)}{bytevector literal}
+\entry{; line\ \ \#| block |\#\ \ \#;(datum)}{comment forms}
+\note{Names: {\cf pred?} asks, {\cf mut!} mutates, {\cf a->b} converts.
+On this sheet {\cf\color{filterink};=>} means ``evaluates to''.}
+
+\sect{Define \& lambda}
+\entry{(define x expr)}{bind a value}
+\entry{(define (f a b) body ...)}{define a procedure}
+\entry{(define (f a . rest) body ...)}{rest args as a list}
+\entry{(lambda (a b) body ...)}{anonymous procedure; {\cf (lambda args ...)} takes all args as a list}
+\entry{(define-values (a b) expr)}{bind multiple values}
+\entry{(case-lambda (formals body ...) ...)}{dispatch on arity \libtag{case-lambda}}
+\entry{(set! var expr)}{assign an existing binding}
+\begin{lstlisting}
+(define (add a b) (+ a b))
+(add 2 3)                 ;=> 5
+\end{lstlisting}
+
+\sect{Binding forms}
+\entry{(let ((x 1) (y 2)) body ...)}{parallel bindings}
+\entry{(let* ((x 1) (y (+ x 1))) ...)}{sequential — each sees the previous}
+\entry{(letrec ((f ...) (g ...)) ...)}{mutually recursive (also {\cf letrec*})}
+\entry{(let-values (((a b) expr) ...) ...)}{bind multiple values (also {\cf let*-values})}
+\begin{lstlisting}
+(let loop ((n 5) (acc 1))  ; named let
+  (if (= n 0) acc
+      (loop (- n 1) (* n acc)))) ;=> 120
+\end{lstlisting}
+\note{Tail calls run in constant stack — recurse freely; a named
+{\cf let} is the idiomatic loop.}
+
+\columnbreak
+\sect{Conditionals \& flow}
+\entry{(if test then else)}{two-way branch; {\cf else} optional}
+\entry{(cond (test expr ...) ... (else ...))}{first true clause wins; {\cf (test => proc)} passes the value on}
+\entry{(case key ((d1 d2) e ...) (else ...))}{dispatch on {\cf eqv?} against datum lists}
+\entry{(and e ...)\ \ (or e ...)}{short-circuit; return the deciding value}
+\entry{(when test body ...)}{one-armed {\cf if} (and {\cf unless})}
+\entry{(begin e ...)}{sequence; value of the last}
+\entry{(do ((v init step) ...) (test res) body ...)}{general loop}
+\begin{lstlisting}
+(case (* 2 3)
+  ((2 3 5 7) 'prime)
+  (else 'composite))  ;=> composite
+
+(do ((i 0 (+ i 1))
+     (sum 0 (+ sum i)))
+    ((= i 5) sum))    ;=> 10
+\end{lstlisting}
+
+\sect{Quote \& quasiquote}
+\entry{'(a b c)}{quoted literal data}
+\entry{`(1 ,x ,@xs)}{template: {\cf ,} inserts a value, {\cf ,@} splices a list}
+\exline{(let ((x 2) (xs '(3 4))) `(1 ,x ,@xs))}{(1 2 3 4)}
+
+\sect{Macros}
+\entry{(define-syntax name (syntax-rules (lits) (pattern template) ...))}{hygienic rewrite rules; {\cf ...} repeats the preceding pattern}
+\entry{(let-syntax ...) (letrec-syntax ...)}{local macros}
+\entry{(syntax-error msg args ...)}{fail at expansion time}
+\begin{lstlisting}
+(define-syntax my-when
+  (syntax-rules ()
+    ((my-when test body ...)
+     (if test (begin body ...)))))
+\end{lstlisting}
+
+\sect{Records}
+\begin{lstlisting}
+(define-record-type <point>
+  (make-point x y)   ; constructor
+  point?             ; predicate
+  (x point-x)        ; getter
+  (y point-y set-point-y!))
+\end{lstlisting}
+\exline{(point-x (make-point 3 4))}{3}
+
+\sect{Exceptions}
+\entry{(error msg irritant ...)}{raise an error object}
+\entry{(guard (e (test expr ...) ... (else ...)) body ...)}{catch: first clause matching {\cf e} handles it}
+\entry{(raise obj)\ \ (raise-continuable obj)}{raise any value; continuable handlers may return a replacement}
+\entry{(with-exception-handler handler thunk)}{install a handler around thunk}
+\entry{(error-object-message e) (error-object-irritants e)}{inspect (also {\cf error-object?})}
+\begin{lstlisting}
+(guard (e (#t (error-object-message e)))
+  (error "boom"))           ;=> "boom"
+\end{lstlisting}
+
+\sect{Multiple values}
+\entry{(values a b ...)}{return several values}
+\entry{(call-with-values producer consumer)}{consume them}
+\exline{(let-values (((a b) (values 1 2))) (+ a b))}{3}
+
+\sect{Continuations}
+\entry{(call/cc proc)}{capture the continuation — escape or resume}
+\entry{(call/ec proc)}{one-shot escape, much cheaper (Kaappi)}
+\entry{(dynamic-wind before thunk after)}{guaranteed entry/exit around thunk}
+
+\sect{Parameters \& promises}
+\entry{(make-parameter init)}{dynamic variable, called to read}
+\entry{(parameterize ((p v) ...) body ...)}{rebind within body}
+\entry{(delay expr)}{promise; {\cf (force p)} runs once, memoizes \libtag{lazy}}
+
+\sect{Libraries}
+\begin{lstlisting}
+(define-library (my lib)
+  (import (scheme base))
+  (export hello)
+  (begin
+    (define (hello) 'hi)))
+\end{lstlisting}
+\entry{(import (only (srfi 1) fold))}{selective import}
+\entry{(import (prefix (srfi 1) s:))}{prefixed; also {\cf (rename ... (old new))} and {\cf (except ...)}}
+\entry{(cond-expand (kaappi ...) (else ...))}{feature-conditional code}
+\entry{(include "file.scm")}{splice a source file}
+\note{{\cf (my lib)} loads from {\cf my/lib.sld} on the library path.}
+
+\end{multicols}
+
+\vfill
+
+% ------------------------------------------------------- tooling strip --
+\noindent\begin{tcolorbox}[colback=stripbg, colframe=brass, boxrule=0.7pt,
+  arc=1.8pt, left=2.6mm, right=2.6mm, top=2mm, bottom=2mm, boxsep=0pt]
+\begin{minipage}[t]{0.317\linewidth}
+\stitle{kaappi CLI}
+\entry{kaappi}{REPL · {\cf kaappi f.scm} runs · reads stdin}
+\entry{kaappi compile f.scm -o app}{native binary via LLVM}
+\entry{kaappi check f.scm}{static analysis; {\cf KP}-code lints}
+\entry{kaappi test tests/}{SRFI-64 runner, one subprocess per file}
+\entry{kaappi fmt --check}{canonical formatter (2-space R7RS)}
+\entry{kaappi explain KP4001}{what a diagnostic means, with fix}
+\entry{kaappi doctor · features --json}{install self-check · build info}
+\entry{--lib-path DIR --sandbox --timeout MS}{key flags; sandbox blocks FFI, files, eval}
+\note{Install: {\cf curl -fsSL https://kaappi-lang.org/install.sh | bash}}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.317\linewidth}
+\stitle{REPL}
+\entry{kaappi>}{prompt; unbalanced parens continue on the next line}
+\entry{\_}{the last result}
+\entry{,help ,quit ,version}{meta-commands start with a comma}
+\entry{,time e ,type e ,describe s ,apropos str}{inspect}
+\entry{,expand e ,dis e ,profile e}{macro-expand · bytecode · profile}
+\entry{,import (srfi 1)\ \ ,load f.scm}{bring in libraries and files}
+\entry{,break f ,step e}{debugger: {\cf step next continue locals backtrace}}
+\entry{\textasciitilde/.kaappi/history · \textasciitilde/.kaappi/config}{persistence; Ctrl-D exits}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.317\linewidth}
+\stitle{thottam · packages}
+\entry{thottam install kaappi-web}{with deps, into {\cf \textasciitilde/.kaappi/lib}}
+\entry{thottam install PKG@v1.0.0}{pin a tag; ranges: {\cf @">=0.2.0"}}
+\entry{thottam install PKG::URL}{install from any git URL}
+\entry{thottam remove · list · update [PKG]}{manage installed packages}
+\entry{thottam verify · --locked install}{check / enforce {\cf \textasciitilde/.kaappi/thottam.lock}}
+\entry{kaappi.pkg}{manifest: {\cf name version depends build}}
+\note{Libraries are plain {\cf .sld} files — import after install:
+{\cf (import (kaappi web))}.}
+\end{minipage}
+\end{tcolorbox}
+
+% ============================================================== PAGE 2 ==
+\newpage
+\mastheadbandtwo
+\vspace*{1.5mm}
+
+\begin{multicols}{3}
+
+\sect{Numbers}
+\entry{(+ a ...) (- a b ...) (* a ...) (/ a b ...)}{arithmetic; exact {\cf /} yields rationals}
+\exline{(/ 1 3)}{1/3}
+\exline{(expt 2 64)}{18446744073709551616}
+\entry{(= a b ...) (< ...) (> ...) (<= ...) (>= ...)}{numeric compare, chainable}
+\entry{zero? positive? negative? odd? even?}{sign and parity}
+\entry{(abs n)\ \ (min a ...)\ \ (max a ...)}{}
+\entry{(quotient a b) (remainder a b) (modulo a b)}{integer division; {\cf modulo} follows the divisor's sign}
+\entry{(floor/ a b) (truncate/ a b)}{two-value division (also {\cf floor-quotient} etc.)}
+\entry{(gcd a ...) (lcm a ...)}{}
+\entry{(floor x) (ceiling x) (truncate x) (round x)}{{\cf round} halves to even}
+\entry{(expt a b) (square a) (exact-integer-sqrt n)}{powers; integer sqrt with remainder}
+\entry{(sqrt x) (exp x) (log x b?) (sin x) (cos x) (tan x) (atan y x?)}{\libtag{inexact}}
+\entry{finite? infinite? nan?}{float predicates \libtag{inexact}}
+\entry{(exact x) (inexact x)}{convert exactness}
+\exline{(exact 0.5)}{1/2}
+\entry{(numerator q) (denominator q) (rationalize x tol)}{rational parts}
+\entry{(number->string n radix?) (string->number s radix?)}{}
+\exline{(number->string 255 16)}{"ff"}
+\exline{(string->number "ff" 16)}{255}
+\entry{number? integer? rational? real? complex?}{tower predicates}
+\entry{exact? inexact? exact-integer?}{exactness predicates}
+
+\sect{Equivalence}
+\entry{(eq? a b)}{identity — symbols, small ints, same object}
+\entry{(eqv? a b)}{{\cf eq?} plus numbers and chars by value}
+\entry{(equal? a b)}{deep structural equality}
+\exline{(equal? '(1 2) (list 1 2))}{\#t}
+\exline{(eqv? 1.0 1)}{\#f}
+\entry{(not x)}{{\cf \#t} only for {\cf \#f}}
+\entry{(boolean=? a b ...) (symbol=? a b ...)}{}
+
+\sect{Type predicates}
+\entry{number? string? char? symbol? boolean?}{atoms}
+\entry{pair? null? list? vector? bytevector?}{compound}
+\entry{procedure? port? eof-object? promise?}{other}
+
+\sect{Pairs \& lists}
+\entry{(cons a d) (car p) (cdr p)}{build · first · rest}
+\exline{(cons 1 '(2 3))}{(1 2 3)}
+\entry{(set-car! p v) (set-cdr! p v)}{mutate a pair}
+\entry{(list a ...) (make-list n fill?)}{}
+\entry{(length ls) (reverse ls) (append ls ...)}{}
+\entry{(list-ref ls k) (list-tail ls k) (list-set! ls k v)}{zero-based access}
+\entry{(map f ls ...) (for-each f ls ...)}{apply elementwise / for effect}
+\exline{(map (lambda (x) (* x x)) '(1 2 3))}{(1 4 9)}
+\entry{(member x ls) (memv x ls) (memq x ls)}{find tail by {\cf equal?/eqv?/eq?}}
+\entry{(assoc k al) (assv k al) (assq k al)}{association-list lookup}
+\exline{(assq 'b '((a 1) (b 2)))}{(b 2)}
+\entry{(list-copy ls)}{shallow copy}
+\entry{(caar p) (cadr p) ... (cddddr p)}{compound accessors \libtag{cxr}}
+
+\columnbreak
+\sect{Strings}
+\entry{(string ch ...) (make-string n ch?)}{}
+\entry{(string-length s) (string-ref s k)}{by codepoint — UTF-8 native}
+\entry{(string-set! s k ch)}{strings are mutable}
+\entry{(substring s a b)}{half-open {\cf [a,b)}}
+\exline{(substring "hello" 1 4)}{"ell"}
+\entry{(string-append s ...)}{}
+\entry{(string->list s) (list->string ls)}{also {\cf string->vector}, {\cf vector->string}}
+\entry{(string-copy s a? b?) (string-copy! to at from) (string-fill! s ch)}{}
+\entry{(string-map f s ...) (string-for-each f s ...)}{}
+\entry{string=? string<? string>? string<=? string>=?}{lexicographic compare}
+\entry{string-ci=? ...\ \ string-upcase string-downcase string-foldcase}{case ops \libtag{char}}
+\entry{(string->symbol s) (symbol->string sym)}{}
+
+\sect{Characters}
+\entry{(char->integer c) (integer->char n)}{codepoint conversion}
+\exline{(char->integer \#\textbackslash A)}{65}
+\entry{char=? char<? char>? char<=? char>=?}{compare ({\cf char-ci...} \libtag{char})}
+\entry{char-alphabetic? char-numeric? char-whitespace?}{classify \libtag{char}}
+\entry{char-upper-case? char-lower-case?}{\libtag{char}}
+\entry{(char-upcase c) (char-downcase c) (char-foldcase c)}{\libtag{char}}
+\entry{(digit-value c)}{digit as number, else {\cf \#f} \libtag{char}}
+
+\sect{Vectors}
+\entry{(vector a ...) (make-vector n fill?)}{}
+\entry{(vector-length v) (vector-ref v k) (vector-set! v k x)}{}
+\entry{(vector->list v a? b?) (list->vector ls)}{}
+\exline{(vector->list \#(1 2 3) 1)}{(2 3)}
+\entry{(vector-copy v a? b?) (vector-copy! to at from) (vector-fill! v x)}{}
+\entry{(vector-append v ...)}{}
+\entry{(vector-map f v ...) (vector-for-each f v ...)}{}
+\exline{(vector-map + \#(1 2) \#(10 20))}{\#(11 22)}
+
+\sect{Bytevectors}
+\entry{(bytevector b ...) (make-bytevector n fill?)}{bytes 0–255}
+\entry{(bytevector-length bv) (bytevector-u8-ref bv k) (bytevector-u8-set! bv k b)}{}
+\entry{(bytevector-copy bv a? b?) (bytevector-copy! to at from) (bytevector-append bv ...)}{}
+\entry{(utf8->string bv a? b?) (string->utf8 s a? b?)}{}
+\exline{(utf8->string \#u8(104 105))}{"hi"}
+
+\sect{Control}
+\entry{(apply f a ... args)}{call with a list as the final args}
+\exline{(apply + 1 '(2 3))}{6}
+\entry{(read-error? e) (file-error? e)}{classify raised errors}
+
+\sect{Ports \& I/O}
+\entry{(display x port?) (write x port?)}{human-readable vs re-readable \libtag{write}}
+\entry{(newline port?) (write-char c) (write-string s)}{}
+\entry{(read port?)}{read one datum \libtag{read}}
+\entry{(read-line port?) (read-char port?) (read-string k port?)}{}
+\exline{(read-line (open-input-string "one"))}{"one"}
+\entry{(peek-char port?)}{look ahead without consuming}
+\entry{(read-u8) (write-u8 b) (read-bytevector k) (write-bytevector bv)}{binary I/O}
+\entry{(eof-object) (eof-object? x)}{end-of-input value}
+\entry{(open-input-string s) (open-output-string)}{string ports; {\cf (get-output-string p)} extracts}
+\exline{(read (open-input-string "(1 2)"))}{(1 2)}
+\entry{(call-with-input-file f proc) (call-with-output-file f proc)}{auto-close \libtag{file}}
+\entry{(with-input-from-file f thunk) (with-output-to-file f thunk)}{redirect current ports \libtag{file}}
+\entry{(open-input-file f) (open-output-file f)}{\libtag{file}}
+\entry{(close-port p) (call-with-port p proc) (flush-output-port p?)}{}
+\entry{(current-input-port) (current-output-port) (current-error-port)}{default ports, parameterizable}
+\entry{(file-exists? f) (delete-file f)}{\libtag{file}}
+\entry{port? input-port? output-port? textual-port? binary-port?}{predicates}
+
+\sect{System \& eval}
+\entry{(exit code?)}{terminate \libtag{process-context}}
+\entry{(command-line)}{program args as a list \libtag{process-context}}
+\entry{(get-environment-variable name)}{one env var; {\cf -variables} for all \libtag{process-context}}
+\entry{(current-second) (current-jiffy) (jiffies-per-second)}{wall clock · monotonic ticks \libtag{time}}
+\entry{(features)}{feature symbols — pairs with {\cf cond-expand}}
+\entry{(load "f.scm")}{\libtag{load}}
+\entry{(eval expr env) (environment import-set ...)}{\libtag{eval}}
+\entry{(real-part z) (imag-part z) (magnitude z) (angle z)}{complex accessors \libtag{complex}}
+
+\sect{Hash tables · SRFI 69}
+\note{{\cf (import (srfi 69))} — for insertion-ordered iteration use
+SRFI 250 instead.}
+\entry{(make-hash-table equal? hash?)}{create; equality and hash optional}
+\entry{(hash-table-set! ht k v)}{associate key with value}
+\entry{(hash-table-ref ht k fail?)}{look up; calls {\cf fail} thunk on a miss}
+\entry{(hash-table-ref/default ht k default)}{look up with fallback}
+\entry{(hash-table-update!/default ht k f default)}{update via {\cf f}}
+\entry{(hash-table-delete! ht k) (hash-table-exists? ht k)}{}
+\entry{(hash-table-size ht) (hash-table-keys ht) (hash-table-values ht)}{}
+\entry{(hash-table->alist ht) (alist->hash-table al)}{convert; also {\cf hash-table-walk}, {\cf hash-table-copy}, {\cf hash-table?}}
+
+\sect{Beyond R7RS-small}
+\entry{(import (srfi 1))}{list library: {\cf fold filter reduce iota any every delete-duplicates ...}}
+\entry{(import (srfi 18))}{OS threads; green fibers are built in}
+\note{600+ built-in procedures, 170+ SRFIs, JSON · HTTP · SQLite ·
+Postgres · Redis via thottam packages
+\ {\color{brassink}$\Rightarrow$}\ kaappi-lang.org/procedures/}
+
+\end{multicols}
+
+\end{document}

@@ -40,7 +40,7 @@ Files in `docs/` that are not nav pages:
 - `docs/wasm/kaappi.wasm` — the WASM binary powering playground and tour. **Gitignored** (kept out of history); `scripts/fetch-wasm.sh` downloads it from the kaappi release matching `kaappi_version`, verified against the release SHA256SUMS. CI fetches it before deploy; run the script once locally before `mkdocs serve`.
 - `docs/assets/kaappi-book.pdf` — the book PDF embedded by the `/book/` viewer. **Gitignored**, same pattern: `scripts/fetch-book.sh` downloads it from the kaappi-book release matching `book_version` in mkdocs.yml, verified against that release's SHA256SUMS. After a book release, bump `book_version` and push — the deploy picks it up. (The page's download link points at `releases/latest` and needs no bump; `docs/assets/book-cover.png` stays committed.)
 - `docs/assets/book-3d.webp` — the angled 3D paperback in the landing page's book band. **Committed** (like `book-cover.png`). Regenerate with `scripts/generate-book-3d.py`: it renders `../kaappi-book/build/cover.pdf`, crops the front panel, hands it to the Gemini API (`gemini-3-pro-image`) as an image reference, and masks the result so it dissolves into the band's `#180E09`. Only needed if the cover art changes — a page-count bump alone doesn't warrant it. Needs `GEMINI_API_KEY`; pass `--raw FILE` to re-mask an existing render without calling the API.
-- `docs/js/` — `codemirror-bundle.mjs` (prebuilt CodeMirror 6), `wasi-shim-bundle.mjs` (prebuilt @bjorn3/browser_wasi_shim), `playground-worker.js` (Web Worker that runs the WASM), `kp-editor.mjs` / `kp-runner.mjs` (shared editor + worker-runner factories used by both the playground and tour), and the content modules `tour-lessons.mjs` (`LESSONS`) and `playground-examples.mjs` (`EXAMPLES`).
+- `docs/assets/kaappi-cheatsheet.pdf` — two-page A4 quick reference (language + CLI/REPL/thottam), linked from the download page and the language guide. **Committed** (small-asset pattern — the inverse of the fetched book PDF). Source in `cheatsheet/`; rebuild with `make -C cheatsheet` (XeLaTeX from TeX Live; Space Grotesk + JetBrains Mono are bundled in `cheatsheet/fonts/`, the Source Sans 3 body font loads from the sibling `../kaappi-book/fonts/` checkout, and the version stamp reads `kaappi_version` from mkdocs.yml — always build via the Makefile, which also handles fontspec's cwd-relative paths and the two-pass TikZ bands). The crema page background is intentional brand identity, not wasted ink. Sheet snippets are NOT covered by the docs-samples sweep — verify `;=>` claims by hand against the kaappi binary when editing (see the omissions comment atop the .tex before adding content).
 - `docs/stylesheets/extra.css` — design bridge into content pages (see Styling).
 - `docs/assets/` — `logo.svg`, `favicon.png`.
 - `docs/ideas.md` and `docs/errata-corrected-r7rs.pdf` — excluded from the build via `exclude_docs` in mkdocs.yml (internal notes / local R7RS spec copy).
@@ -87,6 +87,14 @@ One manual check remains: if the release changed SRFI coverage, bump
 `config.extra`). Get the importable counts from `kaappi features --json`;
 `srfi_count` additionally counts the SRFI 261 naming convention, which has
 no library file.
+
+A second manual step: after `update-wasm` bumps `kaappi_version`, run
+`make -C cheatsheet` locally and commit the refreshed
+`docs/assets/kaappi-cheatsheet.pdf` — the sheet's version stamp comes from
+mkdocs.yml at build time, and CI cannot rebuild it (no TeX toolchain). If
+the release changed the language surface, CLI/REPL commands, or thottam
+behavior, update the sheet's content too and re-verify its `;=>` claims
+against the new binary (they are not covered by the sample sweep).
 
 `docs/install.sh` and the download-table links target `releases/latest`, so
 they normally need no per-release changes.

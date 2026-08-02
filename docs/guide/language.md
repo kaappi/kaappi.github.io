@@ -2,7 +2,9 @@
 
 A quick tour of Kaappi's Scheme dialect with runnable examples. For
 detailed procedure documentation, see the
-[Procedure Reference](../procedures/index.md).
+[Procedure Reference](../procedures/index.md). There is also a printable
+two-page [A4 cheatsheet (PDF)](../assets/kaappi-cheatsheet.pdf) covering
+the language plus CLI, REPL, and thottam essentials.
 
 Most examples below use procedures from `(scheme base)`. In a file you
 need to import it explicitly; the REPL imports it automatically. Some

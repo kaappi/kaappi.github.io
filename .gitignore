@@ -7,6 +7,10 @@ __pycache__/
 # Same pattern for the embedded book PDF (scripts/fetch-book.sh), pinned by
 # book_version in mkdocs.yml.
 /docs/assets/kaappi-book.pdf
+# LaTeX aux files for the cheatsheet. The built PDF (docs/assets/
+# kaappi-cheatsheet.pdf) IS committed — small-asset pattern, unlike the
+# fetched book PDF above. Rebuild with `make -C cheatsheet`.
+/cheatsheet/build/
 # Claude Code local artifacts (shared config such as .claude/launch.json stays
 # tracked). Previously only excluded via this clone's .git/info/exclude.
 .claude/worktrees/

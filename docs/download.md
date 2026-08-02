@@ -66,6 +66,7 @@ than attempt it.
 | `libkaappi_rt-<platform>.a` | Runtime library for native compilation (`kaappi compile`) on macOS, Linux, and the BSDs — one per aarch64/x86_64 target. The install script fetches it for you; manual installs need it too (see below) |
 | [libkaappi_rt-x86_64-windows.lib](https://github.com/kaappi/kaappi/releases/latest/download/libkaappi_rt-x86_64-windows.lib) | Same, for Windows x64. Install it as `kaappi_rt.lib` (see below) |
 | [libkaappi_rt-aarch64-windows.lib](https://github.com/kaappi/kaappi/releases/latest/download/libkaappi_rt-aarch64-windows.lib) | Same, for Windows ARM64 |
+| [kaappi-cheatsheet.pdf](assets/kaappi-cheatsheet.pdf) | Two-page A4 quick reference — the language plus CLI, REPL, and thottam essentials. Print double-sided, flip on long edge |
 
 ### Manual install
 
