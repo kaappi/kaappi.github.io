@@ -47,7 +47,7 @@ Kaappi includes all 14 R7RS standard libraries, {{ srfi_count }} SRFIs
 ({{ srfi_builtin }} built-in, {{ srfi_portable }} portable, three sub-library-only, plus the
 SRFI 261 naming convention), and four Kaappi extension libraries.
 
-### Standard R7RS Libraries (14)
+### Standard R7RS Libraries (16)
 
 | Library | Exports | Description |
 |---------|---------|-------------|
@@ -62,7 +62,9 @@ SRFI 261 naming convention), and four Kaappi extension libraries.
 | `(scheme lazy)` | 5 | `delay`, `force`, promises |
 | `(scheme load)` | 1 | `load` |
 | `(scheme process-context)` | 5 | `exit`, `command-line`, environment variables |
+| `(scheme r5rs)` | 141 | The R5RS identifier set, with `exact->inexact` / `inexact->exact` under their R5RS names |
 | `(scheme read)` | 1 | `read` |
+| `(scheme repl)` | 1 | `interaction-environment` |
 | `(scheme time)` | 3 | `current-second`, jiffies |
 | `(scheme write)` | 7 | `write`, `display`, `write-shared` |
 

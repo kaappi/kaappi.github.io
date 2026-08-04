@@ -180,7 +180,7 @@ output you asked for by name (for example to embed with `zig build
 
 ## Available Libraries
 
-For everything you can import — the 14 standard R7RS libraries, all
+For everything you can import — the 16 standard R7RS libraries, all
 {{ srfi_count }} SRFIs, and the Kaappi extension libraries — see
 [Available Libraries](libraries.md#available-libraries) and
 [SRFI Support](srfi-support.md).
