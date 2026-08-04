@@ -36,6 +36,12 @@ Each ecosystem library (kaappi-json, kaappi-web, etc.) is its own repo under
 the [kaappi GitHub org](https://github.com/kaappi) and follows the same
 fork-and-branch workflow (org membership required).
 
+## Support
+
+Kaappi is free and open source, and most of it happens outside of any
+company's time. If it's been useful to you, consider
+[buying me a coffee](https://www.buymeacoffee.com/baiju).
+
 ## License
 
 Kaappi and all ecosystem libraries are released under the
