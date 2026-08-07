@@ -2,9 +2,19 @@ name: Update playground WASM
 
 # Sync the playground/tour to a kaappi release: fetch the *released* kaappi.wasm
 # (verified against the release SHA256SUMS, so the browser runs the same binary
-# users install) via scripts/fetch-wasm.sh, bump kaappi_version, validate, commit
-# the bump, and deploy. The wasm itself is gitignored — served from the deploy
-# build, not committed.
+# users install) via scripts/fetch-wasm.sh, bump kaappi_version, validate, land
+# the bump on main through a pull request, and deploy. The wasm itself is
+# gitignored — served from the deploy build, not committed.
+#
+# Why a PR instead of a direct push: branch protection on main requires the DCO
+# status check, and a required check can only be satisfied by a SHA the check
+# has already reported success for. A brand-new commit pushed straight to main
+# can never satisfy that (github-actions[bot] isn't an admin, so it can't bypass
+# it either) — see issue #30. Routing the bump through a PR lets DCO run against
+# the PR head, and once it passes the bot merges the PR the same way a human
+# would. mkdocs gh-deploy then runs from this job after the merge lands, because
+# a merge performed with GITHUB_TOKEN does not trigger ci.yml's push-to-main
+# deploy.
 #
 # Run after cutting a core release:  gh workflow run update-wasm.yml -f tag=vX.Y.Z
 
@@ -17,6 +27,7 @@ on:
 
 permissions:
   contents: write
+  pull-requests: write
 
 # Share the deploy lock with ci.yml so the two can't race on gh-pages.
 concurrency:
@@ -29,6 +40,7 @@ jobs:
     env:
       TAG: ${{ inputs.tag }}
       GH_TOKEN: ${{ github.token }}
+      REPO: ${{ github.repository }}
     steps:
       - uses: actions/checkout@v7
 
@@ -50,17 +62,71 @@ jobs:
       - name: Validate
         run: mkdocs build --strict
 
-      - name: Commit version bump and deploy
+      - name: Land the version bump on main via PR
         run: |
+          set -euo pipefail
+          # Set once here (local config persists across steps in this job) so the
+          # gh-deploy commit in the deploy step has an identity even when there is
+          # no version bump to land below.
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          # The wasm is gitignored (fetched above), so only the version bump is
-          # committed; the fetched binary is served via gh-deploy below.
+
           if git diff --quiet -- mkdocs.yml; then
-            echo "mkdocs.yml already on $TAG — no version bump to commit."
-          else
-            git add mkdocs.yml
-            git commit -s -m "Update playground to ${TAG#v}"
-            git push
+            echo "mkdocs.yml already on $TAG — no version bump to land."
+            exit 0
           fi
+
+          # Unique per run so re-triggering the workflow never collides with a
+          # stale branch from an earlier attempt.
+          branch="bot/update-wasm-${TAG#v}-${GITHUB_RUN_ID}"
+          git switch -c "$branch"
+          # Only the version bump is committed; the fetched (gitignored) wasm is
+          # served from the deploy build below. -s carries a real DCO sign-off,
+          # whose author matches the committer so the DCO check passes.
+          git add mkdocs.yml
+          git commit -s -m "Update playground to ${TAG#v}"
+          git push origin "$branch"
+
+          head_sha=$(git rev-parse HEAD)
+          pr_url=$(gh pr create \
+            --base main \
+            --head "$branch" \
+            --title "Update playground to ${TAG#v}" \
+            --body "Automated by the update-wasm workflow after the ${TAG} release. Bumps \`kaappi_version\` in mkdocs.yml so the playground and tour report the released binary. Merges automatically once the DCO check passes.")
+          echo "Opened $pr_url (head $head_sha)"
+
+          # Branch protection only requires the DCO check, which runs as a
+          # check-run (not a commit status) via the DCO2 app. Wait for it to
+          # conclude on the PR head before merging. ~10 min ceiling.
+          ok=""
+          for i in $(seq 1 40); do
+            # Pick the newest DCO run (re-runs add entries) and stay empty-safe
+            # so a not-yet-created check just reads as pending.
+            state=$(gh api "repos/${REPO}/commits/${head_sha}/check-runs" \
+              --jq '[.check_runs[] | select(.name=="DCO")] | sort_by(.started_at) | last
+                    | if . then "\(.status)/\(.conclusion)" else "" end')
+            echo "attempt ${i}: DCO=${state:-<none>}"
+            case "$state" in
+              completed/success) ok=1; break ;;
+              completed/*) echo "::error::DCO check concluded ${state#completed/}"; exit 1 ;;
+              *) sleep 15 ;;
+            esac
+          done
+          if [ -z "$ok" ]; then
+            echo "::error::Timed out waiting for the DCO check to pass on ${head_sha}"
+            exit 1
+          fi
+
+          # DCO is green, so this satisfies branch protection without any admin
+          # bypass — the merge lands exactly the flow protection is designed for.
+          gh pr merge "$pr_url" --merge --delete-branch
+
+      - name: Deploy to GitHub Pages
+        run: |
+          set -euo pipefail
+          # gh-deploy rebuilds the site from the working tree (bumped mkdocs.yml
+          # and the fetched wasm already present) and force-pushes to gh-pages.
+          # Fetch the book PDF too so the deployed /book/ viewer isn't missing
+          # its asset (it's gitignored, like the wasm).
+          scripts/fetch-book.sh
           mkdocs gh-deploy --force --strict
