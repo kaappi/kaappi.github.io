@@ -190,7 +190,7 @@ extra_css:
   - stylesheets/extra.css
 
 extra:
-  kaappi_version: 0.22.1
+  kaappi_version: 0.22.3
   # Book edition embedded on /book/ — scripts/fetch-book.sh downloads the
   # matching kaappi-book release at deploy time. Bump after a book release.
   book_version: 1.2.1
