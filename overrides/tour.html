@@ -314,6 +314,7 @@
     <span class="kp-tour-title" id="kp-tour-title">1 / 12 &mdash; Hello, Scheme!</span>
     <button id="kp-tour-next" title="Next lesson">&rarr;</button>
     <button id="kp-tour-run" title="Run (Ctrl+Enter)">&#9654; Run</button>
+    <button id="kp-tour-stop" title="Stop" hidden>&#9632; Stop</button>
     <span id="kp-tour-status"></span>
     <a href="../playground/" class="kp-tour-link">Free playground &rarr;</a>
     <button id="kp-tour-reset" title="Reset code">Reset</button>
@@ -441,6 +442,8 @@ window._kpTourRunner = runner;
 
 const statusEl = document.getElementById("kp-tour-status");
 const runBtn = document.getElementById("kp-tour-run");
+const stopBtn = document.getElementById("kp-tour-stop");
+let running = false;
 
 function setStatus(text, cls) {
   statusEl.textContent = text;
@@ -457,36 +460,53 @@ document.getElementById("kp-tour-reset").addEventListener("click", () => {
 
 // ---- Execution ----
 async function runCode() {
+  if (running) return;
   const code = editor.getContent();
   if (!code.trim()) return;
 
-  document.getElementById("kp-tour-stdout").textContent = "";
-  document.getElementById("kp-tour-stderr").textContent = "";
+  const stdoutEl = document.getElementById("kp-tour-stdout");
+  const stderrEl = document.getElementById("kp-tour-stderr");
+  stdoutEl.textContent = "";
+  stderrEl.textContent = "";
   setStatus("Running…", "running");
-  runBtn.disabled = true;
+  running = true;
+  runBtn.hidden = true;
+  stopBtn.hidden = false;
+  stopBtn.disabled = false;
 
-  try {
-    const result = await runner.run(code);
-    document.getElementById("kp-tour-stdout").textContent = result.stdout;
-    document.getElementById("kp-tour-stderr").textContent = result.stderr;
-    const ms = Math.round(result.elapsed);
-    setStatus(result.stderr ? `Done (${ms} ms) — errors` : `Done (${ms} ms)`, result.stderr ? "error" : "done");
+  const result = await runner.run(code, {
+    onStdout: (chunk) => { stdoutEl.textContent += chunk; },
+    onStderr: (chunk) => { stderrEl.textContent += chunk; },
+  });
 
-    // Mark lesson complete on successful run
-    if (!result.stderr && !progress.includes(currentLesson)) {
+  running = false;
+  stopBtn.hidden = true;
+  runBtn.hidden = false;
+  const ms = Math.round(result.elapsed);
+  if (result.error) {
+    setStatus(`Done (${ms} ms) — errors`, "error");
+  } else if (result.stopped || result.timedOut) {
+    setStatus(result.timedOut ? `Stopped — ${ms} ms time limit` : `Stopped (${ms} ms)`, "done");
+  } else {
+    setStatus(`Done (${ms} ms)`, "done");
+    // Mark lesson complete on a clean run
+    if (!progress.includes(currentLesson)) {
       progress.push(currentLesson);
       localStorage.setItem("kaappi-tour-progress", JSON.stringify(progress));
       buildSidebar();
     }
-  } catch (e) {
-    document.getElementById("kp-tour-stderr").textContent = e.message;
-    setStatus("Error", "error");
-  } finally {
-    runBtn.disabled = false;
   }
 }
 
+function stopCode() {
+  if (!running) return;
+  stopBtn.disabled = true;
+  setStatus("Stopping…", "running");
+  runner.stop();
+}
+
 runBtn.addEventListener("click", runCode);
+stopBtn.addEventListener("click", stopCode);
 
 // ---- Init ----
 currentLesson = readHash();

@@ -48,6 +48,12 @@
     opacity: .5;
     cursor: not-allowed;
   }
+  #kp-stop {
+    background: var(--kp-roast-2);
+    color: var(--kp-crema);
+    border: 1px solid var(--kp-roast-3);
+  }
+  #kp-stop:hover { background: var(--kp-roast-3); }
 
   .kp-play-toolbar select {
     background: var(--kp-roast-2);
@@ -196,6 +202,7 @@
 <div class="kp-play">
   <div class="kp-play-toolbar">
     <button id="kp-run" title="Run (Ctrl+Enter)">&#9654; Run</button>
+    <button id="kp-stop" title="Stop" hidden>&#9632; Stop</button>
     <select id="kp-examples" aria-label="Example programs">
       <option value="">Examples</option>
       <option value="hello">Hello World</option>
@@ -242,6 +249,7 @@ const statusEl = document.getElementById("kp-status");
 const stdoutEl = document.getElementById("kp-stdout");
 const stderrEl = document.getElementById("kp-stderr");
 const runBtn = document.getElementById("kp-run");
+const stopBtn = document.getElementById("kp-stop");
 const exSelect = document.getElementById("kp-examples");
 
 function setStatus(text, cls) {
@@ -253,32 +261,48 @@ const runner = createRunner();
 window._kpPlaygroundRunner = runner;
 
 let editor;
+let running = false;
 
 async function runCode() {
+  if (running) return;
   const code = editor.getContent();
   if (!code.trim()) return;
 
   stdoutEl.textContent = "";
   stderrEl.textContent = "";
   setStatus("Running…", "running");
-  runBtn.disabled = true;
+  running = true;
+  runBtn.hidden = true;
+  stopBtn.hidden = false;
+  stopBtn.disabled = false;
 
-  try {
-    const result = await runner.run(code);
-    stdoutEl.textContent = result.stdout;
-    stderrEl.textContent = result.stderr;
-    const ms = Math.round(result.elapsed);
-    setStatus(result.stderr ? `Done (${ms} ms) — errors` : `Done (${ms} ms)`,
-              result.stderr ? "error" : "done");
-  } catch (e) {
-    stderrEl.textContent = e.message;
-    setStatus("Error", "error");
-  } finally {
-    runBtn.disabled = false;
+  const result = await runner.run(code, {
+    onStdout: (chunk) => { stdoutEl.textContent += chunk; },
+    onStderr: (chunk) => { stderrEl.textContent += chunk; },
+  });
+
+  running = false;
+  stopBtn.hidden = true;
+  runBtn.hidden = false;
+  const ms = Math.round(result.elapsed);
+  if (result.error) {
+    setStatus(`Done (${ms} ms) — errors`, "error");
+  } else if (result.stopped || result.timedOut) {
+    setStatus(result.timedOut ? `Stopped — ${ms} ms time limit` : `Stopped (${ms} ms)`, "done");
+  } else {
+    setStatus(`Done (${ms} ms)`, "done");
   }
 }
 
+function stopCode() {
+  if (!running) return;
+  stopBtn.disabled = true;
+  setStatus("Stopping…", "running");
+  runner.stop();
+}
+
 runBtn.addEventListener("click", runCode);
+stopBtn.addEventListener("click", stopCode);
 
 exSelect.addEventListener("change", () => {
   const key = exSelect.value;
