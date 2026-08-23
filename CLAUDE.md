@@ -63,10 +63,24 @@ Full-page client-side apps built into the MkDocs site:
   self-verifies the export surface and runs `kaappi.wasm` through the fresh
   shim). Keep `codemirror` pinned at 6.0.1, and load the playground in a
   browser before committing regenerated bundles.
-- Execution is fully client-side: `playground-worker.js` fetches
-  `wasm/kaappi.wasm`, instantiates it against `wasi-shim-bundle.mjs`, writes
-  the editor content as `program.scm` in a virtual FS, and streams
-  stdout/stderr back to the page.
+- Execution is fully client-side in `playground-worker.js`, which fetches
+  `wasm/kaappi.wasm` and instantiates it against `wasi-shim-bundle.mjs`. It
+  feature-detects the WASM's exports and picks one of two paths:
+  - **Stepped** (preferred) — when the binary exports the bounded-step entry
+    point (kaappi#2283: `kaappi_step_alloc`/`setup`/`run`/`stop`/`reset`), the
+    worker pumps `kaappi_step_run(budget)` in a loop: run a chunk of bytecode,
+    flush streamed stdout/stderr to the page, yield, honor a cooperative **Stop**
+    button, enforce a generous wall-clock backstop (30 s) and an output cap, then
+    repeat. This is what powers the real Stop button and lets a long,
+    constant-space program keep running and streaming instead of dying at 5 s.
+  - **Batch** (fallback) — an older binary without those exports runs the classic
+    way: the editor content is written as `program.scm` in a virtual FS and a
+    single blocking WASI `_start` runs it to completion. No mid-run streaming or
+    cooperative stop; `kp-runner.mjs`'s hard-kill timeout is the only guard.
+  The site is safe to deploy against a released WASM that predates the step entry
+  point — it runs batch and upgrades to stepped automatically once `update-wasm`
+  syncs a release that ships the exports. `kp-runner.mjs` owns the worker
+  lifecycle and the `run(code, {onStdout, onStderr}) -> Promise` / `stop()` API.
 - The tour's 12 lessons live in the `LESSONS` array in `docs/js/tour-lessons.mjs`
   (dynamically imported by `overrides/tour.html`); the playground's example
   programs are likewise in `docs/js/playground-examples.mjs`.
