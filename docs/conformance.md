@@ -21,7 +21,7 @@ and this page follows the same shape.
 ## Core language
 
 Every identifier in [R7RS Appendix A](https://standards.scheme.org/corrected-r7rs/r7rs-Z-H-10.html) is
-implemented: 692 built-in procedures, 32 syntax forms, and all 16 standard
+implemented: 695 built-in procedures, 32 syntax forms, and all 16 standard
 libraries. The R7RS conformance test suite passes in full. See
 [CONFORMANCE.md](https://github.com/kaappi/kaappi/blob/main/CONFORMANCE.md)
 in the core repo for exact counts and per-SRFI coverage detail — this page
