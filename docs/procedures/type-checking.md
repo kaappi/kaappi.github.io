@@ -72,9 +72,11 @@ kaappi> (eqv? '() '())
 Performs deep structural comparison. Two pairs are `equal?` if their
 `car` and `cdr` fields are recursively `equal?`. Two vectors are `equal?`
 if they have the same length and all corresponding elements are `equal?`.
-Strings and bytevectors are compared element-by-element. For numbers and
-characters, `equal?` delegates to `eqv?`. This is the most general
-equality predicate but also the slowest for large structures.
+Strings and bytevectors are compared element-by-element. Records are
+compared structurally: two instances of the *same* record type are `equal?`
+when their fields are pairwise `equal?` (records of different types are never
+`equal?`). For numbers and characters, `equal?` delegates to `eqv?`. This is
+the most general equality predicate but also the slowest for large structures.
 
 ```scheme
 kaappi> (equal? '(1 2 3) '(1 2 3))
@@ -86,6 +88,9 @@ kaappi> (equal? '#(1 2) '#(1 2))
 kaappi> (equal? 42 42.0)
 ;=> #f
 kaappi> (equal? '(1 (2 3)) '(1 (2 3)))
+;=> #t
+kaappi> (define-record-type pt (make-pt x) pt? (x pt-x))
+kaappi> (equal? (make-pt 1) (make-pt 1))
 ;=> #t
 ```
 
