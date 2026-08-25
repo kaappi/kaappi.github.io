@@ -154,7 +154,7 @@ These are loaded from `.sld` files when first imported. Sorted by SRFI number.
 | 162 | Comparators sub-library |
 | 164 | Enhanced multi-dimensional arrays (a compatible extension of SRFI 25) |
 | 165 | The environment monad |
-| 166 | Formatting (also `pretty`, `columnar`, `unicode`, `color` sub-libraries) |
+| 166 | Formatting (also `base`, `pretty`, `columnar`, `unicode`, `color` sub-libraries) |
 | 167 | Ordered key-value store |
 | 168 | Generic tuple store database |
 | 169 | Underscores in numbers |

@@ -184,9 +184,11 @@ kaappi> (char-alphabetic? #\x03BB)   ; Greek lambda
 
 **Syntax:** `(char-numeric? char)`
 
-Returns `#t` if *char* is a Unicode numeric digit. This includes ASCII digits
-0-9 as well as digits from other scripts (Arabic-Indic, Devanagari, Thai,
-Tibetan, fullwidth digits, and many more -- 36 digit ranges are recognized).
+Returns `#t` if *char* is a Unicode decimal digit (general category `Nd`).
+Every `Nd` code point is covered: ASCII digits 0-9, digits from other
+scripts (Arabic-Indic, Devanagari, Thai, Tibetan, fullwidth digits, and
+many more), and supplementary-plane digits such as U+1D7CE MATHEMATICAL
+BOLD DIGIT ZERO.
 
 ```scheme
 kaappi> (char-numeric? #\5)
@@ -194,6 +196,8 @@ kaappi> (char-numeric? #\5)
 kaappi> (char-numeric? #\a)
 ;=> #f
 kaappi> (char-numeric? #\x0966)   ; Devanagari digit zero
+;=> #t
+kaappi> (char-numeric? #\x1D7CE)  ; mathematical bold digit zero
 ;=> #t
 ```
 
@@ -355,13 +359,11 @@ kaappi> (char-foldcase #\x017F)   ; Latin small long s
 
 **Syntax:** `(digit-value char)`
 
-If *char* is a Unicode decimal digit, returns its numeric value as an exact
-integer (0--9). Otherwise returns `#f`. This procedure recognizes digits from
-36 different scripts, including ASCII, Arabic-Indic, Devanagari, Bengali,
-Gujarati, Gurmukhi, Oriya, Tamil, Telugu, Kannada, Malayalam, Sinhala, Thai,
-Lao, Tibetan, Myanmar, Khmer, Mongolian, Limbu, New Tai Lue, Tai Tham,
-Balinese, Sundanese, Lepcha, Ol Chiki, Vai, Saurashtra, Kayah Li, Cham,
-Meetei Mayek, and fullwidth digits.
+If *char* is a Unicode decimal digit (general category `Nd`), returns its
+numeric value as an exact integer (0--9). Otherwise returns `#f`. Every
+`Nd` code point is recognized — ASCII, every script's decimal digits, and
+the supplementary-plane mathematical digits — staying in lockstep with
+[`char-numeric?`](#char-numeric) as R7RS requires.
 
 ```scheme
 kaappi> (digit-value #\3)
@@ -372,6 +374,8 @@ kaappi> (digit-value #\x0966)   ; Devanagari digit zero
 ;=> 0
 kaappi> (digit-value #\x0E53)   ; Thai digit three
 ;=> 3
+kaappi> (digit-value #\x1D7CE)  ; mathematical bold digit zero
+;=> 0
 ```
 
 **See also:** [`char-numeric?`](#char-numeric)

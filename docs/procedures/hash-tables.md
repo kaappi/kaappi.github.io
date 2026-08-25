@@ -47,6 +47,11 @@ to compute bucket indices; it must be consistent with the equality
 predicate. When using `eq?` or `eqv?` as the equality predicate,
 provide a matching hash function for correct behavior.
 
+Any `equal?`-comparable value can serve as a key in the default table,
+records included: record instances hash and compare structurally, so two
+instances of the same record type with pairwise `equal?` fields behave
+as the same key.
+
 ```scheme
 kaappi> (define ht (make-hash-table))
 kaappi> (hash-table? ht)

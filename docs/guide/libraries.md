@@ -45,7 +45,7 @@ Multiple imports can be combined:
 
 Kaappi includes all 14 R7RS standard libraries, {{ srfi_count }} SRFIs
 ({{ srfi_builtin }} built-in, {{ srfi_portable }} portable, three sub-library-only, plus the
-SRFI 261 naming convention), and four Kaappi extension libraries.
+SRFI 261 naming convention), and five Kaappi extension libraries.
 
 ### Standard R7RS Libraries (16)
 
@@ -81,6 +81,7 @@ all {{ srfi_count }} supported SRFIs, built-in and portable.
 | `(kaappi fibers)` | Green threads (spawn, yield, fiber-join, channels) |
 | `(kaappi parallel)` | Worker pools and parallel map over OS threads (make-pool, pool-submit, parallel-map) |
 | `(kaappi diagnostics)` | Stable KP diagnostic codes on error objects (error-object-code) |
+| `(kaappi primitives)` | The `%`-prefixed internal primitives that portable `.sld` libraries name in their own source (record substrate, random-source accessors, endianness probe) — the implementation's own substrate, not a stability promise; portable code should use the SRFIs layered over it |
 
 ## Writing Your Own Library
 

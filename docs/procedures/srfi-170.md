@@ -1020,3 +1020,67 @@ kaappi> (temp-file-prefix)
 **See also:** [`create-temp-file`](#create-temp-file)
 
 ---
+
+## Error Conditions
+
+Operations on this page report failures by raising a file error whose
+condition object carries the `errno` of the failing syscall, captured at
+the raise site. The SRFI-170 error protocol reads it back.
+
+### `posix-error?` { #posix-error }
+<!-- index: 1 | True if the condition carries a POSIX errno -->
+
+**Syntax:** `(posix-error? obj)`
+
+Returns `#t` if *obj* is a condition describing a POSIX error — an error
+object raised by a failing SRFI-170 syscall. Failures that never reached a
+syscall (type errors, the embedded-NUL path pre-check) answer `#f`, as does
+any value that is not a condition.
+
+```scheme
+kaappi> (posix-error? 42)
+;=> #f
+```
+
+**See also:** [`posix-error-name`](#posix-error-name), [`posix-error-message`](#posix-error-message)
+
+---
+
+### `posix-error-name` { #posix-error-name }
+<!-- index: 1 | Symbol naming the errno, e.g. ENOENT -->
+
+**Syntax:** `(posix-error-name condition)`
+
+Returns a symbol naming the errno captured on *condition*, e.g. `ENOENT`
+or `EACCES`. Errno numbers differ between POSIX systems but the names are
+shared, so the name is what the protocol exposes. Raises a type error if
+*condition* does not describe a POSIX error.
+
+```scheme
+kaappi> (guard (c ((posix-error? c) (posix-error-name c)))
+        (file-info "/no/such/path"))
+;=> ENOENT
+```
+
+**See also:** [`posix-error-message`](#posix-error-message), [`posix-error?`](#posix-error)
+
+---
+
+### `posix-error-message` { #posix-error-message }
+<!-- index: 1 | strerror(3) text of the captured errno -->
+
+**Syntax:** `(posix-error-message condition)`
+
+Returns the `strerror(3)` message text for the errno captured on
+*condition*. Raises a type error if *condition* does not describe a POSIX
+error.
+
+```scheme
+kaappi> (guard (c ((posix-error? c) (posix-error-message c)))
+        (file-info "/no/such/path"))
+;=> "No such file or directory"
+```
+
+**See also:** [`posix-error-name`](#posix-error-name), [`posix-error?`](#posix-error)
+
+---

@@ -22,12 +22,13 @@ kaappi> _
 
 ## Line Editing
 
-The REPL uses [linenoise](https://github.com/antirez/linenoise) for line editing with full terminal support.
+The REPL uses [isocline](https://github.com/daanx/isocline) for line editing
+with full terminal support.
 
 | Key | Action |
 |-----|--------|
 | **Left / Right** | Move cursor |
-| **Up / Down** | Navigate history |
+| **Up / Down** | Move within a multi-line form; at its top or bottom edge, navigate history |
 | **Ctrl+A** | Move to start of line |
 | **Ctrl+E** | Move to end of line |
 | **Ctrl+K** | Delete from cursor to end |
@@ -38,7 +39,28 @@ The REPL uses [linenoise](https://github.com/antirez/linenoise) for line editing
 | **Ctrl+T** | Transpose characters |
 | **Tab** | Auto-complete symbol names |
 | **Ctrl+R** | Reverse history search |
-| **Ctrl+C** | Cancel current line |
+| **Ctrl+C** | Cancel current form |
+
+Click inside the input area to move the edit cursor by opting in with
+`repl.mouse: true` in `~/.kaappi/config` (default off, so the terminal's
+drag-to-select is untouched; not yet supported in the Windows console).
+Prompt width, continuation prompts, and line wrapping are all accounted
+for, including in wrapped multi-line forms.
+
+## Structural Editing
+
+The whole form being edited lives in one buffer, so Paredit-style
+transforms can move a paren instead of a character:
+
+| Key | Action |
+|-----|--------|
+| **Alt+Shift+S** | Slurp — grow the list at point to include the following expression |
+| **Alt+Shift+B** | Barf — expel the last expression from the list at point |
+| **Alt+Shift+R** | Raise — replace the enclosing list with the expression at point |
+| **Alt+Y** | Rotate — cycle the arguments of the list at point, keeping the head; repeating restores the original |
+
+The transforms understand strings, comments, and character literals rather
+than approximating them as raw text.
 
 ## Syntax Highlighting
 
@@ -186,6 +208,10 @@ kaappi> (square 7)
 The prompt changes to `  ... ` while input is incomplete. The primary
 prompt can be customized via `repl.prompt` in `~/.kaappi/config`.
 Press **Ctrl+C** to cancel a multi-line entry.
+
+The whole form is held in one editable buffer: up and down move within it
+and only reach history at its edges, and a multi-line paste is drawn in
+full rather than folded into a placeholder line.
 
 ## The `_` Variable
 
