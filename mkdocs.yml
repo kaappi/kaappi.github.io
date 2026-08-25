@@ -191,6 +191,11 @@ extra_css:
 
 extra:
   kaappi_version: 0.24.0
+  # Built-in procedure count for conformance.md's R7RS Appendix A coverage
+  # sentence. The update-wasm workflow bumps it (and the SRFI counts below)
+  # from the release tag's CONFORMANCE.md in the core repo, so the site
+  # can't drift from the release it serves.
+  builtin_count: 695
   # Book edition embedded on /book/ — scripts/fetch-book.sh downloads the
   # matching kaappi-book release at deploy time. Bump after a book release.
   book_version: 1.2.1
@@ -199,15 +204,17 @@ extra:
   # spine width (and so the 3D render) is derived from it.
   book_pages: 337
   # SRFI counts shown across the site (faq, glossary, guide index,
-  # srfi-support, libraries, conformance, landing page). srfi_count =
-  # srfi_builtin + srfi_portable importable libraries (verify against
-  # `kaappi features --json` after each kaappi release) + the SRFI 261
-  # naming convention, which is honored by the import resolver but has
-  # no library file. Bump gotcha: features --json only counts top-level
-  # lib/srfi/N.sld files, so sub-library-only SRFIs (importable only as
-  # e.g. `(srfi 160 u8)`; as of v0.22.0 that's 160, 211, 226) are
-  # omitted there — count them into srfi_count by hand, and give them
-  # rows in guide/srfi-support.md. Markdown pages use {{ srfi_count }}
+  # srfi-support, libraries, conformance, landing page). The update-wasm
+  # workflow bumps these from the core repo's CONFORMANCE.md at the
+  # release tag. Accounting: srfi_count = srfi_builtin + srfi_portable
+  # importable libraries + the SRFI 261 naming convention, which is
+  # honored by the import resolver but has no library file.
+  # Audit gotcha: `kaappi features --json` only counts top-level
+  # lib/srfi/N.sld files, so it omits SRFI 261 and the sub-library-only
+  # SRFIs (importable only as e.g. `(srfi 160 u8)`; as of v0.22.0 that's
+  # 160, 211, 226) — CONFORMANCE.md's stated totals are the
+  # authoritative numbers, and those SRFIs also need rows in
+  # guide/srfi-support.md. Markdown pages use {{ srfi_count }}
   # (needs `render_macros: true` frontmatter); overrides/ templates use
   # {{ config.extra.srfi_count }}.
   # v0.22.0: 12 + 162 importable + 261 + the three sub-library-only

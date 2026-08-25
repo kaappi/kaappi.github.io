@@ -1,10 +1,14 @@
 name: Update playground WASM
 
-# Sync the playground/tour to a kaappi release: fetch the *released* kaappi.wasm
+# Sync the site to a kaappi release: fetch the *released* kaappi.wasm
 # (verified against the release SHA256SUMS, so the browser runs the same binary
-# users install) via scripts/fetch-wasm.sh, bump kaappi_version, validate, land
-# the bump on main through a pull request, and deploy. The wasm itself is
-# gitignored — served from the deploy build, not committed.
+# users install) via scripts/fetch-wasm.sh, bump kaappi_version and the count
+# variables (builtin_count, srfi_count, srfi_builtin, srfi_portable — extracted
+# from the core repo's CONFORMANCE.md at the release tag), validate, land the
+# bumps on main through a pull request, tag that merge point docs-vX.Y.Z so the
+# docs history can be sliced by kaappi version (git log docs-v0.22.3..docs-v0.23.0),
+# and deploy. The wasm itself is gitignored — served from the deploy build, not
+# committed.
 #
 # Why a PR instead of a direct push: branch protection on main requires the DCO
 # status check, and a required check can only be satisfied by a SHA the check
@@ -59,6 +63,28 @@ jobs:
         run: |
           sed -i "s/^  kaappi_version: .*/  kaappi_version: ${TAG#v}/" mkdocs.yml
 
+      - name: Bump the count variables from the release's CONFORMANCE.md
+        run: |
+          set -euo pipefail
+          # CONFORMANCE.md in the core repo is the source of truth for the
+          # counts the site renders via {{ ... }} macros; read it at the
+          # release tag so the numbers always match the release being served.
+          conformance=$(gh api "repos/kaappi/kaappi/contents/CONFORMANCE.md?ref=${TAG}" --jq .content | base64 -d)
+          bump() {
+            label="$1" pattern="$2"
+            value=$(printf '%s\n' "$conformance" | grep -oE "$pattern" | head -1 | tr -dc '0-9' || true)
+            if [ -z "$value" ]; then
+              echo "::error::no match for ${label} (${pattern}) in kaappi/kaappi CONFORMANCE.md at ${TAG} — did its wording change?"
+              exit 1
+            fi
+            sed -i "s/^  ${label}: .*/  ${label}: ${value}/" mkdocs.yml
+            echo "${label} -> ${value}"
+          }
+          bump builtin_count '[0-9]+ built-in procedures'
+          bump srfi_count    '[0-9]+ SRFIs supported'
+          bump srfi_builtin  '[0-9]+ built-in \(native Zig\)'
+          bump srfi_portable '[0-9]+ portable \(\.sld files\)'
+
       - name: Validate
         run: mkdocs build --strict
 
@@ -72,7 +98,7 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
           if git diff --quiet -- mkdocs.yml; then
-            echo "mkdocs.yml already on $TAG — no version bump to land."
+            echo "mkdocs.yml already on $TAG — nothing to land."
             exit 0
           fi
 
@@ -80,19 +106,20 @@ jobs:
           # stale branch from an earlier attempt.
           branch="bot/update-wasm-${TAG#v}-${GITHUB_RUN_ID}"
           git switch -c "$branch"
-          # Only the version bump is committed; the fetched (gitignored) wasm is
-          # served from the deploy build below. -s carries a real DCO sign-off,
-          # whose author matches the committer so the DCO check passes.
+          # Only the mkdocs.yml bumps (version + counts) are committed; the
+          # fetched (gitignored) wasm is served from the deploy build below.
+          # -s carries a real DCO sign-off, whose author matches the committer
+          # so the DCO check passes.
           git add mkdocs.yml
-          git commit -s -m "Update playground to ${TAG#v}"
+          git commit -s -m "Sync site to kaappi ${TAG#v}"
           git push origin "$branch"
 
           head_sha=$(git rev-parse HEAD)
           pr_url=$(gh pr create \
             --base main \
             --head "$branch" \
-            --title "Update playground to ${TAG#v}" \
-            --body "Automated by the update-wasm workflow after the ${TAG} release. Bumps \`kaappi_version\` in mkdocs.yml so the playground and tour report the released binary. Merges automatically once the DCO check passes.")
+            --title "Sync site to kaappi ${TAG#v}" \
+            --body "Automated by the update-wasm workflow after the ${TAG} release. Bumps \`kaappi_version\` and the count variables (\`builtin_count\`, \`srfi_count\`, \`srfi_builtin\`, \`srfi_portable\`, extracted from the release tag's CONFORMANCE.md) in mkdocs.yml so the playground, tour, and count macros report the released binary. Tags the merge \`docs-${TAG}\`. Merges automatically once the DCO check passes.")
           echo "Opened $pr_url (head $head_sha)"
 
           # Branch protection only requires the DCO check, which runs as a
@@ -120,6 +147,25 @@ jobs:
           # DCO is green, so this satisfies branch protection without any admin
           # bypass — the merge lands exactly the flow protection is designed for.
           gh pr merge "$pr_url" --merge --delete-branch
+
+      - name: Tag the release sync point
+        run: |
+          set -euo pipefail
+          # Mark where main first serves $TAG, so the docs history can be
+          # sliced by kaappi version:
+          #   git log docs-v0.22.3..docs-v0.23.0   (docs changes of an era)
+          #   git tag --merged <sha> -l 'docs-v*' | sort -V | tail -1
+          # Best effort: on a re-run after a successful sync the tag already
+          # exists and we skip; if the version was ever bumped by hand, the
+          # workflow run tags whatever main currently reports.
+          tag="docs-${TAG}"
+          if git ls-remote --exit-code --tags origin "refs/tags/${tag}" >/dev/null; then
+            echo "${tag} already exists — nothing to tag."
+            exit 0
+          fi
+          git fetch origin main
+          git tag -a "$tag" -m "Docs sync point for kaappi ${TAG}" "$(git rev-parse origin/main)"
+          git push origin "$tag"
 
       - name: Deploy to GitHub Pages
         run: |

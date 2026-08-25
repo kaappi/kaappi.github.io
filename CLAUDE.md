@@ -92,17 +92,20 @@ Full-page client-side apps built into the MkDocs site:
 After each kaappi release (cut with the `/github-release` skill in the core repo),
 the core repo's Step 11 triggers the `update-wasm` workflow in this repo. It
 downloads the released `kaappi.wasm`, verifies its SHA256, bumps `kaappi_version`
-in `mkdocs.yml`, and deploys.
+and the count variables (`builtin_count`, `srfi_count`, `srfi_builtin`,
+`srfi_portable` — extracted from the release tag's CONFORMANCE.md in the core
+repo) in `mkdocs.yml`, tags the merge `docs-vX.Y.Z`, and deploys. Every count
+the site states renders from those variables (markdown via `{{ var }}` with
+`render_macros: true`, home.html via `config.extra`), so no count is
+hand-edited per release anymore.
 
-One manual check remains: if the release changed SRFI coverage, bump
-`srfi_count` / `srfi_builtin` / `srfi_portable` under `extra:` in
-`mkdocs.yml` — every SRFI count on the site renders from these variables
-(markdown via `{{ srfi_count }}` with `render_macros: true`, home.html via
-`config.extra`). Get the importable counts from `kaappi features --json`;
-`srfi_count` additionally counts the SRFI 261 naming convention, which has
-no library file.
+The `docs-vX.Y.Z` tags double as a version ledger over the docs history:
+`git log docs-v0.22.3..docs-v0.23.0` lists every docs change from that
+release's era, and `git tag --merged <sha> -l 'docs-v*' | sort -V | tail -1`
+reports the kaappi version current when an arbitrary docs commit landed
+(tags exist from v0.11.1 on).
 
-A second manual step: after `update-wasm` bumps `kaappi_version`, run
+One manual step remains: after `update-wasm` bumps `kaappi_version`, run
 `make -C cheatsheet` locally and commit the refreshed
 `docs/assets/kaappi-cheatsheet.pdf` — the sheet's version stamp comes from
 mkdocs.yml at build time, and CI cannot rebuild it (no TeX toolchain). If
