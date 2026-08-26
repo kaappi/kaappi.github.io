@@ -195,7 +195,7 @@ extra:
   # sentence. The update-wasm workflow bumps it (and the SRFI counts below)
   # from the release tag's CONFORMANCE.md in the core repo, so the site
   # can't drift from the release it serves.
-  builtin_count: 695
+  builtin_count: 696
   # Book edition embedded on /book/ — scripts/fetch-book.sh downloads the
   # matching kaappi-book release at deploy time. Bump after a book release.
   book_version: 1.2.1
