@@ -190,7 +190,7 @@ extra_css:
   - stylesheets/extra.css
 
 extra:
-  kaappi_version: 0.24.0
+  kaappi_version: 0.25.0
   # Built-in procedure count for conformance.md's R7RS Appendix A coverage
   # sentence. The update-wasm workflow bumps it (and the SRFI counts below)
   # from the release tag's CONFORMANCE.md in the core repo, so the site
