@@ -220,7 +220,8 @@ the machine architecture.
 ```scheme
 kaappi> (features)
 ;=> (r7rs kaappi ieee-float exact-closed exact-complex kaappi-fibers
-;    kaappi-reactor kaappi-diagnostics posix kaappi-threads)
+;    kaappi-reactor kaappi-diagnostics posix kaappi-threads
+;    kaappi-shared-channels)
 kaappi> (memq 'r7rs (features))
 ;=> (r7rs kaappi ieee-float ...)
 kaappi> (memq 'windows (features))
