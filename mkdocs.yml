@@ -54,6 +54,7 @@ nav:
       - Scheme Tutorial: guide/tutorial.md
     - Language:
       - Language Reference: guide/language.md
+      - Explicit Renaming Macros: guide/er-macros.md
       - Cheatsheet: cheatsheet.md
       - Libraries: guide/libraries.md
       - Library Authoring: guide/library-authoring.md

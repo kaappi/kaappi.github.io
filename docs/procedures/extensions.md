@@ -334,7 +334,10 @@ receiver takes the value. Returns an unspecified value.
 
 If *timeout* is given (a time object or number of seconds) and the send
 cannot complete within that time, returns *timeout-val* if supplied, or
-raises an error otherwise.
+raises a channel-timeout condition otherwise — a distinct, testable
+condition recognized by
+[`channel-timeout-exception?`](#channel-timeout-exception), not a
+generic error.
 
 Sending on a closed channel raises an error, as does sending an
 eof-object — at the receiving end it would be indistinguishable from the
@@ -368,9 +371,10 @@ the channel has been closed and all queued values have been received,
 returns an eof-object.
 
 If *timeout* is given (a time object or number of seconds) and no value
-arrives within that time, returns *timeout-val* if supplied, or raises
-an error otherwise. A receive that can never be satisfied raises a
-deadlock error instead of hanging.
+arrives within that time, returns *timeout-val* if supplied, or raises a
+channel-timeout condition otherwise — recognized by
+[`channel-timeout-exception?`](#channel-timeout-exception). A receive
+that can never be satisfied raises a deadlock error instead of hanging.
 
 ```scheme
 kaappi> (define ch (make-channel))
@@ -468,6 +472,40 @@ kaappi> (channel? 'not-a-channel)
 ```
 
 **See also:** [`make-channel`](#make-channel)
+
+---
+
+### `channel-timeout-exception?` { #channel-timeout-exception }
+<!-- index: 1 | True if exception is a channel timeout -->
+
+**Syntax:** `(channel-timeout-exception? obj)`
+
+Returns `#t` if *obj* is a channel-timeout condition, which is raised by
+`channel-send` and `channel-receive` when a *timeout* was supplied
+without a *timeout-val* and the operation could not complete in time —
+the direct analog of SRFI-18's `join-timeout-exception?` for channels.
+Expiry raises this distinct, testable condition rather than a generic
+error, so `guard` can tell a timeout apart from anything a sender or
+receiver could legitimately produce:
+
+```scheme
+kaappi> (define ch (make-channel 1))
+kaappi> (channel-send ch 'a)
+kaappi> (guard (e ((channel-timeout-exception? e) 'timed-out))
+         (channel-send ch 'b 0.1))       ; full for 100 ms, no receiver
+;=> timed-out
+kaappi> (channel-timeout-exception? 'not-a-condition)
+;=> #f
+kaappi> (guard (e ((channel-timeout-exception? e) 'receive-timed-out))
+         (channel-receive (make-channel) 0.1))
+;=> receive-timed-out
+```
+
+The condition is an error object whose message names the operation that
+expired (`"channel-send: timed out"` / `"channel-receive: timed out"`).
+
+**See also:** [`channel-send`](#channel-send),
+[`channel-receive`](#channel-receive)
 
 ---
 
