@@ -185,6 +185,11 @@ overflow:
 ;; prints: yes
 ```
 
+`syntax-rules` is R7RS-small's macro system and covers most needs. For
+macros whose expansion must be computed — validated, recursive over the
+form, generated from data — Kaappi also ships the procedural
+`er-macro-transformer`; see [Explicit Renaming Macros](er-macros.md).
+
 ## Exceptions
 
 ```scheme
@@ -273,5 +278,5 @@ cheaper than `call/cc`, which copies all registers and frames.
 
 ---
 
-Next: [Libraries](libraries.md)
+Next: [Explicit Renaming Macros](er-macros.md)
 
