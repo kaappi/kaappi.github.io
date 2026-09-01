@@ -83,8 +83,15 @@ missing or non-executable file raises a file error, catchable with
 
 ```scheme
 (guard (e ((file-error? e) (display "no such program\n")))
-  (run-process '("definitely-not-installed")))
+  (run-process '("/opt/definitely-not-installed")))
 ```
+
+!!! note
+    On OpenBSD a *bare* program name that resolves to nothing arrives as
+    exit status 127 rather than as a file error — POSIX leaves the choice
+    to the implementation, and OpenBSD's does the `PATH` search in the
+    child. An argv head with a path behaves the same everywhere. See
+    [kaappi#2456](https://github.com/kaappi/kaappi/issues/2456).
 
 ## Feeding input
 
