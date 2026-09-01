@@ -47,7 +47,7 @@ Options are quoted keyword symbols followed by a value:
 | `'output:` | `'string` (default) or `'bytevector` | How *stdout* and *stderr* come back. Use `'bytevector` for a program whose output is not UTF-8 text |
 | `'directory:` | string | Working directory for the child |
 | `'env:` | alist of `(name . value)` strings | Replaces the child's environment wholesale — see [`process-environment`](#process-environment) |
-| `'new-group:` | boolean | Put the child in its own process group. Implied by `'timeout:` |
+| `'new-group:` | boolean | Put the child in its own process group. Implied by `'timeout:`, which refuses an explicit `#f` — only a group kill reaches a grandchild holding the pipes, so a child-only kill could not bound the call |
 
 ```scheme
 kaappi> (call-with-values

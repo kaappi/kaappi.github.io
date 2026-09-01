@@ -126,6 +126,14 @@ fibers, inside the call, so it simply does not happen:
 If you build your own loop with `spawn-process`, this hazard is yours to
 handle — read each pipe in its own fiber.
 
+!!! warning "Windows: keep `input:` under 4 KiB for now"
+    On Windows an `input:` larger than the 4096-byte pipe buffer currently
+    hangs — the write parks waiting for a readiness signal the platform
+    reports incorrectly. Output is unaffected in both directions, and POSIX
+    is unaffected entirely. See
+    [kaappi#2459](https://github.com/kaappi/kaappi/issues/2459); write
+    larger input to a temporary file and pass its path meanwhile.
+
 ## Binary output
 
 `run-process` decodes output as UTF-8 by default. For a program that emits
@@ -155,6 +163,11 @@ The kill is unconditional (`SIGKILL`), because a timeout is a bound and not
 a request, and it goes to the whole process group so a child's own children
 die with it. The partial output lives only on the condition — the normal
 three-value return never happens.
+
+`'timeout:` therefore implies `'new-group: #t`, and passing `'new-group: #f`
+alongside it is an error rather than a silently unbounded call: a child-only
+kill cannot reach a grandchild still holding the pipes, and the wait would
+never end.
 
 ## Environment and working directory
 
