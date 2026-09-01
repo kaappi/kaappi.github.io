@@ -28,7 +28,7 @@ page names). Section overview:
 | Try It (playground) | `docs/playground.md` | 1 | Stub; rendered by `overrides/playground.html` |
 | Tour | `docs/tour.md` | 1 | Stub; rendered by `overrides/tour.html` (12 lessons) |
 | Download | `docs/download.md` | 1 | Install script + binary links; **version in H1** |
-| Guide | `docs/guide/` | 20 + index | Installation through troubleshooting; incl. tutorial, library authoring, concurrency, subprocesses, C/Zig extensions, SRFI support, editors, migrating, security, deployment |
+| Guide | `docs/guide/` | 21 + index | Installation through troubleshooting; incl. tutorial, library authoring, concurrency, subprocesses, er-macros, C/Zig extensions, SRFI support, editors, migrating, security, deployment |
 | Procedures | `docs/procedures/` | 21 + index | Per-category API reference (numbers, lists, strings, SRFI-1/13/18/133/170/254, syntax forms, subprocesses, extensions, …) |
 | Cookbook | `docs/cookbook/` | 11 + index | Task recipes: REST API, HTTP client, HTML templates, JSON, CSV, SQLite, config files, concurrency, subprocesses, testing, CLI tool |
 | Ecosystem | `docs/ecosystem/` | 21 + index | thottam (package manager) + one page per kaappi-* library |

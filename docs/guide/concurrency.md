@@ -58,6 +58,34 @@ thread. Libraries built on `(kaappi net)`'s plain-TCP `tcp-recv`/`tcp-send`
 under this model; only server accept loops need the explicit
 non-blocking treatment `http-listen-fiber` provides.
 
+### Channel timeouts
+
+Every blocking channel operation takes an optional timeout:
+`(channel-send ch value timeout)` and `(channel-receive ch timeout)`
+park for at most *timeout* (a number of seconds or a time object). What
+happens at expiry is up to you. Supply *timeout-val* as the next
+argument and you get that value back; omit it and the operation raises a
+**channel-timeout condition** — a distinct, testable condition, not a
+generic error — recognized by `channel-timeout-exception?`, the direct
+analog of SRFI-18's `join-timeout-exception?`. That distinction lets a
+`guard` tell "timed out" apart from every value a sender could
+legitimately send:
+
+```scheme
+(import (kaappi fibers))
+
+(define ch (make-channel 1))
+(channel-send ch 'first)                        ; channel now full
+
+(guard (e ((channel-timeout-exception? e) 'send-timed-out))
+  (channel-send ch 'second 0.1))                ;=> send-timed-out
+```
+
+Receives work the same way — `(channel-receive empty-ch 0.1)` raises
+rather than returning. See
+[`channel-timeout-exception?`](../procedures/extensions.md#channel-timeout-exception)
+in the reference for both variants.
+
 ## OS threads (SRFI-18)
 
 Real OS threads via `pthread_create`. Each thread gets its own VM and GC

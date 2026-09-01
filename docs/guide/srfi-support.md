@@ -265,7 +265,7 @@ These three have no bare `(srfi N)` to import — only their sub-libraries.
 | SRFI | Title | Import as |
 |------|-------|-----------|
 | 160 | Homogeneous numeric vector libraries | `(srfi 160 base)`, plus one per element type: `(srfi 160 u8)`, `s8`, `u16`, `s16`, `u32`, `s32`, `u64`, `s64`, `f32`, `f64`, `c64`, `c128` |
-| 211 | Scheme macro libraries — the procedural macro transformers | `(srfi 211 explicit-renaming)`, `(srfi 211 define-macro)`, `(srfi 211 syntax-parameter)` |
+| 211 | Scheme macro libraries — the procedural macro transformers ([guide](er-macros.md)) | `(srfi 211 explicit-renaming)`, `(srfi 211 define-macro)`, `(srfi 211 syntax-parameter)` |
 | 226 | Control features — a reduced, escape-only continuation-prompt subset | `(srfi 226 control prompts)`, `(srfi 226 control continuations)`, `(srfi 226 control times)` |
 
 SRFI 211's other eight sub-libraries need syntax objects or output-provenance

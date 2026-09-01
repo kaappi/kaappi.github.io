@@ -24,6 +24,7 @@ short seasons.
 ## Language
 
 - [Language Reference](language.md) — syntax lookup for every form and feature
+- [Explicit Renaming Macros](er-macros.md) — procedural macros with `er-macro-transformer`
 - [Libraries](libraries.md) — importing libraries and what's available
 - [Library Authoring](library-authoring.md) — creating your own libraries with `define-library`
 - [SRFI Support](srfi-support.md) — all {{ srfi_count }} supported SRFIs at a glance

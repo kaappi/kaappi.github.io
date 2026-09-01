@@ -388,15 +388,15 @@ if ONLY is None or "concurrency" in ONLY:
     bs = scheme_blocks("concurrency.md")
     join = lambda idxs: "\n".join("\n".join(bs[i]) for i in idxs) + "\n"
     run_file("concurrency-fibers-threads",
-             "(import (scheme base) (scheme write))\n" + join([0, 1, 2, 3]),
-             ["hello from fiber", "42", "42"])
+             "(import (scheme base) (scheme write))\n" + join([0, 1, 2, 3, 4]),
+             ["hello from fiber", "send-timed-out", "42", "42"])
     if core_lib_args() is None:
         print("concurrency-parallel: SKIPPED ((kaappi parallel) unavailable)")
     else:
         run_file("concurrency-parallel",
-             "(import (scheme base) (scheme write))\n" + join([4]) +
+             "(import (scheme base) (scheme write))\n" + join([5]) +
              "(define (expensive-computation) (* 7 6))\n" +
-             "\n".join(l.split(";=>")[0] for l in bs[5]) + "\n" +
+             "\n".join(l.split(";=>")[0] for l in bs[6]) + "\n" +
              "(display 'pool-done) (newline)\n",
              ["(1 4 9 16 25)", "pool-done"],
              args=(core_lib_args() or []))
