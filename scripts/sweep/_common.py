@@ -104,6 +104,23 @@ if not HAVE_FFI:
           "FFI-dependent checks are skipped", file=sys.stderr)
 
 
+def have_process():
+    """(kaappi process) landed after v0.25.0 (KEP-0022), so released
+    binaries older than that have no subprocess library at all. Detect it
+    once so the subprocess pages skip instead of failing every claim."""
+    r = subprocess.run(
+        ["kaappi", "/dev/stdin"],
+        input='(import (kaappi process))\n(run-process (list "true"))\n',
+        capture_output=True, text=True, timeout=60)
+    return r.returncode == 0
+
+
+HAVE_PROCESS = have_process()
+if not HAVE_PROCESS:
+    print("NOTE: this kaappi build has no (kaappi process) — "
+          "subprocess checks are skipped", file=sys.stderr)
+
+
 def port_open(port, host="127.0.0.1"):
     try:
         with socket.create_connection((host, port), 0.5):

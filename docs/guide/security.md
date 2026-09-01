@@ -190,6 +190,7 @@ kaappi --sandbox untrusted.scm
 | **Process context** | `get-environment-variable`, `get-environment-variables`, `command-line`, `exit` |
 | **Filesystem** | All SRFI-170 operations |
 | **OS threads** | SRFI-18 (`thread-start!`, mutexes, etc.) |
+| **Subprocesses** | All of `(kaappi process)` (`run-process`, `spawn-process`, etc.) — the whole library is excluded, so sandboxed code cannot escape by starting a program |
 
 ### What sandbox allows
 

@@ -60,6 +60,7 @@ nav:
       - Library Authoring: guide/library-authoring.md
       - SRFI Support: guide/srfi-support.md
       - Concurrency: guide/concurrency.md
+      - Running External Programs: guide/subprocesses.md
     - Tooling:
       - REPL Guide: guide/repl.md
       - CLI Reference: guide/cli.md
@@ -97,6 +98,7 @@ nav:
       - SRFI-170 Filesystem: procedures/srfi-170.md
       - SRFI-254 Ephemerons and Guardians: procedures/srfi-254.md
     - Extensions:
+      - Subprocesses: procedures/processes.md
       - Kaappi Extensions: procedures/extensions.md
       - Other Primitives: procedures/other.md
   - Cookbook:
@@ -109,6 +111,7 @@ nav:
     - Store Data in SQLite: cookbook/sqlite-storage.md
     - Read Configuration Files: cookbook/config-files.md
     - Run Concurrent Tasks: cookbook/concurrent-tasks.md
+    - Run External Programs: cookbook/external-programs.md
     - Write Tests: cookbook/testing.md
     - Build a CLI Tool: cookbook/cli-tool.md
   - Ecosystem:

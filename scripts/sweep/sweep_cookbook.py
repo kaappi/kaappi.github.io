@@ -7,7 +7,7 @@ is compile-checked with `kaappi check`.
 """
 import re, subprocess, sys, os, shutil, time, socket, pathlib, urllib.request
 sys.path.insert(0, str(pathlib.Path(__file__).parent))
-from _common import WS, HAVE_FFI, work, platformize, lib_args, core_lib_args
+from _common import WS, HAVE_FFI, HAVE_PROCESS, work, platformize, lib_args, core_lib_args
 
 DOCS = pathlib.Path(sys.argv[1])          # docs/cookbook dir
 WS_PATH = pathlib.Path(WS) if WS else None
@@ -185,6 +185,11 @@ HAVE_FFI and cumulative("sqlite-run", "sqlite-storage.md", list(range(8)),
     libs=([WS_PATH / "kaappi-test" / "lib"]
           if WS_PATH and (WS_PATH / "kaappi-test" / "lib").exists() else []),
     extra_expect=[('(display "done") (newline)', "done")])
+
+# ---------- external-programs.md ----------
+# Every block but the last runs cumulatively; the last one is the injection
+# contrast pair, whose `branch` is deliberately undefined prose.
+HAVE_PROCESS and cumulative("subprocess-run", "external-programs.md", list(range(12)))
 
 # ---------- concurrent-tasks.md ----------
 cumulative("fibers-run", "concurrent-tasks.md", [0, 1, 2, 3, 4],

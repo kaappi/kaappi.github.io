@@ -71,6 +71,10 @@ examples.
 
 {{ procedures_table("syntax-forms.md", kind="form") }}
 
+## [Subprocesses](processes.md)
+
+{{ procedures_table("processes.md") }}
+
 ## [SRFI-18 Threads](threads.md)
 
 {{ procedures_table("threads.md") }}
