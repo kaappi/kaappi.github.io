@@ -18,7 +18,7 @@ Sections → runners:
 | `migrating` | `sweep_migrating.py` | guide/migrating.md, block by block |
 | `cookbook` | `sweep_cookbook.py` + `sweep_cookbook2.py` | all cookbook pages: cumulative claim runs, live HTTP probes of the template servers, CLI transcript replay, `kaappi check` for network/pg/redis code |
 | `guide` | `sweep_guide.py` | tutorial/REPL transcripts (pty-driven, answers linenoise cursor queries), diagnostics triggers vs the KP registry, error-message tables, sandbox matrix, a full cc build of the C-extensions walkthrough |
-| `procs` | `sweep_procs.py` | all 20 procedures pages: each page replayed as one piped REPL session with block sentinels; every `;=>` claim asserted in order |
+| `procs` | `sweep_procs.py` | all 21 procedures pages: each page replayed as one piped REPL session with block sentinels; every `;=>` claim asserted in order |
 | `eco` | `sweep_eco.py` | ecosystem pages, service-backed: live redis + PostgreSQL, a local SMTP sink (`smtp_sink.py`) for email.md's send-email sample, workspace dylibs, per-block connection/schema preludes |
 | `playground` | `sweep_playground.py` | the tour lessons and playground examples (extracted via node), plus a WASM-capability lint |
 
