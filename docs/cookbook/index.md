@@ -29,6 +29,8 @@ self-contained guide that solves one problem end-to-end.
   defaults, environment overrides, and validation
 - [Run Concurrent Tasks](concurrent-tasks.md) — fibers, channels, pipelines,
   and worker pools
+- [Run External Programs](external-programs.md) — spawn commands, capture
+  output, feed stdin, set timeouts, and stream to a long-lived child
 - [Write Tests](testing.md) — test organization, assertions, error testing,
   and CI integration
 - [Build a CLI Tool](cli-tool.md) — argument parsing, subcommands,

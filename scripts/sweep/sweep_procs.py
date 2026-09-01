@@ -3,7 +3,7 @@
 piped REPL session with block-boundary sentinels."""
 import re, subprocess, sys, shutil, pathlib
 sys.path.insert(0, str(pathlib.Path(__file__).parent))
-from _common import work, platformize, core_lib_args, HAVE_FFI
+from _common import work, platformize, core_lib_args, HAVE_FFI, HAVE_PROCESS
 
 DOCS = pathlib.Path(sys.argv[1])            # docs/procedures
 ONLY = set(sys.argv[2].split(",")) if len(sys.argv) > 2 else None
@@ -13,7 +13,8 @@ FAILURES, PASSES = [], []
 
 EXTRA_ARGS = {"extensions.md": PARALLEL_ARGS or []}
 PRELUDE = {"srfi-170.md": "(import (srfi 170))",
-           "srfi-254.md": "(import (srfi 254) (srfi 111))"}
+           "srfi-254.md": "(import (srfi 254) (srfi 111))",
+           "processes.md": "(import (kaappi process) (kaappi fibers))"}
 FIXTURE = "first line of file\nsecond line\n"
 
 def blocks_of(page):
@@ -159,6 +160,8 @@ def assert_ordered(name, stdout, matchers):
     return True
 
 pages = sorted(p.name for p in DOCS.glob("*.md") if p.name != "index.md")
+if not HAVE_PROCESS:
+    pages = [p for p in pages if p != "processes.md"]
 if ONLY:
     pages = [p for p in pages if p.replace(".md", "") in ONLY]
 

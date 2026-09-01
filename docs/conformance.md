@@ -49,10 +49,12 @@ that unspecified territory, tracked as [Kaappi Enhancement Proposals
 | Fibers + I/O reactor | [KEP-0001](https://github.com/kaappi/keps/blob/main/keps/0001-event-loop-reactor.md) | **Final** — shipped | `(cond-expand (kaappi-fibers ...))`, `(cond-expand (kaappi-reactor ...))` |
 | SRFI-18 OS threads | — (R7RS-small doesn't cover threads; SRFI-18 predates this project) | Shipped | `(cond-expand (kaappi-threads ...))`, or `(cond-expand ((library (srfi 18)) ...))` |
 | Cross-thread channels | [KEP-0002](https://github.com/kaappi/keps/blob/main/keps/0002-cross-thread-channels.md) | **Accepted** — core mechanism shipped; the two wakeup-path correctness issues open at 0.14.x ([#1487](https://github.com/kaappi/kaappi/issues/1487), [#1489](https://github.com/kaappi/kaappi/issues/1489)) were fixed in v0.15.0 | `(cond-expand (kaappi-shared-channels ...))` ([KEP-0004](https://github.com/kaappi/keps/blob/main/keps/0004-discoverable-deviations.md) Phase 2; absent on wasm32-wasi, which has no OS threads, and on builds up to v0.25.0, which predate the identifier — there `kaappi features` still tells you what your build has) |
+| Native subprocesses | [KEP-0022](https://github.com/kaappi/keps/blob/main/keps/0022-subprocess-support.md) | **Accepted** — shipped after v0.25.0 | `(cond-expand ((library (kaappi process)) ...))` — there is deliberately no `kaappi-process` identifier. Absent on wasm32-wasi, which has no process model, and under `--sandbox`, which excludes the library. See [Running External Programs](guide/subprocesses.md) |
 | Shared flat numeric buffers | [KEP-0003](https://github.com/kaappi/keps/blob/main/keps/0003-shared-flat-numeric-data.md) | **Draft** — unimplemented, gated behind KEP-0002 usage data | None — doesn't exist yet |
 
 See [Concurrency](guide/concurrency.md) for how to use fibers, the reactor,
-and threads today.
+and threads today, and [Running External
+Programs](guide/subprocesses.md) for subprocesses.
 
 ## Detecting subsystems from code
 

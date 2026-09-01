@@ -28,6 +28,7 @@ short seasons.
 - [Library Authoring](library-authoring.md) — creating your own libraries with `define-library`
 - [SRFI Support](srfi-support.md) — all {{ srfi_count }} supported SRFIs at a glance
 - [Concurrency](concurrency.md) — green threads (fibers) and OS threads (SRFI-18)
+- [Running External Programs](subprocesses.md) — spawn commands, capture output, stream to a long-lived child
 
 ## Tooling
 
