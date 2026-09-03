@@ -221,11 +221,13 @@ These are loaded from `.sld` files when first imported. Sorted by SRFI number.
 | 267 | Raw strings — the `#"X"..."X"` literal syntax is built into the reader; the library adds port procedures |
 | 270 | Hexadecimal floating-point constants |
 | 271 | Random ports from OS entropy (also deterministic `(srfi 271 determinized)`) |
+| 273 | Extensions to data (type-)checking — `define-check`, `declare-checked`, `define-values-checked`, `check-impl?`; layered on and re-exporting all of `(srfi 253)` |
+| 274 | Extended list conversion procedures — `start`/`end` ranges on `list->string`, `list->vector`, `list->stream`, `list->ideque`, `list->generator` and the twelve `list-><type>vector`s, working on dotted and circular lists when `end` is supplied (also `(srfi 274 base)`, `(srfi 274 41)`, `(srfi 274 134)`, `(srfi 274 158)`, `(srfi 274 160 <type>)`) |
 
-### Seven that collide with `(scheme base)`
+### Eight that collide with `(scheme base)`
 
 R7RS 5.2 makes it an error to import one identifier from two libraries with
-different bindings, and Kaappi enforces that at the `import`. Seven portable
+different bindings, and Kaappi enforces that at the `import`. Eight portable
 SRFIs redefine a name `(scheme base)` already exports, so importing both
 plainly is rejected:
 
@@ -238,6 +240,7 @@ plainly is rejected:
 | 101 | `pair?` |
 | 140 | `list->string` |
 | 141 | `truncate/` |
+| 274 | `list->string` |
 
 Each imports cleanly on its own. Alongside `(scheme base)`, reach for
 `prefix` — which sidesteps the question entirely — or `except` the names you
