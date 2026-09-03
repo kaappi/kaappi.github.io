@@ -205,9 +205,11 @@ kaappi> (square 7)
 49
 ```
 
-The prompt changes to `  ... ` while input is incomplete. The primary
-prompt can be customized via `repl.prompt` in `~/.kaappi/config`.
-Press **Ctrl+C** to cancel a multi-line entry.
+While input is incomplete, each further line is indented under the
+prompt rather than given a prompt of its own (transcripts on this site
+write those continuation lines with a `  ...` marker). The primary prompt
+can be customized via `repl.prompt` in `~/.kaappi/config`. Press
+**Ctrl+C** to cancel a multi-line entry.
 
 The whole form is held in one editable buffer: up and down move within it
 and only reach history at its edges, and a multi-line paste is drawn in
@@ -294,7 +296,7 @@ kaappi> (define-syntax my-when
   ...     (syntax-rules ()
   ...       ((_ test body ...) (if test (begin body ...)))))
 kaappi> ,expand (my-when #t (display "yes"))
-(__hyg_1_if #t (begin (display "yes")))
+(__hyg_1_if #t (__hyg_2_begin (display "yes")))
 ```
 
 #### `,profile <expr>` — Detailed profiling

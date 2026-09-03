@@ -243,6 +243,11 @@ If *timeout* is given (a time object or number of seconds) and the thread
 has not terminated by then, a `join-timeout-exception` is raised -- unless
 *timeout-val* is provided, in which case that value is returned instead.
 
+While the caller is parked, the other fibers on its thread keep running,
+so a fiber may start a thread that another fiber is already joining.
+Joining a thread that was never started, with no timeout, raises the
+usual deadlock error instead of hanging.
+
 ```scheme
 kaappi> (define t (make-thread (lambda () (* 6 7))))
 kaappi> (thread-start! t)

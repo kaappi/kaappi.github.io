@@ -474,7 +474,7 @@ if ONLY is None or "troubleshooting" in ONLY:
         ("kp2001", "(lambda)\n",
          ["compile error[KP2001]: invalid syntax"]),
         ("kp3002a", '(+ "a" 1)\n',
-         ["error[KP3002]: type error in 'arithmetic': expected number, got #<string>"]),
+         ["error[KP3002]: type error in '+': expected number, got \"a\""]),
         ("kp3002b", "(car 42)\n",
          ["error[KP3002]: type error in 'car': expected pair, got 42"]),
         ("kp3003a", "(cons 1)\n",
@@ -602,7 +602,10 @@ if ONLY is None or "repl" in ONLY:
     (wd / "helpers.scm").write_text("(define (helper-val) 7)\n")
     SESSION = [
         ("(+ 1 2)", ["3"]), ("_", ["3"]),
-        ("(define (square x)", []), ("   (* x x))", []),
+        # isocline shows no continuation prompt (lines are indented under
+        # the primary one), so the driver cannot see "ready" mid-form:
+        # send the whole form on one line.
+        ("(define (square x) (* x x))", []),
         ("(square 7)", ["49"]),
         ("(* 6 7)", ["42"]), ("(+ _ 8)", ["50"]),
         ('(string-append "answer: " (number->string _))', ['"answer: 50"']),
@@ -618,7 +621,7 @@ if ONLY is None or "repl" in ONLY:
         (",type #t", ["; boolean"]),
         ("(define-syntax my-when (syntax-rules () ((_ test body ...) (if test (begin body ...)))))", []),
         (',expand (my-when #t (display "yes"))',
-         ['(__hyg_1_if #t (begin (display "yes")))']),
+         ['(__hyg_1_if #t (__hyg_2_begin (display "yes")))']),
         (",profile (fib 25)", ["75025", "Profile (", "Self ms", "fib (<repl>:1)"]),
         ("(define (factorial n) (if (<= n 1) 1 (* n (factorial (- n 1)))))", []),
         (",dis factorial", ["; Function: factorial", "; Source: <repl>:1",

@@ -84,8 +84,8 @@ program.scm:3:1: read error[KP1001]: unexpected end of input
 
 **Fix:** Add the missing closing delimiter -- every `(` needs a matching
 `)`. The interactive REPL never reports this error: while input is
-incomplete it shows the `  ... ` continuation prompt and waits for the
-rest.
+incomplete it keeps the form open, indenting each further line under the
+prompt, and waits for the rest.
 
 **Reference:** [`KP1001`](diagnostics.md#kp1001-unexpected-eof) · `kaappi explain KP1001`
 
@@ -253,14 +253,14 @@ REPL the location prefix and source echo are omitted.
 
 **Cause:** A primitive procedure received an argument of the wrong type.
 Kaappi checks types at the point of use and reports the procedure name,
-the expected type, and the offending value. Arithmetic primitives such
-as `+` and `*` report under the shared name `arithmetic`.
+the expected type, and the offending value itself (written as `write`
+would show it, so a string keeps its quotes).
 
 **Example:**
 
 ```scheme
 kaappi> (+ "a" 1)
-error[KP3002]: type error in 'arithmetic': expected number, got #<string>
+error[KP3002]: type error in '+': expected number, got "a"
 
 kaappi> (car 42)
 error[KP3002]: type error in 'car': expected pair, got 42

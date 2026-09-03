@@ -49,8 +49,9 @@ The REPL provides:
 - **Command history** -- up/down arrows, persisted across sessions in
   `~/.kaappi/history`
 - **Tab completion** -- completes symbols and `,commands`
-- **Multi-line input** -- open parentheses are tracked; the prompt changes to
-  `  ... ` until all parens are balanced
+- **Multi-line input** -- open parentheses are tracked; further lines are
+  indented under the prompt until all parens are balanced (shown as `  ...`
+  in the transcripts here)
 
 ```scheme
 kaappi> (define (square x)
