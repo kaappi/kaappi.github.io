@@ -175,6 +175,13 @@ A macro rejected its use, either via the R7RS 'syntax-error' keyword or
 because no 'syntax-rules' pattern matched the form. The accompanying
 message describes what the macro expected.
 
+The same code reports a datum-label cycle in code position — a form such
+as `(display #1=(p #1# q))`, or a `syntax-rules` template that contains
+itself — as `circular form in code position: the form contains itself
+(datum-label cycle)`. Such a form can never be compiled. Circular data
+under `quote` is fine, and shared but acyclic `#1=` structure still
+compiles.
+
 **Example**
 
 ```scheme

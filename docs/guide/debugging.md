@@ -150,7 +150,7 @@ kaappi> (define-syntax my-when
   ...     (syntax-rules ()
   ...       ((_ test body ...) (if test (begin body ...)))))
 kaappi> ,expand (my-when #t (display "yes"))
-(__hyg_1_if #t (begin (display "yes")))
+(__hyg_1_if #t (__hyg_2_begin (display "yes")))
 ```
 
 **`_` variable** — the last evaluation result, useful for incremental exploration:
@@ -412,7 +412,7 @@ $ kaappi expand swap.scm
 (define-syntax swap! (syntax-rules () ((_ a b) (let ((tmp a)) (set! a b) (set! b tmp)))))
 (define x 1)
 (define y 2)
-(__hyg_1_let ((__hyg_2_tmp x)) (set! x y) (set! y __hyg_2_tmp))
+(__hyg_1_let ((__hyg_2_tmp x)) (__hyg_3_set! x y) (__hyg_3_set! y __hyg_2_tmp))
 ```
 
 The REPL's `,expand` command does the same for a single expression.

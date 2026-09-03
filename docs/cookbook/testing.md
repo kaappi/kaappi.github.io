@@ -184,7 +184,9 @@ For large test suites, show only failures:
 (test-verbose! #f)
 
 (test-group "large suite"
-  ;; ... hundreds of tests ...
+  (test-equal "first" 1 1)
+  (test-equal "second" 2 2)
+  ;; ... hundreds more ...
   )
 
 (test-exit)
@@ -284,14 +286,16 @@ kaappi test: seed 76958 (reproduce with: kaappi test --seed 76958)
   PASS  tests/test-demo.scm  (1 tests, 0 skipped, 4ms)
   PASS  tests/test-strings.scm  (2 tests, 0 skipped, 7ms)
 
-Summary: 3 passed, 0 failed, 0 unexpected-pass, 0 expected-fail, 0 skipped
-Files:   2 run, 0 failed, 0 errored (133ms)
+Tests:   3 passed, 0 failed, 0 unexpected-pass, 0 expected-fail, 0 skipped
+Files:   2 run, 0 failed, 0 errored, 0 noted (133ms)
 Seed:    76958  (reproduce with: kaappi test --seed 76958)
 ```
 
 Each file runs in its own subprocess, so one crashing suite cannot take
 down the rest; the runner aggregates the counts and exits non-zero on
-any failure. The printed seed is fed to SRFI-27's default random source
+any failure. A file that ran to completion but reported a non-fatal error
+message is counted as `noted` rather than `errored`. The printed seed is
+fed to SRFI-27's default random source
 in every subprocess, so a failing randomized test reproduces exactly
 with `kaappi test --seed <n>`.
 

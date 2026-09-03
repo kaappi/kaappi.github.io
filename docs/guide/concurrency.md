@@ -132,7 +132,14 @@ for mutexes, condition variables, and the full threading API.
     boundary — sends and receives are deep-copied at each end, the same way
     values already are at `thread-start!`/`thread-join!`. Reaching a channel
     any other way (through a shared global, for example) raises a
-    descriptive error rather than corrupting memory. The wakeup-path bugs
+    descriptive error rather than corrupting memory. Each thread holds its
+    own handle to a channel that has crossed the boundary, so `eq?` on two
+    such handles is `#f`: compare channels with
+    [`channel=?`](../procedures/extensions.md#channel-eq), and key tables
+    or sets on them with
+    [`channel-hash`](../procedures/extensions.md#channel-hash) or
+    [`channel-comparator`](../procedures/extensions.md#channel-comparator).
+    The wakeup-path bugs
     in earlier builds were fixed in v0.15.0; see
     [Standards Conformance](../conformance.md#extensions-beyond-r7rs-smalls-scope)
     for the subsystem's KEP status.

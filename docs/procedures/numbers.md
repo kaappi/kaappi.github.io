@@ -910,9 +910,11 @@ kaappi> (square 1/3)
 **Syntax:** `(sqrt z)`
 
 Returns the principal square root of `z`. For negative real numbers,
-the result is a complex number: `(sqrt -1)` returns `+i`. For exact
-integers that are perfect squares, the result is an exact integer.
-Otherwise the result is a flonum. Also handles complex arguments.
+the result is a complex number with an inexact imaginary part: `(sqrt -1)`
+returns `+1.0i` (not the exact `+i` R7RS shows in its example). For
+non-negative exact integers that are perfect squares, the result is an
+exact integer. Otherwise the result is a flonum. Also handles complex
+arguments.
 
 ```scheme
 kaappi> (sqrt 4)
@@ -920,7 +922,7 @@ kaappi> (sqrt 4)
 kaappi> (sqrt 2.0)
 ;=> 1.4142135623730951
 kaappi> (sqrt -1)
-;=> +i
+;=> +1.0i
 kaappi> (sqrt 9)
 ;=> 3
 ```

@@ -197,10 +197,14 @@ source: https://github.com/kaappi/kaappi-web
 
 | Field | Required | Description |
 |-------|----------|-------------|
-| `name` | yes | Package name |
+| `name` | yes | Package name. Must match the name the package is installed under -- thottam refuses a manifest that declares a different one (`manifest declares name 'x' but installing 'y'`) rather than recording the checkout |
 | `depends` | no | Space-separated dependency specs (`name[@ver][::url]`) |
 | `build` | no | Build command (omit for pure Scheme) |
-| `source` | no | Git URL where this package is hosted |
+| `source` | no | Git URL where this package is hosted. On a bare-name install it is recorded as the lockfile's provenance, so `thottam list` shows it and a later `--locked` install fetches from it. It cannot redirect the first clone (the manifest is only read after cloning), and a command-line `::url` that disagrees with it wins, with a warning |
+
+There is no `version:` field. thottam locks by git commit SHA, so a version
+written in the manifest would mean nothing -- tag releases in git and let
+`name@ver` specs select them.
 
 ## Requirements
 

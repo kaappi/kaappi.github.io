@@ -86,12 +86,12 @@ missing or non-executable file raises a file error, catchable with
   (run-process '("/opt/definitely-not-installed")))
 ```
 
-!!! note
-    On OpenBSD a *bare* program name that resolves to nothing arrives as
-    exit status 127 rather than as a file error — POSIX leaves the choice
-    to the implementation, and OpenBSD's does the `PATH` search in the
-    child. An argv head with a path behaves the same everywhere. See
-    [kaappi#2456](https://github.com/kaappi/kaappi/issues/2456).
+This holds for a bare program name looked up on `PATH` as much as for an
+explicit path, on every platform — including OpenBSD, whose libc
+`posix_spawn` cannot report the child's exec failure and used to leave a
+mistyped command indistinguishable from a program that ran and exited 127
+(fixed in v0.26.0; see
+[kaappi#2456](https://github.com/kaappi/kaappi/issues/2456)).
 
 ## Feeding input
 
@@ -126,13 +126,15 @@ fibers, inside the call, so it simply does not happen:
 If you build your own loop with `spawn-process`, this hazard is yours to
 handle — read each pipe in its own fiber.
 
-!!! warning "Windows: keep `input:` under 4 KiB for now"
-    On Windows an `input:` larger than the 4096-byte pipe buffer currently
-    hangs — the write parks waiting for a readiness signal the platform
-    reports incorrectly. Output is unaffected in both directions, and POSIX
-    is unaffected entirely. See
-    [kaappi#2459](https://github.com/kaappi/kaappi/issues/2459); write
-    larger input to a temporary file and pass its path meanwhile.
+!!! note "Windows: a large `input:` blocks the thread while it drains"
+    On Windows an `input:` larger than the 4 KiB pipe buffer is fed with a
+    blocking OS write rather than a parked one, so the other fibers on that
+    thread pause until the child has read it. A child that writes more than
+    a pipe buffer of output *before* it has finished reading its input can
+    therefore fill its own stdout and wedge both sides. For such filters,
+    write the input to a temporary file and pass its path. POSIX is
+    unaffected. See
+    [kaappi#2459](https://github.com/kaappi/kaappi/issues/2459).
 
 ## Binary output
 

@@ -136,8 +136,11 @@ eliminating heap allocation.
 
 ### GC { #gc }
 
-**Garbage collector.** Kaappi uses a mark-and-sweep collector that traces
-live objects from roots (stack, globals) and frees unreachable memory.
+**Garbage collector.** Kaappi uses a generational mark-and-sweep
+collector: frequent minor collections trace only recently allocated
+objects (plus the older objects a write barrier has flagged as pointing at
+them), while occasional full collections trace everything from the roots
+(stack, globals) and free all unreachable memory.
 
 ### Hygienic macros { #hygienic-macros }
 

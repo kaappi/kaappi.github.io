@@ -144,6 +144,12 @@ fd, wakes any fiber parked on it, and unregisters it from the reactor.
 Don't also close the fd through your own FFI path — the number could be
 recycled onto an unrelated port.
 
+Wrapping also marks the descriptor close-on-exec, so a child started
+through [`(kaappi process)`](./processes.md) never inherits it — the port
+is the ownership boundary. A foreign library that needs a child to inherit
+its descriptor must arrange that on the raw fd itself, before (or instead
+of) wrapping it.
+
 The standard streams (fd 0, 1, 2) are rejected, since their blocking
 semantics are relied on elsewhere. Not available under `--sandbox`
 (where the whole `(kaappi ffi)` library is blocked) or on WebAssembly.
@@ -471,7 +477,108 @@ kaappi> (channel? 'not-a-channel)
 ;=> #f
 ```
 
-**See also:** [`make-channel`](#make-channel)
+**See also:** [`make-channel`](#make-channel), [`channel=?`](#channel-eq)
+
+---
+
+### `channel=?` { #channel-eq }
+<!-- index: 2 | True if both arguments are the same channel, even across threads -->
+
+**Syntax:** `(channel=? channel1 channel2)`
+
+Returns `#t` if *channel1* and *channel2* are the same channel, `#f`
+otherwise. Within one thread this agrees with `eq?`. The difference shows
+once a channel has crossed a thread boundary through a `thread-start!`
+thunk: each thread then holds its own handle to the promoted channel, and
+`eq?`, `eqv?` and `equal?` on two such handles answer `#f` even though
+every send on one is received on the other. `channel=?` answers `#t`
+whenever both operands are backed by the same channel, on either side of
+the boundary.
+
+Both arguments must be channels; anything else is a type error.
+
+```scheme
+kaappi> (define a (make-channel))
+kaappi> (define b (make-channel))
+kaappi> (channel=? a a)
+;=> #t
+kaappi> (channel=? a b)
+;=> #f
+```
+
+**See also:** [`channel-hash`](#channel-hash),
+[`channel-comparator`](#channel-comparator), [`channel?`](#channel-pred)
+
+---
+
+### `channel-hash` { #channel-hash }
+<!-- index: 1+ | Identity hash of a channel: `(channel-hash ch [bound])` -->
+
+**Syntax:** `(channel-hash channel)` | `(channel-hash channel bound)`
+
+Returns a non-negative exact integer hash of *channel*'s identity —
+reduced modulo *bound* (a positive exact integer) when one is given, like
+SRFI 69's `hash`. The hash is consistent with `channel=?`: two handles to
+the same channel hash alike. It is also stable across a channel's
+promotion to cross-thread use, so a hash table keyed on a channel before
+its first hand-off to an OS thread still finds the entry afterwards. For a
+channel that has never crossed a thread, `(channel-hash ch)` equals
+`(hash ch)`.
+
+```scheme
+kaappi> (define a (make-channel))
+kaappi> (= (channel-hash a) (channel-hash a))
+;=> #t
+kaappi> (< -1 (channel-hash a 16) 16)
+;=> #t
+```
+
+**See also:** [`channel=?`](#channel-eq),
+[`channel-comparator`](#channel-comparator)
+
+---
+
+### `channel-comparator` { #channel-comparator }
+<!-- index: 0 | SRFI 128 comparator over channel identity -->
+
+**Syntax:** `(channel-comparator)`
+
+Returns a [SRFI 128](../guide/srfi-support.md) comparator built from
+`channel?`, `channel=?` and `channel-hash` — the key to use when channels
+go into a hash table, a SRFI 113 set, or anything else that takes a
+comparator, so that two handles to one channel land in the same slot. The
+comparator is cached, so repeated calls return the same object. It has no
+ordering predicate.
+
+```scheme
+kaappi> (import (srfi 128) (srfi 113))
+kaappi> (define a (make-channel))
+kaappi> (define b (make-channel))
+kaappi> (comparator? (channel-comparator))
+;=> #t
+kaappi> (=? (channel-comparator) a b)
+;=> #f
+kaappi> (set-size (set (channel-comparator) a a b))
+;=> 2
+```
+
+A table keyed on a channel stays reachable after the channel has been
+handed to another thread, because the hash survives promotion:
+
+```scheme
+(import (kaappi fibers) (srfi 18) (srfi 69))
+
+(let ((ch (make-channel))
+      (registry (make-hash-table (channel-comparator))))
+  (hash-table-set! registry ch 'worker-1)
+  (let ((t (thread-start! (make-thread (lambda () (channel-send ch 'hello))))))
+    (channel-receive ch)                        ; ch is now cross-thread
+    (thread-join! t)
+    (hash-table-ref/default registry ch 'unknown)))
+;=> worker-1
+```
+
+**See also:** [`channel=?`](#channel-eq), [`channel-hash`](#channel-hash)
 
 ---
 

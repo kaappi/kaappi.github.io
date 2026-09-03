@@ -153,19 +153,39 @@ With this invocation, `(import (mylib math))` searches:
 
 ## Bytecode Caching
 
-Libraries are **not** bytecode-cached: a `.sld` file is compiled from source
-each time it is loaded. (An earlier scheme that read `.sbc` files placed next
-to libraries was removed as unsound -- if you have stray `.sbc` files sitting
-beside your `.sld` sources from following older docs, they are ignored and
-can be deleted.)
+Programs and libraries are both cached automatically. Running
+`kaappi program.scm` stores the compiled bytecode in a central cache at
+`$KAAPPI_HOME/cache` (default `~/.kaappi/cache`), keyed by the source
+content and the exact binary that compiled it -- so an upgraded or rebuilt
+`kaappi` never serves stale bytecode. Subsequent runs of an unchanged
+program skip the read/expand/compile pipeline entirely.
 
-Program files *are* cached automatically: running `kaappi program.scm` stores
-the compiled bytecode in a central cache at `$KAAPPI_HOME/cache` (default
-`~/.kaappi/cache`), keyed by the source content and the exact binary that
-compiled it -- so an upgraded or rebuilt `kaappi` never serves stale
-bytecode. Subsequent runs of an unchanged program skip the
-read/expand/compile pipeline entirely. Inspect or wipe the cache from the
-CLI:
+A `.sld` library loaded from a file gets its own cache entry (since
+v0.25.0). The design is "structure from source, code from cache": on every
+load the `.sld` is still read and its declarations walked normally --
+imports load, exports are re-derived, `cond-expand` re-selects,
+`define-record-type` creates its types -- but the body's compiled
+procedures and its macro transformers are replayed from the cache instead
+of being recompiled. Invalidation follows the files you edit: changing a
+library, a file it `include`s, or any library it imports invalidates its
+entry and every entry that transitively imported it (a program's cached
+code embeds the expansions of macros it imported, so a program entry goes
+stale on a library edit too), and so does a `--lib-path` change that
+resolves a dependency somewhere else.
+
+Two things are deliberately never cached: a library whose `cond-expand`
+tests library availability (a `(library ...)` requirement or an `srfi-N`
+feature), because that answer depends on the live library path rather than
+on anything a cache key can hash; and a *program* whose own top level
+defines a macro with `define-syntax` (macros inside a library are fine --
+the library's entry stores the transformers themselves). `kaappi --timings`
+names the reason whenever a file is not cached.
+
+Nothing is ever written next to your sources. (An earlier scheme that read
+`.sbc` files placed beside libraries was removed as unsound -- if you have
+stray `.sbc` files sitting beside your `.sld` sources from following older
+docs, they are ignored and can be deleted.) Inspect or wipe the cache from
+the CLI:
 
 ```bash
 kaappi cache status   # cache location, entries, sizes, staleness

@@ -25,7 +25,7 @@ use `inexact` when you need a float.
 (/ 1 3)                ;=> 1/3
 (inexact (/ 1 3))      ;=> 0.3333333333333333
 (+ 1/3 1/6)            ;=> 1/2
-(sqrt -1)              ;=> +i
+(sqrt -1)              ;=> +1.0i
 (make-rectangular 3 4) ;=> 3+4i
 ```
 

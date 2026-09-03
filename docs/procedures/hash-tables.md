@@ -411,11 +411,12 @@ kaappi> (define sum 0)
 kaappi> (hash-table-walk ht (lambda (k v) (set! sum (+ sum v))))
 kaappi> sum
 ;=> 6
-kaappi> (hash-table-walk ht
-         (lambda (k v) (display k) (display ": ") (display v) (newline)))
-c: 3
-a: 1
-b: 2
+kaappi> (define seen '())
+kaappi> (hash-table-walk ht (lambda (k v) (set! seen (cons (cons k v) seen))))
+kaappi> (length seen)
+;=> 3
+kaappi> (assq 'b seen)      ; the order of the walk is unspecified
+;=> (b . 2)
 ```
 
 !!! note

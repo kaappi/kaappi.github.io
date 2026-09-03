@@ -160,7 +160,7 @@ HAVE_FFI and run("test-sqlite", L + ["t8.scm"], wd,
 
 # b9 verbose-off
 (wd / "t9.scm").write_text("(import (kaappi test))\n" + tb[9])
-run("test-verbose", L + ["t9.scm"], wd, contains=["0 tests"])
+run("test-verbose", L + ["t9.scm"], wd, contains=["2 tests: 2 passed"])
 
 # b10 load-based runner — loaded files rely on the runner's toplevel import
 # (import forms inside load'd files are not supported)
@@ -179,7 +179,7 @@ sd = ROOT / "srfi64"; (sd / "tests").mkdir(parents=True)
     '(test-equal "id" 1 1)\n(test-end "demo")\n')
 run("test-srfi64-runner", ["test", "tests"], sd,
     contains=["PASS  tests/test-demo.scm", "PASS  tests/test-strings.scm",
-              "Summary: 3 passed, 0 failed"])
+              "Tests:   3 passed, 0 failed"])
 
 # ================= cli-tool.md =================
 cb = scheme("cli-tool.md")
