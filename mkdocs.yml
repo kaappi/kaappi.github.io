@@ -194,12 +194,12 @@ extra_css:
   - stylesheets/extra.css
 
 extra:
-  kaappi_version: 0.25.0
+  kaappi_version: 0.26.0
   # Built-in procedure count for conformance.md's R7RS Appendix A coverage
   # sentence. The update-wasm workflow bumps it (and the SRFI counts below)
   # from the release tag's CONFORMANCE.md in the core repo, so the site
   # can't drift from the release it serves.
-  builtin_count: 696
+  builtin_count: 717
   # Book edition embedded on /book/ — scripts/fetch-book.sh downloads the
   # matching kaappi-book release at deploy time. Bump after a book release.
   book_version: 1.2.1
@@ -223,9 +223,9 @@ extra:
   # {{ config.extra.srfi_count }}.
   # v0.22.0: 12 + 162 importable + 261 + the three sub-library-only
   # SRFIs (160, 211, 226) = 178.
-  srfi_count: 178
+  srfi_count: 180
   srfi_builtin: 12
-  srfi_portable: 162
+  srfi_portable: 164
   social:
     - icon: fontawesome/brands/github
       link: https://github.com/kaappi/kaappi
