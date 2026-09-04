@@ -202,7 +202,7 @@ extra:
   builtin_count: 717
   # Book edition embedded on /book/ — scripts/fetch-book.sh downloads the
   # matching kaappi-book release at deploy time. Bump after a book release.
-  book_version: 1.2.1
+  book_version: 1.4.0
   # Interior page count, shown in the landing page's book band. Matches
   # \PageCount in kaappi-book/cover.tex — bump both together, since the
   # spine width (and so the 3D render) is derived from it.
