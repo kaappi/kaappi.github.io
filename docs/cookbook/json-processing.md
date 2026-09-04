@@ -196,8 +196,8 @@ The empty object `{}` reads as the distinct value `json-empty-object`
 ;=> #t
 ```
 
-`assoc`, `length`, `map` and `null?` reject it — check for it before
-treating a parsed object as an alist:
+`assoc`, `length` and `map` raise on it, and `null?` answers `#f` —
+check `json-empty-object?` before treating a parsed object as an alist:
 
 ```scheme
 (define (object->alist o)

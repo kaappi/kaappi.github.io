@@ -236,9 +236,9 @@ writing:
 ```
 
 !!! note "json-empty-object is not a list"
-    `json-empty-object` is a record, so `assoc`, `length`, `map` and
-    `null?` reject it. Check `json-empty-object?` *before* treating a
-    parsed value as an alist.
+    `json-empty-object` is a record: `assoc`, `length` and `map` raise on
+    it, and `null?` answers `#f`. Check `json-empty-object?` *before*
+    treating a parsed value as an alist.
 
 ## Round-trip safety
 

@@ -151,7 +151,7 @@ W = "(import (scheme base) (scheme write))\n"
 
 # ---------- json-processing.md ----------
 CONFIG_JSON = '{"server":{"host":"localhost","port":8080},"debug":true}'
-cumulative("json-run", "json-processing.md", [0, 1, 2, 3, 4, 5, 8, 9],
+cumulative("json-run", "json-processing.md", [0, 1, 2, 3, 4, 5, 8, 9, 10, 11, 12],
     fixtures={"config.json": CONFIG_JSON, "items.json": '[{"name":"a"}]'},
     prelude=W)
 jb = blocks_of("json-processing.md")
