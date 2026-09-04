@@ -25,6 +25,7 @@ thottam install kaappi-json
 | JSON | Scheme | Example |
 |------|--------|---------|
 | object | alist | `(("key" . "value"))` |
+| empty object (`{}`) | `json-empty-object` | test with `(json-empty-object? x)` |
 | array | list | `(1 2 3)` |
 | string | string | `"hello"` |
 | number (integer) | exact integer | `42` |
@@ -34,6 +35,10 @@ thottam install kaappi-json
 | `null` | `'null` symbol | |
 
 Vectors are written as JSON arrays: `#(1 2 3)` becomes `[1,2,3]`.
+
+Non-empty objects read as alists. The empty object `{}` reads as the distinct
+`json-empty-object` value so that it round-trips as `{}` rather than `[]` —
+see [Empty objects](#empty-objects) below.
 
 ## Reading JSON
 
@@ -51,6 +56,9 @@ Vectors are written as JSON arrays: `#(1 2 3)` becomes `[1,2,3]`.
 
 (json-read-string "42")
 ;=> 42
+
+(json-read-string "{}")
+;=> json-empty-object
 ```
 
 ### From a port
@@ -104,7 +112,7 @@ Writes to `port`, or `current-output-port` if omitted:
 
 ### Access nested values
 
-JSON objects are alists. Use `assoc` to look up keys:
+Non-empty JSON objects are alists. Use `assoc` to look up keys:
 
 ```scheme
 (define data
@@ -122,6 +130,20 @@ JSON objects are alists. Use `assoc` to look up keys:
 (car (cdr (assoc "tags" (cdr (assoc "user" data)))))
 ;=> "admin"
 ```
+
+!!! note "Nested `{}` breaks `assoc` chains"
+    These `assoc` chains work only while every object on the path is
+    non-empty — `(assoc "x" json-empty-object)` is a type error, because
+    `json-empty-object` is not a list. Code walking parsed objects should
+    normalize first:
+
+    ```scheme
+    (define (object->alist d)
+      (if (json-empty-object? d) '() d))
+
+    (cdr (assoc "id" (object->alist (cdr (assoc "user" data)))))
+    ;=> 1
+    ```
 
 ### Build nested structures
 
@@ -175,6 +197,49 @@ Emit null in output:
     JSON `null` is `'null` (a symbol), not `#f`. JSON `false` is `#f`.
     This distinction matters when checking for missing vs. false values.
 
+## Empty objects
+
+JSON `{}` reads as the distinct value `json-empty-object`, not as `'()`:
+
+```scheme
+(json-read-string "{}")
+;=> json-empty-object
+
+(json-empty-object? json-empty-object) ;=> #t
+(json-empty-object? '())               ;=> #f
+(json-empty-object? '(("a" . 1)))      ;=> #f
+
+;; a nested {} reads as the sentinel too
+(json-empty-object?
+  (cdr (assoc "server" (json-read-string "{\"server\":{}}"))))
+;=> #t
+```
+
+It writes back as `{}`:
+
+```scheme
+(json-write-string json-empty-object)
+;=> "{}"
+```
+
+The sentinel exists because `{}` and `[]` would otherwise both decode to
+`'()`, making round-trips lossy. The flip side: `'()` still writes as
+`[]`, so code that empties an alist must substitute the sentinel before
+writing:
+
+```scheme
+;; remove key "a"; write the result as a JSON object
+(define obj '(("a" . 1) ("b" . 2)))
+(define rest (filter (lambda (kv) (not (string=? (car kv) "a"))) obj))
+(json-write-string (if (null? rest) json-empty-object rest))
+;=> "{\"b\":2}"
+```
+
+!!! note "json-empty-object is not a list"
+    `json-empty-object` is a record, so `assoc`, `length`, `map` and
+    `null?` reject it. Check `json-empty-object?` *before* treating a
+    parsed value as an alist.
+
 ## Round-trip safety
 
 Parsing and then serializing preserves structure:
@@ -217,6 +282,9 @@ Full JSON spec compliance (RFC 8259):
 (define port (cdr (assoc "port" (cdr (assoc "server" config)))))
 ```
 
+If a config key can hold `{}`, normalize with `object->alist` (see
+[Access nested values](#access-nested-values)) before running `assoc`.
+
 ### Transform and filter
 
 ```scheme
@@ -228,6 +296,10 @@ Full JSON spec compliance (RFC 8259):
 (json-write-string active)
 ;=> "[{\"name\":\"a\",\"active\":true}]"
 ```
+
+Elements that decode to `{}` are not lists — `assoc` raises on them.
+Guard with `json-empty-object?` first when the shape of the data is not
+under your control.
 
 ### Merge objects
 
@@ -251,3 +323,8 @@ Full JSON spec compliance (RFC 8259):
 | `(json-write-string val)` | Write JSON to string |
 | `json-null` | The null value constant (`'null` symbol) |
 | `(json-null? val)` | Test for null |
+| `json-empty-object` | The empty object value (JSON `{}`) |
+| `(json-empty-object? val)` | Test for the empty object |
+
+`json-null` and `json-empty-object` are plain values, not procedures — do not
+call them.

@@ -25,8 +25,8 @@ thottam install kaappi-http    # only needed for the API examples
 
 ## Access nested values
 
-JSON objects are alists, arrays are lists. Use `assoc` to look up keys and
-`cdr` to get the value:
+Non-empty JSON objects are alists, arrays are lists. Use `assoc` to look up
+keys and `cdr` to get the value:
 
 ```scheme
 ;; Given: {"server": {"host": "localhost", "port": 8080}, "debug": true}
@@ -40,14 +40,22 @@ JSON objects are alists, arrays are lists. Use `assoc` to look up keys and
 ;=> "localhost"
 ```
 
-For deeply nested access, a helper avoids chaining `assoc`/`cdr`:
+For deeply nested access, a helper avoids chaining `assoc`/`cdr`. It also
+normalizes the empty object `{}` — which reads as the distinct
+`json-empty-object` value, not as a list — so it never raises on an
+empty object along the path:
 
 ```scheme
+(import (kaappi json))
+
+(define (object->alist o)
+  (if (json-empty-object? o) '() o))
+
 (define (json-ref obj . keys)
   (let loop ((o obj) (ks keys))
     (if (null? ks)
         o
-        (let ((pair (assoc (car ks) o)))
+        (let ((pair (assoc (car ks) (object->alist o))))
           (if pair
               (loop (cdr pair) (cdr ks))
               #f)))))
@@ -66,10 +74,12 @@ Filter and reshape a JSON array:
     {\"name\":\"Bob\",\"age\":25,\"active\":false},
     {\"name\":\"Carol\",\"age\":35,\"active\":true}]"))
 
-;; Keep only active users, extract names
+;; Keep only active users, extract names.
+;; json-ref (defined above) is safe here even if an element is {},
+;; which decodes to the non-list json-empty-object value.
 (define active-names
-  (map (lambda (user) (cdr (assoc "name" user)))
-       (filter (lambda (user) (cdr (assoc "active" user)))
+  (map (lambda (user) (json-ref user "name"))
+       (filter (lambda (user) (json-ref user "active"))
                data)))
 
 active-names  ;=> ("Alice" "Carol")
@@ -171,6 +181,45 @@ JSON `null` is represented as the symbol `'null`:
 ;=> "{\"value\":null}"
 ```
 
+## Handle empty objects
+
+The empty object `{}` reads as the distinct value `json-empty-object`
+(a record, *not* a list), so it round-trips as `{}` instead of `[]`:
+
+```scheme
+(json-empty-object? (json-read-string "{}")) ;=> #t
+(json-empty-object? '())                     ;=> #f
+
+;; a nested {} reads as the sentinel too
+(json-empty-object?
+  (cdr (assoc "server" (json-read-string "{\"server\":{}}"))))
+;=> #t
+```
+
+`assoc`, `length`, `map` and `null?` reject it — check for it before
+treating a parsed object as an alist:
+
+```scheme
+(define (object->alist o)
+  (if (json-empty-object? o) '() o))
+
+(json-write-string (object->alist (json-read-string "{}")))
+;=> "[]"
+```
+
+The flip side: `'()` writes as `[]`, so when a transform empties an
+alist, substitute the sentinel before writing:
+
+```scheme
+(define obj '(("a" . 1) ("b" . 2)))
+(define rest (filter (lambda (kv) (not (string=? (car kv) "a"))) obj))
+(json-write-string (if (null? rest) json-empty-object rest))
+;=> "{\"b\":2}"
+```
+
+See the [JSON library reference](../ecosystem/json.md#empty-objects) for
+details.
+
 ## Checking decoded types
 
 Parsed JSON decodes to ordinary Scheme values; test each with a predicate:
@@ -184,6 +233,13 @@ Parsed JSON decodes to ordinary Scheme values; test each with a predicate:
 | `'null` | `json-null?` |
 | `(1 2 3)` (array) | `list?` |
 | `(("a" . 1))` (object) | `pair?` with a `string?` car |
+| `json-empty-object` (`{}`) | `json-empty-object?` |
+
+!!! note
+    The `pair?`/`string?` test is false for `{}`, which decodes to
+    `json-empty-object` — a record, not a list. A `cond` written from
+    this table checks `json-empty-object?` first, or every branch
+    falls through on an empty object.
 
 For the full JSON-to-Scheme representation table, see the
 [JSON library reference](../ecosystem/json.md#type-mapping).
