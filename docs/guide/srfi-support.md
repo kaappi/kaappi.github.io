@@ -223,6 +223,7 @@ These are loaded from `.sld` files when first imported. Sorted by SRFI number.
 | 271 | Random ports from OS entropy (also deterministic `(srfi 271 determinized)`) |
 | 273 | Extensions to data (type-)checking — `define-check`, `declare-checked`, `define-values-checked`, `check-impl?`; layered on and re-exporting all of `(srfi 253)` |
 | 274 | Extended list conversion procedures — `start`/`end` ranges on `list->string`, `list->vector`, `list->stream`, `list->ideque`, `list->generator` and the twelve `list-><type>vector`s, working on dotted and circular lists when `end` is supplied (also `(srfi 274 base)`, `(srfi 274 41)`, `(srfi 274 134)`, `(srfi 274 158)`, `(srfi 274 160 <type>)`) |
+| 277 | Cyclic ports — `open-cyclic-input-string` and `open-cyclic-input-bytevector` return input ports whose source repeats forever and never yield an EOF object; seeds SRFI 271's `make-random-port` reproducibly without hand-building a 32-byte bytevector, and `(open-cyclic-input-bytevector #u8(0))` is a portable `/dev/zero`. Positions stay monotonic across wraps (SRFI 192); the port reads its own snapshot, so later mutation of the source never affects it |
 
 ### Eight that collide with `(scheme base)`
 
