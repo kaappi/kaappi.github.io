@@ -54,10 +54,25 @@ transforms can move a paren instead of a character:
 
 | Key | Action |
 |-----|--------|
-| **Alt+Shift+S** | Slurp — grow the list at point to include the following expression |
-| **Alt+Shift+B** | Barf — expel the last expression from the list at point |
-| **Alt+Shift+R** | Raise — replace the enclosing list with the expression at point |
-| **Alt+Y** | Rotate — cycle the arguments of the list at point, keeping the head; repeating restores the original |
+| **Esc** then **Shift+S** | Slurp — grow the list at point to include the following expression |
+| **Esc** then **Shift+B** | Barf — expel the last expression from the list at point |
+| **Esc** then **Shift+R** | Raise — replace the enclosing list with the expression at point |
+| **Esc** then **Y** | Rotate — cycle the arguments of the list at point, keeping the head; repeating restores the original |
+
+Press **Esc**, release it, then the key. This reaches the binding on every
+terminal with no configuration. These are Meta (Alt) bindings, so if your
+terminal already sends Alt as Meta you can hold **Alt** and press the key
+instead. On macOS the key is **Option**, and most terminals send it as Meta
+only once configured:
+
+| Terminal | Setting |
+|----------|---------|
+| Terminal.app | Settings → Profiles → Keyboard → "Use Option as Meta key" |
+| iTerm2 | Settings → Profiles → Keys → General → Left Option key: **Esc+** |
+| kitty | `macos_option_as_alt yes` |
+| Alacritty | `window.option_as_alt = "Both"` (or `"OnlyLeft"`) |
+| Ghostty | `macos-option-as-alt = true` |
+| WezTerm | sends Option as Meta by default |
 
 The transforms understand strings, comments, and character literals rather
 than approximating them as raw text.
