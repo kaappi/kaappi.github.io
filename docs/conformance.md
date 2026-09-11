@@ -140,6 +140,6 @@ for the full JSON shape.
 ## Further reading
 
 - [CONFORMANCE.md](https://github.com/kaappi/kaappi/blob/main/CONFORMANCE.md) — exact R7RS and per-SRFI coverage
-- [README "Known limitations"](https://github.com/kaappi/kaappi/blob/main/README.md#known-limitations) — the source this page's gaps table summarizes
+- [Known limitations](https://github.com/kaappi/kaappi/blob/main/docs/dev/known-limitations.md) — the full list of documented deviations that this page's gaps table summarizes
 - [Kaappi Enhancement Proposals](https://github.com/kaappi/keps) — design rationale for everything in the Extensions table above
 - [Stability](stability.md) — what's guaranteed not to break, independent of spec conformance
