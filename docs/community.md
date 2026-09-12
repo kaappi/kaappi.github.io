@@ -3,9 +3,9 @@
 Kaappi is an open-source project under the MIT license. Contributions,
 questions, and feedback are welcome.
 
-The full guide to getting involved — communication channels, how org access
-works, the typical path for a new contributor, governance, and how to report
-a security vulnerability — lives in
+The full guide to getting involved — communication channels, what a PR
+needs before it merges, the typical path for a new contributor, governance,
+and how to report a security vulnerability — lives in
 [kaappi/community](https://github.com/kaappi/community). Start with its
 [CONTRIBUTING.md](https://github.com/kaappi/community/blob/main/CONTRIBUTING.md).
 
@@ -34,7 +34,8 @@ Requires Zig 0.16+.
 
 Each ecosystem library (kaappi-json, kaappi-web, etc.) is its own repo under
 the [kaappi GitHub org](https://github.com/kaappi) and follows the same
-fork-and-branch workflow (org membership required).
+fork-and-branch workflow. Issues and pull requests are open to everyone; no
+org membership is needed.
 
 ## Support
 
