@@ -343,8 +343,9 @@ kaappi app.scm -o=file.txt          # short form, = syntax
 
 A value that starts with `-` is taken as a value only when it is a number
 (`-n -5`) or the lone `-` (the stdin convention). Anything else that looks
-like an option is parsed as one, and the option is reported as missing its
-value.
+like an option is parsed as one: the option is reported as missing its
+value, and the stray token is reported on its own merits, as an unknown
+option if it is one.
 
 ### Short option clusters
 
