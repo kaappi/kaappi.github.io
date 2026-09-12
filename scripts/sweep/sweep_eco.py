@@ -43,7 +43,8 @@ PAGE_LIB = {
 # samples stay skipped as external-service examples, but the
 # "Local / development" localhost block runs for real against
 # scripts/sweep/smtp_sink.py — see the email.md special case below.
-PRELUDE = {"email.md": "(import (kaappi email) (kaappi email mime))",
+PRELUDE = {"cli.md": "(import (kaappi cli))",
+           "email.md": "(import (kaappi email) (kaappi email mime))",
            "http.md": "(import (kaappi http))",
            "redis.md": "(import (kaappi redis))",
            "sqlite.md": "(import (kaappi sqlite))",
@@ -389,8 +390,10 @@ for page in pages:
             continue              # needs a live request object
         if page == "http.md" and re.search(r"\bresp\b", text) and "(define resp" not in text:
             continue              # depends on a response from a skipped network call
-        if page == "cli.md" and "run-cli" in text:
-            continue              # argv-driven; verified via cookbook transcripts
+        if page == "cli.md" and re.search(r"\(run-cli[ \t\n]", text):
+            # argv-driven dispatch; verified via cookbook transcripts. Blocks
+            # that only call run-cli-parse are self-contained and run here.
+            continue
         if page == "system.md" and "(command-line)" in text:
             # transcript documents a `kaappi script.scm foo bar` run
             (wd / "script.scm").write_text(
