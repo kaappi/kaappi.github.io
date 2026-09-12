@@ -159,6 +159,13 @@ entry.
 For testing or custom dispatch:
 
 ```scheme
+(define app
+  (cli "tool" "A tool"
+    (flag "-v" "--verbose" "Verbose output")
+    (option "-n" "--count" "Number of items" 1)
+    (option "-o" "--output" "Output file" "out.txt")
+    (argument "input" "Input file")))
+
 (define result (run-cli-parse app '("--verbose" "-n" "5" "input.txt")))
 ```
 
